@@ -10,7 +10,9 @@ public class Task implements Comparable<Task>, Serializable
     private String description;
     private Date notificationDate;
     private Date plannedDate;
-    private int id = IDGenerator.createId();
+    private int id;
+
+    public Task() {}
 
     public Task(String name, TaskStatus status, String description, Date notificationDate, Date plannedDate) {
         this.name = name;
@@ -72,6 +74,8 @@ public class Task implements Comparable<Task>, Serializable
     public int getId() {
         return id;
     }
+
+    public void setId(int id) {this.id = id;}
 
     //вернет -1 если у задачи переданной в кач-ве аргумента дата идет позже
     @Override

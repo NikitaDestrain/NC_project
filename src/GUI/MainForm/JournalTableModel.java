@@ -17,6 +17,10 @@ public class JournalTableModel extends AbstractTableModel {
         this.tasks = tasks;
     }
 
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
     @Override
     public String getColumnName(int column) {
         return columnNames[column];

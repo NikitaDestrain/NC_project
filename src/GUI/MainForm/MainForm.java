@@ -25,14 +25,28 @@ public class MainForm extends JFrame {
         fileChooser = new JFileChooser();
         journalBackup = new SerializeDeserialize();
         journal = new Journal();
-        Task task = new Task("Test", TaskStatus.Planned, "Test", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
-        journal.addTask(task);
+        Task task1 = new Task("Test", TaskStatus.Planned, "Test",
+                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
+        journal.addTask(task1);
+        Task task2 = new Task("Test2", TaskStatus.Completed, "Test2",
+                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
+        journal.addTask(task2);
+        Task task3 = new Task("Test3", TaskStatus.Completed, "Test3",
+                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
+        Task task4 = new Task("Test3", TaskStatus.Completed, "Test3",
+                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
+        Task task5 = new Task("Test3", TaskStatus.Completed, "Test3",
+                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
+        journal.addTask(task3);
+        journal.addTask(task4);
+        journal.addTask(task5);
 
         tablePanel = new TablePanel();
         tablePanel.setData(journal.getTasks());
         tablePanel.setTableListener((int row) -> {
             journal.removeTask(row);
             tablePanel.refresh();
+            System.out.println(journal.getTasks());
         });
 
         buttonPanel = new ButtonPanel();
@@ -44,8 +58,8 @@ public class MainForm extends JFrame {
 
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(500, 400));
-        setSize(500, 500);
+        setMinimumSize(new Dimension(600, 400));
+        setSize(600, 500);
         setLocationRelativeTo(null);
         setResizable(true);
         setVisible(true);

@@ -15,6 +15,7 @@ public class TablePanel extends JPanel {
     private JournalTableModel tableModel;
     private JPopupMenu popupMenu;
     private TableListener listener;
+    private List<Task> taskList;
 
 
     public TablePanel() {
@@ -38,8 +39,12 @@ public class TablePanel extends JPanel {
                 int row = table.rowAtPoint(e.getPoint());
                 table.getSelectionModel().setSelectionInterval(row,row);
 
-                if (e.getButton() == MouseEvent.BUTTON3) {
+                if (e.getButton() == MouseEvent.BUTTON3) { // правой удаляем
                     popupMenu.show(table, e.getX(), e.getY());
+                }
+                else if (e.getButton() == MouseEvent.BUTTON1) { // левой выделяем для редактирования
+                    Task task = taskList.get(row); // параметры этой задачи передаются в окно редактирования
+                    System.out.println(task.toString());
                 }
             }
         });
@@ -59,6 +64,7 @@ public class TablePanel extends JPanel {
 
     public void setData(List<Task> taskList) {
         tableModel.setData(taskList);
+        this.taskList = taskList;
     }
 
     public void setTableListener(TableListener listener) {
