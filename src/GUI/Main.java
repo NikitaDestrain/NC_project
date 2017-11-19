@@ -1,6 +1,7 @@
 package GUI;
 
 import GUI.MainForm.MainForm;
+import GUI.NotificationWindow.NotificationForm;
 
 import javax.swing.*;
 
