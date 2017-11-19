@@ -7,7 +7,7 @@ public class Journal implements Serializable {
     private List<Task> tasks;
 
     public Journal(){
-        tasks = new LinkedList<Task>();
+        tasks = new LinkedList<>();
     }
 
     public Journal(List<Task> tasks) {
