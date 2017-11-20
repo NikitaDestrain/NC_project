@@ -44,23 +44,26 @@ public class MainForm extends JFrame {
 
         tablePanel = new TablePanel();
         tablePanel.setData(journal.getTasks());
+
         tablePanel.setTableListener((int row) -> {
-            journal.removeTask(row);
-            tablePanel.refresh();
-            System.out.println(journal.getTasks());
-        });
+                    buttonPanel.setListener((int action) -> {
+                        switch (action) {
+                            case TaskActionListener.ADD_TASK:
+                                new TaskForm().layoutForAdd();
+                                break;
+                            case TaskActionListener.EDIT_TASK:
+                                new TaskForm().layoutForEdit();
+                                break;
+                            case TaskActionListener.DELETE_TASK:
+                                journal.removeTask(row);
+                                tablePanel.refresh();
+                                System.out.println(journal.getTasks());
+                                break;
+                        }
+                    });
+                });
 
         buttonPanel = new ButtonPanel();
-        buttonPanel.setListener((int action) -> {
-            switch (action) {
-                case TaskActionListener.ADD_TASK:
-                    new TaskForm().layoutForAdd();
-                    break;
-                case TaskActionListener.EDIT_TASK:
-                    new TaskForm().layoutForEdit();
-                    break;
-            }
-        });
 
         setJMenuBar(createMenu());
         setLayout(new BorderLayout());

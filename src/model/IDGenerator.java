@@ -15,15 +15,15 @@ public class IDGenerator implements Serializable {
         this.taskList = taskList;
     }
 
-    private boolean existID(int id) {
-        return taskList != null && id < taskList.size();
-    }
+//    private boolean existID(int id) {
+//        return taskList != null && id < taskList.size();
+//    }
 
-    public void updateID(int id) {
+    /*public void updateID(int id) {
         if (existID(id)) {
             for (int i = id; i < taskList.size(); i++) {
                 taskList.get(i).setId(i);
             }
         }
-    }
+    }*/
 }

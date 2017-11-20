@@ -1,5 +1,6 @@
 package GUI.MainForm;
 
+import controller.Notifier;
 import model.Task;
 import model.TaskStatus;
 
@@ -16,7 +17,6 @@ public class TablePanel extends JPanel {
     private JPopupMenu popupMenu;
     private TableListener listener;
     private List<Task> taskList;
-
 
     public TablePanel() {
         tableModel = new JournalTableModel();
@@ -37,12 +37,14 @@ public class TablePanel extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 int row = table.rowAtPoint(e.getPoint());
-                table.getSelectionModel().setSelectionInterval(row,row);
+                table.getSelectionModel().setSelectionInterval(row, row);
 
                 if (e.getButton() == MouseEvent.BUTTON3) { // правой удаляем
                     popupMenu.show(table, e.getX(), e.getY());
-                }
-                else if (e.getButton() == MouseEvent.BUTTON1) { // левой выделяем для редактирования
+                } else if (e.getButton() == MouseEvent.BUTTON1) { // левой выделяем для редактирования
+                    if (listener != null) {
+                        listener.rowDeleted(row);
+                    }
                     Task task = taskList.get(row); // параметры этой задачи передаются в окно редактирования
                     System.out.println(task.toString());
                 }
@@ -50,11 +52,7 @@ public class TablePanel extends JPanel {
         });
 
         removeItem.addActionListener((ActionEvent e) -> {
-            int row = table.getSelectedRow();
-            if (listener != null) {
-                listener.rowDeleted(row);
-                tableModel.fireTableRowsDeleted(row,row);
-            }
+            new Notifier().setTask(); // тестовый
         });
 
         setLayout(new BorderLayout());

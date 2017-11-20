@@ -16,6 +16,7 @@ public class ButtonPanel extends JPanel implements ActionListener {
     private JButton editTask;
     private JButton deleteTask;
     private TaskActionListener listener;
+    private TablePanel tablePanel;
 
     public ButtonPanel() {
         addTask = new JButton("Add task");
@@ -35,9 +36,9 @@ public class ButtonPanel extends JPanel implements ActionListener {
 
         editTask.addActionListener(this);
 
-        deleteTask.addActionListener((ActionEvent e) -> {
-            new Notifier().setTask(); // тестовый
-        });
+        deleteTask.addActionListener(this);
+        //            tableListener.rowDeleted(row);
+//            tableModel.fireTableRowsDeleted(row,row);
     }
 
     public void setListener(TaskActionListener listener) {
@@ -53,12 +54,18 @@ public class ButtonPanel extends JPanel implements ActionListener {
         else if (clicked == editTask) {
             listenerAction(TaskActionListener.EDIT_TASK);
         }
+        else if (clicked == deleteTask) {
+            listenerAction(TaskActionListener.DELETE_TASK);
+        }
     }
 
     private void listenerAction(int action) {
         if (listener != null) {
             listener.setAction(action);
-            new TaskForm();
         }
+    }
+
+    public void setTablePanel(TablePanel tablePanel) {
+        this.tablePanel = tablePanel;
     }
 }

@@ -35,7 +35,7 @@ public class Journal implements Serializable {
 
     public void removeTask(int id) {
         tasks.remove(id);
-        generator.updateID(id);
+        //generator.updateID(id);
     }
 
     public void setTask(int id, Task task) {
