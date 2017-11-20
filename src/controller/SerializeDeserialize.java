@@ -1,8 +1,11 @@
 package controller;
 
 import model.Journal;
+import model.Task;
 
 import java.io.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class SerializeDeserialize implements Serializer {
 
@@ -10,10 +13,14 @@ public class SerializeDeserialize implements Serializer {
     public void writeJournal(Journal journal, OutputStream out) throws IOException {
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
         try {
-            objectOutputStream.writeObject(journal);
+            List<Task> tasks = journal.getTasks();
+            int size = tasks.size();
+            for (int i = 0; i < size; i++) {
+                objectOutputStream.writeObject(tasks.get(i));
+            }
         }
         catch (IOException e) {
-            e.getMessage();
+            System.out.println("Не записался");
         }
     }
 
@@ -21,11 +28,16 @@ public class SerializeDeserialize implements Serializer {
     public Journal readJournal(InputStream in) throws IOException {
         Journal journal = null;
         ObjectInputStream objectInputStream = new ObjectInputStream(in);
+        List<Task> tasks = new LinkedList<>();
         try {
-            journal = (Journal)objectInputStream.readObject();
+            Object obj;
+            while((obj = objectInputStream.readObject()) != null) {
+                tasks.add((Task) obj);
+            }
+            journal = new Journal(tasks);
         }
-        catch (IOException e) {
-            e.getMessage();
+        catch (EOFException e) {
+            journal = new Journal(tasks);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

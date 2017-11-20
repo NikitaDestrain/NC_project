@@ -1,8 +1,11 @@
 package model;
 
+import controller.SerializeDeserialize;
+
+import java.io.Serializable;
 import java.util.List;
 
-public class IDGenerator {
+public class IDGenerator implements Serializable {
     List<Task> taskList;
     public int createId() {
         return taskList == null ? -1 : taskList.size();

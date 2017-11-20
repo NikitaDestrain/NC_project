@@ -1,5 +1,6 @@
 package GUI.MainForm;
 
+import GUI.TaskWindow.TaskForm;
 import controller.SerializeDeserialize;
 import model.Journal;
 import model.Task;
@@ -50,6 +51,16 @@ public class MainForm extends JFrame {
         });
 
         buttonPanel = new ButtonPanel();
+        buttonPanel.setListener((int action) -> {
+            switch (action) {
+                case TaskActionListener.ADD_TASK:
+                    new TaskForm().layoutForAdd();
+                    break;
+                case TaskActionListener.EDIT_TASK:
+                    new TaskForm().layoutForEdit();
+                    break;
+            }
+        });
 
         setJMenuBar(createMenu());
         setLayout(new BorderLayout());
@@ -93,15 +104,12 @@ public class MainForm extends JFrame {
 
         exportJournal.addActionListener((ActionEvent e) -> {
             if (fileChooser.showSaveDialog(MainForm.this) == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
+                File selectedFile = new File(fileChooser.getSelectedFile().getAbsolutePath());
                 try {
                     /**
                      * УТОЧНИТЬ ПО ПОВОДУ КОЛИЧЕСТВА ЖУРНАЛОВ В ФАЙЛЕ
                      */
                     journalBackup.writeJournal(journal, new FileOutputStream(selectedFile));
-                } catch (FileNotFoundException ex) {
-                    JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file " +
-                            selectedFile.getAbsolutePath(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file " +
                             selectedFile.getAbsolutePath(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -116,9 +124,6 @@ public class MainForm extends JFrame {
                     this.journal = journalBackup.readJournal(new FileInputStream(selectedFile));
                     tablePanel.setData(journal.getTasks());
                     tablePanel.refresh();
-                } catch (FileNotFoundException ex) {
-                    JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file " +
-                            selectedFile.getAbsolutePath(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file " +
                             selectedFile.getAbsolutePath(), "Error", JOptionPane.ERROR_MESSAGE);

@@ -75,7 +75,7 @@ public class Task implements Comparable<Task>, Serializable
         return id;
     }
 
-    public void setId(int id) {this.id = id;}
+    protected void setId(int id) {this.id = id;}
 
     //вернет -1 если у задачи переданной в кач-ве аргумента дата идет позже
     @Override

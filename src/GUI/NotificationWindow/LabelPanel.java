@@ -11,10 +11,10 @@ public class LabelPanel extends JPanel {
         name = new JLabel();
         description = new JLabel();
         name.setFont(new Font("Verdana", Font.BOLD, 18));
-        name.setVerticalTextPosition(JLabel.CENTER);
-        description.setVerticalAlignment(JLabel.CENTER);
+        name.setVerticalAlignment(SwingConstants.CENTER);
+        description.setVerticalTextPosition(SwingConstants.CENTER);
         description.setFont(new Font("Verdana", Font.PLAIN, 12));
-        setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         add(name);
         add(description);
 

@@ -8,15 +8,13 @@ import javax.swing.*;
 import java.awt.*;
 
 public class NotificationForm extends JFrame {
-    private Notifier notifier;
     private Task task;
     private ButtonPanel buttonPanel;
     private LabelPanel labelPanel;
 
 
     public NotificationForm() {
-        super("ВНИМАНИЕ!");
-        notifier = new Notifier();
+        super("Warning!");
         buttonPanel = new ButtonPanel();
         labelPanel = new LabelPanel();
 
