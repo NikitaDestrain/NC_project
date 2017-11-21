@@ -12,6 +12,7 @@ public class Task implements Comparable<Task>, Serializable
     private Date plannedDate;
     private int id;
 
+    //todo not needed?
     public Task() {}
 
     public Task(String name, TaskStatus status, String description, Date notificationDate, Date plannedDate) {

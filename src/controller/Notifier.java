@@ -18,9 +18,10 @@ public class Notifier {
         addNotification();
     }
 
-    private void addNotification(){
+    private void addNotification(){ //todo private? parameters?
        NotificationTimer notificationTimer = new NotificationTimer(test_task);
        Timer timer = new Timer(true);
        timer.schedule(notificationTimer, test_task.getNotificationDate().getTime() - System.currentTimeMillis() + 5000);
+       //todo Case: user change notification time. What will happen to the old timer?
     }
 }

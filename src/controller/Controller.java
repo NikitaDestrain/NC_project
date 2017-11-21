@@ -19,6 +19,7 @@ public class Controller {
     }
 
     public Date parseStringToDate(String date) {
+        //todo private. Or better - move it to Utils class
         Date parsedDate = null;
         try {
             parsedDate = new SimpleDateFormat("dd-Mmm-yyyy", Locale.ENGLISH).parse(date);
@@ -29,6 +30,7 @@ public class Controller {
     }
 
     private boolean isTwoDatesNotNull(Date date1, Date date2) {
+        //todo --//--
         return date1 != null && date2 != null;
     }
 
@@ -37,6 +39,7 @@ public class Controller {
         Date planned = parseStringToDate(plannedDate);
         if (isTwoDatesNotNull(notification, planned))
         journal.setTask(id, new Task(name, status, description, notification, planned));
+        //todo else?..
     }
 
     public void removeTask(int id) {

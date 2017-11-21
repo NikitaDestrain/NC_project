@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Journal implements Serializable {
     private List<Task> tasks;
-    private IDGenerator generator = new IDGenerator();
+    private IDGenerator generator = new IDGenerator();//todo IDGenerator must be single in whole system
 
     public Journal(){
         tasks = new LinkedList<>();
@@ -17,6 +17,7 @@ public class Journal implements Serializable {
         generator.setTaskList(tasks);
     }
 
+    //todo not needed?
     public IDGenerator getGenerator() {
         return generator;
     }
@@ -27,7 +28,7 @@ public class Journal implements Serializable {
     }
 
     public void addTask(String name, TaskStatus status, String description, Date notificationDate, Date plannedDate) {
-        Task task = new Task(name, status, description, notificationDate, plannedDate);
+        Task task = new Task(name, status, description, notificationDate, plannedDate);//todo tasks creation is not journal responsibility
         task.setId(generator.createId());
         tasks.add(task);
         tasks.sort(new TaskComparator());
@@ -40,10 +41,11 @@ public class Journal implements Serializable {
 
     public void setTask(int id, Task task) {
         tasks.get(id).setTask(task);
+        //todo simple replace?
     }
 
     public List<Task> getTasks() {
-        return tasks;
+        return tasks;//todo unmodifiable list
     }
 
     @Override

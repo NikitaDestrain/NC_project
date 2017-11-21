@@ -5,7 +5,7 @@ import controller.SerializeDeserialize;
 import java.io.Serializable;
 import java.util.List;
 
-public class IDGenerator implements Serializable {
+public class IDGenerator implements Serializable {//todo It doesn't work...
     List<Task> taskList;
     public int createId() {
         return taskList == null ? -1 : taskList.size();

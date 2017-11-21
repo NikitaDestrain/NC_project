@@ -11,12 +11,13 @@ public class SerializeDeserialize implements Serializer {
 
     @Override
     public void writeJournal(Journal journal, OutputStream out) throws IOException {
+        //todo all work with streams must be encapsulated in Serializer
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
         try {
             List<Task> tasks = journal.getTasks();
             int size = tasks.size();
             for (int i = 0; i < size; i++) {
-                objectOutputStream.writeObject(tasks.get(i));
+                objectOutputStream.writeObject(tasks.get(i));//todo why not save the whole journal?
             }
         }
         catch (IOException e) {
