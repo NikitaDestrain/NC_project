@@ -5,21 +5,22 @@ import model.Task;
 import model.TaskStatus;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Timer;
 
 public class Notifier {
-    private NotificationForm notificationForm;
 
-    private Task task = new Task("Test", TaskStatus.Planned, "Description",
-            new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis())); // тестовый
+    private Task test_task = new Task("Test", TaskStatus.Planned, "Description",
+            new Date(), new Date()); // тестовый
 
+    //в конструктор будет приходить задача
     public Notifier() {
+        addNotification();
     }
 
-    public void setTask() {
-        notificationForm = new NotificationForm();
-        notificationForm.setTask(task);
-        notificationForm.setVisible(true);
+    private void addNotification(){
+       NotificationTimer notificationTimer = new NotificationTimer(test_task);
+       Timer timer = new Timer(true);
+       timer.schedule(notificationTimer, test_task.getNotificationDate().getTime() - System.currentTimeMillis() + 5000);
     }
-
-
 }
