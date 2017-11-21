@@ -11,6 +11,8 @@ public class JournalTableModel extends AbstractTableModel {
     private List<Task> tasks;
     private String[] columnNames = {"ID", "Status", "Name", "Description", "Planned date", "Notification date"};
 
+    // TODO CHECKBOXES, КНОПКИ ЛАЙФСАЙКЛА - отменить, отложить
+
     public JournalTableModel() {}
 
     public void setData(List<Task> tasks) {

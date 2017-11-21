@@ -64,6 +64,21 @@ public class MainForm extends JFrame {
                 });
 
         buttonPanel = new ButtonPanel();
+        buttonPanel.setListener((int action) -> {
+                    switch (action) {
+                        case TaskActionListener.ADD_TASK:
+                            new TaskForm().layoutForAdd();
+                            break;
+                        case TaskActionListener.EDIT_TASK:
+                            new TaskForm().layoutForEdit();
+                            break;
+                        case TaskActionListener.DELETE_TASK:
+                            //journal.removeTask(row);
+                            tablePanel.refresh();
+                            System.out.println(journal.getTasks());
+                            break;
+                    }
+                });
 
         setJMenuBar(createMenu());
         setLayout(new BorderLayout());
@@ -78,6 +93,7 @@ public class MainForm extends JFrame {
         setResizable(true);
         setVisible(true);
     }
+
 
     private JMenuBar createMenu() {
         JMenuBar menu = new JMenuBar();
@@ -105,7 +121,7 @@ public class MainForm extends JFrame {
             }
         });
 
-        exportJournal.addActionListener((ActionEvent e) -> {
+        exportJournal.addActionListener((ActionEvent e) -> {  //todo запись в файл при запуске и выходе из проги
             if (fileChooser.showSaveDialog(MainForm.this) == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = new File(fileChooser.getSelectedFile().getAbsolutePath());
                 try {

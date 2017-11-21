@@ -52,7 +52,7 @@ public class TablePanel extends JPanel {
         });
 
         removeItem.addActionListener((ActionEvent e) -> {
-            new Notifier().setTask(); // тестовый
+            //new Notifier().setTask(); // тестовый
         });
 
         setLayout(new BorderLayout());

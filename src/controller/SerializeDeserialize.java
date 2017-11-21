@@ -18,7 +18,7 @@ public class SerializeDeserialize implements Serializer {
             int size = tasks.size();
             for (int i = 0; i < size; i++) {
                 objectOutputStream.writeObject(tasks.get(i));//todo why not save the whole journal?
-            }
+            } // ПОГУГЛИТЬ КАК ЗАПИСАТЬ ЦЕЛИКОМ ЖУРНАЛ С ЛИСТОМ
         }
         catch (IOException e) {
             System.out.println("Не записался");
@@ -38,7 +38,7 @@ public class SerializeDeserialize implements Serializer {
             journal = new Journal(tasks);
         }
         catch (EOFException e) {
-            journal = new Journal(tasks);
+            journal = new Journal(tasks);// ПРЕЕДЕЛАТЬ
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

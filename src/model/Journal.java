@@ -28,7 +28,7 @@ public class Journal implements Serializable {
     }
 
     public void addTask(String name, TaskStatus status, String description, Date notificationDate, Date plannedDate) {
-        Task task = new Task(name, status, description, notificationDate, plannedDate);//todo tasks creation is not journal responsibility
+        Task task = new Task(name, status, description, notificationDate, plannedDate);//todo tasks creation is not journal responsibility FACTORY TASKS
         task.setId(generator.createId());
         tasks.add(task);
         tasks.sort(new TaskComparator());
