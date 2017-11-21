@@ -10,9 +10,10 @@ import java.util.List;
 public class SerializeDeserialize implements Serializer {
 
     @Override
-    public void writeJournal(Journal journal, OutputStream out) throws IOException {
+    public void writeJournal(Journal journal) throws IOException {
         //todo all work with streams must be encapsulated in Serializer
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
+        FileOutputStream fos = new FileOutputStream("backup.txt");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fos);
         try {
             List<Task> tasks = journal.getTasks();
             int size = tasks.size();
@@ -26,9 +27,10 @@ public class SerializeDeserialize implements Serializer {
     }
 
     @Override
-    public Journal readJournal(InputStream in) throws IOException {
+    public Journal readJournal() throws IOException {
+        FileInputStream fis = new FileInputStream("backup.txt");
         Journal journal = null;
-        ObjectInputStream objectInputStream = new ObjectInputStream(in);
+        ObjectInputStream objectInputStream = new ObjectInputStream(fis);
         List<Task> tasks = new LinkedList<>();
         try {
             Object obj;
