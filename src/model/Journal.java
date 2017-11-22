@@ -40,12 +40,12 @@ public class Journal implements Serializable {
     }
 
     public void setTask(int id, Task task) {
-        tasks.get(id).setTask(task);
-        //todo simple replace?
+        tasks.set(id,task);
+        //todo simple replace? DONE
     }
 
     public List<Task> getTasks() {
-        return tasks;//todo unmodifiable list
+        return Collections.unmodifiableList(tasks);//todo unmodifiable list DONE
     }
 
     @Override

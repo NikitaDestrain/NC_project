@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) throws IOException { // todo свернуть в трей
         // todo иниц файл, иниц генератор на журнал
         Journal journal = new SerializeDeserialize().readJournal();
-        SwingUtilities.invokeLater(() -> new MainForm(journal));
+        SwingUtilities.invokeLater(() -> new MainForm().setJournal(journal));
         // todo config file ключ - значение
     }
 }

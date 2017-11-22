@@ -7,9 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TaskForm extends JFrame {
+    private ImageIcon icon = new ImageIcon("icon.png");
 
     public TaskForm() {
-
+        setIconImage(icon.getImage());
     }
 
     public void layoutForAdd() {

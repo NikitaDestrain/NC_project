@@ -11,7 +11,7 @@ public class NotificationForm extends JFrame {
     private Task task;
     private ButtonPanel buttonPanel;
     private LabelPanel labelPanel;
-
+    private ImageIcon icon = new ImageIcon("icon.png");
 
     public NotificationForm() {
         super("Warning!");
@@ -29,6 +29,7 @@ public class NotificationForm extends JFrame {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(screenSize.width - prefSize.width, screenSize.height - prefSize.height - 40,
                 prefSize.width, prefSize.height);
+        setIconImage(icon.getImage());
         setResizable(false);
         setVisible(false);
     }

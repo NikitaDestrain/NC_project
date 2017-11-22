@@ -3,13 +3,14 @@ package GUI.MainForm;
 import model.Task;
 import model.TaskStatus;
 
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import java.util.Date;
 import java.util.List;
 
 public class JournalTableModel extends AbstractTableModel {
     private List<Task> tasks;
-    private String[] columnNames = {"ID", "Status", "Name", "Description", "Planned date", "Notification date"};
+    private String[] columnNames = {"*", "ID", "Status", "Name", "Description", "Planned date", "Notification date"};
 
     // TODO CHECKBOXES, КНОПКИ ЛАЙФСАЙКЛА - отменить, отложить
 
@@ -39,20 +40,39 @@ public class JournalTableModel extends AbstractTableModel {
     }
 
     @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return columnIndex == 3 || columnIndex == 4 || columnIndex == 0;
+    }
+
+    @Override
+    public void fireTableCellUpdated(int row, int column) {
+        Task task = tasks.get(row);
+        switch (column) {
+            case 3 :
+                task.setName((String) getValueAt(row, 3));
+                break;
+            case 4 :
+                task.setName((String) getValueAt(row, 4));
+                break;
+
+        }
+    }
+
+    @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Task task = tasks.get(rowIndex);
         switch (columnIndex) {
-            case 0 :
-                return task.getId();
             case 1 :
-                return task.getStatus();
+                return task.getId();
             case 2 :
-                return task.getName();
+                return task.getStatus();
             case 3 :
-                return task.getDescription();
+                return task.getName();
             case 4 :
-                return task.getPlannedDate();
+                return task.getDescription();
             case 5 :
+                return task.getPlannedDate();
+            case 6 :
                 return task.getNotificationDate();
             default :
                 return null;
@@ -63,16 +83,18 @@ public class JournalTableModel extends AbstractTableModel {
     public Class<?> getColumnClass(int columnIndex) {
         switch (columnIndex) {
             case 0 :
-                return Integer.class;
+                return Boolean.class;
             case 1 :
-                return TaskStatus.class;
+                return Integer.class;
             case 2 :
-                return String.class;
+                return TaskStatus.class;
             case 3 :
                 return String.class;
             case 4 :
-                return Date.class;
+                return String.class;
             case 5 :
+                return Date.class;
+            case 6 :
                 return Date.class;
             default :
                 return null;

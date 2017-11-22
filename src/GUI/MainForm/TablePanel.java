@@ -5,6 +5,8 @@ import model.Task;
 import model.TaskStatus;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -20,24 +22,41 @@ public class TablePanel extends JPanel {
 
     public TablePanel() {
         tableModel = new JournalTableModel();
+        tableModel.addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                if (e.getType() == TableModelEvent.UPDATE) {
+                    int row = table.getSelectedRow();
+                    int col = table.getSelectedColumn();
+                    switch (e.getColumn()) {
+                        case 0 :
+                            break;
+                        case 3:
+                            Task task = taskList.get(row);
+                            task.setName((String)tableModel.getValueAt(row, col));
+                            refresh();
+                            break;
+                    }
+                }
+            }
+        });
         table = new JTable(tableModel);
         table.setRowHeight(20);
         popupMenu = new JPopupMenu();
 
-        table.setDefaultRenderer(TaskStatus.class, new TaskStatusRenderer());
-        table.setDefaultEditor(TaskStatus.class, new TaskStatusEditor());
+        table.setDefaultEditor(Boolean.class, new CheckBoxEditor());
 
-        /**
-         * УТОЧНИТЬ
-         */
-        JMenuItem removeItem = new JMenuItem("Delete task");
-        popupMenu.add(removeItem);
+        JMenuItem deferItem = new JMenuItem("Defer task");
+        JMenuItem cancelItem = new JMenuItem("Cancel task");
+        popupMenu.add(deferItem);
+        popupMenu.add(cancelItem);
 
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 int row = table.rowAtPoint(e.getPoint());
                 table.getSelectionModel().setSelectionInterval(row, row);
+                Task task = taskList.get(row);
 
                 if (e.getButton() == MouseEvent.BUTTON3) { // правой удаляем
                     popupMenu.show(table, e.getX(), e.getY());
@@ -45,14 +64,24 @@ public class TablePanel extends JPanel {
                     if (listener != null) {
                         listener.rowDeleted(row);
                     }
-                    Task task = taskList.get(row); // параметры этой задачи передаются в окно редактирования
+                    //Task task = taskList.get(row); // параметры этой задачи передаются в окно редактирования
                     System.out.println(task.toString());
                 }
             }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
         });
 
-        removeItem.addActionListener((ActionEvent e) -> {
-            //new Notifier().setTask(); // тестовый
+        deferItem.addActionListener((ActionEvent ev) -> {
+            taskList.get(table.getSelectedRow()).setStatus(TaskStatus.Waiting);
+            refresh();
+        });
+        cancelItem.addActionListener((ActionEvent ev) -> {
+            taskList.get(table.getSelectedRow()).setStatus(TaskStatus.Cancelled);
+            refresh();
         });
 
         setLayout(new BorderLayout());

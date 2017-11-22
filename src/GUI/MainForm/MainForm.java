@@ -23,15 +23,16 @@ public class MainForm extends JFrame {
     private SystemTray systemTray = SystemTray.getSystemTray();
 
 
-    public MainForm(Journal journal) {
+    public MainForm() {
         super("Task Scheduler");
 
         fileChooser = new JFileChooser();
         journalBackup = new SerializeDeserialize();
-        this.journal = journal;
+        this.journal = new Journal();
+        //testTable();
 
         tablePanel = new TablePanel();
-        tablePanel.setData(journal.getTasks());
+        tablePanel.setData(this.journal.getTasks());
         tablePanel.refresh();
 
         tablePanel.setTableListener((int row) -> {
@@ -244,5 +245,13 @@ public class MainForm extends JFrame {
         this.journal.addTask(task3);
         this.journal.addTask(task4);
         this.journal.addTask(task5);
+    }
+
+    public void setJournal(Journal journal) {
+        if (journal != null) {
+            this.journal = journal;
+            tablePanel.setData(this.journal.getTasks());
+            tablePanel.refresh();
+        }
     }
 }
