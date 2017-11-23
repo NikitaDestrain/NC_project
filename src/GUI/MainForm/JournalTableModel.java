@@ -45,20 +45,6 @@ public class JournalTableModel extends AbstractTableModel {
     }
 
     @Override
-    public void fireTableCellUpdated(int row, int column) {
-        Task task = tasks.get(row);
-        switch (column) {
-            case 3 :
-                task.setName((String) getValueAt(row, 3));
-                break;
-            case 4 :
-                task.setName((String) getValueAt(row, 4));
-                break;
-
-        }
-    }
-
-    @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Task task = tasks.get(rowIndex);
         switch (columnIndex) {
@@ -76,6 +62,22 @@ public class JournalTableModel extends AbstractTableModel {
                 return task.getNotificationDate();
             default :
                 return null;
+        }
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        Task task = tasks.get(rowIndex);
+        switch (columnIndex) {
+            case 0 :
+                aValue = Boolean.TRUE;
+                return;
+            case 3 :
+                task.setName((String) aValue);
+                return;
+            case 4:
+                task.setDescription((String) aValue);
+                return;
         }
     }
 

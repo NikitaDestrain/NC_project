@@ -5,8 +5,8 @@ import model.Task;
 import model.TaskStatus;
 
 import javax.swing.*;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
+import javax.swing.event.*;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -44,7 +44,23 @@ public class TablePanel extends JPanel {
         table.setRowHeight(20);
         popupMenu = new JPopupMenu();
 
+        DefaultCellEditor cellEditor = new DefaultCellEditor(new JCheckBox());
+        cellEditor.setClickCountToStart(1);
+        cellEditor.addCellEditorListener(new CellEditorListener() {
+            @Override
+            public void editingStopped(ChangeEvent e) {
+                //tableModel.setValueAt();
+            }
+
+            @Override
+            public void editingCanceled(ChangeEvent e) {
+
+            }
+        });
+
         table.setDefaultEditor(Boolean.class, new CheckBoxEditor());
+        table.getColumnModel().getColumn(0).setCellEditor(cellEditor);
+        //table.setDefaultRenderer(Boolean.class, new CheckBoxRenderer());
 
         JMenuItem deferItem = new JMenuItem("Defer task");
         JMenuItem cancelItem = new JMenuItem("Cancel task");
