@@ -11,13 +11,19 @@ import java.util.List;
 public class JournalTableModel extends AbstractTableModel {
     private List<Task> tasks;
     private String[] columnNames = {"*", "ID", "Status", "Name", "Description", "Planned date", "Notification date"};
+    private Object[][] data;
 
     // TODO CHECKBOXES, КНОПКИ ЛАЙФСАЙКЛА - отменить, отложить
 
-    public JournalTableModel() {}
+    public JournalTableModel() {
+    }
 
     public void setData(List<Task> tasks) {
         this.tasks = tasks;
+        data = new Object[tasks.size()][7];
+        for (int j = 0; j < tasks.size(); j++) {
+            data[j][0] = false;
+        }
     }
 
     public List<Task> getTasks() {
@@ -36,7 +42,10 @@ public class JournalTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return tasks == null ? -1 : tasks.size();
+        if (tasks != null) {
+            return tasks.size();
+        }
+        else return -1;
     }
 
     @Override
@@ -48,19 +57,21 @@ public class JournalTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         Task task = tasks.get(rowIndex);
         switch (columnIndex) {
-            case 1 :
+            case 0:
+                return data[rowIndex][0];
+            case 1:
                 return task.getId();
-            case 2 :
+            case 2:
                 return task.getStatus();
-            case 3 :
+            case 3:
                 return task.getName();
-            case 4 :
+            case 4:
                 return task.getDescription();
-            case 5 :
+            case 5:
                 return task.getPlannedDate();
-            case 6 :
+            case 6:
                 return task.getNotificationDate();
-            default :
+            default:
                 return null;
         }
     }
@@ -69,10 +80,11 @@ public class JournalTableModel extends AbstractTableModel {
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         Task task = tasks.get(rowIndex);
         switch (columnIndex) {
-            case 0 :
-                aValue = Boolean.TRUE;
+            case 0:
+                data[rowIndex][0] = aValue;
+                fireTableCellUpdated(rowIndex, columnIndex);
                 return;
-            case 3 :
+            case 3:
                 task.setName((String) aValue);
                 return;
             case 4:
@@ -84,21 +96,21 @@ public class JournalTableModel extends AbstractTableModel {
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         switch (columnIndex) {
-            case 0 :
+            case 0:
                 return Boolean.class;
-            case 1 :
+            case 1:
                 return Integer.class;
-            case 2 :
+            case 2:
                 return TaskStatus.class;
-            case 3 :
+            case 3:
                 return String.class;
-            case 4 :
+            case 4:
                 return String.class;
-            case 5 :
+            case 5:
                 return Date.class;
-            case 6 :
+            case 6:
                 return Date.class;
-            default :
+            default:
                 return null;
         }
     }

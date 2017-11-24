@@ -1,5 +1,5 @@
 package GUI.MainForm;
 
 public interface TableListener {
-    void rowDeleted(int rowIndex);
+    void rowDeleted(Integer... rows);
 }

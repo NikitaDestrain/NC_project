@@ -6,9 +6,11 @@ import model.Task;
 import model.TaskStatus;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ButtonPanel extends JPanel implements ActionListener {
@@ -16,7 +18,8 @@ public class ButtonPanel extends JPanel implements ActionListener {
     private JButton editTask;
     private JButton deleteTask;
     private TaskActionListener listener;
-    private TablePanel tablePanel;
+    private JTable table;
+    private TableListener tableListener;
 
     public ButtonPanel() {
         addTask = new JButton("Add task");
@@ -55,6 +58,25 @@ public class ButtonPanel extends JPanel implements ActionListener {
             listenerAction(TaskActionListener.EDIT_TASK);
         }
         else if (clicked == deleteTask) {
+            ArrayList<Integer> list = new ArrayList<>();
+            for (int i = 0; i < table.getRowCount(); i++) {
+                Boolean b = (Boolean)table.getValueAt(i, 0);
+                if (b) {
+                    list.add(i);
+                }
+            }
+            Object[] objs = list.toArray();
+            Integer[] rows = new Integer[objs.length];
+            for (int i = 0; i < rows.length; i++) {
+                rows[i] = Integer.parseInt(objs[i].toString());
+            }
+            //DefaultTableModel model = (DefaultTableModel) table.getModel();
+//            int [] rows = table.getSelectedRows();
+//            Integer [] rowsInt = new Integer[rows.length];
+//            for (int i = 0; i < rows.length; i++) {
+//                rowsInt[i] = rows[i];
+//            }
+            tableListener.rowDeleted(rows);
             listenerAction(TaskActionListener.DELETE_TASK);
         }
     }
@@ -65,7 +87,11 @@ public class ButtonPanel extends JPanel implements ActionListener {
         }
     }
 
-    public void setTablePanel(TablePanel tablePanel) {
-        this.tablePanel = tablePanel;
+    public void setTable(JTable table) {
+        this.table = table;
+    }
+
+    public void setTableListener(TableListener tableListener) {
+        this.tableListener = tableListener;
     }
 }

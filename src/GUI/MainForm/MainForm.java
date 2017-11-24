@@ -29,13 +29,15 @@ public class MainForm extends JFrame {
         fileChooser = new JFileChooser();
         journalBackup = new SerializeDeserialize();
         this.journal = new Journal();
-        //testTable();
+        testTable();
 
         tablePanel = new TablePanel();
         tablePanel.setData(this.journal.getTasks());
         tablePanel.refresh();
+        buttonPanel = new ButtonPanel();
+        buttonPanel.setTable(tablePanel.getTable());
 
-        tablePanel.setTableListener((int row) -> {
+        tablePanel.setTableListener((Integer... rows) -> {
             buttonPanel.setListener((int action) -> {
                 switch (action) {
                     case TaskActionListener.ADD_TASK:
@@ -45,29 +47,38 @@ public class MainForm extends JFrame {
                         new TaskForm().layoutForEdit();
                         break;
                     case TaskActionListener.DELETE_TASK:
-                        this.journal.removeTask(row);
-                        tablePanel.refresh();
+                        for (int i = 0; i < rows.length; i++) {
+                            this.journal.removeTask(i);
+                            tablePanel.refresh();
+                        }
                         //System.out.println(this.journal.getTasks());
                         break;
                 }
             });
         });
-
-        buttonPanel = new ButtonPanel();
-        buttonPanel.setListener((int action) -> {
-            switch (action) {
-                case TaskActionListener.ADD_TASK:
-                    new TaskForm().layoutForAdd();
-                    break;
-                case TaskActionListener.EDIT_TASK:
-                    new TaskForm().layoutForEdit();
-                    break;
-                case TaskActionListener.DELETE_TASK:
-                    //journal.removeTask(row);
-                    tablePanel.refresh();
-                    //System.out.println(journal.getTasks());
-                    break;
-            }
+        buttonPanel.setTableListener((Integer... rows) -> {
+            buttonPanel.setListener((int action) -> {
+                switch (action) {
+                    case TaskActionListener.ADD_TASK:
+                        new TaskForm().layoutForAdd();
+                        break;
+                    case TaskActionListener.EDIT_TASK:
+                        new TaskForm().layoutForEdit();
+                        break;
+                    case TaskActionListener.DELETE_TASK:
+                        for (int i = 0; i < rows.length; i++) {
+                            this.journal.removeTask(rows[i]);
+                            tablePanel.refresh();
+                            tablePanel.setData(this.journal.getTasks());
+                            buttonPanel.setTable(tablePanel.getTable());
+                            for(int j = i+1; j < rows.length; j++) {
+                                rows[j]--;
+                            }
+                        }
+                        //System.out.println(journal.getTasks());
+                        break;
+                }
+            });
         });
 
         setJMenuBar(createMenu());
@@ -230,7 +241,7 @@ public class MainForm extends JFrame {
     }
 
     private void testTable() {
-                Task task1 = new Task("Test", TaskStatus.Planned, "Test",
+        Task task1 = new Task("Test", TaskStatus.Planned, "Test",
                 new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
         this.journal.addTask(task1);
         Task task2 = new Task("Test2", TaskStatus.Completed, "Test2",
