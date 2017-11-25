@@ -2,6 +2,7 @@ package GUI;
 
 import GUI.MainForm.MainForm;
 import GUI.NotificationWindow.NotificationForm;
+import GUI.TaskWindow.TaskForm;
 import controller.SerializeDeserialize;
 import model.Journal;
 
@@ -14,5 +15,7 @@ public class Main {
         Journal journal = new SerializeDeserialize().readJournal();
         SwingUtilities.invokeLater(() -> new MainForm().setJournal(null));
         // todo config file ключ - значение
+        TaskForm  e = new TaskForm();
+        e.setVisible(true);
     }
 }
