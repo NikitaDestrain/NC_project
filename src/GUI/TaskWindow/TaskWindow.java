@@ -60,7 +60,7 @@ public class TaskWindow extends JFrame {
 
             }
         });
-
+setVisible(true);
     }
 
     public TaskWindow(Task task) {
@@ -91,7 +91,7 @@ public class TaskWindow extends JFrame {
 
             }
         });
-
+setVisible(true);
     }
 
     private void initComponents_WindowTask() {
