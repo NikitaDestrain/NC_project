@@ -1,5 +1,4 @@
 package GUI.TaskWindow;
-import TaskWindow;
 import java.awt.*;
 
 import javax.swing.*;
