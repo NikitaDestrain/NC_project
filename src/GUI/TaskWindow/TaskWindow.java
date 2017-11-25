@@ -118,12 +118,12 @@ public class TaskWindow extends JFrame {
         jButton_cancel.setText("Cancel");
 
         this.jLabel_status = new JLabel();
-        jLabel_status.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel_status.setFont(new java.awt.Font("Tahoma", 0, 12)); 
         jLabel_status.setForeground(new java.awt.Color(0, 0, 153));
         jLabel_status.setText("Status:");
 
         jTextArea_descriprion.setColumns(30);
-        jTextArea_descriprion.setFont(new Font("Tahoma", 0, 12)); //
+        jTextArea_descriprion.setFont(new Font("Tahoma", 0, 12)); 
         jTextArea_descriprion.setRows(5);
         jSpinner_clock_min = new JSpinner();
         jSpinner_clock_hour = new JSpinner();
