@@ -70,7 +70,7 @@ setVisible(true);
         setResizable(false);
         setSize(new java.awt.Dimension(350, 400));
         setLocationRelativeTo(null); //установка по центру экрана
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
         this.initComponents_WindowTask();
         this.jButton_create_or_set.setText("Set change");
         this.paintTask(task);
