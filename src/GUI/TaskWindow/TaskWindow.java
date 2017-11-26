@@ -57,6 +57,7 @@ public class TaskWindow extends JFrame {
                 Task task1 = createTask();
                 if (task1 != null) {
                     //отправка в main
+                    //метод...
                     dispose();
                 }
 
@@ -101,7 +102,7 @@ setVisible(true);
         setResizable(false);
         setSize(new java.awt.Dimension(350, 400));
         setLocationRelativeTo(null); //установка по центру экрана
-       // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         jDateChooser = new com.toedter.calendar.JDateChooser();
 
         jDateChooser.setMaxSelectableDate(new java.util.Date(253370840399000L));//max min data
@@ -143,7 +144,7 @@ setVisible(true);
 
         jPanel1.add(jScrollPane1, BorderLayout.CENTER);
 
-       // setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
  //РАЗМЕЩЕНИЕ конопое НЕ ТРОГАТЬ
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
