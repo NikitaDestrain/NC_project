@@ -22,7 +22,6 @@ public class MainForm extends JFrame {
     private ImageIcon icon = new ImageIcon("icon.png");
     private SystemTray systemTray = SystemTray.getSystemTray();
 
-
     public MainForm() {
         super("Task Scheduler");
 
@@ -75,7 +74,6 @@ public class MainForm extends JFrame {
                                 rows[j]--;
                             }
                         }
-                        //System.out.println(journal.getTasks());
                         break;
                 }
             });
@@ -258,6 +256,10 @@ public class MainForm extends JFrame {
         this.journal.addTask(task5);
     }
 
+    /**
+     * Sets journal to be represented at this <code>MainForm</code>
+     * @param journal object with tasks for representation
+     */
     public void setJournal(Journal journal) {
         if (journal != null) {
             this.journal = journal;

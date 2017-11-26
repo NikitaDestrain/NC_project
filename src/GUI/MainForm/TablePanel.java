@@ -1,12 +1,9 @@
 package GUI.MainForm;
 
-import controller.Notifier;
 import model.Task;
 import model.TaskStatus;
 
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -22,45 +19,10 @@ public class TablePanel extends JPanel {
 
     public TablePanel() {
         tableModel = new JournalTableModel();
-        tableModel.addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                if (e.getType() == TableModelEvent.UPDATE) {
-                    int row = table.getSelectedRow();
-                    int col = table.getSelectedColumn();
-                    switch (e.getColumn()) {
-                        case 0 :
-                            break;
-                        case 3:
-                            Task task = taskList.get(row);
-                            task.setName((String)tableModel.getValueAt(row, col));
-                            refresh();
-                            break;
-                    }
-                }
-            }
-        });
         table = new JTable(tableModel);
         table.setRowHeight(20);
         popupMenu = new JPopupMenu();
-
-        DefaultCellEditor cellEditor = new DefaultCellEditor(new JCheckBox());
-        cellEditor.setClickCountToStart(1);
-        cellEditor.addCellEditorListener(new CellEditorListener() {
-            @Override
-            public void editingStopped(ChangeEvent e) {
-                //tableModel.setValueAt();
-            }
-
-            @Override
-            public void editingCanceled(ChangeEvent e) {
-
-            }
-        });
-
-       table.setDefaultEditor(Boolean.class, new CheckBoxEditor());
-        table.getColumnModel().getColumn(0).setCellEditor(cellEditor);
-        //table.setDefaultRenderer(Boolean.class, new CheckBoxRenderer());
+        table.setRowSelectionAllowed(true);
 
         JMenuItem deferItem = new JMenuItem("Defer task");
         JMenuItem cancelItem = new JMenuItem("Cancel task");
@@ -71,18 +33,21 @@ public class TablePanel extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 int row = table.rowAtPoint(e.getPoint());
+                int col = table.columnAtPoint(e.getPoint());
                 table.getSelectionModel().setSelectionInterval(row, row);
                 Task task = taskList.get(row);
 
                 if (e.getButton() == MouseEvent.BUTTON3) { // правой удаляем
                     popupMenu.show(table, e.getX(), e.getY());
                 } else if (e.getButton() == MouseEvent.BUTTON1) { // левой выделяем для редактирования
-                    if (listener != null) {
-                        listener.rowDeleted(row);
+                    if (col == 0) {
+                        Boolean b = (Boolean)table.getValueAt(row, col);
+                        table.setValueAt(!b, row, col);
                     }
                     //Task task = taskList.get(row); // параметры этой задачи передаются в окно редактирования
-                    System.out.println(task.toString());
+                    //System.out.println(task.toString());
                 }
+
             }
 
             @Override
@@ -105,14 +70,36 @@ public class TablePanel extends JPanel {
         add(new JScrollPane(table), BorderLayout.CENTER);
     }
 
+    /**
+     * Set tasks to be representing at table
+     * @param taskList list with tasks
+     */
     public void setData(List<Task> taskList) {
         tableModel.setData(taskList);
         this.taskList = taskList;
     }
 
+    /**
+     * Set listener to the <code>TablePanel</code> which listens commands for tasks representing at the table
+     * @param listener
+     */
+
     public void setTableListener(TableListener listener) {
         this.listener = listener;
     }
+
+    /**
+     * Get <code>JTable</code> of this <code>TablePanel</code>
+     * @return
+     */
+
+    public JTable getTable() {
+        return table;
+    }
+
+    /**
+     * Refresh values of the table
+     */
 
     public void refresh() {
         tableModel.fireTableDataChanged();
