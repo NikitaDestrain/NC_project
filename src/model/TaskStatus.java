@@ -1,5 +1,5 @@
 package model;
 
 public enum TaskStatus {
-    Planned, Completed, Waiting, Cancelled
+    Planned, Completed, Rescheduled, Cancelled
 }
