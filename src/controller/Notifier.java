@@ -1,27 +1,47 @@
 package controller;
 
-import GUI.NotificationWindow.NotificationForm;
 import model.Task;
-import model.TaskStatus;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
+import java.util.*;
 
 public class Notifier {
 
-    private Task test_task = new Task("Test", TaskStatus.Planned, "Description",
-            new Date(), new Date()); // тестовый
+    private Map<Integer, Timer> timers;
 
-    //в конструктор будет приходить задача
-    public Notifier() {
-        addNotification();
+    protected Notifier() {
+        timers = new HashMap<Integer, Timer>();
     }
 
-    private void addNotification(){ //todo private? parameters?
-       NotificationTimer notificationTimer = new NotificationTimer(test_task);
-       Timer timer = new Timer(true);
-       timer.schedule(notificationTimer, test_task.getNotificationDate().getTime() - System.currentTimeMillis() + 5000);
-       //todo Case: user change notification time. What will happen to the old timer?
+    //выставление таймера для таски
+    protected void addNotification(Task task) {
+        NotificationTimer notificationTimer = new NotificationTimer(task);
+        Timer timer = new Timer(true);
+        System.out.println(task.getNotificationDate().getTime() - System.currentTimeMillis());
+        timer.schedule(notificationTimer, task.getNotificationDate().getTime() - System.currentTimeMillis());
+        timers.put(task.getId(),timer);
+    }
+
+    //отменяет таймер для таски
+    protected void cancelNotification(int id){
+        if(timers.containsKey(id)) {
+            Timer timer = timers.get(id);
+            timer.cancel();
+        }
+        else
+            System.out.println("Error! Cancel is impossible!!!");
+    }
+
+    //приходит уже измененный таск с перенесенным временем
+    protected void editNotification(int id, Task task) {
+        if(timers.containsKey(id)) {
+            Timer timer_old = timers.get(id);
+            timer_old.cancel();
+            NotificationTimer notificationTimer = new NotificationTimer(task);
+            Timer timer = new Timer(true);
+            System.out.println(task.getNotificationDate().getTime() - System.currentTimeMillis());
+            timer.schedule(notificationTimer, task.getNotificationDate().getTime() - System.currentTimeMillis());
+            timers.put(task.getId(),timer);
+        }
+        else
+            System.out.println("Error! Edit is impossible!!!");
     }
 }
