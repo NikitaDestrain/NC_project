@@ -2,6 +2,7 @@ package controller;
 
 import GUI.NotificationWindow.NotificationForm;
 import model.Task;
+import model.TaskStatus;
 
 import java.util.TimerTask;
 
@@ -9,7 +10,7 @@ public class NotificationTimer extends TimerTask {
     private NotificationForm notificationForm;
     private Task task;
 
-    public NotificationTimer(Task task) {
+    protected NotificationTimer(Task task) {
         this.task = task;
     }
 
@@ -19,7 +20,9 @@ public class NotificationTimer extends TimerTask {
     }
 
     private void setTask() {
+        System.out.println("Hi! From Notif Timer!");
         notificationForm = new NotificationForm();
+        task.setStatus(TaskStatus.Completed);
         notificationForm.setTask(task);
         notificationForm.setVisible(true);
     }

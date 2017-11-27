@@ -10,10 +10,7 @@ public class Task implements Comparable<Task>, Serializable
     private String description;
     private Date notificationDate;
     private Date plannedDate;
-    private int id;
-
-    //todo not needed?
-    public Task() {}
+    private int id = 0;
 
     public Task(String name, TaskStatus status, String description, Date notificationDate, Date plannedDate) {
         this.name = name;
@@ -76,7 +73,9 @@ public class Task implements Comparable<Task>, Serializable
         return id;
     }
 
-    protected void setId(int id) {this.id = id;}
+    public void setId(int id) {
+        this.id = id;
+    }
 
     //вернет -1 если у задачи переданной в кач-ве аргумента дата идет позже
     @Override

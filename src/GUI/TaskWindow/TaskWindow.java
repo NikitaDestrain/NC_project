@@ -1,5 +1,6 @@
 package GUI.TaskWindow;
 
+import GUI.MainForm.MainForm;
 import model.Task;
 import model.TaskStatus;
 import javax.swing.*;
@@ -11,8 +12,8 @@ import java.util.Date;
 
 public class TaskWindow extends JFrame {
 
-    Task task;
-    Task loadTask;
+    private MainForm owner;
+    private Task loadTask;
     private JLabel JTabe_name;
     private JLabel jLabel_cont;
     private JLabel jLabel_date;
@@ -26,7 +27,6 @@ public class TaskWindow extends JFrame {
     private JTextField jTextField_contacts;
     private JTextField jTextField_name;
     private JTextField jTextField_notification_date; //высчитать вермя напоминания
-    private JTextField jTextField_time;
     private JButton jButton_cancel;
     private JButton jButton_create_or_set;
     private JSpinner jSpinner_clock_hour;
@@ -36,10 +36,12 @@ public class TaskWindow extends JFrame {
     private com.toedter.calendar.JDateChooser jDateChooser; //Подключить библиотеку кину в telegram
 
     //Перегруженные конструкторы для создания и просмотра/редактирования
-    public TaskWindow() {
-        super("Create new task");
-        this.initComponents_WindowTask();
+    public TaskWindow(MainForm owner) {
 
+        super("Create new task");
+
+        this.initComponents_WindowTask();
+        this.owner=owner;
         this.jLabel_status.setVisible(false);
         this.jButton_create_or_set.setText("Create");
         this.jButton_cancel.addActionListener(new ActionListener() {
@@ -55,6 +57,7 @@ public class TaskWindow extends JFrame {
                 Task task1 = createTask();
                 if (task1 != null) {
                     //отправка в main
+                    //метод...
                     dispose();
                 }
 
@@ -63,14 +66,15 @@ public class TaskWindow extends JFrame {
 setVisible(true);
     }
 
-    public TaskWindow(Task task) {
+    public TaskWindow(MainForm owner,Task task) {
 
         super("Task Info");
+        this.owner=owner;
         this.loadTask = task;
         setResizable(false);
         setSize(new java.awt.Dimension(350, 400));
         setLocationRelativeTo(null); //установка по центру экрана
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         this.initComponents_WindowTask();
         this.jButton_create_or_set.setText("Set change");
         this.paintTask(task);
@@ -98,7 +102,7 @@ setVisible(true);
         setResizable(false);
         setSize(new java.awt.Dimension(350, 400));
         setLocationRelativeTo(null); //установка по центру экрана
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         jDateChooser = new com.toedter.calendar.JDateChooser();
 
         jDateChooser.setMaxSelectableDate(new java.util.Date(253370840399000L));//max min data
@@ -140,7 +144,7 @@ setVisible(true);
 
         jPanel1.add(jScrollPane1, BorderLayout.CENTER);
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
  //РАЗМЕЩЕНИЕ конопое НЕ ТРОГАТЬ
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -225,7 +229,7 @@ setVisible(true);
         pack();
     }
 
-    public Task createTask() //для создания task по введенным значениям
+    private Task createTask() //для создания task по введенным значениям
     {
         if (checkTask()) //проверка на валидность
         {
