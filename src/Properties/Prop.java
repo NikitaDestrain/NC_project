@@ -9,7 +9,7 @@ public class Prop
 {
     //класс для хранения ключ-значение и считывания конфигурационного файла Config.properties
     private static final String PATH_TO_CONFIG = "src/Properties/Config.properties"; //путь к файлу с параметрами
-    public String PATH_TO_JOURNAL;
+    public String PATH_TO_JOURNAL;//не паблик, static.
 
     public  Prop() throws IOException {
         Properties props = new Properties();

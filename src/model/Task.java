@@ -10,7 +10,7 @@ public class Task implements Comparable<Task>, Serializable
     private String description;
     private Date notificationDate;
     private Date plannedDate;
-    private int id = 0;
+    private int id = 0;///!!!!!!!!
 
     public Task(String name, TaskStatus status, String description, Date notificationDate, Date plannedDate) {
         this.name = name;

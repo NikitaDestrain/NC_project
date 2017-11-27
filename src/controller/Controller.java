@@ -55,25 +55,25 @@ public class Controller {
         notifier.cancelNotification(journal.getTask(id).getId());
         journal.getTask(id).setStatus(TaskStatus.Cancelled);
     }
-
+    //todo map create
     //изменяется оповещение (читать в классе Notifier описание по работе с методом)
-    public void editNotification(int id){
+    public void updateNotification(int id){
         Task task = journal.getTask(id);
         task.setStatus(TaskStatus.Rescheduled);
         notifier.editNotification(journal.getTask(id).getId(), task);
         journal.getTask(id).setStatus(TaskStatus.Rescheduled);
     }
 
-    //изменение таски полностью
+    //изменение таски полностью !!!edit rename
     public void setTask(int id, String name, String description, int day, int month, int year, int hour, int minute, int cntHoursForNotification, int cntMinutesForNotification){
-        notifier.cancelNotification(journal.getTask(id).getId());
+        //notifier.cancelNotification(journal.getTask(id).getId());
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day, hour, minute);
         Date d1 = calendar.getTime(); //plannedDate
         calendar.set(year, month, day, hour - cntHoursForNotification, minute - cntMinutesForNotification);
         Date d2 = calendar.getTime(); //notifDate
         if(checkDate(d2)) {
-            Task task = new Task(name, DEFAULT_STATUS, description, d2, d1);
+            Task task = new Task(name, DEFAULT_STATUS, description, d2, d1);//todo do not create
             notifier.cancelNotification(journal.getTask(id).getId());
             task.setId(idGenerator.createId());
             journal.setTask(id, task);

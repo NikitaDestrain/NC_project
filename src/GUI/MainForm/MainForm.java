@@ -1,6 +1,7 @@
 package GUI.MainForm;
 
 import GUI.TaskWindow.TaskForm;
+import GUI.TaskWindow.TaskWindow;
 import controller.SerializeDeserialize;
 import model.Journal;
 import model.Task;
@@ -28,7 +29,7 @@ public class MainForm extends JFrame {
         fileChooser = new JFileChooser();
         journalBackup = new SerializeDeserialize();
         this.journal = new Journal();
-        testTable();
+        //testTable();
 
         tablePanel = new TablePanel();
         tablePanel.setData(this.journal.getTasks());
@@ -59,10 +60,10 @@ public class MainForm extends JFrame {
             buttonPanel.setListener((int action) -> {
                 switch (action) {
                     case TaskActionListener.ADD_TASK:
-                        new TaskForm().layoutForAdd();
+                        new TaskWindow(this);
                         break;
                     case TaskActionListener.EDIT_TASK:
-                        new TaskForm().layoutForEdit();
+                        new TaskWindow(this);
                         break;
                     case TaskActionListener.DELETE_TASK:
                         for (int i = 0; i < rows.length; i++) {

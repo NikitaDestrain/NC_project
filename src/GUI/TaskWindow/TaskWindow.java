@@ -42,7 +42,7 @@ public class TaskWindow extends JFrame {
 
         this.initComponents_WindowTask();
         this.owner=owner;
-        this.jLabel_status.setVisible(false);
+        setVisible(true);
         this.jButton_create_or_set.setText("Create");
         this.jButton_cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

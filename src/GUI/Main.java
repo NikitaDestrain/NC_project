@@ -29,19 +29,24 @@ public class Main {
 
         // todo свернуть в трей
         // todo иниц файл, иниц генератор на журнал
-       /*try {
-            Journal journal = new SerializeDeserialize().readJournal();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+        //Journal journal = null;
+          //  journal = new SerializeDeserialize().readJournal();
+
+        //MainForm form = new MainForm();
+        TaskWindow window = new TaskWindow(new MainForm());
+        window.setVisible(true);
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    new MainForm().setJournal(new SerializeDeserialize().readJournal());
+                }
+                catch (IOException e) {}
+            });
 
 
-        SwingUtilities.invokeLater(() -> new MainForm().setJournal(null));
 
-      //  TaskWindow window = new TaskWindow();
 
-        TaskForm  e = new TaskForm();
-        e.setVisible(true);
+        //TaskForm  e = new TaskForm();
+        //e.setVisible(true);
 
 
     }

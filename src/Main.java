@@ -20,16 +20,16 @@ public class Main {
     public static void main(String[] args)
     {
         Controller controller = new Controller();
-        controller.addTask("Test", "Test", 26,10,2017,23,31, 0,0);
-        controller.addTask("Test", "Test", 26,10,2017,23,35, 0,0);
-        controller.addTask("Test", "Test", 26,10,2017,23,36, 0,0);
-        controller.addTask("Test", "Test", 26,10,2017,23,37, 0,0);
+        controller.addTask("Test", "Test", 27,10,2017,16,17, 0,0);
+        controller.addTask("Test", "Test", 27,10,2017,23,35, 0,0);
+        controller.addTask("Test", "Test", 27,10,2017,23,36, 0,0);
+        controller.addTask("Test", "Test", 27,10,2017,23,37, 0,0);
         controller.removeTask(2);
-        controller.addTask("Test", "Test", 26,10,2017,23,37, 0,0);
+        controller.addTask("Test", "Test", 28,10,2017,23,37, 0,0);
         //controller.editNotification(0);
         //controller.addTask("Test", "Test", 26,11,2017,22,30, 0,5);
         //controller.addTask("Test", "Test", 26,11,2017,22,30, 0,5);
-        SwingUtilities.invokeLater(() -> new MainForm(controller.getJournal()));
+        SwingUtilities.invokeLater(() -> new MainForm().setJournal(controller.getJournal()));
 
         try
         {

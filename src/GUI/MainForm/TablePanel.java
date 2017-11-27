@@ -57,7 +57,7 @@ public class TablePanel extends JPanel {
         });
 
         deferItem.addActionListener((ActionEvent ev) -> {
-            taskList.get(table.getSelectedRow()).setStatus(TaskStatus.Waiting);
+            taskList.get(table.getSelectedRow()).setStatus(TaskStatus.Rescheduled);
             refresh();
         });
         cancelItem.addActionListener((ActionEvent ev) -> {
