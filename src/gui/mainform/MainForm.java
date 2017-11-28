@@ -1,6 +1,6 @@
-package GUI.MainForm;
+package gui.mainform;
 
-import GUI.TaskWindow.TaskWindow;
+import gui.taskwindow.TaskWindow;
 import controller.Controller;
 import controller.SerializeDeserialize;
 import model.Journal;
@@ -303,7 +303,7 @@ public class MainForm extends JFrame {
     }
 
     /**
-     * Sets journal to be represented at this <code>MainForm</code>
+     * Sets journal to be represented at this <code>mainform</code>
      * @param journal object with tasks for representation
      */
     public void setJournal(Journal journal) {

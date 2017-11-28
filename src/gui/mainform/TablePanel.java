@@ -1,6 +1,5 @@
-package GUI.MainForm;
+package gui.mainform;
 
-import GUI.Main;
 import model.Task;
 import model.TaskStatus;
 

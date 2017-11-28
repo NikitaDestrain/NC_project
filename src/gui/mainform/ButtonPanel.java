@@ -1,17 +1,13 @@
-package GUI.MainForm;
+package gui.mainform;
 
-import GUI.TaskWindow.TaskWindow;
-import controller.Notifier;
+import gui.taskwindow.TaskWindow;
 import model.Task;
-import model.TaskStatus;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class ButtonPanel extends JPanel implements ActionListener {
     private JButton addTask;

@@ -1,6 +1,4 @@
-package GUI.NotificationWindow;
-
-import controller.Notifier;
+package gui.notificationwindow;
 
 import javax.swing.*;
 import java.awt.*;

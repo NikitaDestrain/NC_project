@@ -1,4 +1,4 @@
-package GUI.MainForm;
+package gui.mainform;
 
 import model.TaskStatus;
 

@@ -1,9 +1,7 @@
-package GUI;
+package gui;
 
-import GUI.MainForm.MainForm;
-import GUI.NotificationWindow.NotificationForm;
-import GUI.TaskWindow.TaskWindow;
-import Properties.Prop;
+import gui.mainform.MainForm;
+import properties.Prop;
 import controller.SerializeDeserialize;
 import model.Journal;
 
@@ -31,8 +29,8 @@ public class Main {
         //Journal journal = null;
           //  journal = new SerializeDeserialize().readJournal();
 
-        //MainForm form = new MainForm();
-        //TaskWindow window = new TaskWindow(new MainForm());
+        //mainform form = new mainform();
+        //taskwindow window = new taskwindow(new mainform());
         //window.setVisible(true);
             SwingUtilities.invokeLater(() -> {
                 try {

@@ -1,4 +1,4 @@
-package GUI.NotificationWindow;
+package gui.notificationwindow;
 
 import javax.swing.*;
 import java.awt.*;

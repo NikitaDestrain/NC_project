@@ -1,6 +1,6 @@
 package controller;
 
-import GUI.NotificationWindow.NotificationForm;
+import gui.notificationwindow.NotificationForm;
 import model.Task;
 import model.TaskStatus;
 

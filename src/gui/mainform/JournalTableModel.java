@@ -1,9 +1,8 @@
-package GUI.MainForm;
+package gui.mainform;
 
 import model.Task;
 import model.TaskStatus;
 
-import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import java.util.Date;
 import java.util.List;

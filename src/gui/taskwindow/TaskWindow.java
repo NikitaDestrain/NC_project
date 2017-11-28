@@ -1,7 +1,6 @@
-package GUI.TaskWindow;
+package gui.taskwindow;
 
-import GUI.MainForm.MainForm;
-import com.toedter.calendar.JDateChooser;
+import gui.mainform.MainForm;
 import model.Task;
 import model.TaskStatus;
 
@@ -11,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 
 public class TaskWindow extends JFrame {

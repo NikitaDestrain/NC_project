@@ -1,5 +1,6 @@
 package controller;
 
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import model.Journal;
 import model.Task;
 import model.TaskStatus;
@@ -17,7 +18,7 @@ public class Controller {
     private Controller() {
         this.journal = new Journal();
         this.notifier = new Notifier();
-        this.idGenerator = new IDGenerator(journal.getMaxId());
+        this.idGenerator = IDGenerator.getInstance(journal.getMaxId());
     }
 
     public static Controller getInstance() {

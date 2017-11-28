@@ -1,7 +1,5 @@
-package GUI.NotificationWindow;
+package gui.notificationwindow;
 
-import GUI.MainForm.MainForm;
-import controller.Notifier;
 import model.Task;
 
 import javax.swing.*;
