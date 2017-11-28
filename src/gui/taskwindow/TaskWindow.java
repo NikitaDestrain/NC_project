@@ -128,7 +128,7 @@ public class TaskWindow extends JFrame {
         jDateChooser = new com.toedter.calendar.JDateChooser();
         jDateChooser.setLocale(Locale.ENGLISH);
         jDateChooser.setMaxSelectableDate(new java.util.Date(253370840399000L));//max min data
-        jDateChooser.setMinSelectableDate(new java.util.Date(-62135780400000L));
+        jDateChooser.setMinSelectableDate(new java.util.Date(System.currentTimeMillis()));
 
         jLabel_Hours = new javax.swing.JLabel("Hours");
         jLabel_minutes = new javax.swing.JLabel("Minutes");
@@ -358,14 +358,12 @@ public class TaskWindow extends JFrame {
         calend.set(Calendar.MILLISECOND, 0);
         d = calend.getTime();
         this.plannedDate=d;
-
-
     }
 
       private void mainFormAddTask( Task newTask ) //вызываю методы MAINform для записи изменений
     {
         System.out.println(newTask);
-       owner.addTask(newTask);
+        owner.addTask(newTask);
 
     }
     private void mainFormEditTask(Task taskSet)
