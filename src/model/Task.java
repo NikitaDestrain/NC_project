@@ -1,4 +1,6 @@
 package model;
+import controller.IDGenerator;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
@@ -10,7 +12,7 @@ public class Task implements Comparable<Task>, Serializable
     private String description;
     private Date notificationDate;
     private Date plannedDate;
-    private int id = 0;///!!!!!!!!
+    private int id = IDGenerator.getInstance().createId();
 
     public Task(String name, TaskStatus status, String description, Date notificationDate, Date plannedDate) {
         this.name = name;
@@ -73,10 +75,6 @@ public class Task implements Comparable<Task>, Serializable
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     //вернет -1 если у задачи переданной в кач-ве аргумента дата идет позже
     @Override
     public int compareTo(Task task) {
@@ -90,7 +88,7 @@ public class Task implements Comparable<Task>, Serializable
     @Override
     public String toString() {
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(this.getClass().getSimpleName() + " (" + this.getName() + ", " + this.getStatus() + this.getDescription());
+        stringBuffer.append(this.getId() + "." + this.getClass().getSimpleName() + " (" + this.getName() + ", " + this.getStatus() + this.getDescription());
         stringBuffer.append(", " + this.getNotificationDate() + ", " + this.getPlannedDate() + ")");
         return stringBuffer.toString();
     }

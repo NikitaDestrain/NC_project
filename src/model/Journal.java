@@ -4,35 +4,27 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Journal implements Serializable {
-    private List<Task> tasks;
+    private Map<Integer, Task> tasks;
 
     public Journal(){
-        tasks = new LinkedList<>();
+        tasks = new HashMap<Integer, Task>();
     }
 
-    public Journal(List<Task> tasks) {
+    public Journal(HashMap<Integer, Task> tasks) {
         this.tasks = tasks;
     }
 
     public void addTask(Task task) {
-        tasks.add(task);
-        tasks.sort(new TaskComparator());
+        tasks.put(task.getId(),task);
     }
-
-    /*
-    public void addTask(String name, TaskStatus status, String description, Date notificationDate, Date plannedDate, int id) {
-        Task task = new Task(name, status, description, notificationDate, plannedDate);//todo tasks creation is not journal responsibility FACTORY TASKS
-        tasks.add(task);
-        tasks.sort(new TaskComparator());
-    }*/
 
     public void removeTask(int id) {
         tasks.remove(id);
     }
 
     public void setTask(int id, Task task) {
-        tasks.set(id, task);
-        //todo simple replace? DONE
+        tasks.remove(id);
+        tasks.put(task.getId(), task);
     }
 
     public Task getTask(int id) {
@@ -40,7 +32,7 @@ public class Journal implements Serializable {
     }
 
     public List<Task> getTasks() {
-        return Collections.unmodifiableList(tasks);//todo unmodifiable list DONE
+        return Collections.unmodifiableList(new LinkedList<Task>(tasks.values()));//todo unmodifiable list DONE
     }
 
     public int getMaxId(){
