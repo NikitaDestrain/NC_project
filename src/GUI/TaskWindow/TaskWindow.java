@@ -1,6 +1,7 @@
 package GUI.TaskWindow;
 
 import GUI.MainForm.MainForm;
+import com.toedter.calendar.JDateChooser;
 import model.Task;
 import model.TaskStatus;
 
@@ -10,32 +11,37 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
 
 public class TaskWindow extends JFrame {
 
     private MainForm owner;
+
     private Task loadTask;
-    private JLabel JTabe_name;
-    private JLabel jLabel_cont;
+    private JLabel JTabe_nameTask;
     private JLabel jLabel_date;
     private JLabel jLabel_dics;
-    private JLabel jLabel_notif;
-    private JLabel jLabel_time;
     private JPanel jPanel1;
     private JScrollPane jScrollPane1;
     private JTextArea jTextArea_descriprion;
     private JLabel jLabel_status;
-    private JTextField jTextField_contacts;
     private JTextField jTextField_name;
-    private JTextField jTextField_notification_date; //высчитать вермя напоминания
     private JButton jButton_cancel;
     private JButton jButton_create_or_set;
     private JSpinner jSpinner_clock_hour;
     private JSpinner jSpinner_clock_min;
-    private JLabel jLabel_cloc2;
-    private MainForm main;
+
+    private JLabel jLabel_Hours;
+    private JLabel jLabel_minutes;
+    private JLabel jLabel_remiend;
+
+    private javax.swing.JComboBox<String> jComboBox_remiendBefore;
 
     private com.toedter.calendar.JDateChooser jDateChooser; //Подключить библиотеку кину в telegram
+
+    private Date plannedDate;//запланированное время
+    private Date notificationDate; //время уведомления
 
     //Перегруженные конструкторы для создания и просмотра/редактирования
     public TaskWindow(MainForm owner) {
@@ -44,7 +50,8 @@ public class TaskWindow extends JFrame {
 
         this.initComponents_WindowTask();
         this.owner = owner;
-        //setVisible(true);
+
+      this.jLabel_status.setVisible(false);
         this.jButton_create_or_set.setText("Create");
         this.jButton_cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -56,10 +63,10 @@ public class TaskWindow extends JFrame {
         this.jButton_create_or_set.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                Task task1 = createTask();
-                if (task1 != null) {
-                    main = MainForm.getInstance();
-                    main.addTask(task1);
+                Task newTask = createTask();
+
+                if (newTask != null) {
+                  mainFormAddTask(newTask);
                     dispose();
                 }
 
@@ -70,11 +77,12 @@ public class TaskWindow extends JFrame {
 
     public TaskWindow(MainForm owner, Task task) {
 
+
         super("Task Info");
         this.owner = owner;
         this.loadTask = task;
-        setResizable(false);
-        setSize(new java.awt.Dimension(350, 400));
+
+
         setLocationRelativeTo(null); //установка по центру экрана
 
         this.initComponents_WindowTask();
@@ -92,6 +100,7 @@ public class TaskWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 if (saveTask()) {
+                    mainFormEditTask(loadTask);
                     dispose();
                 }
 
@@ -101,143 +110,158 @@ public class TaskWindow extends JFrame {
     }
 
     private void initComponents_WindowTask() {
+
+        setSize(new Dimension(350, 350));
         setResizable(false);
-        setSize(new java.awt.Dimension(350, 400));
+
         setLocationRelativeTo(null); //установка по центру экрана
 
-        jDateChooser = new com.toedter.calendar.JDateChooser();
 
+
+        jComboBox_remiendBefore = new javax.swing.JComboBox<>();
+       jComboBox_remiendBefore.setModel(new DefaultComboBoxModel<>(new String[] { "1 minute", "5  minutes", "10  minutes", "15  minutes", "20  minutes", "25  minutes", "30  minutes", "45  minutes", "1 hour", "2 hours", "3 hours", "6 hours", "12 hours" }));
+
+
+
+        JTabe_nameTask = new JLabel("Task name:");
+        jTextField_name = new JTextField();
+
+        jLabel_date = new JLabel("Date:");
+        jDateChooser = new com.toedter.calendar.JDateChooser();
+        jDateChooser.setLocale(Locale.ENGLISH);
         jDateChooser.setMaxSelectableDate(new java.util.Date(253370840399000L));//max min data
         jDateChooser.setMinSelectableDate(new java.util.Date(-62135780400000L));
 
-        JTabe_name = new JLabel("Task name:");
-        jTextField_name = new JTextField();
-        jLabel_date = new JLabel("Date:");
-        jLabel_notif = new JLabel("Notification time:");
-        jTextField_notification_date = new JTextField();
-        jLabel_cont = new JLabel("Contacts:");
-        jTextField_contacts = new JTextField();
+        jLabel_Hours = new javax.swing.JLabel("Hours");
+        jLabel_minutes = new javax.swing.JLabel("Minutes");
         jLabel_dics = new JLabel("Description:");
+
         jPanel1 = new JPanel();
         jScrollPane1 = new JScrollPane();
+
         jTextArea_descriprion = new JTextArea();
-        jButton_create_or_set = new JButton();
-        jButton_cancel = new JButton();
-        jButton_create_or_set.setText("");
-        jButton_cancel.setText("Cancel");
-
-        this.jLabel_status = new JLabel();
-        jLabel_status.setFont(new java.awt.Font("Tahoma", 0, 12));
-        jLabel_status.setForeground(new java.awt.Color(0, 0, 153));
-        jLabel_status.setText("Status:");
-
         jTextArea_descriprion.setColumns(30);
         jTextArea_descriprion.setFont(new Font("Tahoma", 0, 12));
         jTextArea_descriprion.setRows(5);
+
+        jButton_create_or_set = new JButton();
+        jButton_cancel = new JButton();
+        jButton_cancel.setText("Cancel");
+
+        jLabel_remiend = new JLabel("Remind before:");
+
+        jLabel_status = new JLabel();
+        jLabel_status.setFont(new java.awt.Font("Tahoma", 0, 12));
+        jLabel_status.setForeground(new java.awt.Color(0, 0, 153));
+
+        jLabel_status.setText("Status: ");
+
+
         jSpinner_clock_min = new JSpinner();
         jSpinner_clock_hour = new JSpinner();
         jSpinner_clock_hour.setModel(new SpinnerNumberModel(0, 0, 23, 1));
         jSpinner_clock_min.setModel(new SpinnerNumberModel(0, 0, 59, 1));
 
-        jLabel_cloc2 = new JLabel();
-        jLabel_cloc2.setText(":");
+
 
         jScrollPane1.setViewportView(jTextArea_descriprion);
 
         jPanel1.add(jScrollPane1, BorderLayout.CENTER);
 
 
+
+        jComboBox_remiendBefore.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0 minutes", "1 minutes", "5 minutes", "10 minutes", "15 minutes", "20 minutes", "25 minutes", "30 minutes", "45 minutes", "1 hour", "2 hours", "3 hours", "6 hours", "12 hours" }));
         //РАЗМЕЩЕНИЕ конопое НЕ ТРОГАТЬ
-        GroupLayout layout = new GroupLayout(getContentPane());
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 323, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, 4, Short.MAX_VALUE))
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addComponent(jScrollPane1)
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                                                .addComponent(jButton_create_or_set, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                .addComponent(jButton_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                        .addComponent(JTabe_nameTask, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                        .addGroup(layout.createSequentialGroup()
+                                                                                .addComponent(jLabel_date)
+                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
+                                                                                .addComponent(jDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                        .addComponent(jLabel_remiend))
+                                                                .addGap(10, 10, 10)
+                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                .addComponent(jTextField_name, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                .addComponent(jComboBox_remiendBefore, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                .addComponent(jLabel_status))
+                                                                        .addGroup(layout.createSequentialGroup()
+                                                                                .addComponent(jSpinner_clock_hour, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                .addComponent(jLabel_Hours)
+                                                                                .addGap(16, 16, 16)
+                                                                                .addComponent(jSpinner_clock_min, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                .addGap(8, 8, 8)
+                                                                                .addComponent(jLabel_minutes)))))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                         .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                        .addGroup(layout.createSequentialGroup()
-                                                                .addComponent(jButton_create_or_set, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                .addComponent(jButton_cancel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(layout.createSequentialGroup()
-                                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                                        .addComponent(jLabel_cont)
-                                                                        .addComponent(jLabel_dics)
-                                                                        .addComponent(jLabel_notif))
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                                                .addComponent(jSpinner_clock_hour, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
-                                                                                .addGap(18, 18, 18)
-                                                                                .addComponent(jLabel_cloc2)
-                                                                                .addGap(18, 18, 18)
-                                                                                .addComponent(jSpinner_clock_min, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
-                                                                                .addGap(6, 6, 6))
-                                                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                                                .addComponent(jLabel_status)
-                                                                                .addComponent(jTextField_contacts, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE))))
-                                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                                        .addComponent(JTabe_name, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
-                                                                        .addComponent(jLabel_date))
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                                                        .addComponent(jTextField_name, GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
-                                                                        .addComponent(jDateChooser, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                                                .addContainerGap())))
+                                                .addComponent(jLabel_dics)
+                                                .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(JTabe_name)
-                                        .addComponent(jTextField_name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel_date)
-                                        .addComponent(jDateChooser, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel_notif)
-                                        .addComponent(jLabel_cloc2)
-                                        .addComponent(jSpinner_clock_min, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jSpinner_clock_hour, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jTextField_contacts, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel_cont))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addGap(14, 14, 14)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(JTabe_nameTask)
+                                        .addComponent(jTextField_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(35, 35, 35)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(jSpinner_clock_hour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jLabel_Hours)
+                                                .addComponent(jSpinner_clock_min, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jLabel_minutes))
+                                        .addComponent(jLabel_date, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addGap(27, 27, 27)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jComboBox_remiendBefore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel_remiend))
+                                .addGap(39, 39, 39)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel_dics)
-                                        .addComponent(jLabel_status))
-                                .addGap(30, 30, 30)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jLabel_status, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jButton_create_or_set)
                                         .addComponent(jButton_cancel))
-                                .addContainerGap(19, Short.MAX_VALUE))
+                                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         pack();
     }
 
+
     private Task createTask() //для создания task по введенным значениям
     {
         if (checkTask()) //проверка на валидность
         {
-            Date d = this.getNotificationDate();
-            Task newTask = new Task(this.JTabe_name.getText().toString(), TaskStatus.Planned, this.jTextArea_descriprion.getText(), d, d);
-            return newTask;
+             calcPlannedDate(); //считаем и заносим в поля
+             calcNotificationDate();
+
+            Task task = new Task(this.jTextField_name.getText().toString(), TaskStatus.Planned, this.jTextArea_descriprion.getText(), this.notificationDate, this.plannedDate);
+            return task;
         }
         return null;
     }
@@ -248,10 +272,12 @@ public class TaskWindow extends JFrame {
         {
             this.loadTask.setName(jTextField_name.getText().toString());
             this.loadTask.setDescription(this.jTextArea_descriprion.getText().toString());
-            this.loadTask.setNotificationDate(this.getNotificationDate());
-            this.loadTask.setStatus(TaskStatus.Planned);
-            main = MainForm.getInstance();
-            main.editTask(loadTask.getId(), loadTask);
+            this.calcPlannedDate();
+            this.calcNotificationDate();
+            System.out.println(this.plannedDate +" "+this.notificationDate+" ");
+            this.loadTask.setPlannedDate(this.plannedDate);
+            this.loadTask.setNotificationDate(this.notificationDate);
+
             return true;
         }
         return false;
@@ -276,21 +302,32 @@ public class TaskWindow extends JFrame {
         return true;
     }
 
-    private Date getNotificationDate() //высчитываетяс конечное время с учетом дня месяца года времени минут
+    private void calcNotificationDate() //высчитываетяс конечное время с учетом времени оповещения
     {
         int h = 0, m = 0;
 
-        h = (int) this.jSpinner_clock_hour.getValue();
-        m = (int) this.jSpinner_clock_min.getValue();
 
-        Date d = this.jDateChooser.getDate(); //Получаем дату только время текущее
-        Calendar calend = Calendar.getInstance(); //Создание даты уведомления (перерасчет через Calendar)
-        calend.setTime(d);
-        calend.set(Calendar.HOUR_OF_DAY, h);
-        calend.set(Calendar.MINUTE, m);
-        calend.set(Calendar.SECOND, 0);
-        d = calend.getTime();
-        return d;
+
+
+        String stringRaminedTime = (String) this.jComboBox_remiendBefore.getSelectedItem();
+
+       String[] param =  stringRaminedTime.split(" "); //0 элемент кол-во 1-тап (мин или часы)
+
+        if(param[1].contains("hour")) //проверка на наличие такой последовательности слова в стоке
+        {
+           h = Integer.parseInt(param[0]);
+           // System.out.println("hours "+h);
+        }
+        if (param[1].contains("minut"))
+        {
+           m = Integer.parseInt(param[0]);
+           // System.out.println("minutes "+m);
+        }
+        this.notificationDate = new Date((this.plannedDate.getTime() - (h*60*60*1000)-(m*60*1000)));
+      ///  System.out.println(this.notificationDate);
+
+
+
     }
 
     private void paintTask(Task task)//заполняет поля формы
@@ -299,20 +336,44 @@ public class TaskWindow extends JFrame {
         this.jDateChooser.setDate(task.getNotificationDate());
 
         Calendar calend = Calendar.getInstance();
-        calend.setTime(task.getNotificationDate());
+        calend.setTime(task.getPlannedDate());
+
         this.jSpinner_clock_hour.setValue((int) calend.get(Calendar.HOUR_OF_DAY));
         this.jSpinner_clock_min.setValue((int) calend.get(Calendar.MINUTE));
         this.jTextArea_descriprion.setText(task.getDescription());
-        this.jLabel_status.setText("Status:" + task.getStatus());
+        this.jLabel_status.setText("Status: " + task.getStatus());
     }
 
-    /*   private void MainForm_addTask( Task newTask ) //вызываю методы MAINform для записи изменений
+    public void calcPlannedDate() ///метод получения запланированной даты
     {
-        owner.addTask(newTask);
+        int h = 0, m = 0;
+
+        h = (int) this.jSpinner_clock_hour.getValue();
+        m = (int) this.jSpinner_clock_min.getValue();
+
+        Date d = this.jDateChooser.getDate(); //Получаем дату (время не верное)
+        Calendar calend = Calendar.getInstance(); //Создание даты уведомления (перерасчет через Calendar)
+        calend.setTime(d);
+        calend.set(Calendar.HOUR_OF_DAY, h);
+        calend.set(Calendar.MINUTE, m);
+        calend.set(Calendar.SECOND, 0);
+        calend.set(Calendar.MILLISECOND, 0);
+        d = calend.getTime();
+        this.plannedDate=d;
+
+
     }
-    private void MainForm_setTask(Task TaskSet)
+
+      private void mainFormAddTask( Task newTask ) //вызываю методы MAINform для записи изменений
     {
-        owner.setTask(TaskSet);
+        System.out.println(newTask);
+       owner.addTask(newTask);
+
     }
-     */
+    private void mainFormEditTask(Task taskSet)
+    {
+
+        owner.editTask(this.loadTask.getId(),taskSet);
+    }
+
 }
