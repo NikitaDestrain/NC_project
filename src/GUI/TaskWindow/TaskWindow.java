@@ -3,6 +3,7 @@ package GUI.TaskWindow;
 import GUI.MainForm.MainForm;
 import model.Task;
 import model.TaskStatus;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -41,8 +42,8 @@ public class TaskWindow extends JFrame {
         super("Create new task");
 
         this.initComponents_WindowTask();
-        this.owner=owner;
-        setVisible(true);
+        this.owner = owner;
+        //setVisible(true);
         this.jButton_create_or_set.setText("Create");
         this.jButton_cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -63,13 +64,13 @@ public class TaskWindow extends JFrame {
 
             }
         });
-setVisible(true);
+        setVisible(true);
     }
 
-    public TaskWindow(MainForm owner,Task task) {
+    public TaskWindow(MainForm owner, Task task) {
 
         super("Task Info");
-        this.owner=owner;
+        this.owner = owner;
         this.loadTask = task;
         setResizable(false);
         setSize(new java.awt.Dimension(350, 400));
@@ -95,7 +96,7 @@ setVisible(true);
 
             }
         });
-setVisible(true);
+        setVisible(true);
     }
 
     private void initComponents_WindowTask() {
@@ -125,12 +126,12 @@ setVisible(true);
         jButton_cancel.setText("Cancel");
 
         this.jLabel_status = new JLabel();
-        jLabel_status.setFont(new java.awt.Font("Tahoma", 0, 12)); 
+        jLabel_status.setFont(new java.awt.Font("Tahoma", 0, 12));
         jLabel_status.setForeground(new java.awt.Color(0, 0, 153));
         jLabel_status.setText("Status:");
 
         jTextArea_descriprion.setColumns(30);
-        jTextArea_descriprion.setFont(new Font("Tahoma", 0, 12)); 
+        jTextArea_descriprion.setFont(new Font("Tahoma", 0, 12));
         jTextArea_descriprion.setRows(5);
         jSpinner_clock_min = new JSpinner();
         jSpinner_clock_hour = new JSpinner();
@@ -145,85 +146,85 @@ setVisible(true);
         jPanel1.add(jScrollPane1, BorderLayout.CENTER);
 
 
- //РАЗМЕЩЕНИЕ конопое НЕ ТРОГАТЬ
+        //РАЗМЕЩЕНИЕ конопое НЕ ТРОГАТЬ
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 323, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, 4, Short.MAX_VALUE))
-                                .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addGroup(layout.createSequentialGroup()
-                                                        .addComponent(jButton_create_or_set,GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(jButton_cancel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
-                                                .addGroup(layout.createSequentialGroup()
-                                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                                .addComponent(jLabel_cont)
-                                                                .addComponent(jLabel_dics)
-                                                                .addComponent(jLabel_notif))
-                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                                        .addComponent(jSpinner_clock_hour, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
-                                                                        .addGap(18, 18, 18)
-                                                                        .addComponent(jLabel_cloc2)
-                                                                        .addGap(18, 18, 18)
-                                                                        .addComponent(jSpinner_clock_min, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
-                                                                        .addGap(6, 6, 6))
-                                                                .addGroup(GroupLayout.Alignment.TRAILING, layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                                        .addComponent(jLabel_status)
-                                                                        .addComponent(jTextField_contacts, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE))))
-                                                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                                .addComponent(JTabe_name, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
-                                                                .addComponent(jLabel_date))
-                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                                                .addComponent(jTextField_name, GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
-                                                                .addComponent(jDateChooser, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                                        .addContainerGap())))
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 323, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, 4, Short.MAX_VALUE))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(jButton_create_or_set, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                .addComponent(jButton_cancel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                        .addComponent(jLabel_cont)
+                                                                        .addComponent(jLabel_dics)
+                                                                        .addComponent(jLabel_notif))
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                                                .addComponent(jSpinner_clock_hour, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
+                                                                                .addGap(18, 18, 18)
+                                                                                .addComponent(jLabel_cloc2)
+                                                                                .addGap(18, 18, 18)
+                                                                                .addComponent(jSpinner_clock_min, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
+                                                                                .addGap(6, 6, 6))
+                                                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                                .addComponent(jLabel_status)
+                                                                                .addComponent(jTextField_contacts, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE))))
+                                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                        .addComponent(JTabe_name, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
+                                                                        .addComponent(jLabel_date))
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                                                        .addComponent(jTextField_name, GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
+                                                                        .addComponent(jDateChooser, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                                .addContainerGap())))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(JTabe_name)
-                                .addComponent(jTextField_name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel_date)
-                                .addComponent(jDateChooser, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel_notif)
-                                .addComponent(jLabel_cloc2)
-                                .addComponent(jSpinner_clock_min, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jSpinner_clock_hour, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(jTextField_contacts, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel_cont))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel_dics)
-                                .addComponent(jLabel_status))
-                        .addGap(30, 30, 30)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                .addComponent(jButton_create_or_set)
-                                .addComponent(jButton_cancel))
-                        .addContainerGap(19, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(JTabe_name)
+                                        .addComponent(jTextField_name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel_date)
+                                        .addComponent(jDateChooser, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel_notif)
+                                        .addComponent(jLabel_cloc2)
+                                        .addComponent(jSpinner_clock_min, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jSpinner_clock_hour, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jTextField_contacts, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel_cont))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel_dics)
+                                        .addComponent(jLabel_status))
+                                .addGap(30, 30, 30)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(jButton_create_or_set)
+                                        .addComponent(jButton_cancel))
+                                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();

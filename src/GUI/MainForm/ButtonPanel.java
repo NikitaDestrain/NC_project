@@ -1,6 +1,6 @@
 package GUI.MainForm;
 
-import GUI.TaskWindow.TaskForm;
+import GUI.TaskWindow.TaskWindow;
 import controller.Notifier;
 import model.Task;
 import model.TaskStatus;
@@ -18,13 +18,18 @@ public class ButtonPanel extends JPanel implements ActionListener {
     private JButton editTask;
     private JButton deleteTask;
     private TaskActionListener listener;
-    private JTable table;
+    private JTable jtable;
     private TableListener tableListener;
+    private Task task;
+    private MainForm owner;
+    private TaskSender taskSender;
 
-    public ButtonPanel() {
+    public ButtonPanel(MainForm owner) {
+        this.owner = owner;
         addTask = new JButton("Add task");
         editTask = new JButton("Edit task");
         deleteTask = new JButton("Delete task");
+        taskSender = TaskSender.getInstance();
 
         setLayout(new FlowLayout());
         add(addTask);
@@ -40,27 +45,35 @@ public class ButtonPanel extends JPanel implements ActionListener {
         editTask.addActionListener(this);
 
         deleteTask.addActionListener(this);
-        //            tableListener.rowDeleted(row);
-//            tableModel.fireTableRowsDeleted(row,row);
     }
 
     public void setListener(TaskActionListener listener) {
         this.listener = listener;
     }
 
+    public void setTableListener(TableListener tableListener) {
+        this.tableListener = tableListener;
+    }
+
+    public void setJtable(JTable jtable) {
+        this.jtable = jtable;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton clicked = (JButton) e.getSource();
         if (clicked == addTask) {
-            listenerAction(TaskActionListener.ADD_TASK);
+            new TaskWindow(owner);
         }
         else if (clicked == editTask) {
-            listenerAction(TaskActionListener.EDIT_TASK);
+            task = taskSender.getTask();
+            if (task != null)
+                listenerAction(TaskActionListener.EDIT_TASK, task);
         }
         else if (clicked == deleteTask) {
             ArrayList<Integer> list = new ArrayList<>();
-            for (int i = 0; i < table.getRowCount(); i++) {
-                Boolean b = (Boolean)table.getValueAt(i, 0);
+            for (int i = 0; i < jtable.getRowCount(); i++) {
+                Boolean b = (Boolean)jtable.getValueAt(i, 0);
                 if (b) {
                     list.add(i);
                 }
@@ -70,14 +83,14 @@ public class ButtonPanel extends JPanel implements ActionListener {
             for (int i = 0; i < rows.length; i++) {
                 rows[i] = Integer.parseInt(objs[i].toString());
             }
-            //DefaultTableModel model = (DefaultTableModel) table.getModel();
-//            int [] rows = table.getSelectedRows();
-//            Integer [] rowsInt = new Integer[rows.length];
-//            for (int i = 0; i < rows.length; i++) {
-//                rowsInt[i] = rows[i];
-//            }
             tableListener.rowDeleted(rows);
             listenerAction(TaskActionListener.DELETE_TASK);
+        }
+    }
+
+    private void listenerAction(int action, Task task) {
+        if (listener != null) {
+            listener.setTask(action, task);
         }
     }
 
@@ -87,11 +100,4 @@ public class ButtonPanel extends JPanel implements ActionListener {
         }
     }
 
-    public void setTable(JTable table) {
-        this.table = table;
-    }
-
-    public void setTableListener(TableListener tableListener) {
-        this.tableListener = tableListener;
-    }
 }

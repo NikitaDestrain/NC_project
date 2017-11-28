@@ -1,5 +1,6 @@
 package GUI.MainForm;
 
+import GUI.Main;
 import model.Task;
 import model.TaskStatus;
 
@@ -16,17 +17,19 @@ public class TablePanel extends JPanel {
     private JPopupMenu popupMenu;
     private TableListener listener;
     private List<Task> taskList;
+    private MainForm form;
+    private TaskSender taskSender;
 
-    public TablePanel() {
+    public TablePanel(MainForm form) {
+        this.form = form;
         tableModel = new JournalTableModel();
         table = new JTable(tableModel);
+        taskSender = TaskSender.getInstance();
         table.setRowHeight(20);
         popupMenu = new JPopupMenu();
         table.setRowSelectionAllowed(true);
 
-        JMenuItem deferItem = new JMenuItem("Defer task");
         JMenuItem cancelItem = new JMenuItem("Cancel task");
-        popupMenu.add(deferItem);
         popupMenu.add(cancelItem);
 
         table.addMouseListener(new MouseAdapter() {
@@ -41,24 +44,18 @@ public class TablePanel extends JPanel {
                     popupMenu.show(table, e.getX(), e.getY());
                 } else if (e.getButton() == MouseEvent.BUTTON1) { // левой выделяем для редактирования
                     if (col == 0) {
-                        Boolean b = (Boolean)table.getValueAt(row, col);
+                        Boolean b = (Boolean) table.getValueAt(row, col);
                         table.setValueAt(!b, row, col);
+                    } else {
+                        taskSender.setTask(task);
                     }
-                    //Task task = taskList.get(row); // параметры этой задачи передаются в окно редактирования
-                    //System.out.println(task.toString());
                 }
-
             }
 
             @Override
             public void mouseClicked(MouseEvent e) {
 
             }
-        });
-
-        deferItem.addActionListener((ActionEvent ev) -> {
-            taskList.get(table.getSelectedRow()).setStatus(TaskStatus.Rescheduled);
-            refresh();
         });
         cancelItem.addActionListener((ActionEvent ev) -> {
             taskList.get(table.getSelectedRow()).setStatus(TaskStatus.Cancelled);

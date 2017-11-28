@@ -1,7 +1,6 @@
 
 import GUI.MainForm.MainForm;
 import GUI.NotificationWindow.NotificationForm;
-import GUI.TaskWindow.TaskForm;
 import GUI.TaskWindow.TaskWindow;
 import Properties.Prop;
 import controller.Controller;
@@ -51,9 +50,6 @@ public class Main {
 
 
       //  TaskWindow window = new TaskWindow();
-
-        TaskForm  e = new TaskForm();
-        e.setVisible(true);
 
 
     }

@@ -2,7 +2,6 @@ package GUI;
 
 import GUI.MainForm.MainForm;
 import GUI.NotificationWindow.NotificationForm;
-import GUI.TaskWindow.TaskForm;
 import GUI.TaskWindow.TaskWindow;
 import Properties.Prop;
 import controller.SerializeDeserialize;
@@ -33,13 +32,20 @@ public class Main {
           //  journal = new SerializeDeserialize().readJournal();
 
         //MainForm form = new MainForm();
-        TaskWindow window = new TaskWindow(new MainForm());
-        window.setVisible(true);
+        //TaskWindow window = new TaskWindow(new MainForm());
+        //window.setVisible(true);
             SwingUtilities.invokeLater(() -> {
                 try {
-                    new MainForm().setJournal(new SerializeDeserialize().readJournal());
+                    Journal journal = new SerializeDeserialize().readJournal();
+                    if (journal == null)
+                        JOptionPane.showMessageDialog(null, "Incorrect journal in file. You may create a new one",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    new MainForm().setJournal(journal);
                 }
-                catch (IOException e) {}
+                catch (IOException e) {
+                    JOptionPane.showMessageDialog(null, "Could not load journal from file",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
             });
 
 

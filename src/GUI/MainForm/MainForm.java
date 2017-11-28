@@ -1,6 +1,5 @@
 package GUI.MainForm;
 
-import GUI.TaskWindow.TaskForm;
 import GUI.TaskWindow.TaskWindow;
 import controller.SerializeDeserialize;
 import model.Journal;
@@ -31,53 +30,96 @@ public class MainForm extends JFrame {
         this.journal = new Journal();
         //testTable();
 
-        tablePanel = new TablePanel();
+        tablePanel = new TablePanel(this);
         tablePanel.setData(this.journal.getTasks());
         tablePanel.refresh();
-        buttonPanel = new ButtonPanel();
-        buttonPanel.setTable(tablePanel.getTable());
+        buttonPanel = new ButtonPanel(this);
+        buttonPanel.setJtable((tablePanel.getTable()));
 
-        tablePanel.setTableListener((Integer... rows) -> {
-            buttonPanel.setListener((int action) -> {
-                switch (action) {
-                    case TaskActionListener.ADD_TASK:
-                        new TaskForm().layoutForAdd();
-                        break;
-                    case TaskActionListener.EDIT_TASK:
-                        new TaskForm().layoutForEdit();
-                        break;
-                    case TaskActionListener.DELETE_TASK:
-                        for (int i = 0; i < rows.length; i++) {
-                            this.journal.removeTask(i);
-                            tablePanel.refresh();
+        buttonPanel.setTableListener(new TableListener() {
+            @Override
+            public void rowDeleted(Integer... rows) {
+                buttonPanel.setListener(new TaskActionListener() {
+                    @Override
+                    public void setTask(int action, Task task) {
+                        if (task != null && action == TaskActionListener.EDIT_TASK) {
+                            new TaskWindow(MainForm.this, task);
                         }
-                        //System.out.println(this.journal.getTasks());
-                        break;
-                }
-            });
+                    }
+
+                    @Override
+                    public void setAction(int action) {
+                        switch (action) {
+                            case TaskActionListener.ADD_TASK:
+                                new TaskWindow(MainForm.this);
+                                break;
+                            case TaskActionListener.DELETE_TASK:
+                                for (int i = 0; i < rows.length; i++) {
+                                    journal.removeTask(rows[i]);
+                                    tablePanel.refresh();
+                                    tablePanel.setData(journal.getTasks());
+                                    buttonPanel.setJtable((tablePanel.getTable()));
+                                    for (int j = i + 1; j < rows.length; j++) {
+                                        rows[j]--;
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                });
+            }
         });
-        buttonPanel.setTableListener((Integer... rows) -> {
-            buttonPanel.setListener((int action) -> {
+
+        buttonPanel.setListener(new TaskActionListener() {
+            @Override
+            public void setTask(int action, Task task) {
+                if (task != null && action == TaskActionListener.EDIT_TASK) {
+                    new TaskWindow(MainForm.this, task);
+                }
+            }
+
+            @Override
+            public void setAction(int action) {
                 switch (action) {
                     case TaskActionListener.ADD_TASK:
-                        new TaskWindow(this);
-                        break;
-                    case TaskActionListener.EDIT_TASK:
-                        new TaskWindow(this);
-                        break;
-                    case TaskActionListener.DELETE_TASK:
-                        for (int i = 0; i < rows.length; i++) {
-                            this.journal.removeTask(rows[i]);
-                            tablePanel.refresh();
-                            tablePanel.setData(this.journal.getTasks());
-                            buttonPanel.setTable(tablePanel.getTable());
-                            for(int j = i+1; j < rows.length; j++) {
-                                rows[j]--;
-                            }
-                        }
+                        new TaskWindow(MainForm.this);
                         break;
                 }
-            });
+            }
+        });
+
+        tablePanel.setTableListener(new TableListener() {
+            @Override
+            public void rowDeleted(Integer... rows) {
+                buttonPanel.setListener(new TaskActionListener() {
+                    @Override
+                    public void setTask(int action, Task task) {
+                        if (task != null && action == TaskActionListener.EDIT_TASK) {
+                            new TaskWindow(MainForm.this, task);
+                        }
+                    }
+
+                    @Override
+                    public void setAction(int action) {
+                        switch (action) {
+                            case TaskActionListener.ADD_TASK:
+                                new TaskWindow(MainForm.this);
+                                break;
+                            case TaskActionListener.DELETE_TASK:
+                                for (int i = 0; i < rows.length; i++) {
+                                    journal.removeTask(rows[i]);
+                                    tablePanel.refresh();
+                                    tablePanel.setData(journal.getTasks());
+                                    buttonPanel.setJtable((tablePanel.getTable()));
+                                    for (int j = i + 1; j < rows.length; j++) {
+                                        rows[j]--;
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                });
+            }
         });
 
         setJMenuBar(createMenu());
@@ -215,7 +257,7 @@ public class MainForm extends JFrame {
             }
         });
 
-        exportJournal.addActionListener((ActionEvent e) -> {  //todo запись в файл при запуске и выходе из проги
+        exportJournal.addActionListener((ActionEvent e) -> {
 
             try {
                 journalBackup.writeJournal(journal);

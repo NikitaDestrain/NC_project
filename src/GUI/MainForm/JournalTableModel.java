@@ -10,7 +10,7 @@ import java.util.List;
 
 public class JournalTableModel extends AbstractTableModel {
     private List<Task> tasks;
-    private String[] columnNames = {"*", "ID", "Status", "Name", "Description", "Planned date", "Notification date"};
+    private String[] columnNames = {"*", "Status", "Name", "Description", "Planned date", "Notification date"};
     private Object[][] data;
 
     // TODO CHECKBOXES, КНОПКИ ЛАЙФСАЙКЛА - отменить, отложить
@@ -20,7 +20,7 @@ public class JournalTableModel extends AbstractTableModel {
 
     public void setData(List<Task> tasks) {
         this.tasks = tasks;
-        data = new Object[tasks.size()][7];
+        data = new Object[tasks.size()][6];
         for (int j = 0; j < tasks.size(); j++) {
             data[j][0] = false;
         }
@@ -50,7 +50,7 @@ public class JournalTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columnIndex == 3 || columnIndex == 4 || columnIndex == 0;
+        return columnIndex == 2 || columnIndex == 3 || columnIndex == 0;
     }
 
     @Override
@@ -60,16 +60,14 @@ public class JournalTableModel extends AbstractTableModel {
             case 0:
                 return data[rowIndex][0];
             case 1:
-                return task.getId();
-            case 2:
                 return task.getStatus();
-            case 3:
+            case 2:
                 return task.getName();
-            case 4:
+            case 3:
                 return task.getDescription();
-            case 5:
+            case 4:
                 return task.getPlannedDate();
-            case 6:
+            case 5:
                 return task.getNotificationDate();
             default:
                 return null;
@@ -84,10 +82,10 @@ public class JournalTableModel extends AbstractTableModel {
                 data[rowIndex][0] = aValue;
                 fireTableCellUpdated(rowIndex, columnIndex);
                 return;
-            case 3:
+            case 2:
                 task.setName((String) aValue);
                 return;
-            case 4:
+            case 3:
                 task.setDescription((String) aValue);
                 return;
         }
@@ -99,16 +97,14 @@ public class JournalTableModel extends AbstractTableModel {
             case 0:
                 return Boolean.class;
             case 1:
-                return Integer.class;
-            case 2:
                 return TaskStatus.class;
+            case 2:
+                return String.class;
             case 3:
                 return String.class;
             case 4:
-                return String.class;
-            case 5:
                 return Date.class;
-            case 6:
+            case 5:
                 return Date.class;
             default:
                 return null;
