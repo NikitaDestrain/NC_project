@@ -225,7 +225,6 @@ public class MainForm extends JFrame {
         } catch (AWTException e) {
             e.printStackTrace();
         }
-
     }
 
     private JMenuBar createMenu() {
@@ -319,17 +318,13 @@ public class MainForm extends JFrame {
     }
 
     public void editTask(int taskID, Task task) {
-        controller.setTask(taskID, task.getName(), task.getDescription(), task.getPlannedDate().getDay(),
-                task.getPlannedDate().getMonth(), task.getPlannedDate().getYear(),task.getPlannedDate().getHours(),
-                task.getPlannedDate().getMinutes(), task.getNotificationDate().getHours(), task.getNotificationDate().getMinutes());
+        controller.editTask(taskID, task);
         tablePanel.setData(this.journal.getTasks());
         tablePanel.refresh();
     }
 
     public void addTask(Task task) {
-        controller.addTask(task.getName(), task.getDescription(), task.getPlannedDate().getDay(),
-                task.getPlannedDate().getMonth(), task.getPlannedDate().getYear(),task.getPlannedDate().getHours(),
-                task.getPlannedDate().getMinutes(), task.getNotificationDate().getHours(), task.getNotificationDate().getMinutes());
+        controller.addTask(task);
         tablePanel.setData(this.journal.getTasks());
         tablePanel.refresh();
     }
