@@ -33,6 +33,7 @@ public class TaskWindow extends JFrame {
     private JSpinner jSpinner_clock_hour;
     private JSpinner jSpinner_clock_min;
     private JLabel jLabel_cloc2;
+    private MainForm main;
 
     private com.toedter.calendar.JDateChooser jDateChooser; //Подключить библиотеку кину в telegram
 
@@ -57,8 +58,8 @@ public class TaskWindow extends JFrame {
 
                 Task task1 = createTask();
                 if (task1 != null) {
-                    //отправка в main
-                    //метод...
+                    main = MainForm.getInstance();
+                    main.addTask(task1);
                     dispose();
                 }
 
@@ -245,10 +246,12 @@ public class TaskWindow extends JFrame {
     {
         if (checkTask()) //проверка на валидность
         {
-            this.loadTask.setName(this.JTabe_name.getText().toString());
+            this.loadTask.setName(jTextField_name.getText().toString());
             this.loadTask.setDescription(this.jTextArea_descriprion.getText().toString());
             this.loadTask.setNotificationDate(this.getNotificationDate());
             this.loadTask.setStatus(TaskStatus.Planned);
+            main = MainForm.getInstance();
+            main.editTask(loadTask.getId(), loadTask);
             return true;
         }
         return false;

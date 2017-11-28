@@ -43,8 +43,9 @@ public class Main {
                     new MainForm().setJournal(journal);
                 }
                 catch (IOException e) {
-                    JOptionPane.showMessageDialog(null, "Could not load journal from file",
+                    JOptionPane.showMessageDialog(null, "Could not load journal from file. You may create a new one",
                             "Error", JOptionPane.ERROR_MESSAGE);
+                    new MainForm().setJournal(null);
                 }
             });
 

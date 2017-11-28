@@ -12,11 +12,18 @@ public class Controller {
     private Notifier notifier;
     private IDGenerator idGenerator;
     private static TaskStatus DEFAULT_STATUS = TaskStatus.Planned;
+    private static Controller instance;
 
-    public Controller() {
+    private Controller() {
         this.journal = new Journal();
         this.notifier = new Notifier();
         this.idGenerator = new IDGenerator(journal.getMaxId());
+    }
+
+    public static Controller getInstance() {
+        if (instance == null)
+            instance = new Controller();
+        return instance;
     }
 
     public Journal getJournal() {

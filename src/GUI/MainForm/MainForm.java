@@ -1,6 +1,7 @@
 package GUI.MainForm;
 
 import GUI.TaskWindow.TaskWindow;
+import controller.Controller;
 import controller.SerializeDeserialize;
 import model.Journal;
 import model.Task;
@@ -15,19 +16,21 @@ import java.util.Date;
 public class MainForm extends JFrame {
     private JFileChooser fileChooser;
     private SerializeDeserialize journalBackup;
+    private Controller controller = Controller.getInstance();
     private Journal journal;
     private TablePanel tablePanel;
     private ButtonPanel buttonPanel;
     private TrayIcon tray;
     private ImageIcon icon = new ImageIcon("icon.png");
     private SystemTray systemTray = SystemTray.getSystemTray();
+    private static MainForm instance;
 
     public MainForm() {
         super("Task Scheduler");
-
+        instance = this;
         fileChooser = new JFileChooser();
         journalBackup = new SerializeDeserialize();
-        this.journal = new Journal();
+        this.journal = controller.getJournal();
         //testTable();
 
         tablePanel = new TablePanel(this);
@@ -309,5 +312,25 @@ public class MainForm extends JFrame {
             tablePanel.setData(this.journal.getTasks());
             tablePanel.refresh();
         }
+    }
+
+    public static MainForm getInstance() {
+        return instance;
+    }
+
+    public void editTask(int taskID, Task task) {
+        controller.setTask(taskID, task.getName(), task.getDescription(), task.getPlannedDate().getDay(),
+                task.getPlannedDate().getMonth(), task.getPlannedDate().getYear(),task.getPlannedDate().getHours(),
+                task.getPlannedDate().getMinutes(), task.getNotificationDate().getHours(), task.getNotificationDate().getMinutes());
+        tablePanel.setData(this.journal.getTasks());
+        tablePanel.refresh();
+    }
+
+    public void addTask(Task task) {
+        controller.addTask(task.getName(), task.getDescription(), task.getPlannedDate().getDay(),
+                task.getPlannedDate().getMonth(), task.getPlannedDate().getYear(),task.getPlannedDate().getHours(),
+                task.getPlannedDate().getMinutes(), task.getNotificationDate().getHours(), task.getNotificationDate().getMinutes());
+        tablePanel.setData(this.journal.getTasks());
+        tablePanel.refresh();
     }
 }
