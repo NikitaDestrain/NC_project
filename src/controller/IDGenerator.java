@@ -2,7 +2,7 @@ package controller;
 
 public class IDGenerator{
 
-    private int nextId = 0;
+    private int nextId;
     private static IDGenerator instance;
 
     private IDGenerator(int nextId) {
@@ -17,11 +17,11 @@ public class IDGenerator{
 
     public static IDGenerator getInstance() {
         if (instance == null)
-            instance = new IDGenerator(-1);
+            instance = new IDGenerator(0);
         return instance;
     }
 
     public synchronized int createId() {
-        return ++nextId;
+        return nextId++;
     }
 }
