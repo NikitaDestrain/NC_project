@@ -12,12 +12,12 @@ public class LabelPanel extends JPanel {
         description = new JLabel();
         name.setFont(new Font("Verdana", Font.BOLD, 18));
         name.setVerticalAlignment(SwingConstants.CENTER);
+        name.setHorizontalAlignment(SwingConstants.CENTER);
         description.setVerticalTextPosition(SwingConstants.CENTER);
-        description.setFont(new Font("Verdana", Font.PLAIN, 12));
+        description.setFont(new Font("Verdana", Font.PLAIN, 13));
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         add(name);
         add(description);
-
         Dimension dimension = getPreferredSize();
         dimension.height = 120;
         setPreferredSize(dimension);
