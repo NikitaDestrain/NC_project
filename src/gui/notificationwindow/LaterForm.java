@@ -21,7 +21,7 @@ public class LaterForm extends JFrame {
         add(message);
         buttonLaterPanel = new ButtonLaterPanel(task);
         add(buttonLaterPanel, BorderLayout.SOUTH);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setMinimumSize(new Dimension(400, 300));
         Dimension prefSize = new Dimension(400, 300);
         setPreferredSize(prefSize);

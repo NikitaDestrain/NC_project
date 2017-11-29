@@ -26,8 +26,6 @@ public class Notifier {
             Timer timer = timers.get(id);
             timer.cancel();
         }
-        else
-            System.out.println("Error! Cancel is impossible!!!");
     }
 
     //приходит уже измененный таск с перенесенным временем
@@ -39,9 +37,7 @@ public class Notifier {
             Timer timer = new Timer(true);
             System.out.println(task.getNotificationDate().getTime() - System.currentTimeMillis());
             timer.schedule(notificationTimer, task.getNotificationDate().getTime() - System.currentTimeMillis());
-            timers.put(task.getId(),timer);
+            timers.put(task.getId(), timer);
         }
-        else
-            System.out.println("Error! Edit is impossible!!!");
     }
 }

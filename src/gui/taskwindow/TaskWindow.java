@@ -4,7 +4,6 @@ import controller.Controller;
 import gui.mainform.MainForm;
 import model.Task;
 import model.TaskStatus;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -287,7 +286,7 @@ public class TaskWindow extends JFrame {
         StringBuffer err = new StringBuffer("");
 
         if (this.jTextField_name.getText().length() == 0) {
-            err.append("Enter tak name ");
+            err.append("Enter task name ");
             new ErrDialog(this, err.toString());
             return false;
 

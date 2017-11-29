@@ -32,7 +32,9 @@ public class Journal implements Serializable {
     }
 
     public List<Task> getTasks() {
-        return Collections.unmodifiableList(new LinkedList<Task>(tasks.values()));//todo unmodifiable list DONE
+        LinkedList<Task> list = new LinkedList<Task>(tasks.values());
+        list.sort(new TaskComparator());
+        return Collections.unmodifiableList(list);
     }
 
     public int getMaxId(){
