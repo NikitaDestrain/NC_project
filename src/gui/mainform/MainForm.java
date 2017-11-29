@@ -57,9 +57,9 @@ public class MainForm extends JFrame {
                                 break;
                             case TaskActionListener.DELETE_TASK:
                                 for (int i = 0; i < rows.length; i++) {
-                                    journal.removeTask(rows[i]);
-                                    tablePanel.refresh();
-                                    tablePanel.setData(journal.getTasks());
+                                    Task task = journal.getTasks().get(rows[i]);
+                                    controller.removeTask(task.getId());
+                                    updateJournal();
                                     buttonPanel.setJtable((tablePanel.getTable()));
                                     for (int j = i + 1; j < rows.length; j++) {
                                         rows[j]--;
@@ -305,18 +305,6 @@ public class MainForm extends JFrame {
     public void updateJournal() {
         controller = Controller.getInstance();
         this.journal = controller.getJournal();
-        tablePanel.setData(this.journal.getTasks());
-        tablePanel.refresh();
-    }
-
-    public void editTask(int taskID, Task task) {
-        controller.editTask(taskID, task);
-        tablePanel.setData(this.journal.getTasks());
-        tablePanel.refresh();
-    }
-
-    public void addTask(Task task) {
-        controller.addTask(task);
         tablePanel.setData(this.journal.getTasks());
         tablePanel.refresh();
     }
