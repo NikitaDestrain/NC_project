@@ -22,7 +22,6 @@ public class NotificationForm extends JFrame {
         setLayout(new BorderLayout());
         add(labelPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
-
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setMinimumSize(new Dimension(400, 300));
         Dimension prefSize = new Dimension(400, 300);
@@ -31,7 +30,6 @@ public class NotificationForm extends JFrame {
         setBounds(screenSize.width - prefSize.width, screenSize.height - prefSize.height - 40, prefSize.width, prefSize.height);
         setIconImage(icon.getImage());
         setResizable(false);
-        setVisible(false);
     }
 
     public void setTask(Task task) {

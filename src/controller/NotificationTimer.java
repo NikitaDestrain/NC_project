@@ -1,9 +1,9 @@
 package controller;
 
 import gui.notificationwindow.NotificationForm;
+import gui.notificationwindow.Sound;
 import model.Task;
 import model.TaskStatus;
-
 import java.util.TimerTask;
 
 public class NotificationTimer extends TimerTask {
@@ -20,5 +20,6 @@ public class NotificationTimer extends TimerTask {
         task.setStatus(TaskStatus.Completed);
         notificationForm.setTask(task);
         notificationForm.setVisible(true);
+        Sound.playSound("sounds/snd.wav").join();
     }
 }
