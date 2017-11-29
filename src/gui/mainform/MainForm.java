@@ -31,7 +31,6 @@ public class MainForm extends JFrame {
         fileChooser = new JFileChooser();
         journalBackup = new SerializeDeserialize();
         this.journal = new Journal();
-        //testTable();
 
         tablePanel = new TablePanel(this);
         tablePanel.setData(this.journal.getTasks());
@@ -281,24 +280,6 @@ public class MainForm extends JFrame {
         });
 
         return menu;
-    }
-
-    private void testTable() {
-        Task task1 = new Task("Test", TaskStatus.Planned, "Test",
-                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
-        this.journal.addTask(task1);
-        Task task2 = new Task("Test2", TaskStatus.Completed, "Test2",
-                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
-        this.journal.addTask(task2);
-        Task task3 = new Task("Test3", TaskStatus.Completed, "Test3",
-                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
-        Task task4 = new Task("Test3", TaskStatus.Completed, "Test3",
-                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
-        Task task5 = new Task("Test3", TaskStatus.Completed, "Test3",
-                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
-        this.journal.addTask(task3);
-        this.journal.addTask(task4);
-        this.journal.addTask(task5);
     }
 
     /**
