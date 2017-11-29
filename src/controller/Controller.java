@@ -6,6 +6,7 @@ import model.Task;
 import model.TaskStatus;
 import sun.nio.cs.ext.MacArabic;
 
+import javax.swing.*;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -56,7 +57,8 @@ public class Controller {
             mainForm.updateJournal();
         }
         else
-            System.out.println("Invalid Date!!!"); //сообщение в форму о неверной дате
+            JOptionPane.showMessageDialog(null, "Task you intended to add has incorrect notification time!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     //удаляется таск(????) и оповещение
