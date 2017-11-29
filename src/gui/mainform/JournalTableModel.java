@@ -4,12 +4,14 @@ import model.Task;
 import model.TaskStatus;
 
 import javax.swing.table.AbstractTableModel;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class JournalTableModel extends AbstractTableModel {
     private List<Task> tasks;
-    private String[] columnNames = {"*", "Status", "Name", "Description", "Planned date", "Notification date"};
+    private String[] columnNames = {"*", "Status", "Name", "Description", "Planned date", "Planned time", "Notification date",
+    "Notification time"};
     private Object[][] data;
 
     // TODO CHECKBOXES, КНОПКИ ЛАЙФСАЙКЛА - отменить, отложить
@@ -19,7 +21,7 @@ public class JournalTableModel extends AbstractTableModel {
 
     public void setData(List<Task> tasks) {
         this.tasks = tasks;
-        data = new Object[tasks.size()][6];
+        data = new Object[tasks.size()][8];
         for (int j = 0; j < tasks.size(); j++) {
             data[j][0] = false;
         }
@@ -55,6 +57,11 @@ public class JournalTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Task task = tasks.get(rowIndex);
+        Calendar planned = Calendar.getInstance();
+        Calendar notif = Calendar.getInstance();
+        planned.setTime(task.getPlannedDate());
+        notif.setTime(task.getNotificationDate());
+        String minutes = "";
         switch (columnIndex) {
             case 0:
                 return data[rowIndex][0];
@@ -65,9 +72,15 @@ public class JournalTableModel extends AbstractTableModel {
             case 3:
                 return task.getDescription();
             case 4:
-                return task.getPlannedDate();// + " " + task.getPlannedDate().getTime();
+                return planned.getTime();// + " " + task.getPlannedDate().getTime();
             case 5:
-                return task.getNotificationDate();// + " " + task.getNotificationDate().getTime();
+                minutes = planned.get(Calendar.MINUTE) == 0 ? planned.get(Calendar.MINUTE) + "0" : planned.get(Calendar.MINUTE) + "";
+                return planned.get(Calendar.HOUR_OF_DAY) + ":" + minutes;// + " " + task.getNotificationDate().getTime();
+            case 6:
+                return notif.getTime();
+            case 7:
+                minutes = notif.get(Calendar.MINUTE) == 0 ? notif.get(Calendar.MINUTE) + "0" : notif.get(Calendar.MINUTE) + "";
+                return notif.get(Calendar.HOUR_OF_DAY) + ":" + minutes;
             default:
                 return null;
         }
@@ -104,7 +117,11 @@ public class JournalTableModel extends AbstractTableModel {
             case 4:
                 return Date.class;
             case 5:
+                return String.class;
+            case 6:
                 return Date.class;
+            case 7:
+                return String.class;
             default:
                 return null;
         }
