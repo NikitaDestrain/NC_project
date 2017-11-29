@@ -37,10 +37,9 @@ public class Journal implements Serializable {
 
     public int getMaxId(){
         int res = 0;
-        for (int i = 0; i < tasks.size(); i++) {
-            if(tasks.get(i).getId() > res)
-                res = tasks.get(i).getId();
-        }
+        for (Integer key: tasks.keySet())
+            if(res < key)
+                res = key;
         return res;
     }
 
