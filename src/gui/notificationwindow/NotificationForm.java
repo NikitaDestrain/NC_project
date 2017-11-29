@@ -3,8 +3,6 @@ package gui.notificationwindow;
 import controller.Controller;
 import gui.mainform.MainForm;
 import model.Task;
-import model.TaskStatus;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -30,8 +28,7 @@ public class NotificationForm extends JFrame {
         Dimension prefSize = new Dimension(400, 300);
         setPreferredSize(prefSize);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(screenSize.width - prefSize.width, screenSize.height - prefSize.height - 40,
-                prefSize.width, prefSize.height);
+        setBounds(screenSize.width - prefSize.width, screenSize.height - prefSize.height - 40, prefSize.width, prefSize.height);
         setIconImage(icon.getImage());
         setResizable(false);
         setVisible(false);
@@ -53,6 +50,7 @@ public class NotificationForm extends JFrame {
             finish = new JButton("Finish task");
             cancel = new JButton("Cancel task");
 
+            setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             setLayout(new FlowLayout());
             add(later);
             add(finish);
@@ -68,14 +66,12 @@ public class NotificationForm extends JFrame {
             });
 
             finish.addActionListener((ActionEvent e) -> {
-                //task.setStatus(TaskStatus.Completed);
                 controller.finishNotification(task.getId());
                 mainForm.updateJournal();
                 dispose();
             });
 
             cancel.addActionListener((ActionEvent e) -> {
-                //task.setStatus(TaskStatus.Cancelled);
                 controller.cancelNotification(task.getId());
                 mainForm.updateJournal();
                 dispose();
