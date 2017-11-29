@@ -286,7 +286,7 @@ public class TaskWindow extends JFrame {
         StringBuffer err = new StringBuffer("");
 
         if (this.jTextField_name.getText().length() == 0) {
-            err.append("Enter tak name ");
+            err.append("Enter task name ");
             new ErrDialog(this, err.toString());
             return false;
 
