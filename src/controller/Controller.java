@@ -4,8 +4,6 @@ import gui.mainform.MainForm;
 import model.Journal;
 import model.Task;
 import model.TaskStatus;
-import sun.nio.cs.ext.MacArabic;
-
 import javax.swing.*;
 import java.util.Calendar;
 import java.util.Date;
@@ -43,7 +41,8 @@ public class Controller {
             notifier.addNotification(task);
         }
         else {
-            task.setStatus(TaskStatus.Overdue);
+            if(task.getStatus() == TaskStatus.Planned)
+                task.setStatus(TaskStatus.Overdue);
         }
         journal.addTask(task);
         mainForm.updateJournal();
@@ -61,7 +60,7 @@ public class Controller {
                     "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    //удаляется таск(????) и оповещение
+    //удаляется таск и оповещение
     public void removeTask(int id){
         notifier.cancelNotification(id);
         journal.removeTask(id);
@@ -80,7 +79,7 @@ public class Controller {
         journal.getTask(id).setStatus(TaskStatus.Completed);
         mainForm.updateJournal();
     }
-    //todo map create
+
     //изменяется оповещение (читать в классе Notifier описание по работе с методом)
     public void updateNotification(int id){
         Task task = journal.getTask(id);
