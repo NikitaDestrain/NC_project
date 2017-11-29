@@ -1,5 +1,6 @@
 package gui.taskwindow;
 
+import controller.Controller;
 import gui.mainform.MainForm;
 import model.Task;
 import model.TaskStatus;
@@ -15,7 +16,7 @@ import java.util.Locale;
 public class TaskWindow extends JFrame {
 
     private MainForm owner;
-
+    private Controller controller = Controller.getInstance();
     private Task loadTask;
     private JLabel JTabe_nameTask;
     private JLabel jLabel_date;
@@ -363,13 +364,16 @@ public class TaskWindow extends JFrame {
       private void mainFormAddTask( Task newTask ) //вызываю методы MAINform для записи изменений
     {
         System.out.println(newTask);
-        owner.addTask(newTask);
-
+        //owner.addTask(newTask);
+        controller.addTask(newTask);
+        owner.updateJournal();
     }
     private void mainFormEditTask(Task taskSet)
     {
-
-        owner.editTask(this.loadTask.getId(),taskSet);
+        //owner.editTask(this.loadTask.getId(),taskSet);
+        taskSet.setStatus(TaskStatus.Rescheduled);
+        controller.editTask(this.loadTask.getId(),taskSet);
+        owner.updateJournal();
     }
 
 }

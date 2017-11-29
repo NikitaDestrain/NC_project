@@ -1,6 +1,7 @@
 package gui.notificationwindow;
 
 import controller.Controller;
+import gui.mainform.MainForm;
 import model.Task;
 import model.TaskStatus;
 
@@ -13,6 +14,8 @@ public class NotificationForm extends JFrame {
     private ButtonPanel buttonPanel;
     private LabelPanel labelPanel;
     private ImageIcon icon = new ImageIcon("icon.png");
+    private Controller controller = Controller.getInstance();;
+    private MainForm mainForm = MainForm.getInstance();
 
     public NotificationForm() {
         super("Alarm!");
@@ -65,12 +68,16 @@ public class NotificationForm extends JFrame {
             });
 
             finish.addActionListener((ActionEvent e) -> {
-                task.setStatus(TaskStatus.Completed);
+                //task.setStatus(TaskStatus.Completed);
+                controller.finishNotification(task.getId());
+                mainForm.updateJournal();
                 dispose();
             });
 
             cancel.addActionListener((ActionEvent e) -> {
-                task.setStatus(TaskStatus.Cancelled);
+                //task.setStatus(TaskStatus.Cancelled);
+                controller.cancelNotification(task.getId());
+                mainForm.updateJournal();
                 dispose();
             });
         }

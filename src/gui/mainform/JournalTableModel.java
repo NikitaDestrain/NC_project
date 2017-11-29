@@ -65,9 +65,9 @@ public class JournalTableModel extends AbstractTableModel {
             case 3:
                 return task.getDescription();
             case 4:
-                return task.getPlannedDate();
+                return task.getPlannedDate();// + " " + task.getPlannedDate().getTime();
             case 5:
-                return task.getNotificationDate();
+                return task.getNotificationDate();// + " " + task.getNotificationDate().getTime();
             default:
                 return null;
         }

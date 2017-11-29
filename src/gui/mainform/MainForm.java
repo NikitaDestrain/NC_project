@@ -16,7 +16,7 @@ import java.util.Date;
 public class MainForm extends JFrame {
     private JFileChooser fileChooser;
     private SerializeDeserialize journalBackup;
-    private Controller controller = Controller.getInstance();
+    private Controller controller;// = Controller.getInstance();
     private Journal journal;
     private TablePanel tablePanel;
     private ButtonPanel buttonPanel;
@@ -30,7 +30,7 @@ public class MainForm extends JFrame {
         instance = this;
         fileChooser = new JFileChooser();
         journalBackup = new SerializeDeserialize();
-        this.journal = controller.getJournal();
+        this.journal = new Journal();
         //testTable();
 
         tablePanel = new TablePanel(this);
@@ -307,7 +307,11 @@ public class MainForm extends JFrame {
      */
     public void setJournal(Journal journal) {
         if (journal != null) {
-            this.journal = journal;
+            controller = Controller.getInstance();
+            for(Task t : journal.getTasks()) {
+                controller.addTaskFromBackup(t);
+            }
+            this.journal = controller.getJournal();
             tablePanel.setData(this.journal.getTasks());
             tablePanel.refresh();
         }
@@ -315,6 +319,13 @@ public class MainForm extends JFrame {
 
     public static MainForm getInstance() {
         return instance;
+    }
+
+    public void updateJournal() {
+        controller = Controller.getInstance();
+        this.journal = controller.getJournal();
+        tablePanel.setData(this.journal.getTasks());
+        tablePanel.refresh();
     }
 
     public void editTask(int taskID, Task task) {

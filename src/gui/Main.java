@@ -15,7 +15,7 @@ public class Main {
         try {
             Prop prop = new Prop(); //поля этого объекта содержат необхдимые значения
         } catch (IOException e) {
-            System.out.println(e.toString()+" не верно указан файл конфигурации");;
+            System.out.println(e.toString()+" не верно указан файл конфигурации");
         }
         SwingUtilities.invokeLater(() -> {
             try {

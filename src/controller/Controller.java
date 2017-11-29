@@ -1,8 +1,11 @@
 package controller;
 
+import gui.mainform.MainForm;
 import model.Journal;
 import model.Task;
 import model.TaskStatus;
+import sun.nio.cs.ext.MacArabic;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -12,6 +15,7 @@ public class Controller {
     private Notifier notifier;
     private IDGenerator idGenerator;
     private static Controller instance;
+    private MainForm mainForm = MainForm.getInstance();
 
     private Controller() {
         this.journal = new Journal();
@@ -33,11 +37,23 @@ public class Controller {
         return !date.before(Calendar.getInstance().getTime());
     }
 
+    public void addTaskFromBackup(Task task) {
+        if(checkDate(task.getNotificationDate())) {
+            notifier.addNotification(task);
+        }
+        else {
+            task.setStatus(TaskStatus.Overdue);
+        }
+        journal.addTask(task);
+        mainForm.updateJournal();
+    }
+
     //создается таск вместе с оповещением
     public void addTask(Task task) {
         if(checkDate(task.getNotificationDate())) {
             journal.addTask(task);
             notifier.addNotification(task);
+            mainForm.updateJournal();
         }
         else
             System.out.println("Invalid Date!!!"); //сообщение в форму о неверной дате
@@ -47,12 +63,20 @@ public class Controller {
     public void removeTask(int id){
         notifier.cancelNotification(id);
         journal.removeTask(id);
+        mainForm.updateJournal();
     }
 
     //отменяется оповещение
     public void cancelNotification(int id){
         notifier.cancelNotification(id);
         journal.getTask(id).setStatus(TaskStatus.Cancelled);
+        mainForm.updateJournal();
+    }
+
+    public void finishNotification(int id) {
+        notifier.cancelNotification(id);
+        journal.getTask(id).setStatus(TaskStatus.Completed);
+        mainForm.updateJournal();
     }
     //todo map create
     //изменяется оповещение (читать в классе Notifier описание по работе с методом)
@@ -61,11 +85,13 @@ public class Controller {
         task.setStatus(TaskStatus.Rescheduled);
         notifier.editNotification(id, task);
         journal.getTask(id).setStatus(TaskStatus.Rescheduled);
+        mainForm.updateJournal();
     }
 
     //изменение таски полностью !!!edit rename
     public void editTask(int id, Task task){
         journal.setTask(id, task);
         notifier.editNotification(id, task);
+        mainForm.updateJournal();
     }
 }
