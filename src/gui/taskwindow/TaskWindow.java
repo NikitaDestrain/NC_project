@@ -4,7 +4,6 @@ import controller.Controller;
 import gui.mainform.MainForm;
 import model.Task;
 import model.TaskStatus;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
