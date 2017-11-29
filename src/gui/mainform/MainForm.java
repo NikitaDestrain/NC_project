@@ -206,7 +206,7 @@ public class MainForm extends JFrame {
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setMinimumSize(new Dimension(600, 400));
-        setSize(600, 500);
+        setSize(800, 500);
         setIconImage(icon.getImage());
         setLocationRelativeTo(null);
         setResizable(true);
