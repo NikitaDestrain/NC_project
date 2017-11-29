@@ -77,7 +77,7 @@ public class TablePanel extends JPanel {
             TaskSender sender = TablePanel.getInstance().getTaskSender();
             Task task = sender.getTask();
             task.setStatus(TaskStatus.Cancelled);
-            controller.editTask(task.getId(), task);
+            controller.cancelNotification(task.getId());
             mainForm.updateJournal();
             refresh();
         });
