@@ -12,14 +12,12 @@ public class Controller {
 
     private Journal journal;
     private Notifier notifier;
-    private IDGenerator idGenerator;
     private static Controller instance;
     private MainForm mainForm = MainForm.getInstance();
 
     private Controller() {
         this.journal = new Journal();
         this.notifier = new Notifier();
-        this.idGenerator = IDGenerator.getInstance(journal.getMaxId());
     }
 
     public static Controller getInstance() {
@@ -41,7 +39,7 @@ public class Controller {
             notifier.addNotification(task);
         }
         else {
-            if(task.getStatus() == TaskStatus.Planned)
+            if(task.getStatus() == TaskStatus.Planned || task.getStatus() == TaskStatus.Rescheduled)
                 task.setStatus(TaskStatus.Overdue);
         }
         journal.addTask(task);

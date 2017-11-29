@@ -22,6 +22,6 @@ public class IDGenerator{
     }
 
     public synchronized int createId() {
-        return nextId++;
+        return ++nextId;
     }
 }
