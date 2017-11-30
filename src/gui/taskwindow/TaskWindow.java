@@ -375,7 +375,7 @@ public class TaskWindow extends JFrame {
     private void calcNotificationDate() //высчитываетяс конечное время с учетом времени оповещения
     {
         //высчит дату уведомления
-        int notif_h = 0, notif_m = 0;
+        int notif_h, notif_m;
         Calendar calend = Calendar.getInstance();
         notif_h = (int) this.jSpinner_notifHour.getValue();
         notif_m = (int) this.jSpinner_notifMinutes.getValue();
@@ -411,7 +411,7 @@ public class TaskWindow extends JFrame {
 
     public void calcPlannedDate() ///метод получения запланированной даты
     {
-        int h = 0, m = 0;
+        int h, m;
 
         h = (int) this.jSpinner_plannedHour.getValue();
         m = (int) this.jSpinner_plannedMin.getValue();
