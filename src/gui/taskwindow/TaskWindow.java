@@ -339,7 +339,7 @@ public class TaskWindow extends JFrame {
                 loadTask.setStatus(TaskStatus.Completed);
             }
 
-
+            System.out.println(loadTask);
             return true;
         }
 
