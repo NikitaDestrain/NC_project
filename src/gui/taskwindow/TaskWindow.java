@@ -47,9 +47,6 @@ public class TaskWindow extends JFrame {
     private javax.swing.JTextField jTextField_name;
 
 
-
-
-
     private Date plannedDate;//запланированное время
     private Date notificationDate; //время уведомления
 
@@ -57,13 +54,13 @@ public class TaskWindow extends JFrame {
     public TaskWindow(MainForm owner) {
 
         super("Create new task");
-        this.controller =Controller.getInstance();
+        this.controller = Controller.getInstance();
         this.initComponents_WindowTask();
         this.owner = owner;
 
-      this.jLabel_status.setVisible(false);
-     this.jComboBox_changeStatus.setVisible(false);
-      this.jLable_jangeStatus.setVisible(false);
+        this.jLabel_status.setVisible(false);
+        this.jComboBox_changeStatus.setVisible(false);
+        this.jLable_jangeStatus.setVisible(false);
         this.jButton_create_or_set.setText("Create");
         this.jButton_cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -78,7 +75,7 @@ public class TaskWindow extends JFrame {
                 Task newTask = createTask();
 
                 if (newTask != null) {
-                  mainFormAddTask(newTask);
+                    mainFormAddTask(newTask);
                     dispose();
                 }
 
@@ -113,8 +110,8 @@ public class TaskWindow extends JFrame {
 
                 if (saveTask()) {
 
-                        mainFormEditTask(loadTask);
-                        dispose();
+                    mainFormEditTask(loadTask);
+                    dispose();
 
                 }
 
@@ -146,7 +143,7 @@ public class TaskWindow extends JFrame {
         jDateChooser_notificationDate.setMinSelectableDate(new java.util.Date(System.currentTimeMillis()));
 
         jComboBox_changeStatus = new JComboBox<>();
-        jComboBox_changeStatus.setModel(new DefaultComboBoxModel<>(new String[] { "No", "Completed", "Cancel" }));
+        jComboBox_changeStatus.setModel(new DefaultComboBoxModel<>(new String[]{"No", "Completed", "Cancel"}));
 
         jLabel_Hours = new javax.swing.JLabel("Hours");
         jLabel_minutes = new javax.swing.JLabel("Minutes");
@@ -170,7 +167,6 @@ public class TaskWindow extends JFrame {
         jButton_cancel.setText("Cancel");
 
 
-
         jLabel_status = new JLabel("Status: ");
         jLabel_status.setFont(new java.awt.Font("Tahoma", 0, 12));
         jLabel_status.setForeground(new java.awt.Color(0, 0, 255));
@@ -187,8 +183,7 @@ public class TaskWindow extends JFrame {
         jSpinner_notifMinutes.setModel(new SpinnerNumberModel(0, 0, 59, 1));
 
         jLable_jangeStatus = new JLabel("Change status?");
-        jLabel_statusInfo= new JLabel("");
-
+        jLabel_statusInfo = new JLabel("");
 
 
         jScrollPane1.setViewportView(jTextArea_descriprion);
@@ -202,8 +197,6 @@ public class TaskWindow extends JFrame {
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
-
-
 
 
         //РАЗМЕЩЕНИЕ конопок НЕ ТРОГАТЬ
@@ -317,8 +310,8 @@ public class TaskWindow extends JFrame {
     {
         if (checkTask()) //проверка на валидность
         {
-             calcPlannedDate(); //считаем и заносим в поля
-             calcNotificationDate();
+            calcPlannedDate(); //считаем и заносим в поля
+            calcNotificationDate();
 
             Task task = new Task(this.jTextField_name.getText().toString(), TaskStatus.Planned, this.jTextArea_descriprion.getText(), this.notificationDate, this.plannedDate);
 
@@ -335,19 +328,16 @@ public class TaskWindow extends JFrame {
             this.loadTask.setDescription(this.jTextArea_descriprion.getText().toString());
             this.calcPlannedDate();
             this.calcNotificationDate();
-            System.out.println(this.plannedDate +" "+this.notificationDate+" ");
+            System.out.println(this.plannedDate + " " + this.notificationDate + " ");
             this.loadTask.setPlannedDate(this.plannedDate);
             this.loadTask.setNotificationDate(this.notificationDate);
-          String new_status = this.jComboBox_changeStatus.getSelectedItem().toString();
-          if(new_status.equals("Cancel"))
-          {
-              loadTask.setStatus(TaskStatus.Cancelled);
-          }
-          if(new_status.equals("Completed"))
-          {
-              loadTask.setStatus(TaskStatus.Completed);
-          }
-
+            String new_status = this.jComboBox_changeStatus.getSelectedItem().toString();
+            if (new_status.equals("Cancel")) {
+                loadTask.setStatus(TaskStatus.Cancelled);
+            }
+            if (new_status.equals("Completed")) {
+                loadTask.setStatus(TaskStatus.Completed);
+            }
 
 
             return true;
@@ -372,8 +362,7 @@ public class TaskWindow extends JFrame {
             new ErrDialog(this, err.toString());
             return false;
         }
-        if(this.jDateChooser_notificationDate.getDate()==null)
-        {
+        if (this.jDateChooser_notificationDate.getDate() == null) {
             err.append("Enter notification date ");
             new ErrDialog(this, err.toString());
             return false;
@@ -386,9 +375,9 @@ public class TaskWindow extends JFrame {
     private void calcNotificationDate() //высчитываетяс конечное время с учетом времени оповещения
     {
         //высчит дату уведомления
-      int   notif_h=0, notif_m=0;
+        int notif_h = 0, notif_m = 0;
         Calendar calend = Calendar.getInstance();
-        notif_h= (int) this.jSpinner_notifHour.getValue();
+        notif_h = (int) this.jSpinner_notifHour.getValue();
         notif_m = (int) this.jSpinner_notifMinutes.getValue();
         Date notif = this.jDateChooser_notificationDate.getDate();
         calend.setTime(notif);
@@ -397,7 +386,7 @@ public class TaskWindow extends JFrame {
         calend.set(Calendar.SECOND, 0);
         calend.set(Calendar.MILLISECOND, 0);
         notif = calend.getTime();
-        this.notificationDate=notif;
+        this.notificationDate = notif;
 
 
     }
@@ -410,8 +399,8 @@ public class TaskWindow extends JFrame {
 
         Calendar calend = Calendar.getInstance();
         calend.setTime(task.getPlannedDate());
-        this.jSpinner_plannedHour.setValue( calend.get(Calendar.HOUR_OF_DAY));
-        this.jSpinner_plannedMin.setValue( calend.get(Calendar.MINUTE));
+        this.jSpinner_plannedHour.setValue(calend.get(Calendar.HOUR_OF_DAY));
+        this.jSpinner_plannedMin.setValue(calend.get(Calendar.MINUTE));
         this.jTextArea_descriprion.setText(task.getDescription());
 
         calend.setTime(task.getNotificationDate());
@@ -428,7 +417,6 @@ public class TaskWindow extends JFrame {
         m = (int) this.jSpinner_plannedMin.getValue();
 
 
-
         Date plan = this.jDateChooser_PlannedDate.getDate(); //Получаем дату (время не верное)
         Calendar calend = Calendar.getInstance(); //Создание даты уведомления (перерасчет через Calendar)
         calend.setTime(plan);
@@ -437,21 +425,21 @@ public class TaskWindow extends JFrame {
         calend.set(Calendar.SECOND, 0);
         calend.set(Calendar.MILLISECOND, 0);
         plan = calend.getTime();
-        this.plannedDate=plan;
+        this.plannedDate = plan;
 
     }
 
-      private void mainFormAddTask( Task newTask ) //вызываю методы MAINform для записи изменений
+    private void mainFormAddTask(Task newTask) //вызываю методы MAINform для записи изменений
     {
 
         controller.addTask(newTask);
         owner.updateJournal();
     }
-    private void mainFormEditTask(Task taskSet)
-    {
+
+    private void mainFormEditTask(Task taskSet) {
 
         taskSet.setStatus(TaskStatus.Rescheduled);
-        controller.editTask(this.loadTask.getId(),taskSet);
+        controller.editTask(this.loadTask.getId(), taskSet);
         owner.updateJournal();
     }
 
