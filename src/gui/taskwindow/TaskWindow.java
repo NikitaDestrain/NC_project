@@ -1,6 +1,6 @@
 package gui.taskwindow;
 
-import com.toedter.calendar.JDateChooser;
+
 import controller.Controller;
 import gui.mainform.MainForm;
 import model.Task;
