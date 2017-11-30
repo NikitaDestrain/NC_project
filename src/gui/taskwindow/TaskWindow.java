@@ -306,7 +306,7 @@ public class TaskWindow extends JFrame {
     }
 
 
-    private Task createTask() //для создания task по введенным значениям
+    private Task createTask() //для создания task
     {
         if (checkTask()) //проверка на валидность
         {
