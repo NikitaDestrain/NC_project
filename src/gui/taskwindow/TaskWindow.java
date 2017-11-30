@@ -2,6 +2,7 @@ package gui.taskwindow;
 
 
 import controller.Controller;
+import factories.TaskFactory;
 import gui.mainform.MainForm;
 import model.Task;
 import model.TaskStatus;
@@ -313,9 +314,9 @@ public class TaskWindow extends JFrame {
             calcPlannedDate(); //считаем и заносим в поля
             calcNotificationDate();
 
-            Task task = new Task(this.jTextField_name.getText().toString(), TaskStatus.Planned, this.jTextArea_descriprion.getText(), this.notificationDate, this.plannedDate);
 
-            return task;
+
+            return TaskFactory.createTask(this.jTextField_name.getText().toString(), TaskStatus.Planned, this.jTextArea_descriprion.getText(), this.notificationDate, this.plannedDate);
         }
         return null;
     }
