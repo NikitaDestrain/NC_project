@@ -3,7 +3,7 @@ package gui;
 import controller.Controller;
 import controller.IDGenerator;
 import gui.mainform.MainForm;
-import properties.Prop;
+import properties.ParserProperties;
 import controller.SerializeDeserialize;
 import model.Journal;
 
@@ -14,14 +14,10 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args)
     {
-        try {
-            Prop prop = new Prop(); //поля этого объекта содержат необхдимые значения
-        } catch (IOException e) {
-            System.out.println(e.toString()+" не верно указан файл конфигурации");
-        }
         SwingUtilities.invokeLater(() -> {
             try {
-                Journal journal = new SerializeDeserialize().readJournal();
+                 //поля этого объекта содержат необхдимые значения
+                Journal journal = new SerializeDeserialize().readJournal(ParserProperties.getProperties("PATH_TO_JOURNAL"));
                 if (journal == null)
                     JOptionPane.showMessageDialog(null, "Incorrect journal in file. You may create a new one","Error", JOptionPane.ERROR_MESSAGE);
                 IDGenerator.getInstance(journal.getMaxId());

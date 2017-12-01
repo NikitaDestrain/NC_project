@@ -6,6 +6,7 @@ import controller.SerializeDeserialize;
 import model.Journal;
 import model.Task;
 import model.TaskStatus;
+import properties.ParserProperties;
 
 import javax.swing.*;
 import java.awt.*;
@@ -193,7 +194,7 @@ public class MainForm extends JFrame {
 
                 if (action == JOptionPane.OK_OPTION) {
                     try {
-                        journalBackup.writeJournal(journal);
+                        journalBackup.writeJournal(journal, ParserProperties.getProperties("PATH_TO_JOURNAL"));
                     } catch (IOException e1) {
                         JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file ",
                                 "Error", JOptionPane.ERROR_MESSAGE);
@@ -249,7 +250,7 @@ public class MainForm extends JFrame {
 
             if (action == JOptionPane.OK_OPTION) {
                 try {
-                    journalBackup.writeJournal(this.journal);
+                    journalBackup.writeJournal(this.journal,ParserProperties.getProperties("PATH_TO_JOURNAL"));
                 } catch (IOException e1) {
                     JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file ",
                             "Error", JOptionPane.ERROR_MESSAGE);
@@ -261,7 +262,7 @@ public class MainForm extends JFrame {
         exportJournal.addActionListener((ActionEvent e) -> {
 
             try {
-                journalBackup.writeJournal(journal);
+                journalBackup.writeJournal(journal, ParserProperties.getProperties("PATH_TO_JOURNAL"));
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file ",
                         "Error", JOptionPane.ERROR_MESSAGE);
@@ -270,7 +271,7 @@ public class MainForm extends JFrame {
 
         importJournal.addActionListener((ActionEvent e) -> {
             try {
-                this.journal = journalBackup.readJournal();
+                this.journal = journalBackup.readJournal(ParserProperties.getProperties("PATH_TO_JOURNAL"));
                 tablePanel.setData(journal.getTasks());
                 tablePanel.refresh();
             } catch (IOException ex) {
