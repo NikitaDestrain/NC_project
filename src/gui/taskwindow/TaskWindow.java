@@ -144,7 +144,7 @@ public class TaskWindow extends JFrame {
         jDateChooser_notificationDate.setMinSelectableDate(new java.util.Date(System.currentTimeMillis()));
 
         jComboBox_changeStatus = new JComboBox<>();
-        jComboBox_changeStatus.setModel(new DefaultComboBoxModel<>(new String[]{"No", "Completed", "Cancel"}));
+        jComboBox_changeStatus.setModel(new DefaultComboBoxModel<>(new String[]{"No", "Completed", "Cancelled"}));
 
         jLabel_Hours = new javax.swing.JLabel("Hours");
         jLabel_minutes = new javax.swing.JLabel("Minutes");
@@ -438,8 +438,11 @@ public class TaskWindow extends JFrame {
     }
 
     private void mainFormEditTask(Task taskSet) {
-
-        taskSet.setStatus(TaskStatus.Rescheduled);
+        String status = (String) jComboBox_changeStatus.getSelectedItem();
+        if (status.equals("Cancelled"))
+            taskSet.setStatus(TaskStatus.Cancelled);
+        else if (status.equals("Completed"))
+            taskSet.setStatus(TaskStatus.Completed);
         controller.editTask(this.loadTask.getId(), taskSet);
         owner.updateJournal();
     }
