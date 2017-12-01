@@ -35,7 +35,7 @@ public class Controller {
     }
 
     public void addTaskFromBackup(Task task) {
-        if(checkDate(task.getNotificationDate())) {
+        if(checkDate(task.getNotificationDate()) && (task.getStatus() == TaskStatus.Planned || task.getStatus() == TaskStatus.Rescheduled)) {
             notifier.addNotification(task);
         }
         else {
