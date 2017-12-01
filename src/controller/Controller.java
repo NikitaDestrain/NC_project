@@ -17,6 +17,7 @@ public class Controller {
 
     private Controller() {
         this.journal = new Journal();
+
         this.notifier = new Notifier();
     }
 
