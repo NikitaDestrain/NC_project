@@ -313,9 +313,6 @@ public class TaskWindow extends JFrame {
         {
             calcPlannedDate(); //считаем и заносим в поля
             calcNotificationDate();
-
-
-
             return TaskFactory.createTask(this.jTextField_name.getText().toString(), TaskStatus.Planned, this.jTextArea_descriprion.getText(), this.notificationDate, this.plannedDate);
         }
         return null;
@@ -334,6 +331,7 @@ public class TaskWindow extends JFrame {
             this.loadTask.setNotificationDate(this.notificationDate);
             String new_status = this.jComboBox_changeStatus.getSelectedItem().toString();
             if (new_status.equals("Cancel")) {
+                //controller.cancelNotification(loadTask.getId());
                 loadTask.setStatus(TaskStatus.Cancelled);
             }
             if (new_status.equals("Completed")) {
@@ -439,11 +437,17 @@ public class TaskWindow extends JFrame {
 
     private void mainFormEditTask(Task taskSet) {
         String status = (String) jComboBox_changeStatus.getSelectedItem();
-        if (status.equals("Cancelled"))
-            taskSet.setStatus(TaskStatus.Cancelled);
-        else if (status.equals("Completed"))
+        if (status.equals("Cancelled")){
+            controller.cancelNotification(taskSet.getId());
+        }
+        else if (status.equals("Completed")){
+            controller.cancelNotification(taskSet.getId());
             taskSet.setStatus(TaskStatus.Completed);
-        controller.editTask(this.loadTask.getId(), taskSet);
+        }
+        else {
+            controller.editTask(taskSet.getId(), taskSet);
+            taskSet.setStatus(TaskStatus.Rescheduled);
+        }
         owner.updateJournal();
     }
 
