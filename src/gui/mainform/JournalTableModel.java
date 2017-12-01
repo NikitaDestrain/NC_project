@@ -74,12 +74,14 @@ public class JournalTableModel extends AbstractTableModel {
             case 4:
                 return planned.get(Calendar.DAY_OF_MONTH) +"."+ (planned.get(Calendar.MONTH)+1) +"."+planned.get(Calendar.YEAR);// + " " + task.getPlannedDate().getTime();
             case 5:
-                minutes = planned.get(Calendar.MINUTE) == 0 ? planned.get(Calendar.MINUTE) + "0" : planned.get(Calendar.MINUTE) + "";
+                minutes = planned.get(Calendar.MINUTE) + "";
+                minutes = minutes.length() == 1 ? "0" + minutes : minutes;
                 return planned.get(Calendar.HOUR_OF_DAY) + ":" + minutes;// + " " + task.getNotificationDate().getTime();
             case 6:
                 return  notif.get(Calendar.DAY_OF_MONTH) +"."+ (notif.get(Calendar.MONTH)+1) +"."+notif.get(Calendar.YEAR);
             case 7:
-                minutes = notif.get(Calendar.MINUTE) == 0 ? notif.get(Calendar.MINUTE) + "0" : notif.get(Calendar.MINUTE) + "";
+                minutes = notif.get(Calendar.MINUTE) + "";
+                minutes = minutes.length() == 1 ? "0" + minutes : minutes;
                 return notif.get(Calendar.HOUR_OF_DAY) + ":" + minutes;
             default:
                 return null;
