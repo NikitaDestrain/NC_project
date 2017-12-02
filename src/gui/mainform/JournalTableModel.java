@@ -3,6 +3,7 @@ package gui.mainform;
 import model.Task;
 import model.TaskStatus;
 
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,7 +12,7 @@ import java.util.List;
 public class JournalTableModel extends AbstractTableModel {
     private List<Task> tasks;
     private String[] columnNames = {"*", "Status", "Name", "Description", "Planned date", "Planned time", "Notification date",
-    "Notification time"};
+            "Notification time"};
     private Object[][] data;
 
     // TODO CHECKBOXES, КНОПКИ ЛАЙФСАЙКЛА - отменить, отложить
@@ -45,8 +46,7 @@ public class JournalTableModel extends AbstractTableModel {
     public int getRowCount() {
         if (tasks != null) {
             return tasks.size();
-        }
-        else return -1;
+        } else return -1;
     }
 
     @Override
@@ -72,13 +72,13 @@ public class JournalTableModel extends AbstractTableModel {
             case 3:
                 return task.getDescription();
             case 4:
-                return planned.get(Calendar.DAY_OF_MONTH) +"."+ (planned.get(Calendar.MONTH)+1) +"."+planned.get(Calendar.YEAR);// + " " + task.getPlannedDate().getTime();
+                return planned.get(Calendar.DAY_OF_MONTH) + "." + (planned.get(Calendar.MONTH) + 1) + "." + planned.get(Calendar.YEAR);// + " " + task.getPlannedDate().getTime();
             case 5:
                 minutes = planned.get(Calendar.MINUTE) + "";
                 minutes = minutes.length() == 1 ? "0" + minutes : minutes;
                 return planned.get(Calendar.HOUR_OF_DAY) + ":" + minutes;// + " " + task.getNotificationDate().getTime();
             case 6:
-                return  notif.get(Calendar.DAY_OF_MONTH) +"."+ (notif.get(Calendar.MONTH)+1) +"."+notif.get(Calendar.YEAR);
+                return notif.get(Calendar.DAY_OF_MONTH) + "." + (notif.get(Calendar.MONTH) + 1) + "." + notif.get(Calendar.YEAR);
             case 7:
                 minutes = notif.get(Calendar.MINUTE) + "";
                 minutes = minutes.length() == 1 ? "0" + minutes : minutes;
@@ -97,7 +97,14 @@ public class JournalTableModel extends AbstractTableModel {
                 fireTableCellUpdated(rowIndex, columnIndex);
                 return;
             case 2:
-                task.setName((String) aValue);
+                String value = (String) aValue;
+                if (value.equals("")) {
+                    JOptionPane.showMessageDialog(null,
+                            "Task name should not be empty!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                else
+                    task.setName((String) aValue);
                 return;
             case 3:
                 task.setDescription((String) aValue);

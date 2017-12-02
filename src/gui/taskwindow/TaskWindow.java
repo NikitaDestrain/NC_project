@@ -438,7 +438,12 @@ public class TaskWindow extends JFrame {
     private void mainFormEditTask(Task taskSet) {
         String status = (String) jComboBox_changeStatus.getSelectedItem();
         if (status.equals("Cancelled")){
-            controller.cancelNotification(taskSet.getId());
+            if (taskSet.getStatus() == TaskStatus.Completed)
+                JOptionPane.showMessageDialog(null,
+                        "You can not cancel already completed task!",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            else
+                controller.cancelNotification(taskSet.getId());
         }
         else if (status.equals("Completed")){
             controller.cancelNotification(taskSet.getId());

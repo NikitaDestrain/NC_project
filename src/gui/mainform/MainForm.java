@@ -25,6 +25,7 @@ public class MainForm extends JFrame {
     private ImageIcon icon = new ImageIcon("icon.png");//todo повод завести новую пропертю
     private SystemTray systemTray = SystemTray.getSystemTray();
     private static MainForm instance;
+    private TaskSender taskSender = TaskSender.getInstance();
 
     public MainForm() {
         super("Task Scheduler");
@@ -65,6 +66,7 @@ public class MainForm extends JFrame {
                                     for (int j = i + 1; j < rows.length; j++) {
                                         rows[j]--;
                                     }
+                                    taskSender.clearTask();
                                 }
                                 break;
                         }

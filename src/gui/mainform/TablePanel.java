@@ -61,9 +61,8 @@ public class TablePanel extends JPanel {
                     if (col == 0) {
                         Boolean b = (Boolean) table.getValueAt(row, col);
                         table.setValueAt(!b, row, col);
-                    } else {
-                        taskSender.setTask(task);
                     }
+                        taskSender.setTask(task);
                 }
             }
 
@@ -76,10 +75,16 @@ public class TablePanel extends JPanel {
             MainForm mainForm = MainForm.getInstance();
             TaskSender sender = TablePanel.getInstance().getTaskSender();
             Task task = sender.getTask();
-            task.setStatus(TaskStatus.Cancelled);
-            controller.cancelNotification(task.getId());
-            mainForm.updateJournal();
-            refresh();
+            if (task.getStatus() == TaskStatus.Completed)
+                JOptionPane.showMessageDialog(null,
+                        "You can not cancel already completed task!",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            else {
+                task.setStatus(TaskStatus.Cancelled);
+                controller.cancelNotification(task.getId());
+                mainForm.updateJournal();
+                refresh();
+            }
         });
 
         setLayout(new BorderLayout());
