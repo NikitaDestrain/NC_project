@@ -12,16 +12,18 @@ public class Task implements Comparable<Task>, Serializable
     private String description;
     private Date notificationDate;
     private Date plannedDate;
-    private int id = IDGenerator.getInstance().createId();//todo это не правильно сразу по нескольким причинам
+   // private int id = IDGenerator.getInstance().createId();//todo это не правильно сразу по нескольким причинам
+    private int id;
     // 1. Не таска должна отвечать за генерацию ID, это не ее ответственность
     // 2. Каждый раз при создания нового java-объекта таски у вас генерируется новый ID. А если это не новая таска, а уже существующая таска?
 
-    public Task(String name, TaskStatus status, String description, Date notificationDate, Date plannedDate) {
+    public Task(String name, TaskStatus status, String description, Date notificationDate, Date plannedDate, int id) {
         this.name = name;
         this.status = status;
         this.description = description;
         this.notificationDate = notificationDate;
         this.plannedDate = plannedDate;
+        this.id = id;
     }
 
     public void setTask(Task task)
