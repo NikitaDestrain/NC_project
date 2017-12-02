@@ -13,21 +13,21 @@ import java.util.List;
 public class SerializeDeserialize implements Serializer {
 
     @Override
-    public void writeJournal(Journal journal) throws IOException {
-        try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(
-                new FileOutputStream(ParserProperties.getProperties("PATH_TO_JOURNAL")))) {
+    public void writeJournal(Journal journal, String path) throws IOException {
+        try {
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(
+                    new FileOutputStream(path));
             objectOutputStream.writeObject(journal);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Could not save journal to file ",
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            e.getMessage();
         }
     }
 
     @Override
-    public Journal readJournal() throws IOException {
+    public Journal readJournal(String path) throws IOException {
         Journal journal = null;
-        try(ObjectInputStream objectInputStream = new ObjectInputStream(
-                new FileInputStream(ParserProperties.getProperties("PATH_TO_JOURNAL")))) {
+        try (ObjectInputStream objectInputStream = new ObjectInputStream(
+                new FileInputStream(path))) {
             journal = (Journal) objectInputStream.readObject();
         } catch (EOFException e) {
             return null;

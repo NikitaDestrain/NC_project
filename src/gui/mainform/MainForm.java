@@ -17,7 +17,7 @@ import java.util.Date;
 public class MainForm extends JFrame {
     private JFileChooser fileChooser;
     private SerializeDeserialize journalBackup;
-    private Controller controller;// = Controller.getInstance();
+    //private Controller controller;// = Controller.getInstance();
     private Journal journal;
     private TablePanel tablePanel;
     private ButtonPanel buttonPanel;
@@ -60,7 +60,7 @@ public class MainForm extends JFrame {
                             case TaskActionListener.DELETE_TASK:
                                 for (int i = 0; i < rows.length; i++) {
                                     Task task = journal.getTasks().get(rows[i]);
-                                    controller.removeTask(task.getId());
+                                    Controller.getInstance().removeTask(task.getId());
                                     updateJournal();
                                     buttonPanel.setJtable((tablePanel.getTable()));
                                     for (int j = i + 1; j < rows.length; j++) {
@@ -192,17 +192,24 @@ public class MainForm extends JFrame {
                 int action = JOptionPane.showConfirmDialog(
                         MainForm.this, "Do you really want to close the app?",
                         "Warning!",
-                        JOptionPane.YES_NO_CANCEL_OPTION);
+                        JOptionPane.YES_NO_OPTION);
 
                 if (action == JOptionPane.OK_OPTION) {
                     try {
-                        journalBackup.writeJournal(journal);
+                        String path = ParserProperties.getProperties("PATH_TO_JOURNAL");
+                        if (path == null)
+                            JOptionPane.showMessageDialog(MainForm.this,
+                                    "Incorrect file path",
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        else {
+                            journalBackup.writeJournal(journal, path);
+                            System.exit(0);
+                        }
                     } catch (IOException e1) {
-                        JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file ",
+                        JOptionPane.showMessageDialog(MainForm.this,
+                                "Could not save journal to file",
                                 "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                    //System.out.println("Closing");
-                    System.exit(0);
                 }
             }
         });
@@ -248,11 +255,11 @@ public class MainForm extends JFrame {
             int action = JOptionPane.showConfirmDialog(
                     MainForm.this, "Do you really want to close the app?",
                     "Warning!",
-                    JOptionPane.YES_NO_CANCEL_OPTION);//todo No и Cancel делаю ровно то же самое.
+                    JOptionPane.YES_NO_OPTION);//todo No и Cancel делаю ровно то же самое.
 
             if (action == JOptionPane.OK_OPTION) {
                 try {
-                    journalBackup.writeJournal(this.journal);//todo захардкоженные значения стоит выносить в константы
+                    journalBackup.writeJournal(this.journal, ParserProperties.getProperties("PATH_TO_JOURNAL"));//todo захардкоженные значения стоит выносить в константы
                 } catch (IOException e1) {
                     JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file ",
                             "Error", JOptionPane.ERROR_MESSAGE);
@@ -264,7 +271,7 @@ public class MainForm extends JFrame {
         exportJournal.addActionListener((ActionEvent e) -> {
 
             try {
-                journalBackup.writeJournal(journal);
+                journalBackup.writeJournal(journal, ParserProperties.getProperties("PATH_TO_JOURNAL"));
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file ",
                         "Error", JOptionPane.ERROR_MESSAGE);
@@ -273,7 +280,7 @@ public class MainForm extends JFrame {
 
         importJournal.addActionListener((ActionEvent e) -> {
             try {
-                this.journal = journalBackup.readJournal();
+                this.journal = journalBackup.readJournal(ParserProperties.getProperties("PATH_TO_JOURNAL"));
                 tablePanel.setData(journal.getTasks());
                 tablePanel.refresh();
             } catch (IOException ex) {
@@ -287,15 +294,16 @@ public class MainForm extends JFrame {
 
     /**
      * Sets journal to be represented at this <code>mainform</code>
+     *
      * @param journal object with tasks for representation
      */
     public void setJournal(Journal journal) {
         if (journal != null) {
-            controller = Controller.getInstance();
-            for(Task t : journal.getTasks()) {
-                controller.addTaskFromBackup(t);
+            //controller = Controller.getInstance();
+            for (Task t : journal.getTasks()) {
+                Controller.getInstance().addTaskFromBackup(t);
             }
-            this.journal = controller.getJournal();
+            this.journal = Controller.getInstance().getJournal();
             tablePanel.setData(this.journal.getTasks());
             tablePanel.refresh();
         }
@@ -306,9 +314,9 @@ public class MainForm extends JFrame {
     }
 
     public void updateJournal() {
-        controller = Controller.getInstance();//todo нет нужны каждый раз перезаписывать поле. Синглетон на то и синглетон, что он всегда один и тот же.
+        //controller = Controller.getInstance();//todo нет нужны каждый раз перезаписывать поле. Синглетон на то и синглетон, что он всегда один и тот же.
         // Можно или один раз инициализировать поле или вообще отказаться от поля и каждый раз просто вызывать Controller.getInstance()
-        this.journal = controller.getJournal();
+        this.journal = Controller.getInstance().getJournal();
         tablePanel.setData(this.journal.getTasks());
         tablePanel.refresh();
     }
