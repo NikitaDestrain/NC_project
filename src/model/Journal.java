@@ -22,7 +22,9 @@ public class Journal implements Serializable {
         tasks.remove(id);
     }
 
-    public void setTask(int id, Task task) {
+    public void setTask(int id, Task task) {//todo не понятна логика метода. Он получает на вход id и таску. Удаляет из журнала таску с указанным id
+        // и добавляет в журнал новую таску (у которой в общем случае может быть такой же, а может быть и другой id)
+        // Для какого сценария может потребоваться такая логика?
         tasks.remove(id);
         tasks.put(task.getId(), task);
     }

@@ -17,9 +17,9 @@ public class NotificationTimer extends TimerTask {
     @Override
     public void run() {
         notificationForm = new NotificationForm();
-        task.setStatus(TaskStatus.Completed);
+        task.setStatus(TaskStatus.Completed);//todo статус должен менться по кнопке! Нотификация - это еще не команда к завершению таски, жизненным цмклом управляет пользователь через кнопки.
         notificationForm.setTask(task);
         notificationForm.setVisible(true);
-        Sound.playSound("sounds/snd.wav").join();
+        Sound.playSound("sounds/snd.wav").join();//todo еще одно захардкоженное знаение. Напрашивается новая пропертя.
     }
 }

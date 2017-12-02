@@ -22,7 +22,7 @@ public class MainForm extends JFrame {
     private TablePanel tablePanel;
     private ButtonPanel buttonPanel;
     private TrayIcon tray;
-    private ImageIcon icon = new ImageIcon("icon.png");
+    private ImageIcon icon = new ImageIcon("icon.png");//todo повод завести новую пропертю
     private SystemTray systemTray = SystemTray.getSystemTray();
     private static MainForm instance;
 
@@ -233,7 +233,7 @@ public class MainForm extends JFrame {
         JMenu fileMenu = new JMenu("File");
         menu.add(fileMenu);
 
-        JMenuItem exportJournal = new JMenuItem("Export journal...");
+        JMenuItem exportJournal = new JMenuItem("Export journal...");//todo эти пункты сейчас ничего полезного не делают
         JMenuItem importJournal = new JMenuItem("Import journal...");
         JMenuItem exit = new JMenuItem("Exit");
 
@@ -246,11 +246,11 @@ public class MainForm extends JFrame {
             int action = JOptionPane.showConfirmDialog(
                     MainForm.this, "Do you really want to close the app?",
                     "Warning!",
-                    JOptionPane.YES_NO_CANCEL_OPTION);
+                    JOptionPane.YES_NO_CANCEL_OPTION);//todo No и Cancel делаю ровно то же самое.
 
             if (action == JOptionPane.OK_OPTION) {
                 try {
-                    journalBackup.writeJournal(this.journal,ParserProperties.getProperties("PATH_TO_JOURNAL"));
+                    journalBackup.writeJournal(this.journal,ParserProperties.getProperties("PATH_TO_JOURNAL"));//todo захардкоженные значения стоит выносить в константы
                 } catch (IOException e1) {
                     JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file ",
                             "Error", JOptionPane.ERROR_MESSAGE);
@@ -304,7 +304,8 @@ public class MainForm extends JFrame {
     }
 
     public void updateJournal() {
-        controller = Controller.getInstance();
+        controller = Controller.getInstance();//todo нет нужны каждый раз перезаписывать поле. Синглетон на то и синглетон, что он всегда один и тот же.
+        // Можно или один раз инициализировать поле или вообще отказаться от поля и каждый раз просто вызывать Controller.getInstance()
         this.journal = controller.getJournal();
         tablePanel.setData(this.journal.getTasks());
         tablePanel.refresh();

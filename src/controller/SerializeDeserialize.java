@@ -11,10 +11,10 @@ public class SerializeDeserialize implements Serializer {
 
     @Override
     public void writeJournal(Journal journal, String path) throws IOException {
-        try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("backup.txt"))) {
+        try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("backup.txt"))) {//todo а зачем нам на входе path, если у нас захардкоженное значение?
             objectOutputStream.writeObject(journal);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace();//todo это ужасный способ обработки ошибки. В качестве отладки - ок, но пользователю то что то сказать надо? Пользователь в консоль смотреть не будет
         }
     }
 
@@ -26,7 +26,7 @@ public class SerializeDeserialize implements Serializer {
         } catch (EOFException e) {
             return null;
         } catch (ClassNotFoundException e1) {
-            e1.printStackTrace();
+            e1.printStackTrace(); //todo аналогично
         }
         return journal;
     }
