@@ -17,7 +17,7 @@ public class Main {
         SwingUtilities.invokeLater(() -> {
             try {
                  //поля этого объекта содержат необхдимые значения
-                Journal journal = new SerializeDeserialize().readJournal(ParserProperties.getProperties("PATH_TO_JOURNAL"));//todo константы стоит выносить в public static final переменные
+                Journal journal = new SerializeDeserialize().readJournal();//todo константы стоит выносить в public static final переменные
                 if (journal == null) {
                     IDGenerator.getInstance();
                     JOptionPane.showMessageDialog(null, "Incorrect journal in file. You may create a new one", "Error", JOptionPane.ERROR_MESSAGE);

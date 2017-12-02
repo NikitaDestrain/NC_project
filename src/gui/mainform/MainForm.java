@@ -196,7 +196,7 @@ public class MainForm extends JFrame {
 
                 if (action == JOptionPane.OK_OPTION) {
                     try {
-                        journalBackup.writeJournal(journal, ParserProperties.getProperties("PATH_TO_JOURNAL"));
+                        journalBackup.writeJournal(journal);
                     } catch (IOException e1) {
                         JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file ",
                                 "Error", JOptionPane.ERROR_MESSAGE);
@@ -252,7 +252,7 @@ public class MainForm extends JFrame {
 
             if (action == JOptionPane.OK_OPTION) {
                 try {
-                    journalBackup.writeJournal(this.journal,ParserProperties.getProperties("PATH_TO_JOURNAL"));//todo захардкоженные значения стоит выносить в константы
+                    journalBackup.writeJournal(this.journal);//todo захардкоженные значения стоит выносить в константы
                 } catch (IOException e1) {
                     JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file ",
                             "Error", JOptionPane.ERROR_MESSAGE);
@@ -264,7 +264,7 @@ public class MainForm extends JFrame {
         exportJournal.addActionListener((ActionEvent e) -> {
 
             try {
-                journalBackup.writeJournal(journal, ParserProperties.getProperties("PATH_TO_JOURNAL"));
+                journalBackup.writeJournal(journal);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file ",
                         "Error", JOptionPane.ERROR_MESSAGE);
@@ -273,7 +273,7 @@ public class MainForm extends JFrame {
 
         importJournal.addActionListener((ActionEvent e) -> {
             try {
-                this.journal = journalBackup.readJournal(ParserProperties.getProperties("PATH_TO_JOURNAL"));
+                this.journal = journalBackup.readJournal();
                 tablePanel.setData(journal.getTasks());
                 tablePanel.refresh();
             } catch (IOException ex) {
