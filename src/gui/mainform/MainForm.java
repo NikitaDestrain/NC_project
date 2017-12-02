@@ -230,7 +230,7 @@ public class MainForm extends JFrame {
     private void addToTray() {
         try {
             systemTray.add(tray);
-            //tray.displayMessage("Свернулся", "В трей", TrayIcon.MessageType.INFO);
+            tray.displayMessage("Attention!", "Task scheduler was hidden to tray", TrayIcon.MessageType.INFO);
         } catch (AWTException e) {
             e.printStackTrace();
         }
@@ -281,8 +281,15 @@ public class MainForm extends JFrame {
         importJournal.addActionListener((ActionEvent e) -> {
             try {
                 this.journal = journalBackup.readJournal(ParserProperties.getProperties("PATH_TO_JOURNAL"));
-                tablePanel.setData(journal.getTasks());
-                tablePanel.refresh();
+                if (this.journal != null) {
+                    Controller.getInstance().setJournal(this.journal);
+                    tablePanel.setData(journal.getTasks());
+                    tablePanel.refresh();
+                }
+                else
+                    JOptionPane.showMessageDialog(MainForm.this,
+                            "Could not load journal from file",
+                            "Error", JOptionPane.ERROR_MESSAGE);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(MainForm.this, "Could not load journal from file",
                         "Error", JOptionPane.ERROR_MESSAGE);
@@ -300,9 +307,7 @@ public class MainForm extends JFrame {
     public void setJournal(Journal journal) {
         if (journal != null) {
             //controller = Controller.getInstance();
-            for (Task t : journal.getTasks()) {
-                Controller.getInstance().addTaskFromBackup(t);
-            }
+            Controller.getInstance().setJournal(journal);
             this.journal = Controller.getInstance().getJournal();
             tablePanel.setData(this.journal.getTasks());
             tablePanel.refresh();
