@@ -17,7 +17,6 @@ public class Controller {
 
     private Controller() {
         this.journal = new Journal();
-
         this.notifier = new Notifier();
     }
 
@@ -52,15 +51,9 @@ public class Controller {
 
     //создается таск вместе с оповещением
     public void addTask(Task task) {
-        if(checkDate(task.getNotificationDate())) {
-            journal.addTask(task);
-            notifier.addNotification(task);
-            mainForm.updateJournal();
-        }
-        else
-            JOptionPane.showMessageDialog(null, "Task you intended to add has incorrect notification time!",
-                    "Error", JOptionPane.ERROR_MESSAGE); //todo нарушение ответственности слоев. Контроллер не отвечает за показ сообщений пользователю.
-        // контроллеру стоит выбросить исключение, view слою его поймать и соответственным образом обработать (показать сообщение пользователю)
+        journal.addTask(task);
+        notifier.addNotification(task);
+        mainForm.updateJournal();
     }
 
     //удаляется таск и оповещение
@@ -77,6 +70,7 @@ public class Controller {
         mainForm.updateJournal();
     }
 
+    //завершает таску
     public void finishNotification(int id) {
         notifier.cancelNotification(id);
         journal.getTask(id).setStatus(TaskStatus.Completed);
@@ -87,15 +81,13 @@ public class Controller {
     public void updateNotification(int id){
         Task task = journal.getTask(id);
         task.setStatus(TaskStatus.Rescheduled);
-        notifier.editNotification(id, task);
-        journal.getTask(id).setStatus(TaskStatus.Rescheduled);//todo дублирование
+        notifier.editNotification(task);
         mainForm.updateJournal();
     }
 
-    //изменение таски полностью !!!edit rename
-    public void editTask(int id, Task task){
-        journal.setTask(id, task);
-        notifier.editNotification(id, task);
+    //изменение таски полностью
+    public void editTask(Task task){
+        notifier.editNotification(task);
         mainForm.updateJournal();
     }
 }

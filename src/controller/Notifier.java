@@ -29,9 +29,9 @@ public class Notifier {
     }
 
     //приходит уже измененный таск с перенесенным временем
-    protected void editNotification(int id, Task task) { //todo аналогичная проблема, как в Journal.setTask. Нет нужды передавать id отдельно, он есть в самой таске.
-        if(timers.containsKey(id)) {
-            Timer timer_old = timers.get(id);
+    protected void editNotification(Task task) {
+        if(timers.containsKey(task.getId())) {
+            Timer timer_old = timers.get(task.getId());
             timer_old.cancel();
             NotificationTimer notificationTimer = new NotificationTimer(task);
             Timer timer = new Timer(true);

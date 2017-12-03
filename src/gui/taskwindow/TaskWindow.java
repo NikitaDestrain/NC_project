@@ -352,7 +352,7 @@ private void initComponentsEditTask()
     jButton_cancel = new JButton();
     jButton_cancel.setText("Cancel");
     jButton_TaskCompleted = new JButton();
-    jButton_TaskCompleted.setText("Completed task");
+    jButton_TaskCompleted.setText("Complete task");
     jButton_CancelTask = new JButton();
     jButton_CancelTask.setText("Cancel task");
 
@@ -643,13 +643,13 @@ private void initComponentsEditTask()
 
         if((loadTask.getStatus()!=TaskStatus.Completed)&&(loadTask.getStatus()!=TaskStatus.Cancelled))
         {
-            controller.editTask(taskSet.getId(), taskSet);
+            controller.editTask(taskSet);
             taskSet.setStatus(TaskStatus.Rescheduled);
 
         }
         else
         {
-            controller.editTask(taskSet.getId(), taskSet);
+            controller.editTask(taskSet);
         }
         owner.updateJournal();
     }
