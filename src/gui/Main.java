@@ -1,6 +1,5 @@
 package gui;
 
-import controller.Controller;
 import controller.IDGenerator;
 import gui.mainform.MainForm;
 import properties.ParserProperties;
@@ -8,7 +7,6 @@ import controller.SerializeDeserialize;
 import model.Journal;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 
 public class Main {
