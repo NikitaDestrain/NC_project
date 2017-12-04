@@ -3,37 +3,52 @@ package properties;
 import exceptions.IllegalPropertyException;
 
 import java.io.FileInputStream;
-
 import java.io.IOException;
 import java.util.Properties;
 
 public class ParserProperties //todo к сожалению, это не синглетон. инстанс создается, но не используется.
 {
-    private static  String PATH_TO_CONFIG = "src/properties/Config.properties";//todo не храните проперти в пакетах исходного кода.
+   private static  String PATH_TO_CONFIG = "Config.properties";//todo не храните проперти в пакетах исходного кода.
     // Проперти это что-то, что может поменять конечный пользователь. Они должны лежать отдельно, конечному пользователю нет нужны лезть в сорцы
-    private static ParserProperties instance = new ParserProperties();
+    private static ParserProperties instance;
     private static Properties props;
 
 
-    private ParserProperties()
+
+    private ParserProperties() throws IOException //указываем конкретный путь в файлу с конфигурацией
     {
-        props = new Properties();
+
+        this.props = new Properties();
+        FileInputStream fin = new FileInputStream(PATH_TO_CONFIG);
+        this.props.load(fin);
+        fin.close();
     }
 
 
-    public static synchronized String  getProperties(String key) throws IOException, IllegalPropertyException { //todo каждый раз, когда нужно получить значение по ключу, мы заново загружаем весь файл.
+
+    public static  ParserProperties getInstance () throws IOException {
+        if(instance == null)
+        {
+            instance = new ParserProperties();
+        }
+    return  instance;
+    }
+
+    public  synchronized String getProperties(String key) throws IllegalPropertyException {
+        String s = props.getProperty(key);
+        if (s == null) {
+            throw new IllegalPropertyException();
+        } else {
+            return s;
+        }
+    }
+
+
+    /*  public static synchronized String  getProperties(String key) throws IOException { //todo каждый раз, когда нужно получить значение по ключу, мы заново загружаем весь файл.
         // А если у нас не одна пропертя, а 500? Весь смысл парсера пропертей в том, чтобы предоставить простой программный доступ к пропертям, которые хранятся где-то извне.
         // Стандартный подход - при запуске приложения один раз прочитать файл, сохранить результаты в переменную и потом предоставлять всему приложению быстрый доступ к пропертям.
+*/
 
-
-       FileInputStream fin = new FileInputStream(PATH_TO_CONFIG);
-
-       props.load(fin);
-       fin.close();
-       String property = props.getProperty(key);
-       if (property == null) throw new IllegalPropertyException();
-       else return property;
-   }
 }
 
 
