@@ -517,22 +517,26 @@ private void initComponentsEditTask()
     {
         if (checkTask()) //проверка на валидность
         {
-            this.loadTask.setName(jTextField_name.getText().toString());
-            this.loadTask.setDescription(this.jTextArea_descriprion.getText().toString());
-            this.calcPlannedDate();
-            this.calcNotificationDate();
-
-            if(this.notificationDate.before(Calendar.getInstance().getTime()))
+            if((loadTask.getStatus()==TaskStatus.Cancelled )||( loadTask.getStatus() == TaskStatus.Completed ))
             {
-                JOptionPane.showMessageDialog(this, "Task you intended to add has incorrect notification time!", "Error", JOptionPane.ERROR_MESSAGE);
-                return false;
+                this.loadTask.setName(jTextField_name.getText().toString());
+                this.loadTask.setDescription(this.jTextArea_descriprion.getText().toString());
+            }
+            else {
+                this.loadTask.setName(jTextField_name.getText().toString());
+                this.loadTask.setDescription(this.jTextArea_descriprion.getText().toString());
+                this.calcPlannedDate();
+                this.calcNotificationDate();
+
+                if (this.notificationDate.before(Calendar.getInstance().getTime())) {
+                    JOptionPane.showMessageDialog(this, "Task you intended to add has incorrect notification time!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+
+                this.loadTask.setPlannedDate(this.plannedDate);
+                this.loadTask.setNotificationDate(this.notificationDate);
             }
 
-
-
-            this.loadTask.setPlannedDate(this.plannedDate);
-            this.loadTask.setNotificationDate(this.notificationDate);
-            System.out.println(loadTask);
             return true;
         }
 
