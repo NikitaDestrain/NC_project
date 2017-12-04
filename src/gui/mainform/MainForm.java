@@ -1,5 +1,6 @@
 package gui.mainform;
 
+import exceptions.IllegalPropertyException;
 import gui.taskwindow.TaskWindow;
 import controller.Controller;
 import controller.SerializeDeserialize;
@@ -205,6 +206,9 @@ public class MainForm extends JFrame {
                             journalBackup.writeJournal(journal, path);
                             System.exit(0);
                         }
+                    } catch (IllegalPropertyException ex) {
+                        JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
+                                "Error", JOptionPane.ERROR_MESSAGE);
                     } catch (IOException e1) {
                         JOptionPane.showMessageDialog(MainForm.this,
                                 "Could not save journal to file",
@@ -260,6 +264,9 @@ public class MainForm extends JFrame {
             if (action == JOptionPane.OK_OPTION) {
                 try {
                     journalBackup.writeJournal(this.journal, ParserProperties.getProperties("PATH_TO_JOURNAL"));//todo захардкоженные значения стоит выносить в константы
+                } catch (IllegalPropertyException ex) {
+                    JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (IOException e1) {
                     JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file ",
                             "Error", JOptionPane.ERROR_MESSAGE);
@@ -272,8 +279,11 @@ public class MainForm extends JFrame {
 
             try {
                 journalBackup.writeJournal(journal, ParserProperties.getProperties("PATH_TO_JOURNAL"));
+            } catch (IllegalPropertyException ex) {
+                JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
+                        "Error", JOptionPane.ERROR_MESSAGE);
             } catch (IOException ex) {
-                JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file ",
+                JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
@@ -285,11 +295,13 @@ public class MainForm extends JFrame {
                     Controller.getInstance().setJournal(this.journal);
                     tablePanel.setData(journal.getTasks());
                     tablePanel.refresh();
-                }
-                else
+                } else
                     JOptionPane.showMessageDialog(MainForm.this,
                             "Could not load journal from file",
                             "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (IllegalPropertyException ex) {
+                JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
+                        "Error", JOptionPane.ERROR_MESSAGE);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(MainForm.this, "Could not load journal from file",
                         "Error", JOptionPane.ERROR_MESSAGE);
