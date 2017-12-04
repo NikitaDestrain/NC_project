@@ -20,7 +20,8 @@ public class MainForm extends JFrame {
     private TablePanel tablePanel;
     private ButtonPanel buttonPanel;
     private TrayIcon tray;
-    private ImageIcon icon = new ImageIcon("icon.png");//todo повод завести новую пропертю
+   // private ImageIcon icon = new ImageIcon("icon.png");//todo повод завести новую пропертю
+    private ImageIcon icon;
     private SystemTray systemTray = SystemTray.getSystemTray();
     private static MainForm instance;
     private TaskSender taskSender = TaskSender.getInstance();
@@ -33,7 +34,7 @@ public class MainForm extends JFrame {
         journalBackup = new SerializeDeserialize();
         this.journal = new Journal();
 
-
+  icon=new ImageIcon(ParserProperties.getInstance().getProperties("MAIN_FORM_ICON"));
 
         tablePanel = new TablePanel(this);
         tablePanel.setData(this.journal.getTasks());

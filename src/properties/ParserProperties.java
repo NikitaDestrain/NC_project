@@ -21,15 +21,20 @@ public class ParserProperties //todo к сожалению, это не синг
         this.props = new Properties();
         FileInputStream fin = new FileInputStream(PATH_TO_CONFIG);
         this.props.load(fin);
+        System.out.println(props.propertyNames());
         fin.close();
     }
 
 
 
-    public static  ParserProperties getInstance () throws IOException {
+    public static  ParserProperties getInstance () {
         if(instance == null)
         {
-            instance = new ParserProperties();
+            try {
+                instance = new ParserProperties();
+            } catch (IOException e) {
+               return null;
+            }
         }
     return  instance;
     }
