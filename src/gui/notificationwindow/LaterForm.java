@@ -2,10 +2,10 @@ package gui.notificationwindow;
 
 import controller.Controller;
 import model.Task;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Calendar;
 import java.util.Date;
 
 public class LaterForm extends JFrame {
@@ -30,7 +30,7 @@ public class LaterForm extends JFrame {
         Dimension prefSize = new Dimension(400, 300);
         setPreferredSize(prefSize);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(screenSize.width - prefSize.width, screenSize.height - prefSize.height - 40, prefSize.width, prefSize.height);
+        setBounds(screenSize.width - prefSize.width, screenSize.height - prefSize.height - 70, prefSize.width, prefSize.height);
         setIconImage(icon.getImage());
         setVisible(true);
     }
@@ -53,8 +53,9 @@ public class LaterForm extends JFrame {
 
             okButton = new JButton("OK");
             okButton.addActionListener((ActionEvent e) -> {
-                task.setPlannedDate(new Date(task.getNotificationDate().getTime() + (int) (this.hoursSpinner.getValue()) * 60 * 60000 + (int) (this.minutesSpinner.getValue()) * 60000));
-                task.setNotificationDate(new Date(task.getNotificationDate().getTime() + (int) this.hoursSpinner.getValue() * 60 * 60000 + (int) this.minutesSpinner.getValue() * 60000));
+                task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
+                        - Calendar.getInstance().get(Calendar.SECOND) * 1000 + (int) this.hoursSpinner.getValue() * 60 * 60000
+                        + (int) this.minutesSpinner.getValue() * 60000));
                 controller.updateNotification(task.getId());
                 dispose();
             });
@@ -82,29 +83,29 @@ public class LaterForm extends JFrame {
             later60 = new JButton("1 hour");
 
             later5.addActionListener((ActionEvent e) -> {
-                task.setPlannedDate(new Date(task.getNotificationDate().getTime() + 5 * 60000));
-                task.setNotificationDate(new Date(task.getNotificationDate().getTime() + 5 * 60000));
+                task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
+                        - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 5 * 60000));
                 controller.updateNotification(task.getId());
                 dispose();
             });
 
             later15.addActionListener((ActionEvent e) -> {
-                task.setPlannedDate(new Date(task.getNotificationDate().getTime() + 15 * 60000));
-                task.setNotificationDate(new Date(task.getNotificationDate().getTime() + 15 * 60000));
+                task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
+                        - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 15 * 60000));
                 controller.updateNotification(task.getId());
                 dispose();
             });
 
             later30.addActionListener((ActionEvent e) -> {
-                task.setPlannedDate(new Date(task.getNotificationDate().getTime() + 30 * 60000));
-                task.setNotificationDate(new Date(task.getNotificationDate().getTime() + 30 * 60000));
+                task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
+                        - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 30 * 60000));
                 controller.updateNotification(task.getId());
                 dispose();
             });
 
             later60.addActionListener((ActionEvent e) -> {
-                task.setPlannedDate(new Date(task.getNotificationDate().getTime() + 60 * 60000));
-                task.setNotificationDate(new Date(task.getNotificationDate().getTime() + 60 * 60000));
+                task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
+                        - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 60 * 60000));
                 controller.updateNotification(task.getId());
                 dispose();
             });

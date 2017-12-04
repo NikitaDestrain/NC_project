@@ -27,7 +27,7 @@ public class NotificationForm extends JFrame {
         Dimension prefSize = new Dimension(400, 300);
         setPreferredSize(prefSize);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(screenSize.width - prefSize.width, screenSize.height - prefSize.height - 40, prefSize.width, prefSize.height);
+        setBounds(screenSize.width - prefSize.width, screenSize.height - prefSize.height - 70, prefSize.width, prefSize.height);
         setIconImage(icon.getImage());
         setResizable(false);
     }

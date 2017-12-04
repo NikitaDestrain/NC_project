@@ -1,20 +1,16 @@
 package gui.mainform;
 
-import exceptions.ConfigNotFound;
 import exceptions.IllegalPropertyException;
 import gui.taskwindow.TaskWindow;
 import controller.Controller;
 import controller.SerializeDeserialize;
 import model.Journal;
 import model.Task;
-import model.TaskStatus;
 import properties.ParserProperties;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.util.Date;
 
 public class MainForm extends JFrame {
     private JFileChooser fileChooser;

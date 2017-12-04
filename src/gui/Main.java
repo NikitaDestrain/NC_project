@@ -1,13 +1,11 @@
 package gui;
 
 import controller.IDGenerator;
-import exceptions.ConfigNotFound;
 import exceptions.IllegalPropertyException;
 import gui.mainform.MainForm;
 import properties.ParserProperties;
 import controller.SerializeDeserialize;
 import model.Journal;
-
 import javax.swing.*;
 import java.io.IOException;
 
@@ -27,13 +25,11 @@ public class Main {
                 JOptionPane.showMessageDialog(null, "Illegal value of property",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-            
             catch (IOException e) {
                 JOptionPane.showMessageDialog(null, "Could not load journal from file. You may create a new one", "Error", JOptionPane.ERROR_MESSAGE);
                 IDGenerator.getInstance();
                 new MainForm().setJournal(null);
             }
-
         });
     }
 }
