@@ -63,7 +63,7 @@ public class ButtonPanel extends JPanel implements ActionListener {
         }
         else if (clicked == editTask) {
             task = taskSender.getTask();
-            //taskSender.clearTask();
+            taskSender.clearTask();
             if (task != null)
                 listenerAction(TaskActionListener.EDIT_TASK, task);
         }

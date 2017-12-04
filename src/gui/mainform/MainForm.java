@@ -7,6 +7,7 @@ import controller.SerializeDeserialize;
 import model.Journal;
 import model.Task;
 import properties.ParserProperties;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -20,7 +21,6 @@ public class MainForm extends JFrame {
     private TablePanel tablePanel;
     private ButtonPanel buttonPanel;
     private TrayIcon tray;
-   // private ImageIcon icon = new ImageIcon("icon.png");//todo повод завести новую пропертю
     private ImageIcon icon;
     private SystemTray systemTray = SystemTray.getSystemTray();
     private static MainForm instance;
@@ -33,9 +33,12 @@ public class MainForm extends JFrame {
         fileChooser = new JFileChooser();
         journalBackup = new SerializeDeserialize();
         this.journal = new Journal();
-
-  icon=new ImageIcon(ParserProperties.getInstance().getProperties("MAIN_FORM_ICON"));
-
+        try {
+            icon = new ImageIcon(ParserProperties.getInstance().getProperties("MAIN_FORM_ICON"));
+        } catch (IllegalPropertyException e) {
+            JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
         tablePanel = new TablePanel(this);
         tablePanel.setData(this.journal.getTasks());
         tablePanel.refresh();
@@ -133,7 +136,6 @@ public class MainForm extends JFrame {
         setLayout(new BorderLayout());
         add(tablePanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
-
         tray = new TrayIcon(icon.getImage());
         tray.addActionListener((ActionEvent e) -> {
             setVisible(true);
@@ -198,7 +200,7 @@ public class MainForm extends JFrame {
 
                 if (action == JOptionPane.OK_OPTION) {
                     try {
-                        String path =ParserProperties.getInstance().getProperties("PATH_TO_JOURNAL");
+                        String path = ParserProperties.getInstance().getProperties("PATH_TO_JOURNAL");
                         if (path == null)
                             JOptionPane.showMessageDialog(MainForm.this,
                                     "Incorrect file path",
@@ -291,8 +293,6 @@ public class MainForm extends JFrame {
 
         importJournal.addActionListener((ActionEvent e) -> {
             try {
-
-
                 this.journal = journalBackup.readJournal(ParserProperties.getInstance().getProperties("PATH_TO_JOURNAL"));
                 if (this.journal != null) {
                     Controller.getInstance().setJournal(this.journal);
@@ -302,9 +302,7 @@ public class MainForm extends JFrame {
                     JOptionPane.showMessageDialog(MainForm.this,
                             "Could not load journal from file",
                             "Error", JOptionPane.ERROR_MESSAGE);
-            }
-
-            catch (IllegalPropertyException ex) {
+            } catch (IllegalPropertyException ex) {
                 JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
                         "Error", JOptionPane.ERROR_MESSAGE);
             } catch (IOException ex) {
