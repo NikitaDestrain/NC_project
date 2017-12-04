@@ -6,6 +6,8 @@ import model.Task;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Calendar;
+import java.util.Date;
 
 public class NotificationForm extends JFrame {
     private Task task;
@@ -64,13 +66,21 @@ public class NotificationForm extends JFrame {
             });
 
             finish.addActionListener((ActionEvent e) -> {
-                controller.finishNotification(task.getId());
+                if(controller.getJournal().getTask(task.getId()) != null)
+                    controller.finishNotification(task.getId());
+                else
+                    JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be finished!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 mainForm.updateJournal();
                 dispose();
             });
 
             cancel.addActionListener((ActionEvent e) -> {
-                controller.cancelNotification(task.getId());
+                if(controller.getJournal().getTask(task.getId()) != null)
+                    controller.cancelNotification(task.getId());
+                else
+                    JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be canceled!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 mainForm.updateJournal();
                 dispose();
             });

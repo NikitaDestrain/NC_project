@@ -53,10 +53,15 @@ public class LaterForm extends JFrame {
 
             okButton = new JButton("OK");
             okButton.addActionListener((ActionEvent e) -> {
-                task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
-                        - Calendar.getInstance().get(Calendar.SECOND) * 1000 + (int) this.hoursSpinner.getValue() * 60 * 60000
-                        + (int) this.minutesSpinner.getValue() * 60000));
-                controller.updateNotification(task.getId());
+                if(controller.getJournal().getTask(task.getId()) != null) {
+                    task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
+                            - Calendar.getInstance().get(Calendar.SECOND) * 1000 + (int) this.hoursSpinner.getValue() * 60 * 60000
+                            + (int) this.minutesSpinner.getValue() * 60000));
+                    controller.updateNotification(task.getId());
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 dispose();
             });
 
@@ -83,30 +88,50 @@ public class LaterForm extends JFrame {
             later60 = new JButton("1 hour");
 
             later5.addActionListener((ActionEvent e) -> {
-                task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
-                        - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 5 * 60000));
-                controller.updateNotification(task.getId());
+                if(controller.getJournal().getTask(task.getId()) != null) {
+                    task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
+                            - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 5 * 60000));
+                    controller.updateNotification(task.getId());
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 dispose();
             });
 
             later15.addActionListener((ActionEvent e) -> {
-                task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
-                        - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 15 * 60000));
-                controller.updateNotification(task.getId());
+                if(controller.getJournal().getTask(task.getId()) != null) {
+                    task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
+                            - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 15 * 60000));
+                    controller.updateNotification(task.getId());
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 dispose();
             });
 
             later30.addActionListener((ActionEvent e) -> {
-                task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
-                        - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 30 * 60000));
-                controller.updateNotification(task.getId());
+                if(controller.getJournal().getTask(task.getId()) != null) {
+                    task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
+                            - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 30 * 60000));
+                    controller.updateNotification(task.getId());
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 dispose();
             });
 
             later60.addActionListener((ActionEvent e) -> {
-                task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
-                        - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 60 * 60000));
-                controller.updateNotification(task.getId());
+                if(controller.getJournal().getTask(task.getId()) != null) {
+                    task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
+                            - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 60 * 60000));
+                    controller.updateNotification(task.getId());
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 dispose();
             });
 
