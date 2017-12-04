@@ -27,11 +27,7 @@ public class Main {
                 JOptionPane.showMessageDialog(null, "Illegal value of property",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-            catch (ConfigNotFound e)
-            {
-                JOptionPane.showMessageDialog(null, "Configuration file not found",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            
             catch (IOException e) {
                 JOptionPane.showMessageDialog(null, "Could not load journal from file. You may create a new one", "Error", JOptionPane.ERROR_MESSAGE);
                 IDGenerator.getInstance();
