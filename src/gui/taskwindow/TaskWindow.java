@@ -139,8 +139,9 @@ public class TaskWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
 
-                    controller.cancelNotification(loadTask.getId());
-                    loadTask.setStatus(TaskStatus.Completed);
+                 /*   controller.cancelNotification(loadTask.getId());
+                    loadTask.setStatus(TaskStatus.Completed);*/
+                 controller.finishNotification(loadTask.getId());
                     owner.updateJournal();
                     dispose();
 
@@ -532,7 +533,7 @@ private void initComponentsEditTask()
 
             this.loadTask.setPlannedDate(this.plannedDate);
             this.loadTask.setNotificationDate(this.notificationDate);
-            System.out.println(loadTask);
+         //   System.out.println(loadTask);
             return true;
         }
 
