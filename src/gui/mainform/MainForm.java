@@ -1,5 +1,6 @@
 package gui.mainform;
 
+import exceptions.ConfigNotFound;
 import exceptions.IllegalPropertyException;
 import gui.taskwindow.TaskWindow;
 import controller.Controller;
@@ -28,12 +29,15 @@ public class MainForm extends JFrame {
     private static MainForm instance;
     private TaskSender taskSender = TaskSender.getInstance();
 
+
     public MainForm() {
         super("Task Scheduler");
         instance = this;
         fileChooser = new JFileChooser();
         journalBackup = new SerializeDeserialize();
         this.journal = new Journal();
+
+
 
         tablePanel = new TablePanel(this);
         tablePanel.setData(this.journal.getTasks());
@@ -197,7 +201,7 @@ public class MainForm extends JFrame {
 
                 if (action == JOptionPane.OK_OPTION) {
                     try {
-                        String path = ParserProperties.getProperties("PATH_TO_JOURNAL");
+                        String path =ParserProperties.getInstance().getProperties("PATH_TO_JOURNAL");
                         if (path == null)
                             JOptionPane.showMessageDialog(MainForm.this,
                                     "Incorrect file path",
@@ -263,7 +267,7 @@ public class MainForm extends JFrame {
 
             if (action == JOptionPane.OK_OPTION) {
                 try {
-                    journalBackup.writeJournal(this.journal, ParserProperties.getProperties("PATH_TO_JOURNAL"));//todo захардкоженные значения стоит выносить в константы
+                    journalBackup.writeJournal(this.journal, ParserProperties.getInstance().getProperties("PATH_TO_JOURNAL"));//todo захардкоженные значения стоит выносить в константы
                 } catch (IllegalPropertyException ex) {
                     JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
                             "Error", JOptionPane.ERROR_MESSAGE);
@@ -278,7 +282,7 @@ public class MainForm extends JFrame {
         exportJournal.addActionListener((ActionEvent e) -> {
 
             try {
-                journalBackup.writeJournal(journal, ParserProperties.getProperties("PATH_TO_JOURNAL"));
+                journalBackup.writeJournal(journal, ParserProperties.getInstance().getProperties("PATH_TO_JOURNAL"));
             } catch (IllegalPropertyException ex) {
                 JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
                         "Error", JOptionPane.ERROR_MESSAGE);
@@ -290,7 +294,9 @@ public class MainForm extends JFrame {
 
         importJournal.addActionListener((ActionEvent e) -> {
             try {
-                this.journal = journalBackup.readJournal(ParserProperties.getProperties("PATH_TO_JOURNAL"));
+
+
+                this.journal = journalBackup.readJournal(ParserProperties.getInstance().getProperties("PATH_TO_JOURNAL"));
                 if (this.journal != null) {
                     Controller.getInstance().setJournal(this.journal);
                     tablePanel.setData(journal.getTasks());
@@ -299,7 +305,9 @@ public class MainForm extends JFrame {
                     JOptionPane.showMessageDialog(MainForm.this,
                             "Could not load journal from file",
                             "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (IllegalPropertyException ex) {
+            }
+
+            catch (IllegalPropertyException ex) {
                 JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
                         "Error", JOptionPane.ERROR_MESSAGE);
             } catch (IOException ex) {

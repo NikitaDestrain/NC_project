@@ -127,7 +127,7 @@ public class TaskWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
 
-                    controller.cancelNotification(loadTask.getId());
+                controller.cancelNotification(loadTask.getId());
                 owner.updateJournal();
                 dispose();
 
@@ -529,7 +529,7 @@ private void initComponentsEditTask()
             }
 
 
-            System.out.println(this.plannedDate + " " + this.notificationDate + " ");
+
             this.loadTask.setPlannedDate(this.plannedDate);
             this.loadTask.setNotificationDate(this.notificationDate);
             System.out.println(loadTask);
@@ -647,10 +647,7 @@ private void initComponentsEditTask()
             taskSet.setStatus(TaskStatus.Rescheduled);
 
         }
-        else
-        {
-            controller.editTask(taskSet);
-        }
+
         owner.updateJournal();
     }
 
