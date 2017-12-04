@@ -533,7 +533,7 @@ private void initComponentsEditTask()
 
             this.loadTask.setPlannedDate(this.plannedDate);
             this.loadTask.setNotificationDate(this.notificationDate);
-         //   System.out.println(loadTask);
+            System.out.println(loadTask);
             return true;
         }
 
