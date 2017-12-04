@@ -10,10 +10,6 @@ public class Journal implements Serializable {
         tasks = new HashMap<Integer, Task>();
     }
 
-    public Journal(HashMap<Integer, Task> tasks) {
-        this.tasks = tasks;
-    }
-
     public void addTask(Task task) {
         tasks.put(task.getId(),task);
     }

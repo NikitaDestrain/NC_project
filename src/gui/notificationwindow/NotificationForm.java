@@ -1,24 +1,31 @@
 package gui.notificationwindow;
 
 import controller.Controller;
+import exceptions.IllegalPropertyException;
 import gui.mainform.MainForm;
 import model.Task;
+import properties.ParserProperties;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Calendar;
-import java.util.Date;
 
 public class NotificationForm extends JFrame {
     private Task task;
     private ButtonPanel buttonPanel;
     private LabelPanel labelPanel;
-    private ImageIcon icon = new ImageIcon("icon.png");
+    private ImageIcon icon;
     private Controller controller = Controller.getInstance();;
     private MainForm mainForm = MainForm.getInstance();
 
     public NotificationForm() {
         super("Alarm!");
+        try {
+            icon = new ImageIcon(ParserProperties.getInstance().getProperties("MAIN_FORM_ICON"));
+        } catch (IllegalPropertyException e) {
+            JOptionPane.showMessageDialog(null, "Illegal value of property",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
         buttonPanel = new ButtonPanel();
         labelPanel = new LabelPanel();
         setLayout(new BorderLayout());

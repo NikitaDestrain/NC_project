@@ -20,7 +20,6 @@ public class NotificationTimer extends TimerTask {
         notificationForm = new NotificationForm();
         notificationForm.setTask(task);
         notificationForm.setVisible(true);
-       // Sound.playSound("sounds/snd.wav").join();//todo еще одно захардкоженное знаение. Напрашивается новая пропертя.
         Sound.playSound(ParserProperties.getInstance().getProperties("NOTIF_SOUND"));
     }
 }

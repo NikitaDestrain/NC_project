@@ -4,7 +4,7 @@ import gui.mainform.MainForm;
 import model.Journal;
 import model.Task;
 import model.TaskStatus;
-import javax.swing.*;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -34,9 +34,7 @@ public class Controller {
         return !date.before(Calendar.getInstance().getTime());
     }
 
-    public void setJournal(Journal journal) { //todo метод правильный по своей сути (нужно восстановить нотификации при запуске приложения), но не оптимальный с точки зрения лишний объектов.
-        // мы уже загрузили целый журнал из файла. Почему бы не использовать его? Для чего нам создавать новый объект журнала и копировать в него все таски из загруженного?
-        // я бы назвал этот метод setJournal и подавал в него бы сразу весь загруженный журнал, и уже в этом журнале бежал бы по списку тасок и делал необходимые действия
+    public void setJournal(Journal journal) {
         this.journal = journal;
         for (Task task : journal.getTasks()) {
             if (checkDate(task.getNotificationDate()) && (task.getStatus() == TaskStatus.Planned || task.getStatus() == TaskStatus.Rescheduled)) {

@@ -1,14 +1,8 @@
 package controller;
 
-import gui.mainform.MainForm;
 import model.Journal;
-import model.Task;
-import properties.ParserProperties;
 
-import javax.swing.*;
 import java.io.*;
-import java.util.LinkedList;
-import java.util.List;
 
 public class SerializeDeserialize implements Serializer {
 

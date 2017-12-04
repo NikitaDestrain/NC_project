@@ -1,7 +1,10 @@
 package gui.notificationwindow;
 
 import controller.Controller;
+import exceptions.IllegalPropertyException;
 import model.Task;
+import properties.ParserProperties;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,10 +15,16 @@ public class LaterForm extends JFrame {
     private JLabel message;
     private ButtonLaterPanel buttonLaterPanel;
     private WriteLaterPanel writeLaterPanel;
-    private ImageIcon icon = new ImageIcon("icon.png");
+    private ImageIcon icon;
 
     public LaterForm(Task task){
         setLayout(new GridLayout(3,1));
+        try {
+            icon = new ImageIcon(ParserProperties.getInstance().getProperties("MAIN_FORM_ICON"));
+        } catch (IllegalPropertyException e) {
+            JOptionPane.showMessageDialog(null, "Illegal value of property",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
         message = new JLabel("Choose the time for reschedule");
         message.setFont(new Font("Verdana", Font.BOLD, 18));
         message.setVerticalAlignment(SwingConstants.CENTER);

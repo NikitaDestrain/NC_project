@@ -1,6 +1,7 @@
 package controller;
 
 import model.Task;
+
 import java.util.*;
 
 public class Notifier {
@@ -15,7 +16,6 @@ public class Notifier {
     protected void addNotification(Task task) {
         NotificationTimer notificationTimer = new NotificationTimer(task);
         Timer timer = new Timer(true);
-        System.out.println(task.getNotificationDate().getTime() - System.currentTimeMillis());
         timer.schedule(notificationTimer, task.getNotificationDate().getTime() - System.currentTimeMillis());
         timers.put(task.getId(),timer);
     }
@@ -35,7 +35,6 @@ public class Notifier {
             timer_old.cancel();
             NotificationTimer notificationTimer = new NotificationTimer(task);
             Timer timer = new Timer(true);
-            System.out.println(task.getNotificationDate().getTime() - System.currentTimeMillis());
             timer.schedule(notificationTimer, task.getNotificationDate().getTime() - System.currentTimeMillis());
             timers.put(task.getId(), timer);
         }
