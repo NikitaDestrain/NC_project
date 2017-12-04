@@ -126,7 +126,6 @@ public class TaskWindow extends JFrame {
 
             public void actionPerformed(ActionEvent e) {
 
-
                 controller.cancelNotification(loadTask.getId());
                 owner.updateJournal();
                 dispose();
