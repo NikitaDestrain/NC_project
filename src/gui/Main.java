@@ -19,7 +19,6 @@ public class Main {
         } else {
             SwingUtilities.invokeLater(() -> {
                 try {
-                    //поля этого объекта содержат необхдимые значения
                     Journal journal = new SerializeDeserialize().readJournal(ParserProperties.getInstance().getProperties("PATH_TO_JOURNAL"));//todo константы стоит выносить в public static final переменные
                     if (journal == null) {
                         IDGenerator.getInstance();
