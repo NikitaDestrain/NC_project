@@ -10,7 +10,6 @@ import java.util.Date;
 public class TaskFactory  
 
 {
-
     /**
      * Method for creating a task object
      * {@linkplain model.Task}
@@ -23,7 +22,7 @@ public class TaskFactory
      */
    public static Task createTask (String name, TaskStatus status, String description, Date notificationDate, Date plannedDate)
    {
-        // todo фаблика должна быть ответственна за конструирование объекта таски. И за проставление у таски ID - тоже
+        //todo фаблика должна быть ответственна за конструирование объекта таски. И за проставление у таски ID - тоже
 
        return  new Task(name, status, description, notificationDate, plannedDate, IDGenerator.getInstance().createId());
 
