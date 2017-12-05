@@ -6,11 +6,24 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * A class that allows you to read the configuration file. It also provides globally access to the properties described in the configuration file
+ */
+
 public class ParserProperties //todo к сожалению, это не синглетон. инстанс создается, но не используется.
 {
+    /**
+     * Path to the configuration file
+     */
    private static  String PATH_TO_CONFIG = "Config.properties";//todo не храните проперти в пакетах исходного кода.
     // Проперти это что-то, что может поменять конечный пользователь. Они должны лежать отдельно, конечному пользователю нет нужны лезть в сорцы
+    /**
+     * Object of current class
+     */
     private static ParserProperties instance;
+    /**
+     * Object helper class for reading and displaying properties
+     */
     private static Properties props;
 
 
@@ -26,7 +39,11 @@ public class ParserProperties //todo к сожалению, это не синг
     }
 
 
+    /**
+     * A method that allows you to get an object of this class
+     * @return class object<b> ParserProperties </b>  if the configuration file was read successfully, else return <b>null</b>
 
+     */
     public static  ParserProperties getInstance () {
         if(instance == null)
         {
@@ -39,6 +56,12 @@ public class ParserProperties //todo к сожалению, это не синг
     return  instance;
     }
 
+    /**
+     * The method allows you to get the property found by the <b>key</b>
+     * @param key key corresponding to a certain property
+     * @return property corresponding to the specified <b>key</b>
+     * @throws IllegalPropertyException  if no property is found that matches the specified <b>key</b>
+     */
     public  synchronized String getProperties(String key) throws IllegalPropertyException {
         String s = props.getProperty(key);
         if (s == null) {
