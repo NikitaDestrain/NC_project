@@ -1,9 +1,13 @@
 package server.model;
 
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.*;
 
+@XmlRootElement(name = "journal")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Journal implements Serializable {
+    @XmlElement (name = "task")
     private Map<Integer, Task> tasks;
 
     /**
