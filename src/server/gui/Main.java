@@ -1,18 +1,25 @@
-package server.gui;
+package gui;
 
-import server.controller.IDGenerator;
-import server.exceptions.IllegalPropertyException;
-import server.gui.mainform.MainForm;
-import server.properties.ParserProperties;
-import server.controller.SerializeDeserialize;
-import server.model.Journal;
+import commandProcessor.ParserXml;
 
-import javax.swing.*;
+import org.xml.sax.SAXException;
+import server.factories.TaskFactory;
+import server.model.Task;
+import server.model.TaskStatus;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Main {
     public static void main(String[] args) {
-        if (ParserProperties.getInstance() == null) {
+
+    /*    if (ParserProperties.getInstance() == null) {
 
             JOptionPane.showMessageDialog(null, "Config file not found or damaged!", "Error", JOptionPane.ERROR_MESSAGE);
 
@@ -36,6 +43,28 @@ public class Main {
                 }
 
             });
+        }*/
+
+        ParserXml parser = new ParserXml();
+
+        try {
+            parser.readXMLCommand(new FileInputStream("src/commandProcessor/test_xml_AddTask.xml")); //чтение из потока
+
+
+            Task t = TaskFactory.createTask("name", TaskStatus.Cancelled, "description", Calendar.getInstance().getTime(), Calendar.getInstance().getTime());
+            parser.creatXMLCommandAddTask(new FileOutputStream("src/commandProcessor/test_xml_create.xml"), t);
         }
+         catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

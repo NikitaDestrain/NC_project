@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Command CommandType ="AddTask">
+        <Task>
+        <TaskName>TaskName</TaskName>
+        <TaskStatus>Complete</TaskStatus>
+        <Description>description</Description>
+        <PlannedDate>1513273253777</PlannedDate>
+        <NotificationDate>1513273253777</NotificationDate>
+        </Task>
+
+</Command>

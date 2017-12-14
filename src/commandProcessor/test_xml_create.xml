@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Command CommandType="AddTask">
+<Task>
+<TaskName>name</TaskName>
+<TaskStatus>Cancelled</TaskStatus>
+<Description>description</Description>
+<PlannedDate>1513280225782</PlannedDate>
+<NotificationDate>1513280225782</NotificationDate>
+</Task>
+</Command>
