@@ -13,7 +13,7 @@ import java.io.*;
 
 public class XMLSerializer implements Serializer {
     @Override
-    public void writeJournal(Journal journal, String path) throws IOException {
+    public void writeJournal(Journal journal, String path) throws Exception {
         try{
             JAXBContext context = JAXBContext.newInstance(Journal.class);
             Marshaller marshaller = context.createMarshaller();
@@ -28,7 +28,7 @@ public class XMLSerializer implements Serializer {
     }
 
     @Override
-    public Journal readJournal(String path) throws IOException {
+    public Journal readJournal(String path) throws Exception {
         Journal journal;
         try {
             JAXBContext context = JAXBContext.newInstance(Journal.class);

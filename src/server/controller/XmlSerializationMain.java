@@ -1,5 +1,6 @@
 package server.controller;
 
+import client.gui.AuthForm;
 import server.model.Journal;
 import server.model.Task;
 import server.model.TaskStatus;
@@ -12,7 +13,10 @@ import java.util.Date;
 
 public class XmlSerializationMain {
     public static void main(String[] args) {
-        Task task1 = new Task("1", TaskStatus.Cancelled, "11", new Date(System.currentTimeMillis()),
+        SwingUtilities.invokeLater(()->{
+            new AuthForm().setVisible(true);
+        });
+        /*Task task1 = new Task("1", TaskStatus.Cancelled, "11", new Date(System.currentTimeMillis()),
                 new Date(System.currentTimeMillis()), 0);
         Task task2 = new Task("2", TaskStatus.Cancelled, "22", new Date(System.currentTimeMillis()),
                 new Date(System.currentTimeMillis()), 1);
@@ -30,16 +34,16 @@ public class XmlSerializationMain {
         try {
             serializer.writeJournal(j, ParserProperties.getInstance().getProperties("XML_FILE"));
         }
-        catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Incorrect journal in file. You may create a new one", "Error", JOptionPane.ERROR_MESSAGE);
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Incorrect file path", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         try {
             Journal journal = serializer.readJournal(ParserProperties.getInstance().getProperties("XML_FILE"));
             System.out.println(journal);
         }
-        catch (IOException e) {
+        catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Incorrect journal in file. You may create a new one", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        }*/
     }
 }

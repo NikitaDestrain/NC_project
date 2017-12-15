@@ -212,7 +212,7 @@ public class MainForm extends JFrame {
                     } catch (IllegalPropertyException ex) {
                         JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
                                 "Error", JOptionPane.ERROR_MESSAGE);
-                    } catch (IOException e1) {
+                    } catch (Exception e1) {
                         JOptionPane.showMessageDialog(MainForm.this,
                                 "Could not save journal to file",
                                 "Error", JOptionPane.ERROR_MESSAGE);
@@ -270,7 +270,7 @@ public class MainForm extends JFrame {
                 } catch (IllegalPropertyException ex) {
                     JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
                             "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (IOException e1) {
+                } catch (Exception ex) {
                     JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file ",
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -285,7 +285,7 @@ public class MainForm extends JFrame {
             } catch (IllegalPropertyException ex) {
                 JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
                         "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -305,7 +305,7 @@ public class MainForm extends JFrame {
             } catch (IllegalPropertyException ex) {
                 JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
                         "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 JOptionPane.showMessageDialog(MainForm.this, "Could not load journal from file",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }

@@ -6,6 +6,6 @@ import java.io.IOException;
 
 
 public interface Serializer {
-    void writeJournal (Journal journal, String path) throws IOException;
-    Journal readJournal (String path) throws IOException;
+    void writeJournal (Journal journal, String path) throws Exception;
+    Journal readJournal (String path) throws Exception;
 }

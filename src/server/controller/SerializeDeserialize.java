@@ -13,7 +13,7 @@ public class SerializeDeserialize implements Serializer {
      * @throws IOException
      */
     @Override
-    public void writeJournal(Journal journal, String path) throws IOException {
+    public void writeJournal(Journal journal, String path) throws Exception {
         try {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(
                     new FileOutputStream(path));
@@ -31,7 +31,7 @@ public class SerializeDeserialize implements Serializer {
      */
 
     @Override
-    public Journal readJournal(String path) throws IOException {
+    public Journal readJournal(String path) throws Exception {
         Journal journal;
         try (ObjectInputStream objectInputStream = new ObjectInputStream(
                 new FileInputStream(path))) {
