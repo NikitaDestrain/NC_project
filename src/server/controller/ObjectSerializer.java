@@ -4,7 +4,7 @@ import server.model.Journal;
 
 import java.io.*;
 
-public class SerializeDeserialize implements Serializer {
+public class ObjectSerializer implements Serializer {
 
     /**
      * Writes the received journal to the file with specified path

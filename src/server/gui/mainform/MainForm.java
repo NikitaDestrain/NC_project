@@ -1,9 +1,9 @@
 package server.gui.mainform;
 
 import server.controller.Controller;
+import server.controller.ObjectSerializer;
 import server.exceptions.IllegalPropertyException;
 import server.gui.taskwindow.TaskWindow;
-import server.controller.SerializeDeserialize;
 import server.model.Journal;
 import server.model.Task;
 import server.properties.ParserProperties;
@@ -11,11 +11,10 @@ import server.properties.ParserProperties;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
 
 public class MainForm extends JFrame {
     private JFileChooser fileChooser;
-    private SerializeDeserialize journalBackup;
+    private ObjectSerializer journalBackup;
     //private Controller server.exceptions.controller;// = Controller.getInstance();
     private Journal journal;
     private TablePanel tablePanel;
@@ -31,7 +30,7 @@ public class MainForm extends JFrame {
         super("Task Scheduler");
         instance = this;
         fileChooser = new JFileChooser();
-        journalBackup = new SerializeDeserialize();
+        journalBackup = new ObjectSerializer();
         this.journal = new Journal();
         try {
             icon = new ImageIcon(ParserProperties.getInstance().getProperties("MAIN_FORM_ICON"));
