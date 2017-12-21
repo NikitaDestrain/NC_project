@@ -1,7 +1,6 @@
 package server.controller;
 
 public class IDGenerator{
-
     private int nextId;
     private static IDGenerator instance;
 

@@ -1,4 +1,4 @@
-package client;
+package server.network;
 
 public class PortGenerator {
     private int nextPort;

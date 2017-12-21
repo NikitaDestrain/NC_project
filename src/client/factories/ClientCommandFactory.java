@@ -1,8 +1,8 @@
-package server.factories;
+package client.factories;
 
-import commandProcessor.Command;
+import client.commandprocessor.Command;
 
-public class CommandFactory {
+public class ClientCommandFactory {
 
     public static Command createCommand(String name, Object object){
         return new Command(name, object);

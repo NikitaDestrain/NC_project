@@ -1,14 +1,11 @@
 package server.controller;
 
 import server.model.Journal;
-import server.properties.ParserProperties;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
 import java.io.*;
 
 public class XMLSerializer implements Serializer {

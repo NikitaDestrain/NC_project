@@ -1,6 +1,5 @@
-package commandProcessor;
+package client.commandprocessor.temporary;
 
-import com.sun.org.apache.xerces.internal.dom.ChildNode;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import server.factories.TaskFactory;
@@ -13,7 +12,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
