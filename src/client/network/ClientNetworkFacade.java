@@ -8,6 +8,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
+import java.util.Scanner;
 
 public class ClientNetworkFacade {
     private static int notificationPort;
@@ -20,18 +21,20 @@ public class ClientNetworkFacade {
     private static DataOutputStream notificationOutputStream;
     private static DataInputStream notificationInputStream;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException{
         System.out.println("Client logs:");
         serverPort = 1337;
         connect(serverPort);
         createNotificationChanel(notificationPort);
 
+        Scanner scanner = new Scanner(System.in);
         while(true) {
             //test
             ClientCommandProcessor.sendAddCommand(new Task("sss", TaskStatus.Planned,"s", new Date(), new Date(), 0), dataOutputStream);
-            System.out.println("Finish.");
-            break;
+            if(scanner.nextLine().equalsIgnoreCase("stop"))
+                break;
         }
+        System.out.println("Finish.");
         finish();
     }
 

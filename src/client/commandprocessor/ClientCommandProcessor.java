@@ -2,7 +2,6 @@ package client.commandprocessor;
 
 import client.factories.ClientCommandFactory;
 import client.model.Task;
-import client.commandprocessor.Command;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -50,6 +49,7 @@ public class ClientCommandProcessor {
             System.out.println("Sending success");
         }
         catch(JAXBException | IOException e){
+            e.printStackTrace();
             e.getMessage();
         }
     }

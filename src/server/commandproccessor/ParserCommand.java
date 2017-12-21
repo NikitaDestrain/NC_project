@@ -3,6 +3,8 @@ package server.commandproccessor;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 public class ParserCommand {
@@ -14,6 +16,7 @@ public class ParserCommand {
             Unmarshaller unmarshaller = context.createUnmarshaller();
             command = (Command) unmarshaller.unmarshal(in);
         } catch (JAXBException e) {
+            e.printStackTrace();
             System.out.println("Parse error!");
             return null;
         }
