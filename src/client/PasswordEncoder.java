@@ -12,10 +12,17 @@ public class PasswordEncoder {
      * @throws NoSuchAlgorithmException
      */
 
-    public byte[] encode(String password) throws NoSuchAlgorithmException {
+    public String encode(String password) throws NoSuchAlgorithmException {
         MessageDigest md5 = MessageDigest.getInstance("MD5");
         md5.update(password.getBytes());
 
-        return md5.digest();
+        StringBuffer sb = new StringBuffer();
+        String hex;
+        for (byte data : md5.digest()) {
+            hex = Integer.toHexString(0xFF & data);
+            if (hex.length() == 1) sb.append('0');
+            sb.append(hex);
+        }
+        return sb.toString();
     }
 }

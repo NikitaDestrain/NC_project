@@ -47,11 +47,11 @@ public class Main {
         ParserXml parser = new ParserXml();
 
         try {
-            parser.readXMLCommand(new FileInputStream("src/client.commandprocessor/test_xml_AddTask.xml")); //чтение из потока
+            parser.readXMLCommand(new FileInputStream("src/client/commandprocessor/temporary/test_xml_AddTask.xml")); //чтение из потока
 
 
             Task t = TaskFactory.createTask("name", TaskStatus.Cancelled, "description", Calendar.getInstance().getTime(), Calendar.getInstance().getTime());
-            parser.creatXMLCommandAddTask(new FileOutputStream("src/client.commandprocessor/test_xml_create.xml"), t);
+            parser.creatXMLCommandAddTask(new FileOutputStream("src/client/commandprocessor/temporary/test_xml_create.xml"), t);
         }
          catch (ParserConfigurationException e) {
             e.printStackTrace();
