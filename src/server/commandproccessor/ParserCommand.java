@@ -22,18 +22,4 @@ public class ParserCommand {
         }
         return command;
     }
-
-    public static AuthCommand parseAuthCommand(InputStream in) {
-        AuthCommand command;
-        try {
-            JAXBContext context = JAXBContext.newInstance(AuthCommand.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            command = (AuthCommand) unmarshaller.unmarshal(in);
-        } catch (JAXBException e) {
-            e.printStackTrace();
-            System.out.println("Parse error!");
-            return null;
-        }
-        return command;
-    }
 }

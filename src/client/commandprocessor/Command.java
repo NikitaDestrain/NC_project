@@ -9,7 +9,7 @@ import java.io.Serializable;
 @XmlType(propOrder = {"name", "object"}, name = "Command")
 @XmlRootElement(name = "command")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({Task.class, Journal.class})
+@XmlSeeAlso({Task.class, Journal.class, User.class})
 public class Command implements Serializable {
     @XmlElement (name = "name")
     private String name;

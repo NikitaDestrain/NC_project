@@ -1,6 +1,5 @@
 package client.commandprocessor;
 
-import client.commandprocessor.temporary.AuthCommand;
 import client.factories.ClientCommandFactory;
 import client.model.Task;
 
@@ -39,8 +38,12 @@ public class ClientCommandProcessor {
         return ClientCommandFactory.createCommand("Cancel", task);
     }
 
-    private static AuthCommand createAuthCommand(String name, String login, String password) {
-        return ClientCommandFactory.createAuthCommand(name, login, password);
+    private static Command createSignInCommand(String login, String password) {
+        return ClientCommandFactory.createCommand("sign in", new User(login, password));
+    }
+
+    private static Command createSignUpCommand(String login, String password) {
+        return ClientCommandFactory.createCommand("sign up", new User(login, password));
     }
 
     public static void sendAddCommand(Task task, OutputStream out) {
@@ -124,12 +127,25 @@ public class ClientCommandProcessor {
         }
     }
 
-    public static void sendAuthCommand(String name, String login, String password, OutputStream out) {
+    public static void sendSignInCommand(String login, String password, OutputStream out) {
         try {
-            JAXBContext context = JAXBContext.newInstance(AuthCommand.class);
+            JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(createAuthCommand(name, login, password), out);
+            marshaller.marshal(createSignInCommand(login, password), out);
+            out.flush();
+        }
+        catch(JAXBException | IOException e){
+            e.getMessage();
+        }
+    }
+
+    public static void sendSignUpCommand(String login, String password, OutputStream out) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(Command.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.marshal(createSignUpCommand(login, password), out);
             out.flush();
         }
         catch(JAXBException | IOException e){

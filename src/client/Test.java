@@ -1,8 +1,6 @@
 package client;
 
 import client.commandprocessor.ClientCommandProcessor;
-import client.commandprocessor.Command;
-import client.factories.ClientCommandFactory;
 import server.commandproccessor.ParserCommand;
 
 import java.io.FileInputStream;
@@ -20,7 +18,7 @@ public class Test {
         }
         //ClientCommandFactory.createAuthCommand("auth", "artem", pass);
         try {
-            ClientCommandProcessor.sendAuthCommand("auth", "artem", pass, // или auth или signUp
+            ClientCommandProcessor.sendSignInCommand("artem", pass,
                     new FileOutputStream("src/client/test.xml"));
         }
         catch (FileNotFoundException e) {
@@ -28,7 +26,7 @@ public class Test {
         }
 
         try {
-            server.commandproccessor.AuthCommand command = ParserCommand.parseAuthCommand(
+            server.commandproccessor.Command command = ParserCommand.parseToCommand(
                     new FileInputStream("src/client/test.xml"));
             System.out.println(command.toString());
         } catch (FileNotFoundException e) {
