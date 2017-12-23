@@ -10,18 +10,19 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.Scanner;
 
-public class ClientNetworkFacade {
-    private static int notificationPort;
-    private static int serverPort;
-    private static Socket clientDataSocket;
-    private static Socket notificationSenderSocket;
-    private static DataOutputStream dataOutputStream;
-    private static DataInputStream dataInputStream;
-    private static ServerSocket notificationSocket;
-    private static DataOutputStream notificationOutputStream;
-    private static DataInputStream notificationInputStream;
+public class ClientNetworkFacade extends Thread {
+    private int notificationPort;
+    private int serverPort;
+    private Socket clientDataSocket;
+    private Socket notificationSenderSocket;
+    private DataOutputStream dataOutputStream;
+    private DataInputStream dataInputStream;
+    private ServerSocket notificationSocket;
+    private DataOutputStream notificationOutputStream;
+    private DataInputStream notificationInputStream;
 
-    public static void main(String[] args) throws InterruptedException{
+    @Override
+    public void run(){
         System.out.println("Client logs:");
         serverPort = 1337;
         connect(serverPort);
@@ -38,7 +39,7 @@ public class ClientNetworkFacade {
         finish();
     }
 
-    private static void connect(int port) {
+    private void connect(int port) {
         try {
             clientDataSocket = new Socket("localhost", port);
             dataOutputStream = new DataOutputStream(clientDataSocket.getOutputStream());
@@ -53,7 +54,7 @@ public class ClientNetworkFacade {
         }
     }
 
-    private static void createNotificationChanel(int port) {
+    private void createNotificationChanel(int port) {
         try {
             System.out.println("Creating chanel for Notifications");
             notificationSocket = new ServerSocket(port);
@@ -69,7 +70,7 @@ public class ClientNetworkFacade {
         }
     }
 
-    private static void finish() {
+    private void finish() {
         try {
             notificationInputStream.close();
             notificationOutputStream.close();

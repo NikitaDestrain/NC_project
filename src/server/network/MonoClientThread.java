@@ -8,16 +8,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 
-public class MonoClientThread implements Runnable{
+public class MonoClientThread implements Runnable {
 
-    private static int notificationPort;
-    private static int number = 0;
-    private static Socket clientDataSocket;
-    private static Socket notificationSocket;
-    private static DataOutputStream dataOutputStream;
-    private static DataInputStream dataInputStream;
-    private static DataOutputStream notificationOutputStream;
-    private static DataInputStream notificationInputStream;
+    private int notificationPort;
+    private int number = 0;
+    private Socket clientDataSocket;
+    private Socket notificationSocket;
+    private DataOutputStream dataOutputStream;
+    private DataInputStream dataInputStream;
+    private DataOutputStream notificationOutputStream;
+    private DataInputStream notificationInputStream;
 
     public MonoClientThread(Socket socket) {
         clientDataSocket = socket;
@@ -28,11 +28,16 @@ public class MonoClientThread implements Runnable{
         System.out.printf("\nClient №%d is connected\n", ++number);
         start();
         connectToNotificationChanel();
-        System.out.println(ParserCommand.parseToCommand(dataInputStream));
-        finish();
+        try {
+            Thread.sleep(5000);
+            System.out.println(ParserCommand.parseToCommand(dataInputStream));
+        }
+        catch (InterruptedException e)
+        {}
+        //finish();
     }
 
-    private static void start() {
+    private void start() {
         try {
             dataOutputStream = new DataOutputStream(clientDataSocket.getOutputStream());
             System.out.println("DataOutputStream  created");
@@ -44,7 +49,7 @@ public class MonoClientThread implements Runnable{
         }
     }
 
-    private static void connectToNotificationChanel() {
+    private void connectToNotificationChanel() {
         System.out.println("Creating Notification Chanel");
         notificationPort = PortGenerator.getInstance().createPort();
         System.out.println("Port: " + notificationPort);
@@ -62,7 +67,7 @@ public class MonoClientThread implements Runnable{
         }
     }
 
-    private static void finish() {
+    private void finish() {
         try {
             dataInputStream.close();
             dataOutputStream.close();
