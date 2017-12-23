@@ -21,8 +21,10 @@ public class ClientNetworkFacade extends Thread {
     private DataOutputStream notificationOutputStream;
     private DataInputStream notificationInputStream;
 
+
     @Override
     public void run(){
+
         System.out.println("Client logs:");
         serverPort = 1337;
         connect(serverPort);
@@ -51,6 +53,7 @@ public class ClientNetworkFacade extends Thread {
         }
         catch (IOException e) {
             System.out.println("Server is offline");
+
         }
     }
 
@@ -67,6 +70,7 @@ public class ClientNetworkFacade extends Thread {
         }
         catch (IOException e){
             e.getMessage();
+
         }
     }
 
@@ -80,5 +84,12 @@ public class ClientNetworkFacade extends Thread {
         catch (IOException e) {
             e.getMessage();
         }
+    }
+
+
+
+    public OutputStream getOutputStream()
+    {
+        return this.dataOutputStream;
     }
 }

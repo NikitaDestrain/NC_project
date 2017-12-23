@@ -1,35 +1,55 @@
 package client.gui;
 
+import client.PasswordEncoder;
+import client.commandprocessor.ClientCommandProcessor;
+import client.factories.ClientCommandFactory;
+import client.network.ClientNetworkFacade;
+
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.xml.bind.JAXBException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 public class AuthForm extends JFrame {
-    private JButton okButton;
+    private JButton connectButton;
     private JButton cancelButton;
     private JTextField userField;
     private JPasswordField passwordField;
+    private JButton jbutt_registration;
+    ClientNetworkFacade cnf;
 
     public AuthForm() {
         super("Authorization");
-        okButton = new JButton("OK");
+        connectButton = new JButton("Connect");
         cancelButton = new JButton("Cancel");
+        jbutt_registration = new JButton("Registration");
         userField = new JTextField(10);
         passwordField = new JPasswordField(10);
         passwordField.setEchoChar('*'); // что отображается при вводе пароля
 
         layoutComponents();
 
-        okButton.addActionListener((ActionEvent e)->{
-            //JOptionPane.showMessageDialog(null,
-              //      "OK button", "Button click", JOptionPane.INFORMATION_MESSAGE);
-            new SignUpForm().setVisible(true);
+        connectButton.addActionListener((ActionEvent e)->{
+
+           connection();
         });
 
         cancelButton.addActionListener((ActionEvent e) ->{
-            JOptionPane.showMessageDialog(null,
-                    "Cancel button", "Button click", JOptionPane.INFORMATION_MESSAGE);
+
+           /* JOptionPane.showMessageDialog(null,
+                    "Cancel button", "Button click", JOptionPane.INFORMATION_MESSAGE);*/
+           dispose();
+        });
+
+        jbutt_registration.addActionListener((ActionEvent e) ->
+        {
+
+            new SignUpForm().setVisible(true);
+
+
         });
 
         setSize(new Dimension(320,230));
@@ -38,6 +58,8 @@ public class AuthForm extends JFrame {
         setResizable(false);
         setVisible(false);
     }
+
+
 
     private void layoutComponents() {
         JPanel controlsPanel = new JPanel();
@@ -83,17 +105,61 @@ public class AuthForm extends JFrame {
         gc.anchor = GridBagConstraints.LINE_START;
         controlsPanel.add(passwordField,gc);
 
-        ///////////////// OK and Cancel buttons
-        buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        buttonsPanel.add(okButton,gc);
+        ///////////////// OK and Cancel buttons an registration button
+        buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonsPanel.add(jbutt_registration, gc);
+        buttonsPanel.add(connectButton,gc);
         buttonsPanel.add(cancelButton,gc);
 
-        Dimension btnSize = cancelButton.getPreferredSize();
-        okButton.setPreferredSize(btnSize);
+
+        //Dimension btnSize = cancelButton.getPreferredSize();
+        //connectButton.setPreferredSize(btnSize);
 
         ///////Adding panels to frame
         setLayout(new BorderLayout());
         add(controlsPanel, BorderLayout.CENTER);
         add(buttonsPanel, BorderLayout.SOUTH);
+    }
+
+
+
+    private void connection() {
+
+
+        String login, password;
+        login= this.userField.getText();
+        password= String.valueOf(this.passwordField.getPassword());
+
+
+        if((login.length()==0)|| (password.length()==0))
+        {
+            JOptionPane.showMessageDialog(this, "Enter login/password", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        else {
+            ClientNetworkFacade cnf = new ClientNetworkFacade();
+            cnf.start();
+
+
+            if (cnf.getOutputStream() == null) {
+                JOptionPane.showMessageDialog(this, "Server is not available!", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                try {
+                    ClientCommandProcessor.sendSignInCommand(login, new PasswordEncoder().encode(password), cnf.getOutputStream());
+                } catch (JAXBException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            //при успешной авторизации открытие окно журнала
+
+
+        }
+
+
     }
 }

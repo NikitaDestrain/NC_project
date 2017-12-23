@@ -1,9 +1,13 @@
 package client.gui;
 
+import client.network.ClientNetworkFacade;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class SignUpForm extends JFrame {
     private JButton okButton;
@@ -14,6 +18,7 @@ public class SignUpForm extends JFrame {
 
     public SignUpForm() {
         super("Registration");
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         okButton = new JButton("OK");
         cancelButton = new JButton("Cancel");
         loginField = new JTextField(10);
@@ -25,20 +30,38 @@ public class SignUpForm extends JFrame {
         layoutComponents();
 
         okButton.addActionListener((ActionEvent e)->{
-            JOptionPane.showMessageDialog(null,
-                    "OK button", "Button click", JOptionPane.INFORMATION_MESSAGE);
+          registration();
         });
 
         cancelButton.addActionListener((ActionEvent e) ->{
-            JOptionPane.showMessageDialog(null,
-                    "Cancel button", "Button click", JOptionPane.INFORMATION_MESSAGE);
+
+           this.dispose();
         });
 
+
+        addWindowListener(new WindowAdapter() {
+             public  void windowClosing (WindowEvent e)
+             {
+                closingFrame(e);
+             }
+        });
+
+
         setSize(new Dimension(320,230));
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
         setLocationRelativeTo(null);
         setResizable(false);
         setVisible(false);
+    }
+
+
+
+    public void closingFrame(WindowEvent e) {
+        if (e.getID()==WindowEvent.WINDOW_CLOSING) {
+
+            this.dispose();
+
+        }
     }
 
     private void layoutComponents() {
@@ -98,7 +121,7 @@ public class SignUpForm extends JFrame {
         controlsPanel.add(confirmPasswordField,gc);
 
         ///////////////// OK and Cancel buttons
-        buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         buttonsPanel.add(okButton,gc);
         buttonsPanel.add(cancelButton,gc);
 
@@ -110,4 +133,34 @@ public class SignUpForm extends JFrame {
         add(controlsPanel, BorderLayout.CENTER);
         add(buttonsPanel, BorderLayout.SOUTH);
     }
+
+
+    private void registration() {
+        String login, password, password2;
+        login = this.loginField.getText();
+        password = String.valueOf(this.passwordField.getPassword());
+        password2 = String.valueOf(this.confirmPasswordField.getPassword());
+
+        if ((login.length() == 0) || (password.length() == 0) || (password2.length() == 0)) {
+            JOptionPane.showMessageDialog(this, "Enter login/password/confirm password!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (!(password.equals(password2))) {
+            JOptionPane.showMessageDialog(this, "Passwords do not match!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+
+            ClientNetworkFacade cnf = new ClientNetworkFacade();
+            cnf.start();
+            if (cnf.getOutputStream() == null) {
+                JOptionPane.showMessageDialog(this, "Server is not available!", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+
+
+                ///Регистрация
+                ///отключение от сервера возврат на форму с входом
+
+
+            }
+
+        }
+    }
+
 }
