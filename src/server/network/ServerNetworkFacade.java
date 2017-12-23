@@ -25,7 +25,6 @@ public class ServerNetworkFacade extends Thread {
             try {
                 clientDataSocket = serverDataSocket.accept();
                 executeIt.execute(new MonoClientThread(clientDataSocket));
-                System.out.println("Connection accepted.");
                 if (scanner.nextLine().equalsIgnoreCase("stop"))
                     serverDataSocket.close();
             }

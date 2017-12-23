@@ -39,11 +39,11 @@ public class ClientCommandProcessor {
     }
 
     private static Command createSignInCommand(String login, String password) {
-        return ClientCommandFactory.createCommand("sign in", new User(login, password));
+        return ClientCommandFactory.createCommand("Sign in", new User(login, password));
     }
 
     private static Command createSignUpCommand(String login, String password) {
-        return ClientCommandFactory.createCommand("sign up", new User(login, password));
+        return ClientCommandFactory.createCommand("Sign up", new User(login, password));
     }
 
     public static void sendAddCommand(Task task, OutputStream out) {
