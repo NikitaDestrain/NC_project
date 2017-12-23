@@ -1,9 +1,15 @@
 package client.network;
 
+import client.gui.AuthForm;
+
 public class StartClient {
 
     public static void main(String[] args) {
-        ClientNetworkFacade cnf = new ClientNetworkFacade();
+
+
+        //new AuthForm().setVisible(true);
+
+          ClientNetworkFacade cnf = new ClientNetworkFacade();
         cnf.start();
     }
 }
