@@ -5,13 +5,12 @@ import server.commandproccessor.ParserCommand;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Socket;
 
 public class MonoClientThread implements Runnable {
 
     private int notificationPort;
-    private int number = 0;
+    private static int number = 0;
     private Socket clientDataSocket;
     private Socket notificationSocket;
     private DataOutputStream dataOutputStream;
@@ -25,7 +24,8 @@ public class MonoClientThread implements Runnable {
 
     @Override
     public void run() {
-        System.out.printf("\nClient №%d is connected\n", ++number);
+        System.out.printf("\nConnection accepted.");
+        System.out.printf("Client №%d is connected\n", ++number);
         start();
         connectToNotificationChanel();
         try {
@@ -34,7 +34,7 @@ public class MonoClientThread implements Runnable {
         }
         catch (InterruptedException e)
         {}
-        //finish();
+        finish();
     }
 
     private void start() {

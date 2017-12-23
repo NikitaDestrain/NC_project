@@ -24,6 +24,7 @@ public class ClientNetworkFacade extends Thread {
     @Override
     public void run(){
         System.out.println("Client logs:");
+        System.out.println();
         serverPort = 1337;
         connect(serverPort);
         createNotificationChanel(notificationPort);
@@ -31,8 +32,8 @@ public class ClientNetworkFacade extends Thread {
         Scanner scanner = new Scanner(System.in);
         while(true) {
             //test
-            ClientCommandProcessor.sendAddCommand(new Task("sss", TaskStatus.Planned,"s", new Date(), new Date(), 0), dataOutputStream);
-            if(scanner.nextLine().equalsIgnoreCase("stop"))
+            ClientCommandProcessor.sendAddCommand(new Task("sss", TaskStatus.Planned, "s", new Date(), new Date(), 0), dataOutputStream);
+            if (scanner.nextLine().equalsIgnoreCase("stop"))
                 break;
         }
         System.out.println("Finish.");

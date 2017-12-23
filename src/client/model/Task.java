@@ -7,7 +7,7 @@ import java.util.Date;
 /** The class serves to store the object "task" with server.exceptions.properties
  * <b>name</b>, <b>status</b>, <b>description</b>, <b>notificationDate</b>,  <b>plannedDate</b>, <b>id</b>.
  */
-@XmlType(propOrder = {"id", "name", "description", "status", "notificationDate", "plannedDate"}, name = "Task")
+@XmlType(propOrder = {"id", "name", "description", "status", "notificationDate", "plannedDate"}, name = "task")
 @XmlRootElement(name = "task")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Task implements Comparable<Task>, Serializable {
