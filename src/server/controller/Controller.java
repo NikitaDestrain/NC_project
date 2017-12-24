@@ -1,5 +1,6 @@
 package server.controller;
 
+import server.commandproccessor.User;
 import server.gui.mainform.MainForm;
 import server.model.Journal;
 import server.model.Task;
@@ -7,6 +8,8 @@ import server.model.TaskStatus;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Controller {
 
@@ -14,10 +17,12 @@ public class Controller {
     private Notifier notifier;
     private static Controller instance;
     private MainForm mainForm = MainForm.getInstance();
+    private Map<String, String> usersAuthData;
 
     private Controller() {
         this.journal = new Journal();
         this.notifier = new Notifier();
+        this.usersAuthData = new HashMap<>();
     }
 
     /**
@@ -132,5 +137,24 @@ public class Controller {
     public void editTask(Task task){
         notifier.editNotification(task);
         mainForm.updateJournal();
+    }
+
+    /**
+     * Checks if user with current login exists in user's map and its password equals password from parameter
+     */
+
+    public boolean isUserDataCorrect(User user) {
+        if (user == null) return false;
+        return usersAuthData.containsKey(user.getLogin()) && usersAuthData.get(user.getLogin()).equals(user.getPassword());
+    }
+
+    public boolean isSuchLoginExists(String login) {
+        return usersAuthData.containsKey(login);
+    }
+
+    public void addUser(User user) {
+        if (user != null) {
+            usersAuthData.put(user.getLogin(), user.getPassword());
+        }
     }
 }
