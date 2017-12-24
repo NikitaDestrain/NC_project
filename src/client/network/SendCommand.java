@@ -25,11 +25,6 @@ public class SendCommand {
 
             marshaller.marshal(ClientCommandProcessor.createAddCommand(task), out);
 
-         /*   marshaller.marshal(ClientCommandProcessor.createAddCommand(task), new FileOutputStream("bugMarshal.xml"));
-            out.flush();
-
-            File f = new File("bugMarshal.xml");
-            System.out.println(f.length());*/
          out.flush();
 
             System.out.println("Sending success");

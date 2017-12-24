@@ -157,7 +157,6 @@ public class SignUpForm extends JFrame {
                 ///Регистрация
                 ///отключение от сервера возврат на форму с входом
 
-
             }
 
         }

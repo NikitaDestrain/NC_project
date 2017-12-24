@@ -32,7 +32,7 @@ public class ParserCommand {
         return command;
     }
 
-    public static void doCommandAction(Command command) {
+  /*  public static void doCommandAction(Command command) {
         if (command != null) {
             switch (command.getName()) {
                 case "Update" :
@@ -45,5 +45,5 @@ public class ParserCommand {
                     break;
             }
         }
-    }
+    }*/
 }

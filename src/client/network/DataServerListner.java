@@ -25,7 +25,6 @@ public class DataServerListner extends Thread
         {
            // парсинг пришедшей команды
 
-
             //вызов класса который это команду обрабатывает
            // InputCommandHandler.readInputCommand(command);
         }

@@ -97,7 +97,6 @@ public class ClientNetworkFacade extends Thread {
     }
 
 
-
     public DataOutputStream getDataOutputStream()
     {
         return dataOutputStream;

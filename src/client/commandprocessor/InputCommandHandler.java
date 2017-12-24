@@ -26,6 +26,5 @@ public class InputCommandHandler
                 //уведомление о задаче
                 break;
         }
-
     }
 }

@@ -24,7 +24,6 @@ public class NotifServerListner extends Thread {
         while (true)
         {
             //парсинг
-
             //вызов класса который это команду обрабатывает
            // InputCommandHandler.readInputCommand(command);
         }

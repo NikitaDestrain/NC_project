@@ -165,7 +165,6 @@ public class AuthForm extends JFrame {
                 }
             }
 
-
             //при успешной авторизации Сервер отправляет команду об успешной авторихации
             //открываем окно журнала вызывается после прочтения команды Complete Auth в InputCommandHendler
 

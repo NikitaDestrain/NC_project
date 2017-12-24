@@ -42,7 +42,4 @@ public class ClientCommandProcessor {
         return ClientCommandFactory.createCommand("Sign up", new User(login, password));
     }
 
-
-
-
 }
