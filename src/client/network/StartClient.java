@@ -7,9 +7,9 @@ public class StartClient {
     public static void main(String[] args) {
 
 
-        //new AuthForm().setVisible(true);
+        new AuthForm().setVisible(true);
 
-          ClientNetworkFacade cnf = new ClientNetworkFacade();
-        cnf.start();
+        /*  ClientNetworkFacade cnf = new ClientNetworkFacade();
+        cnf.start();*/
     }
 }

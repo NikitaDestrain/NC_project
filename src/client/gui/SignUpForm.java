@@ -149,7 +149,7 @@ public class SignUpForm extends JFrame {
 
             ClientNetworkFacade cnf = new ClientNetworkFacade();
             cnf.start();
-            if (cnf.getOutputStream() == null) {
+            if (cnf.getDataOutputStream() == null) {
                 JOptionPane.showMessageDialog(this, "Server is not available!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
 

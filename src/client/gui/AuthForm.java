@@ -4,6 +4,8 @@ import client.PasswordEncoder;
 import client.commandprocessor.ClientCommandProcessor;
 import client.factories.ClientCommandFactory;
 import client.network.ClientNetworkFacade;
+import client.network.DataServerListner;
+import client.network.SendCommand;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -12,6 +14,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+
+import static java.lang.Thread.sleep;
 
 public class AuthForm extends JFrame {
     private JButton connectButton;
@@ -138,13 +142,20 @@ public class AuthForm extends JFrame {
         else {
             ClientNetworkFacade cnf = new ClientNetworkFacade();
             cnf.start();
+            try {
+                sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
 
-            if (cnf.getOutputStream() == null) {
+            if (cnf.getDataOutputStream() == null) {
                 JOptionPane.showMessageDialog(this, "Server is not available!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                try {
-                    ClientCommandProcessor.sendSignInCommand(login, new PasswordEncoder().encode(password), cnf.getOutputStream());
+
+
+               try {
+                   SendCommand.sendSignInCommand(login, new PasswordEncoder().encode(password), cnf.getDataOutputStream());
                 } catch (JAXBException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -155,7 +166,8 @@ public class AuthForm extends JFrame {
             }
 
 
-            //при успешной авторизации открытие окно журнала
+            //при успешной авторизации Сервер отправляет команду об успешной авторихации
+            //открываем окно журнала вызывается после прочтения команды Complete Auth в InputCommandHendler
 
 
         }
