@@ -6,10 +6,8 @@ import server.model.Task;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import javax.xml.stream.XMLStreamReader;
+import java.io.*;
 
 public class ParserCommand {
 
@@ -21,7 +19,31 @@ public class ParserCommand {
             System.out.println("1");
             Unmarshaller unmarshaller = context.createUnmarshaller();
             System.out.println("2");
-            command = (Command) unmarshaller.unmarshal(in);
+
+
+
+
+            byte[] mData;
+            try {
+
+                       mData = new byte[in.available()];
+                       in.read(mData);
+
+                       InputStream is = new ByteArrayInputStream(mData);
+                       command = (Command) unmarshaller.unmarshal(is);
+
+                       return command;
+
+                } catch(IOException e){
+                    e.printStackTrace();
+                }
+
+
+
+
+
+            System.out.println("вызывается unmarshal");
+
             System.out.println("Command reading success");
         } catch (JAXBException e) {
             e.printStackTrace();
@@ -29,7 +51,8 @@ public class ParserCommand {
             System.out.println("Parse error!");
             return null;
         }
-        return command;
+        return null;
+       // return command;
     }
 
     public static void doCommandAction(Command command) {
