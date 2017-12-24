@@ -1,11 +1,15 @@
 package server.commandproccessor;
 
+import server.controller.Controller;
+import server.model.Task;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 public class ParserCommand {
 
@@ -26,5 +30,79 @@ public class ParserCommand {
             return null;
         }
         return command;
+    }
+
+    public static void doCommandAction(Command command) {
+        if (command != null) {
+            switch (command.getName()) {
+                case "Add" :
+                    doAddAction((Task) command.getObject());
+                    break;
+                case "Edit" :
+                    doEditAction((Task) command.getObject());
+                    break;
+                case "Delete" :
+                    doDeleteAction((Task) command.getObject());
+                    break;
+                case "Later" :
+                    doLaterAction((Task) command.getObject());
+                    break;
+                case "Finish" :
+                    doFinishAction((Task) command.getObject());
+                    break;
+                case "Cancel" :
+                    doCancelAction((Task) command.getObject());
+                    break;
+                case "Sign in" :
+                    doSignInAction((User) command.getObject());
+                    break;
+                case "Sign up" :
+                    doSignUpAction((User) command.getObject());
+                    break;
+            }
+        }
+    }
+
+    private static synchronized void doAddAction(Task task) {
+        Controller.getInstance().addTask(task);
+    }
+
+    private static synchronized void doEditAction(Task task) {
+        Controller.getInstance().editTask(task);
+    }
+
+    private static synchronized void doDeleteAction(Task task) {
+        Controller.getInstance().removeTask(task.getId());
+    }
+
+    private static synchronized void doLaterAction(Task task) {
+        Controller.getInstance().updateNotification(task.getId());
+    }
+
+    private static synchronized void doFinishAction(Task task) {
+        Controller.getInstance().finishNotification(task.getId());
+    }
+
+    private static synchronized void doCancelAction(Task task) {
+        Controller.getInstance().cancelNotification(task.getId());
+    }
+
+    private static synchronized void doSignInAction(User user) {
+        OutputStream out = null;
+        if (Controller.getInstance().isUserDataCorrect(user)) { // верные логин и пароль
+            ServerCommandProcessor.sendSuccessfulAuthCommand(out); // тут будет нужный поток вывода
+        }
+        else ServerCommandProcessor.sendUnSuccessfulAuthCommand(out);
+    }
+
+    private static synchronized void doSignUpAction(User user) {
+        Controller controller = Controller.getInstance();
+        OutputStream out = null;
+        if (controller.isSuchLoginExists(user.getLogin())) // пользователь с таким логином существует
+            ServerCommandProcessor.sendUnSuccessfulAuthCommand(out); // тут будет нужный поток вывода
+        else {
+            controller.addUser(user);
+            ServerCommandProcessor.sendSuccessfulAuthCommand(out);
+        }
     }
 }

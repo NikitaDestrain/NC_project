@@ -12,7 +12,7 @@ public class Test {
     public static void main(String[] args) {
         String pass = null;
         try {
-            pass = new PasswordEncoder().encode("1234");
+            pass = PasswordEncoder.encode("1234");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
