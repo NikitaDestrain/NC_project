@@ -64,7 +64,7 @@ public class ParserCommand {
          return null;
     }
 
-   /* public static void doCommandAction(Command command) {
+    public static void doCommandAction(Command command) {
         if (command != null) {
             switch (command.getName()) {
                 case "Add" :
@@ -91,6 +91,7 @@ public class ParserCommand {
                 case "Sign up" :
                     doSignUpAction((User) command.getObject());
                     break;
+
             }
         }
     }
@@ -117,7 +118,7 @@ public class ParserCommand {
 
     private static synchronized void doCancelAction(Task task) {
         Controller.getInstance().cancelNotification(task.getId());
-    } */
+    }
 
     private static synchronized void doSignInAction(User user) {
         OutputStream out = null;

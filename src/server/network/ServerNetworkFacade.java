@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ServerNetworkFacade extends Thread {
-    private int DEFAULT_PORT = 1337;
+    private static int DEFAULT_PORT = 1337;
     private int serverPort;
     private ServerSocket serverDataSocket;
     private Socket clientDataSocket;

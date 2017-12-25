@@ -40,7 +40,7 @@ public class ClientNetworkFacade extends Thread {
         Scanner scanner = new Scanner(System.in);
 
         DataServerListener datalistener = new DataServerListener(dataInputStream);
-        datalistener.start();
+        datalistener.start();//todo not needed
         NotificationServerListener notiflistener = new NotificationServerListener(notificationInputStream);
         notiflistener.start();
 
@@ -74,6 +74,7 @@ public class ClientNetworkFacade extends Thread {
 
     private void createNotificationChanel(int port) {
         try {
+            //todo port create  sync
             System.out.println("Creating chanel for Notifications");
             notificationSocket = new ServerSocket(port);
             notificationSenderSocket = notificationSocket.accept();
