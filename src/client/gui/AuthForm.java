@@ -140,7 +140,7 @@ public class AuthForm extends JFrame {
             ClientNetworkFacade cnf = new ClientNetworkFacade();
             cnf.start();
             try {
-                sleep(3000);
+                sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -151,15 +151,15 @@ public class AuthForm extends JFrame {
             } else {
 
 
-               try {
-                   CommandSender.sendSignInCommand(login, new PasswordEncoder().encode(password), cnf.getDataOutputStream());
-                } catch (JAXBException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                try {
+                    CommandSender.sendSignInCommand(login, new PasswordEncoder().encode(password), cnf.getDataOutputStream());
+
+
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 }
+
+
             }
 
             //при успешной авторизации Сервер отправляет команду об успешной авторихации

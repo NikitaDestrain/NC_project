@@ -31,7 +31,13 @@ public class ClientNetworkFacade extends Thread {
         createNotificationChanel(notificationPort);
 
         Scanner scanner = new Scanner(System.in);
-        while(true) {
+
+        DataServerListener datalistener = new DataServerListener(dataInputStream);
+        datalistener.start();
+        NotificationServerListener notiflistener = new NotificationServerListener(notificationInputStream);
+        notiflistener.start();
+
+       while(true) {
             //test
             CommandSender.sendAddCommand(new Task("sss", TaskStatus.Planned, "s", new Date(), new Date(), 0), dataOutputStream);
             if (scanner.nextLine().equalsIgnoreCase("stop")) {
@@ -39,11 +45,8 @@ public class ClientNetworkFacade extends Thread {
             }
         }
         System.out.println("Finish.");
-       // finish();
-        DataServerListener datalistener = new DataServerListener(dataInputStream);
-        datalistener.start();
-        NotificationServerListener notiflistener = new NotificationServerListener(notificationInputStream);
-        notiflistener.start();
+       finish();
+
     }
 
     private void connect(int port) {

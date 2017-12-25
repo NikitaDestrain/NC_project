@@ -1,11 +1,14 @@
 package server.network;
 
+import server.commandproccessor.Command;
 import server.commandproccessor.ParserCommand;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+
+import static java.lang.Thread.sleep;
 
 public class MonoClientThread implements Runnable {
 
@@ -28,7 +31,25 @@ public class MonoClientThread implements Runnable {
         System.out.printf("Client №%d is connected\n", ++number);
         start();
         connectToNotificationChanel();
-        System.out.println(ParserCommand.parseToCommand(dataInputStream));
+        try {
+
+//sleep (5000);
+               while (true) {
+                   // читаем данные в буфер
+                   if(dataInputStream.available()>0) {
+                       byte[] buffer = new byte[dataInputStream.available()];
+                       int readBytesCount = dataInputStream.read(buffer);
+                       System.out.println("размер прочитанного" + readBytesCount);
+                       System.out.println("читаем из потока");
+                           Command com = ParserCommand.parseToCommand(buffer);
+                           System.out.println(com);
+                   }
+               }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         finish();
     }
 

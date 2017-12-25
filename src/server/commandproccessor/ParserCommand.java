@@ -37,6 +37,33 @@ public class ParserCommand {
         return null;
     }
 
+    public static Command parseToCommand (byte[] dataArr) {
+        Command command;
+        try {
+            System.out.println("Start reading command");
+            JAXBContext context = JAXBContext.newInstance(Command.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            byte[] mData;
+
+
+                InputStream is = new ByteArrayInputStream(dataArr);
+                command = (Command) unmarshaller.unmarshal(is);
+            System.out.println("Command reading success");
+            is.close();
+                return command;
+
+
+        } catch (JAXBException e) {
+            e.printStackTrace();
+            e.getMessage();
+            System.out.println("Parse error!");
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+         return null;
+    }
+
     public static void doCommandAction(Command command) {
         if (command != null) {
             switch (command.getName()) {
