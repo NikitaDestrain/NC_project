@@ -2,8 +2,8 @@ package server.factories;
 
 
 import server.controller.IDGenerator;
-import server.model.Task;
-import server.model.TaskStatus;
+import client.model.Task;
+import client.model.TaskStatus;
 
 import java.util.Date;
 

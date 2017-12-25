@@ -1,5 +1,6 @@
-package client.gui;
+package client.gui.authforms;
 
+import client.commandprocessor.CommandSender;
 import client.network.ClientNetworkFacade;
 
 import javax.swing.*;
@@ -15,9 +16,12 @@ public class SignUpForm extends JFrame {
     private JTextField loginField;
     private JPasswordField passwordField;
     private JPasswordField confirmPasswordField;
+    private static SignUpForm instance;
+    private ClientNetworkFacade clientFacade;
 
     public SignUpForm() {
         super("Registration");
+        instance = this;
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         okButton = new JButton("OK");
         cancelButton = new JButton("Cancel");
@@ -34,7 +38,6 @@ public class SignUpForm extends JFrame {
         });
 
         cancelButton.addActionListener((ActionEvent e) ->{
-
            this.dispose();
         });
 
@@ -49,12 +52,17 @@ public class SignUpForm extends JFrame {
 
         setSize(new Dimension(320,230));
 
+        clientFacade = ClientNetworkFacade.getInstance();
+        clientFacade.start();
+
         setLocationRelativeTo(null);
         setResizable(false);
         setVisible(false);
     }
 
-
+    public static SignUpForm getInstance() {
+        return instance;
+    }
 
     public void closingFrame(WindowEvent e) {
         if (e.getID()==WindowEvent.WINDOW_CLOSING) {
@@ -134,7 +142,6 @@ public class SignUpForm extends JFrame {
         add(buttonsPanel, BorderLayout.SOUTH);
     }
 
-
     private void registration() {
         String login, password, password2;
         login = this.loginField.getText();
@@ -142,24 +149,25 @@ public class SignUpForm extends JFrame {
         password2 = String.valueOf(this.confirmPasswordField.getPassword());
 
         if ((login.length() == 0) || (password.length() == 0) || (password2.length() == 0)) {
-            JOptionPane.showMessageDialog(this, "Enter login/password/confirm password!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Fill up all the fields!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
         } else if (!(password.equals(password2))) {
-            JOptionPane.showMessageDialog(this, "Passwords do not match!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Passwords do not match!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-
-            ClientNetworkFacade cnf = new ClientNetworkFacade();
-            cnf.start();
-            if (cnf.getDataOutputStream() == null) {
-                JOptionPane.showMessageDialog(this, "Server is not available!", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-
-
-                ///Регистрация
-                ///отключение от сервера возврат на форму с входом
-
+            if (clientFacade.getDataOutputStream() == null)
+                JOptionPane.showMessageDialog( null,
+                        "Server is not available!", "Error", JOptionPane.ERROR_MESSAGE);
+            else {
+                CommandSender.sendSignUpCommand(login, password, clientFacade.getDataOutputStream());
             }
-
         }
     }
 
+    public void showUnsuccessfulSignUpMessage() {
+        JOptionPane.showMessageDialog( null,
+                "User with such login already exists!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
 }

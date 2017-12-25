@@ -1,57 +1,45 @@
-package client.gui;
+package client.gui.authforms;
 
-import client.commandprocessor.PasswordEncoder;
 import client.network.ClientNetworkFacade;
 import client.commandprocessor.CommandSender;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.xml.bind.JAXBException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 
 import static java.lang.Thread.sleep;
 
 public class AuthForm extends JFrame {
-    private JButton connectButton;
-    private JButton cancelButton;
-    private JTextField userField;
+    private JButton okButton;
+    private JTextField loginField;
     private JPasswordField passwordField;
-    private JButton jbutt_registration;
-    ClientNetworkFacade cnf;
+    private JButton registrationButton;
+    private ClientNetworkFacade clientFacade;
+    private static AuthForm instance;
 
     public AuthForm() {
         super("Authorization");
-        connectButton = new JButton("Connect");
-        cancelButton = new JButton("Cancel");
-        jbutt_registration = new JButton("Registration");
-        userField = new JTextField(10);
+        instance = this;
+        okButton = new JButton("OK");
+        registrationButton = new JButton("Registration");
+        loginField = new JTextField(10);
         passwordField = new JPasswordField(10);
         passwordField.setEchoChar('*'); // что отображается при вводе пароля
 
         layoutComponents();
 
-        connectButton.addActionListener((ActionEvent e)->{
-
-           connection();
+        okButton.addActionListener((ActionEvent e)->{
+            sendData();
         });
 
-        cancelButton.addActionListener((ActionEvent e) ->{
-
-           /* JOptionPane.showMessageDialog(null,
-                    "Cancel button", "Button click", JOptionPane.INFORMATION_MESSAGE);*/
-           dispose();
+        registrationButton.addActionListener((ActionEvent e) -> {
+            this.dispose();
+            callSignUpForm();
         });
 
-        jbutt_registration.addActionListener((ActionEvent e) ->
-        {
-
-            new SignUpForm().setVisible(true);
-
-
-        });
+        clientFacade = ClientNetworkFacade.getInstance();
+        clientFacade.start();
 
         setSize(new Dimension(320,230));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -59,8 +47,6 @@ public class AuthForm extends JFrame {
         setResizable(false);
         setVisible(false);
     }
-
-
 
     private void layoutComponents() {
         JPanel controlsPanel = new JPanel();
@@ -93,7 +79,7 @@ public class AuthForm extends JFrame {
 
         gc.gridx++;
         gc.anchor = GridBagConstraints.LINE_START;
-        controlsPanel.add(userField,gc);
+        controlsPanel.add(loginField,gc);
 
         ///// Password field and label
         gc.gridy++;
@@ -108,13 +94,12 @@ public class AuthForm extends JFrame {
 
         ///////////////// OK and Cancel buttons an registration button
         buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        buttonsPanel.add(jbutt_registration, gc);
-        buttonsPanel.add(connectButton,gc);
-        buttonsPanel.add(cancelButton,gc);
+        buttonsPanel.add(registrationButton, gc);
+        buttonsPanel.add(okButton,gc);
 
 
         //Dimension btnSize = cancelButton.getPreferredSize();
-        //connectButton.setPreferredSize(btnSize);
+        //okButton.setPreferredSize(btnSize);
 
         ///////Adding panels to frame
         setLayout(new BorderLayout());
@@ -123,14 +108,45 @@ public class AuthForm extends JFrame {
     }
 
 
+    public static AuthForm getInstance() {
+        return instance;
+    }
 
-    private void connection() {
+    private void callSignUpForm() {
+        SignUpForm signUpForm = SignUpForm.getInstance();
+        if (signUpForm == null) signUpForm = new SignUpForm();
+        signUpForm.setVisible(true);
+    }
 
+    private void sendData() {
+        if (loginField.getText() == null || loginField.getText().length() == 0
+                || passwordField.getPassword().length == 0) {
+            JOptionPane.showMessageDialog( null,
+                    "Incorrect login or password!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        else {
+            if (clientFacade.getDataOutputStream() == null)
+                JOptionPane.showMessageDialog( null,
+                        "Server is not available!", "Error", JOptionPane.ERROR_MESSAGE);
+            else
+                CommandSender.sendSignInCommand(loginField.getText(),
+                        String.valueOf(passwordField.getPassword()),
+                        clientFacade.getDataOutputStream());
+        }
+    }
 
+    public void showUnsuccessfulAuthMessage() {
+        JOptionPane.showMessageDialog( null,
+                "User with such login and password does not exists!",
+                "Error", JOptionPane.ERROR_MESSAGE);
+        this.dispose();
+        callSignUpForm();
+    }
+
+    /*private void connection() {
         String login, password;
-        login= this.userField.getText();
+        login= this.loginField.getText();
         password= String.valueOf(this.passwordField.getPassword());
-
 
         if((login.length()==0)|| (password.length()==0))
         {
@@ -144,30 +160,17 @@ public class AuthForm extends JFrame {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-
             if (cnf.getDataOutputStream() == null) {
                 JOptionPane.showMessageDialog(this, "Server is not available!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-
-
                 try {
                     CommandSender.sendSignInCommand(login, new PasswordEncoder().encode(password), cnf.getDataOutputStream());
-
-
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 }
-
-
             }
-
             //при успешной авторизации Сервер отправляет команду об успешной авторихации
             //открываем окно журнала вызывается после прочтения команды Complete Auth в InputCommandHendler
-
-
         }
-
-
-    }
+    }*/
 }

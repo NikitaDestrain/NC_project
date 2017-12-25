@@ -1,10 +1,11 @@
 package client.commandprocessor;
 
 
-import client.model.Task;
+import client.gui.authforms.AuthForm;
+import client.gui.authforms.SignUpForm;
 import server.gui.mainform.MainForm;
 import server.gui.notificationwindow.NotificationForm;
-import server.model.Journal;
+import client.model.Journal;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -34,14 +35,35 @@ public class ParserCommand {
 
     public static void doCommandAction(Command command) {
         if (command != null) {
+            MainForm mainForm;
+            AuthForm authForm;
+            SignUpForm signUpForm;
             switch (command.getName()) {
                 case "Update" :
-                    MainForm mainForm = MainForm.getInstance();
+                    mainForm = MainForm.getInstance();
                     if (mainForm == null) mainForm = new MainForm();
-                    mainForm.setJournal((Journal) command.getObject()); // при update приходит журнал
+                    //mainForm.setJournal((Journal) command.getObject()); // при update приходит журнал
+                    mainForm.setVisible(true);
                     break;
                 case "Notification" :
                     new NotificationForm().setTask((server.model.Task) command.getObject());
+                    break;
+                case "Unsuccessful auth":
+                    authForm = AuthForm.getInstance();
+                    if (authForm == null) authForm = new AuthForm();
+                    authForm.setVisible(true);
+                    authForm.showUnsuccessfulAuthMessage();
+                    break;
+                case "Unsuccessful sign up" :
+                    signUpForm = SignUpForm.getInstance();
+                    if (signUpForm == null) signUpForm = new SignUpForm();
+                    signUpForm.setVisible(true);
+                    signUpForm.showUnsuccessfulSignUpMessage();
+                    break;
+                case "Successful auth":
+                    mainForm = MainForm.getInstance();
+                    if (mainForm == null) mainForm = new MainForm();
+                    new MainForm().setVisible(true);
                     break;
             }
         }

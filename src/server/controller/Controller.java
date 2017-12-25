@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Controller {
-
     private Journal journal;
     private Notifier notifier;
     private static Controller instance;

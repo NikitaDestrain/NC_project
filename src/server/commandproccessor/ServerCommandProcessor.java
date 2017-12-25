@@ -25,8 +25,12 @@ public class ServerCommandProcessor {
         return ServerCommandFactory.createCommand("Successful auth", null);
     }
 
-    private static Command createUnSuccessfulAuthCommand() {
+    private static Command createUnsuccessfulAuthCommand() {
         return ServerCommandFactory.createCommand("Unsuccessful auth", null);
+    }
+
+    private static Command createUnsuccessfulSignUpCommand() {
+        return ServerCommandFactory.createCommand("Unsuccessful sign up", null);
     }
 
     public static void sendUpdateCommand(Journal journal, OutputStream out) {
@@ -70,7 +74,19 @@ public class ServerCommandProcessor {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(createUnSuccessfulAuthCommand(), out);
+            marshaller.marshal(createUnsuccessfulAuthCommand(), out);
+        }
+        catch(JAXBException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendUnsuccessfulSignUpCommand(OutputStream out) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(Command.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.marshal(createUnsuccessfulSignUpCommand(), out);
         }
         catch(JAXBException e){
             e.printStackTrace();

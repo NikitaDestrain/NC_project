@@ -20,7 +20,14 @@ public class ClientNetworkFacade extends Thread {
     private ServerSocket notificationSocket;
     private DataOutputStream notificationOutputStream;
     private DataInputStream notificationInputStream;
+    private static ClientNetworkFacade instance;
 
+    private ClientNetworkFacade() {}
+
+    public static ClientNetworkFacade getInstance() {
+        if (instance == null) instance = new ClientNetworkFacade();
+        return instance;
+    }
 
     @Override
     public void run() {

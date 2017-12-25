@@ -226,7 +226,7 @@ public class MainForm extends JFrame {
         setIconImage(icon.getImage());
         setLocationRelativeTo(null);
         setResizable(true);
-        setVisible(true);
+        setVisible(false);
     }
 
     private void removeFromTray() {

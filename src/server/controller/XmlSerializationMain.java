@@ -1,14 +1,8 @@
 package server.controller;
 
-import client.gui.AuthForm;
-import server.model.Journal;
-import server.model.Task;
-import server.model.TaskStatus;
-import server.properties.ParserProperties;
+import client.gui.authforms.AuthForm;
 
 import javax.swing.*;
-import java.io.*;
-import java.util.Date;
 
 
 public class XmlSerializationMain {
