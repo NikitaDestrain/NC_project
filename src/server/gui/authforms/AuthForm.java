@@ -1,8 +1,8 @@
-package client.gui.authforms;
+package server.gui.authforms;
 
-import client.gui.UserContainer;
-import client.network.ClientNetworkFacade;
-import client.commandprocessor.CommandSender;
+import server.commandproccessor.User;
+import server.controller.Controller;
+import server.gui.mainform.MainForm;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -11,17 +11,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import static java.lang.Thread.sleep;
-
 public class AuthForm extends JFrame {
     private JButton okButton;
     private JTextField loginField;
     private JPasswordField passwordField;
     private JButton registrationButton;
-    private ClientNetworkFacade clientFacade;
+    private Controller controller = Controller.getInstance();
     private static AuthForm instance;
-    private CommandSender commandSender = CommandSender.getInstance();
-    private UserContainer userContainer = UserContainer.getInstance();
 
     public AuthForm() {
         super("Authorization");
@@ -35,16 +31,13 @@ public class AuthForm extends JFrame {
         layoutComponents();
 
         okButton.addActionListener((ActionEvent e) -> {
-            sendData();
+            signIn();
         });
 
         registrationButton.addActionListener((ActionEvent e) -> {
             this.dispose();
             callSignUpForm();
         });
-
-        clientFacade = ClientNetworkFacade.getInstance();
-        if (!clientFacade.isAlive()) clientFacade.start();
 
         setSize(new Dimension(320, 230));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -135,29 +128,23 @@ public class AuthForm extends JFrame {
         signUpForm.setVisible(true);
     }
 
-    private void sendData() {
+    private void signIn() {
         if (loginField.getText() == null || loginField.getText().length() == 0
                 || passwordField.getPassword().length == 0) {
             JOptionPane.showMessageDialog(null,
                     "Incorrect login or password!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (!controller.isUserDataCorrect(new User(loginField.getText(),
+                String.valueOf(passwordField.getPassword())))) {
+            JOptionPane.showMessageDialog(null,
+                    "User with such login and password does not exists! You should sign up now!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            new SignUpForm().setVisible(true);
+            this.dispose();
         } else {
-            if (clientFacade.getDataOutputStream() == null)
-                JOptionPane.showMessageDialog(null,
-                        "Server is not available!", "Error", JOptionPane.ERROR_MESSAGE);
-            else {
-                userContainer.setUsername(loginField.getText());
-                commandSender.sendSignInCommand(loginField.getText(),
-                        String.valueOf(passwordField.getPassword()),
-                        clientFacade.getDataOutputStream());
-            }
+            MainForm mainForm = MainForm.getInstance();
+            if (mainForm == null) mainForm = new MainForm();
+            mainForm.setUsername(loginField.getText());
+            mainForm.setVisible(true);
         }
-    }
-
-    public void showUnsuccessfulAuthMessage() {
-        JOptionPane.showMessageDialog(null,
-                "User with such login and password does not exists! You should sign up now!",
-                "Error", JOptionPane.ERROR_MESSAGE);
-        this.dispose();
-        callSignUpForm();
     }
 }

@@ -13,6 +13,14 @@ public class ServerNetworkFacade extends Thread {
     private ServerSocket serverDataSocket;
     private Socket clientDataSocket;
     private ExecutorService executeIt;
+    public static ServerNetworkFacade instance;
+
+    private ServerNetworkFacade() {}
+
+    public static ServerNetworkFacade getInstance() {
+        if (instance == null) instance = new ServerNetworkFacade();
+        return instance;
+    }
 
     @Override
     public void run() {

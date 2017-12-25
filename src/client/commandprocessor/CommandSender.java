@@ -1,7 +1,6 @@
 package client.commandprocessor;
 
-import client.commandprocessor.ClientCommandProcessor;
-import client.commandprocessor.Command;
+import client.factories.ClientCommandFactory;
 import client.model.Task;
 
 import javax.xml.bind.JAXBContext;
@@ -11,14 +10,22 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class CommandSender {
+    private static CommandSender instance;
 
-    public static void sendAddCommand(Task task, OutputStream out) {
+    private CommandSender() {}
+
+    public static CommandSender getInstance() {
+        if (instance == null) instance = new CommandSender();
+        return instance;
+    }
+
+    public void sendAddCommand(Task task, OutputStream out) {
         try {
             System.out.println("Sending command...");
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandProcessor.createAddCommand(task), out);
+            marshaller.marshal(ClientCommandFactory.createCommand("Add", task), out);
             out.flush();
             System.out.println("Sending success");
         }
@@ -28,12 +35,12 @@ public class CommandSender {
         }
     }
 
-    public static void sendEditCommand(Task task, OutputStream out) {
+    public void sendEditCommand(Task task, OutputStream out) {
         try {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandProcessor.createEditCommand(task), out);
+            marshaller.marshal(ClientCommandFactory.createCommand("Edit", task), out);
             out.flush();
         }
         catch(JAXBException | IOException e){
@@ -41,12 +48,12 @@ public class CommandSender {
         }
     }
 
-    public static void sendDeleteCommand(Task task, OutputStream out) {
+    public void sendDeleteCommand(Task task, OutputStream out) {
         try {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandProcessor.createDeleteCommand(task), out);
+            marshaller.marshal(ClientCommandFactory.createCommand("Delete", task), out);
             out.flush();
         }
         catch(JAXBException | IOException e){
@@ -54,12 +61,12 @@ public class CommandSender {
         }
     }
 
-    public static void sendLaterCommand(Task task, OutputStream out) {
+    public void sendLaterCommand(Task task, OutputStream out) {
         try {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandProcessor.createLaterCommand(task), out);
+            marshaller.marshal(ClientCommandFactory.createCommand("Later", task), out);
             out.flush();
         }
         catch(JAXBException | IOException e){
@@ -67,12 +74,12 @@ public class CommandSender {
         }
     }
 
-    public static void sendFinishCommand(Task task, OutputStream out) {
+    public void sendFinishCommand(Task task, OutputStream out) {
         try {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandProcessor.createFinishCommand(task), out);
+            marshaller.marshal(ClientCommandFactory.createCommand("Finish", task), out);
             out.flush();
         }
         catch(JAXBException | IOException e){
@@ -80,12 +87,12 @@ public class CommandSender {
         }
     }
 
-    public static void sendCancelCommand(Task task, OutputStream out) {
+    public void sendCancelCommand(Task task, OutputStream out) {
         try {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandProcessor.createCancelCommand(task), out);
+            marshaller.marshal(ClientCommandFactory.createCommand("Cancel", task), out);
             out.flush();
         }
         catch(JAXBException | IOException e){
@@ -93,12 +100,12 @@ public class CommandSender {
         }
     }
 
-    public static void sendSignInCommand(String login, String password, OutputStream out) {
+    public void sendSignInCommand(String login, String password, OutputStream out) {
         try {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandProcessor.createSignInCommand(login, password), out);
+            marshaller.marshal(ClientCommandFactory.createCommand("Sign in", new User(login, password)), out);
             out.flush();
         }
         catch (JAXBException | IOException e) {
@@ -107,12 +114,12 @@ public class CommandSender {
 
     }
 
-    public static void sendSignUpCommand(String login, String password, OutputStream out) {
+    public void sendSignUpCommand(String login, String password, OutputStream out) {
         try {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandProcessor.createSignUpCommand(login, password), out);
+            marshaller.marshal(ClientCommandFactory.createCommand("Sign up", new User(login, password)), out);
             out.flush();
         }
         catch (JAXBException | IOException e) {

@@ -1,7 +1,7 @@
 package server.network;
 
 import server.commandproccessor.Command;
-import server.commandproccessor.ParserCommand;
+import server.commandproccessor.CommandParser;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -20,6 +20,7 @@ public class MonoClientThread implements Runnable {
     private DataInputStream dataInputStream;
     private DataOutputStream notificationOutputStream;
     private DataInputStream notificationInputStream;
+    private CommandParser commandParser = CommandParser.getInstance();
 
     public MonoClientThread(Socket socket) {
         clientDataSocket = socket;
@@ -41,7 +42,7 @@ public class MonoClientThread implements Runnable {
                        int readBytesCount = dataInputStream.read(buffer);
                        System.out.println("размер прочитанного" + readBytesCount);
                        System.out.println("читаем из потока");
-                           Command com = ParserCommand.parseToCommand(buffer);
+                           Command com = commandParser.parseToCommand(buffer);
                            System.out.println(com);
                    }
                }

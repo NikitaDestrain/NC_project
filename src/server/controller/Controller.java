@@ -5,7 +5,9 @@ import server.gui.mainform.MainForm;
 import server.model.Journal;
 import server.model.Task;
 import server.model.TaskStatus;
+import server.properties.ParserProperties;
 
+import javax.swing.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,11 +19,19 @@ public class Controller {
     private static Controller instance;
     private MainForm mainForm = MainForm.getInstance();
     private Map<String, String> usersAuthData;
+    private XMLSerializer serializer;
 
     private Controller() {
         this.journal = new Journal();
         this.notifier = new Notifier();
         this.usersAuthData = new HashMap<>();
+        this.serializer = new XMLSerializer();
+        try {
+            setJournal(serializer.readJournal(ParserProperties.getInstance().getProperties("XML_FILE")));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Could not load journal from file!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -65,6 +75,9 @@ public class Controller {
                     task.setStatus(TaskStatus.Overdue);
             }
         }
+    }
+
+    public void updateMainForm() {
         mainForm.updateJournal();
     }
 
@@ -144,7 +157,8 @@ public class Controller {
 
     public boolean isUserDataCorrect(User user) {
         if (user == null) return false;
-        return usersAuthData.containsKey(user.getLogin()) && usersAuthData.get(user.getLogin()).equals(user.getPassword());
+        return usersAuthData.containsKey(user.getLogin()) &&
+                usersAuthData.get(user.getLogin()).equals(user.getPassword());
     }
 
     public boolean isSuchLoginExists(String login) {

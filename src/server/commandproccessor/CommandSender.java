@@ -7,89 +7,90 @@ import server.model.Task;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import java.io.IOException;
 import java.io.OutputStream;
 
-public class ServerCommandProcessor {
+public class CommandSender {
+    private static CommandSender instance;
 
-    //апдейт журнала
-    private static Command createUpdateCommand(Journal journal) {
-        return ServerCommandFactory.createCommand("Update", journal);
+    private CommandSender() {}
+
+    public static CommandSender getInstance() {
+        if (instance == null) instance = new CommandSender();
+        return instance;
     }
 
-    //нотификация клиенту
-    private static Command createNotificationCommand(Task task) {
-        return ServerCommandFactory.createCommand("Notification", task);
-    }
-
-    private static Command createSuccessfulAuthCommand() {
-        return ServerCommandFactory.createCommand("Successful auth", null);
-    }
-
-    private static Command createUnsuccessfulAuthCommand() {
-        return ServerCommandFactory.createCommand("Unsuccessful auth", null);
-    }
-
-    private static Command createUnsuccessfulSignUpCommand() {
-        return ServerCommandFactory.createCommand("Unsuccessful sign up", null);
-    }
-
-    public static void sendUpdateCommand(Journal journal, OutputStream out) {
+    public void sendUpdateCommand(Journal journal, OutputStream out) {
         try {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(createUpdateCommand(journal), out);
+            marshaller.marshal(ServerCommandFactory.createCommand("Update", journal), out);
         }
         catch(JAXBException e){
             e.printStackTrace();
         }
     }
 
-    public static void sendNotificationCommand(Task task, OutputStream out) {
+    public void sendNotificationCommand(Task task, OutputStream out) {
         try {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(createNotificationCommand(task), out);
+            marshaller.marshal(ServerCommandFactory.createCommand("Notification", task), out);
         }
         catch(JAXBException e){
             e.printStackTrace();
         }
     }
 
-    public static void sendSuccessfulAuthCommand(OutputStream out) {
+    public void sendSuccessfulAuthCommand(OutputStream out) {
         try {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(createSuccessfulAuthCommand(), out);
+            marshaller.marshal(ServerCommandFactory.createCommand("Successful auth", null), out);
         }
         catch(JAXBException e){
             e.printStackTrace();
         }
     }
 
-    public static void sendUnSuccessfulAuthCommand(OutputStream out) {
+    public void sendUnsuccessfulAuthCommand(OutputStream out) {
         try {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(createUnsuccessfulAuthCommand(), out);
+            marshaller.marshal(ServerCommandFactory.createCommand("Unsuccessful auth", null), out);
         }
         catch(JAXBException e){
             e.printStackTrace();
         }
     }
 
-    public static void sendUnsuccessfulSignUpCommand(OutputStream out) {
+    public void sendUnsuccessfulSignUpCommand(OutputStream out) {
         try {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(createUnsuccessfulSignUpCommand(), out);
+            marshaller.marshal(ServerCommandFactory.createCommand("Unsuccessful sign up", null),
+                    out);
         }
         catch(JAXBException e){
             e.printStackTrace();
+        }
+    }
+
+    public void sendUnsuccessfulActionCommand(OutputStream out) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(Command.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.marshal(ServerCommandFactory.createCommand("Unsuccessfully", null), out);
+            out.flush();
+        }
+        catch (JAXBException | IOException e) {
+            e.getMessage();
         }
     }
 }

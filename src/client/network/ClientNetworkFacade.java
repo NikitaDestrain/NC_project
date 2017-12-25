@@ -21,6 +21,7 @@ public class ClientNetworkFacade extends Thread {
     private DataOutputStream notificationOutputStream;
     private DataInputStream notificationInputStream;
     private static ClientNetworkFacade instance;
+    private CommandSender commandSender = CommandSender.getInstance();
 
     private ClientNetworkFacade() {}
 
@@ -46,7 +47,7 @@ public class ClientNetworkFacade extends Thread {
 
        while(true) {
             //test
-            CommandSender.sendAddCommand(new Task("sss", TaskStatus.Planned, "s", new Date(), new Date(), 0), dataOutputStream);
+            commandSender.sendAddCommand(new Task("sss", TaskStatus.Planned, "s", new Date(), new Date(), 0), dataOutputStream);
             if (scanner.nextLine().equalsIgnoreCase("stop")) {
                 break;
             }

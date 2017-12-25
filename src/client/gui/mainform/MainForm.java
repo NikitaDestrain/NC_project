@@ -1,21 +1,20 @@
-package server.gui.mainform;
+package client.gui.mainform;
 
-import server.controller.Controller;
-import server.controller.ObjectSerializer;
-import server.controller.XMLSerializer;
-import server.exceptions.IllegalPropertyException;
-import server.gui.taskwindow.TaskWindow;
-import server.model.Journal;
-import server.model.Task;
-import server.properties.ParserProperties;
+import client.commandprocessor.CommandSender;
+import client.gui.taskwindow.TaskWindow;
+import client.exceptions.IllegalPropertyException;
+import client.model.Journal;
+import client.model.Task;
+import client.network.ClientNetworkFacade;
+import client.properties.ParserProperties;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.LinkedList;
 
 public class MainForm extends JFrame {
     private JFileChooser fileChooser;
-    private XMLSerializer journalBackup;
     private Journal journal;
     private TablePanel tablePanel;
     private ButtonPanel buttonPanel;
@@ -24,13 +23,14 @@ public class MainForm extends JFrame {
     private SystemTray systemTray = SystemTray.getSystemTray();
     private static MainForm instance;
     private TaskSender taskSender = TaskSender.getInstance();
+    private ClientNetworkFacade clientFacade = ClientNetworkFacade.getInstance();
+    private CommandSender commandSender = CommandSender.getInstance();
     private JLabel usernameLabel = new JLabel("You logged as: ");
 
     public MainForm() {
         super("Task Scheduler");
         instance = this;
         fileChooser = new JFileChooser();
-        journalBackup = new XMLSerializer();
         this.journal = new Journal();
         try {
             icon = new ImageIcon(ParserProperties.getInstance().getProperties("MAIN_FORM_ICON"));
@@ -39,10 +39,10 @@ public class MainForm extends JFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         tablePanel = new TablePanel(this);
-        tablePanel.setData(this.journal.getTasks());
+        tablePanel.setData(new LinkedList<>());
         tablePanel.refresh();
         buttonPanel = new ButtonPanel(this);
-        buttonPanel.setJtable((tablePanel.getTable()));
+        buttonPanel.setJTable((tablePanel.getTable()));
 
         buttonPanel.setTableListener(new TableListener() {
             @Override
@@ -64,9 +64,9 @@ public class MainForm extends JFrame {
                             case TaskActionListener.DELETE_TASK:
                                 for (int i = 0; i < rows.length; i++) {
                                     Task task = journal.getTasks().get(rows[i]);
-                                    Controller.getInstance().removeTask(task.getId());
-                                    updateJournal();
-                                    buttonPanel.setJtable((tablePanel.getTable()));
+                                    //Controller.getInstance().removeTask(task.getId());
+                                    commandSender.sendDeleteCommand(task, clientFacade.getDataOutputStream());
+                                    buttonPanel.setJTable((tablePanel.getTable()));
                                     for (int j = i + 1; j < rows.length; j++) {
                                         rows[j]--;
                                     }
@@ -119,7 +119,7 @@ public class MainForm extends JFrame {
                                     journal.removeTask(rows[i]);
                                     tablePanel.refresh();
                                     tablePanel.setData(journal.getTasks());
-                                    buttonPanel.setJtable((tablePanel.getTable()));
+                                    buttonPanel.setJTable((tablePanel.getTable()));
                                     for (int j = i + 1; j < rows.length; j++) {
                                         rows[j]--;
                                     }
@@ -131,7 +131,7 @@ public class MainForm extends JFrame {
             }
         });
 
-        setJMenuBar(createMenu());
+        //setJMenuBar(createMenu());
         setLayout(new BorderLayout());
         add(tablePanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
@@ -197,27 +197,8 @@ public class MainForm extends JFrame {
                         MainForm.this, "Do you really want to close the app?",
                         "Warning!",
                         JOptionPane.YES_NO_OPTION);
-
-                if (action == JOptionPane.OK_OPTION) {
-                    try {
-                        String path = ParserProperties.getInstance().getProperties("PATH_TO_JOURNAL");
-                        if (path == null)
-                            JOptionPane.showMessageDialog(MainForm.this,
-                                    "Incorrect file path",
-                                    "Error", JOptionPane.ERROR_MESSAGE);
-                        else {
-                            journalBackup.writeJournal(journal, path);
-                            System.exit(0);
-                        }
-                    } catch (IllegalPropertyException ex) {
-                        JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(MainForm.this,
-                                "Could not save journal to file",
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
+                if (action == JOptionPane.OK_OPTION)
+                    System.exit(0);
             }
         });
 
@@ -251,19 +232,19 @@ public class MainForm extends JFrame {
     private JMenuBar createMenu() {
         JMenuBar menu = new JMenuBar();
 
-        JMenu fileMenu = new JMenu("File");
-        menu.add(fileMenu);
+        //JMenu fileMenu = new JMenu("File");
+        //menu.add(fileMenu);
 
-        JMenuItem exportJournal = new JMenuItem("Export journal...");//todo эти пункты сейчас ничего полезного не делают
-        JMenuItem importJournal = new JMenuItem("Import journal...");
-        JMenuItem exit = new JMenuItem("Exit");
+        //JMenuItem exportJournal = new JMenuItem("Export journal...");//todo эти пункты сейчас ничего полезного не делают
+        //JMenuItem importJournal = new JMenuItem("Import journal...");
+        //JMenuItem exit = new JMenuItem("Exit");
 
-        fileMenu.add(exportJournal);
-        fileMenu.add(importJournal);
-        fileMenu.addSeparator();
-        fileMenu.add(exit);
+        //fileMenu.add(exportJournal);
+        //fileMenu.add(importJournal);
+        //fileMenu.addSeparator();
+        //fileMenu.add(exit);
 
-        exit.addActionListener((ActionEvent e) -> {
+        /*exit.addActionListener((ActionEvent e) -> {
             int action = JOptionPane.showConfirmDialog(
                     MainForm.this, "Do you really want to close the app?",
                     "Warning!",
@@ -314,7 +295,7 @@ public class MainForm extends JFrame {
                 JOptionPane.showMessageDialog(MainForm.this, "Could not load journal from file",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-        });
+        });*/
 
         return menu;
     }
@@ -325,12 +306,14 @@ public class MainForm extends JFrame {
      * @param journal object with tasks for representation
      */
     public void setJournal(Journal journal) {
-        if (journal != null) {
-            Controller controller = Controller.getInstance();
-            this.journal = controller.getJournal();
+        if (journal != null) { // который пришел с команды
+            this.journal = journal;
             tablePanel.setData(this.journal.getTasks());
             tablePanel.refresh();
-        }
+        } else
+            JOptionPane.showMessageDialog(MainForm.this,
+                    "Incorrect journal!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     public static MainForm getInstance() {
@@ -340,8 +323,7 @@ public class MainForm extends JFrame {
     public void updateJournal() {
         //server.exceptions.controller = Controller.getInstance();//todo нет нужны каждый раз перезаписывать поле. Синглетон на то и синглетон, что он всегда один и тот же.
         // Можно или один раз инициализировать поле или вообще отказаться от поля и каждый раз просто вызывать Controller.getInstance()
-        Controller controller = Controller.getInstance();
-        this.journal = controller.getJournal();
+        //this.journal = Controller.getInstance().getJournal();
         tablePanel.setData(this.journal.getTasks());
         tablePanel.refresh();
     }

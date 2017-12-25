@@ -1,12 +1,5 @@
 package client;
 
-import client.commandprocessor.ClientCommandProcessor;
-import server.commandproccessor.ParserCommand;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.security.NoSuchAlgorithmException;
 
 public class Test {
     public static void main(String[] args) {
@@ -26,7 +19,7 @@ public class Test {
         }
 
         try {
-            server.commandproccessor.Command command = ParserCommand.parseToCommand(
+            server.commandproccessor.Command command = CommandParser.parseToCommand(
                     new FileInputStream("src/client/test.xml"));
             System.out.println(command.toString());
         } catch (FileNotFoundException e) {

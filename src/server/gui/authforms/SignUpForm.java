@@ -1,8 +1,10 @@
-package client.gui.authforms;
+package server.gui.authforms;
 
 import client.commandprocessor.CommandSender;
 import client.gui.UserContainer;
 import client.network.ClientNetworkFacade;
+import server.commandproccessor.User;
+import server.controller.Controller;
 import server.gui.mainform.MainForm;
 
 import javax.swing.*;
@@ -19,9 +21,7 @@ public class SignUpForm extends JFrame {
     private JPasswordField passwordField;
     private JPasswordField confirmPasswordField;
     private static SignUpForm instance;
-    private ClientNetworkFacade clientFacade;
-    private CommandSender commandSender = CommandSender.getInstance();
-    private UserContainer userContainer = UserContainer.getInstance();
+    private Controller controller = Controller.getInstance();
 
     public SignUpForm() {
         super("Registration");
@@ -61,9 +61,6 @@ public class SignUpForm extends JFrame {
 
 
         setSize(new Dimension(320, 230));
-
-        clientFacade = ClientNetworkFacade.getInstance();
-        if (!clientFacade.isAlive()) clientFacade.start();
 
         setLocationRelativeTo(null);
         setResizable(false);
@@ -159,19 +156,17 @@ public class SignUpForm extends JFrame {
             JOptionPane.showMessageDialog(this,
                     "Passwords do not match!",
                     "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (controller.isSuchLoginExists(login)) {
+            JOptionPane.showMessageDialog(this,
+                    "User with such login already exists!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            if (clientFacade.getDataOutputStream() == null)
-                JOptionPane.showMessageDialog(null,
-                        "Server is not available!", "Error", JOptionPane.ERROR_MESSAGE);
-            else {
-                userContainer.setUsername(login);
-                commandSender.sendSignUpCommand(login, password, clientFacade.getDataOutputStream());
-            }
+            controller.addUser(new User(login, password));
+            MainForm mainForm = MainForm.getInstance();
+            if (mainForm == null) mainForm = new MainForm();
+            mainForm.setUsername(login);
+            mainForm.setJournal(controller.getJournal());
+            mainForm.setVisible(true);
         }
-    }
-
-    public void showUnsuccessfulSignUpMessage() {
-        JOptionPane.showMessageDialog(null,
-                "User with such login already exists!", "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
