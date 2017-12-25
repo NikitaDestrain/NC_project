@@ -16,34 +16,17 @@ public class ParserCommand {
         try {
             System.out.println("Start reading command");
             JAXBContext context = JAXBContext.newInstance(Command.class);
-            System.out.println("1");
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            System.out.println("2");
-
-
-
-
             byte[] mData;
             try {
-
-                       mData = new byte[in.available()];
-                       in.read(mData);
-
-                       InputStream is = new ByteArrayInputStream(mData);
-                       command = (Command) unmarshaller.unmarshal(is);
-
-                       return command;
-
-                } catch(IOException e){
-                    e.printStackTrace();
-                }
-
-
-
-
-
-            System.out.println("вызывается unmarshal");
-
+                mData = new byte[in.available()];
+                in.read(mData);
+                InputStream is = new ByteArrayInputStream(mData);
+                command = (Command) unmarshaller.unmarshal(is);
+                return command;
+            } catch(IOException e){
+                e.printStackTrace();
+            }
             System.out.println("Command reading success");
         } catch (JAXBException e) {
             e.printStackTrace();
@@ -52,7 +35,6 @@ public class ParserCommand {
             return null;
         }
         return null;
-       // return command;
     }
 
     public static void doCommandAction(Command command) {

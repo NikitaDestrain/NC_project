@@ -3,8 +3,6 @@ package client.commandprocessor;
 import client.factories.ClientCommandFactory;
 import client.model.Task;
 
-
-
 public class ClientCommandProcessor {
     //создание
     public static Command createAddCommand(Task task) { return ClientCommandFactory.createCommand("Add", task); }
@@ -41,5 +39,4 @@ public class ClientCommandProcessor {
     public static Command createSignUpCommand(String login, String password) {
         return ClientCommandFactory.createCommand("Sign up", new User(login, password));
     }
-
 }

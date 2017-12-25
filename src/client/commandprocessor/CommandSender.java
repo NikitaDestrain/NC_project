@@ -1,4 +1,4 @@
-package client.network;
+package client.commandprocessor;
 
 import client.commandprocessor.ClientCommandProcessor;
 import client.commandprocessor.Command;
@@ -7,14 +7,10 @@ import client.model.Task;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-
-
-public class SendCommand {
+public class CommandSender {
 
     public static void sendAddCommand(Task task, OutputStream out) {
         try {
@@ -22,11 +18,8 @@ public class SendCommand {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
             marshaller.marshal(ClientCommandProcessor.createAddCommand(task), out);
-
-         out.flush();
-
+            out.flush();
             System.out.println("Sending success");
         }
         catch(JAXBException | IOException e){
@@ -100,24 +93,30 @@ public class SendCommand {
         }
     }
 
-    public static void sendSignInCommand(String login, String password, OutputStream out) throws JAXBException, IOException {
-
-        JAXBContext context = JAXBContext.newInstance(Command.class);
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshaller.marshal(ClientCommandProcessor.createSignInCommand(login, password), out);
-        out.flush();
-
+    public static void sendSignInCommand(String login, String password, OutputStream out) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(Command.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.marshal(ClientCommandProcessor.createSignInCommand(login, password), out);
+            out.flush();
+        }
+        catch (JAXBException | IOException e) {
+            e.getMessage();
+        }
 
     }
 
-    public static void sendSignUpCommand(String login, String password, OutputStream out) throws JAXBException, IOException {
-
-        JAXBContext context = JAXBContext.newInstance(Command.class);
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshaller.marshal(ClientCommandProcessor.createSignUpCommand(login, password), out);
-        out.flush();
-
+    public static void sendSignUpCommand(String login, String password, OutputStream out) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(Command.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.marshal(ClientCommandProcessor.createSignUpCommand(login, password), out);
+            out.flush();
+        }
+        catch (JAXBException | IOException e) {
+            e.getMessage();
+        }
     }
 }

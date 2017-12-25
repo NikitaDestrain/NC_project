@@ -1,8 +1,8 @@
 package client.network;
 
-import client.commandprocessor.ClientCommandProcessor;
-import client.model.TaskStatus;
+import client.commandprocessor.CommandSender;
 import client.model.Task;
+import client.model.TaskStatus;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -23,8 +23,7 @@ public class ClientNetworkFacade extends Thread {
 
 
     @Override
-    public void run(){
-
+    public void run() {
         System.out.println("Client logs:");
         System.out.println();
         serverPort = 1337;
@@ -32,23 +31,19 @@ public class ClientNetworkFacade extends Thread {
         createNotificationChanel(notificationPort);
 
         Scanner scanner = new Scanner(System.in);
-      /*  while(true) {
+        while(true) {
             //test
-            ClientCommandProcessor.sendAddCommand(new Task("sss", TaskStatus.Planned, "s", new Date(), new Date(), 0), dataOutputStream);
+            CommandSender.sendAddCommand(new Task("sss", TaskStatus.Planned, "s", new Date(), new Date(), 0), dataOutputStream);
             if (scanner.nextLine().equalsIgnoreCase("stop")) {
                 break;
             }
-
-
-
-        }*/
+        }
         System.out.println("Finish.");
        // finish();
-
-        DataServerListner datalistner = new DataServerListner(dataInputStream);
-        datalistner.start();
-        NotifServerListner notiflistner = new NotifServerListner(notificationInputStream);
-        notiflistner.start();
+        DataServerListener datalistener = new DataServerListener(dataInputStream);
+        datalistener.start();
+        NotificationServerListener notiflistener = new NotificationServerListener(notificationInputStream);
+        notiflistener.start();
     }
 
     private void connect(int port) {
@@ -112,7 +107,7 @@ public class ClientNetworkFacade extends Thread {
         return notificationOutputStream;
     }
 
-    public DataInputStream getNoitificationInputStream()
+    public DataInputStream getNotificationInputStream()
     {
         return notificationInputStream;
     }

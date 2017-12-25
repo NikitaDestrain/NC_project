@@ -1,16 +1,13 @@
 package client.commandprocessor;
 
-
 import javax.swing.*;
 
 public class InputCommandHandler
 {
-    //читает пришедшую команду и вызывает необходимые методы контроллера
+    //читает пришедшую команду и вызывает необходимые методы контроллера (НЕТ КОНТРОЛЛЕРА У КЛИЕНТА!!!!!!!!!!!!!!!!)
 
-    public synchronized static void readInputCommand(Command inputCommand)
-    {
-        switch (inputCommand.getName())
-        {
+    public synchronized static void readInputCommand(Command inputCommand) {
+        switch (inputCommand.getName()) {
             case "Unsuccessful auth":
                 JOptionPane.showMessageDialog( null,"Unsuccessful auth!", "Error", JOptionPane.ERROR_MESSAGE);
                 break;

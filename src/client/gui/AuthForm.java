@@ -1,11 +1,8 @@
 package client.gui;
 
-import client.PasswordEncoder;
-import client.commandprocessor.ClientCommandProcessor;
-import client.factories.ClientCommandFactory;
+import client.commandprocessor.PasswordEncoder;
 import client.network.ClientNetworkFacade;
-import client.network.DataServerListner;
-import client.network.SendCommand;
+import client.commandprocessor.CommandSender;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -155,7 +152,7 @@ public class AuthForm extends JFrame {
 
 
                try {
-                   SendCommand.sendSignInCommand(login, new PasswordEncoder().encode(password), cnf.getDataOutputStream());
+                   CommandSender.sendSignInCommand(login, new PasswordEncoder().encode(password), cnf.getDataOutputStream());
                 } catch (JAXBException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

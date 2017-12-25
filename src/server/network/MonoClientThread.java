@@ -28,12 +28,7 @@ public class MonoClientThread implements Runnable {
         System.out.printf("Client №%d is connected\n", ++number);
         start();
         connectToNotificationChanel();
-        try {
-            Thread.sleep(5000);
-            System.out.println(ParserCommand.parseToCommand(dataInputStream));
-        }
-        catch (InterruptedException e)
-        {}
+        System.out.println(ParserCommand.parseToCommand(dataInputStream));
         finish();
     }
 
