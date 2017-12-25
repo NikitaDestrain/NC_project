@@ -1,7 +1,9 @@
 package client.gui.mainform;
 
+import client.commandprocessor.CommandSender;
 import client.model.Task;
 import client.model.TaskStatus;
+import client.network.ClientNetworkFacade;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -14,6 +16,8 @@ public class JournalTableModel extends AbstractTableModel {
     private String[] columnNames = {"*", "Status", "Name", "Description", "Planned date", "Planned time", "Notification date",
             "Notification time"};
     private Object[][] data;
+    private CommandSender commandSender = CommandSender.getInstance();
+    private ClientNetworkFacade clientFacade = ClientNetworkFacade.getInstance();
 
     // TODO CHECKBOXES, КНОПКИ ЛАЙФСАЙКЛА - отменить, отложить
 
@@ -103,11 +107,14 @@ public class JournalTableModel extends AbstractTableModel {
                             "Task name should not be empty!",
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                else
+                else {
                     task.setName((String) aValue);
-                return;
+                    commandSender.sendEditCommand(task, clientFacade.getDataOutputStream());
+                    return;
+                }
             case 3:
                 task.setDescription((String) aValue);
+                commandSender.sendEditCommand(task, clientFacade.getDataOutputStream());
                 return;
         }
     }
