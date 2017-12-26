@@ -108,6 +108,7 @@ public class ClientNetworkFacade extends Thread {
                     byte[] tmp_buffer = new byte[dataInputStream.available()];
                     int tmp_trash = dataInputStream.read(tmp_buffer);
                     Command command = commandParser.parseToCommand(tmp_buffer);
+                    System.out.print("Server send: ");
                     System.out.println(command);
                 }
             }
