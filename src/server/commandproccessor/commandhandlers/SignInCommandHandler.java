@@ -15,11 +15,9 @@ public class SignInCommandHandler implements CommandHandler {
         Controller controller = Controller.getInstance();
         if (controller.isUserDataCorrect(((User) command.getObject()))) {
             commandSender.sendSuccessfulAuthCommand(ServerNetworkFacade.getInstance().getDataOutputStream(((User) command.getObject()).getPort()));
-            for (DataOutputStream out: ServerNetworkFacade.getInstance().getClientDataOutputStreams())
-                commandSender.sendUpdateCommand(controller.getJournal(), out);
+            commandSender.sendUpdateCommand(controller.getJournal(), ServerNetworkFacade.getInstance().getDataOutputStream(((User) command.getObject()).getPort()));
         }
         else
             commandSender.sendUnsuccessfulAuthCommand(ServerNetworkFacade.getInstance().getDataOutputStream(((User) command.getObject()).getPort()));
-
     }
 }

@@ -20,8 +20,7 @@ public class SignUpCommandHandler implements CommandHandler {
         else {
             controller.addUser(user);
             commandSender.sendSuccessfulAuthCommand(ServerNetworkFacade.getInstance().getDataOutputStream(((User) command.getObject()).getPort()));
-            for (DataOutputStream out: ServerNetworkFacade.getInstance().getClientDataOutputStreams())
-                commandSender.sendUpdateCommand(controller.getJournal(), out);
+            commandSender.sendUpdateCommand(controller.getJournal(), ServerNetworkFacade.getInstance().getDataOutputStream(((User) command.getObject()).getPort()));
         }
     }
 }
