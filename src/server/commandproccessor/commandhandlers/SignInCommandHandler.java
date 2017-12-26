@@ -7,22 +7,19 @@ import server.controller.Controller;
 import server.network.ServerNetworkFacade;
 
 import java.io.DataOutputStream;
-import java.io.OutputStream;
 
 public class SignInCommandHandler implements CommandHandler {
     @Override
     public synchronized void handle(Command command) {
         ServerCommandSender commandSender = ServerCommandSender.getInstance();
         Controller controller = Controller.getInstance();
-        if (controller.isUserDataCorrect(((User) command.getObject()))) { // верные логин и пароль
-            for (DataOutputStream out: ServerNetworkFacade.getInstance().getClientDataOutputStreams()) {
-                commandSender.sendSuccessfulAuthCommand(out); // тут будет нужный поток вывода
+        if (controller.isUserDataCorrect(((User) command.getObject()))) {
+            commandSender.sendSuccessfulAuthCommand(ServerNetworkFacade.getInstance().getDataOutputStream(((User) command.getObject()).getPort()));
+            for (DataOutputStream out: ServerNetworkFacade.getInstance().getClientDataOutputStreams())
                 commandSender.sendUpdateCommand(controller.getJournal(), out);
-            }
         }
         else
-            for (DataOutputStream out: ServerNetworkFacade.getInstance().getClientDataOutputStreams()) {
-                commandSender.sendUnsuccessfulAuthCommand(out); // todo output stream everywhere
-            }
+            commandSender.sendUnsuccessfulAuthCommand(ServerNetworkFacade.getInstance().getDataOutputStream(((User) command.getObject()).getPort()));
+
     }
 }

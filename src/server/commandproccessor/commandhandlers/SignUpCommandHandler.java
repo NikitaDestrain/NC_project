@@ -15,16 +15,13 @@ public class SignUpCommandHandler implements CommandHandler {
         Controller controller = Controller.getInstance();
         User user = ((User) command.getObject());
         ServerCommandSender commandSender = ServerCommandSender.getInstance();
-        if (controller.isSuchLoginExists(user.getLogin())) // пользователь с таким логином существует
-            for (DataOutputStream out: ServerNetworkFacade.getInstance().getClientDataOutputStreams()) {
-                commandSender.sendUnsuccessfulSignUpCommand(out); // тут будет нужный поток вывода
-            }
+        if (controller.isSuchLoginExists(user.getLogin()))
+            commandSender.sendUnsuccessfulSignUpCommand(ServerNetworkFacade.getInstance().getDataOutputStream(((User) command.getObject()).getPort()));
         else {
             controller.addUser(user);
-            for (DataOutputStream out: ServerNetworkFacade.getInstance().getClientDataOutputStreams()) {
-                commandSender.sendSuccessfulAuthCommand(out);
-                commandSender.sendUpdateCommand(controller.getJournal(), out); // todo output stream everywhere
-            }
+            commandSender.sendSuccessfulAuthCommand(ServerNetworkFacade.getInstance().getDataOutputStream(((User) command.getObject()).getPort()));
+            for (DataOutputStream out: ServerNetworkFacade.getInstance().getClientDataOutputStreams())
+                commandSender.sendUpdateCommand(controller.getJournal(), out);
         }
     }
 }

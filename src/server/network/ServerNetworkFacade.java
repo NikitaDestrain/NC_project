@@ -35,8 +35,6 @@ public class ServerNetworkFacade extends Thread {
         System.out.println("Server logs:");
         serverPort = DEFAULT_PORT;
         start(serverPort, DEFAULT_MAX_CNT_CLIENTS);
-
-        Scanner scanner = new Scanner(System.in);
         while (!serverDataSocket.isClosed()) {
             try {
                 clientDataSocket = serverDataSocket.accept();
@@ -88,5 +86,9 @@ public class ServerNetworkFacade extends Thread {
     public void removeClientDataOutputStreams(Integer key) {
         clientDataOutputStreams.remove(key);
         --clientCount;
+    }
+
+    public DataOutputStream getDataOutputStream(int key) {
+        return clientDataOutputStreams.get(key);
     }
 }

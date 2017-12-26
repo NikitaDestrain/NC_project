@@ -3,21 +3,23 @@ package client.commandprocessor;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 
-@XmlType(propOrder = {"login", "password"}, name = "user")
+@XmlType(propOrder = {"login", "password", "port"}, name = "user")
 @XmlRootElement(name = "user")
 @XmlAccessorType(XmlAccessType.FIELD)
-
 public class User implements Serializable {
     @XmlElement(name = "login")
     private String login;
     @XmlElement(name = "password")
     private String password;
+    @XmlElement(name = "port")
+    private Integer port;
 
     public User() {}
 
-    public User(String login, String password) {
+    public User(String login, String password, Integer port) {
         this.login = login;
         this.password = password;
+        this.port = port;
     }
 
     public String getLogin() {
@@ -36,11 +38,20 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "login='" + login + '\'' +
                 ", password='" + password + '\'' +
+                ", port='" + port +
                 '}';
     }
 }

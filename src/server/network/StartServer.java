@@ -1,5 +1,6 @@
 package server.network;
 
+import server.gui.authforms.AuthForm;
 import server.gui.mainform.MainForm;
 
 import javax.swing.*;
@@ -10,7 +11,7 @@ public class StartServer {
         ServerNetworkFacade snf = ServerNetworkFacade.getInstance();
         snf.start();
         SwingUtilities.invokeLater(() -> {
-            new MainForm().setVisible(true);
+            new AuthForm().setVisible(true);
         });
     }
 }

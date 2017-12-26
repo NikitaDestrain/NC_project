@@ -11,8 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import static java.lang.Thread.sleep;
-
 public class AuthForm extends JFrame {
     private JButton okButton;
     private JTextField loginField;

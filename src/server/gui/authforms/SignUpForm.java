@@ -160,7 +160,7 @@ public class SignUpForm extends JFrame {
                     "User with such login already exists!",
                     "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            controller.addUser(new User(login, password));
+            controller.addUser(new User(login, password, -1));
             MainForm mainForm = MainForm.getInstance();
             if (mainForm == null) mainForm = new MainForm();
             mainForm.setUsername(login);

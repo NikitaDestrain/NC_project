@@ -14,10 +14,11 @@ public class ServerNotificationListener extends Thread{
 
     public ServerNotificationListener(DataInputStream in, int port) {
         this.notificationInputStream = in;
+        this.port = port;
     }
 
     public void run() {
-        System.out.printf("Notification listener for client with port %d starts", port);
+        System.out.printf("Notification listener for client with port %d starts\n", port);
         try {
             while (true) {
                 if(notificationInputStream.available() > 0) {
