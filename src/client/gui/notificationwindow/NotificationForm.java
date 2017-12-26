@@ -76,7 +76,7 @@ public class NotificationForm extends JFrame {
 
             finish.addActionListener((ActionEvent e) -> {
                 if(task != null)
-                    commandSender.sendFinishCommand(task, clientFacade.getDataOutputStream());
+                    commandSender.sendFinishCommand(task, clientFacade.getNotificationOutputStream());
                 else
                     JOptionPane.showMessageDialog(null, "No task to perform this action!",
                             "Error", JOptionPane.ERROR_MESSAGE);
@@ -85,7 +85,7 @@ public class NotificationForm extends JFrame {
 
             cancel.addActionListener((ActionEvent e) -> {
                 if(task != null)
-                    commandSender.sendCancelCommand(task, clientFacade.getDataOutputStream());
+                    commandSender.sendCancelCommand(task, clientFacade.getNotificationOutputStream());
                 else
                     JOptionPane.showMessageDialog(null, "No task to perform this action",
                             "Error", JOptionPane.ERROR_MESSAGE);

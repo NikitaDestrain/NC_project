@@ -21,8 +21,8 @@ public class ClientNetworkFacade extends Thread {
     private DataOutputStream notificationOutputStream;
     private DataInputStream notificationInputStream;
     private static ClientNetworkFacade instance;
-    private ClientCommandSender commandSender = ClientCommandSender.getInstance();
     private ClientCommandParser commandParser = ClientCommandParser.getInstance();
+    private ClientNotificationListener clientNotificationListener;
 
     private ClientNetworkFacade() {}
 
@@ -81,6 +81,8 @@ public class ClientNetworkFacade extends Thread {
             System.out.println("Notification OutputStream  created");
             notificationInputStream = new DataInputStream(notificationSenderSocket.getInputStream());
             System.out.println("Notification InputStream created");
+            clientNotificationListener = new ClientNotificationListener(notificationInputStream);
+            clientNotificationListener.start();
         }
         catch (IOException e){
             e.getMessage();
@@ -91,6 +93,7 @@ public class ClientNetworkFacade extends Thread {
     public void finish() {
         try {
             ClientCommandSender.getInstance().sendDisconnectCommand(dataOutputStream);
+            clientNotificationListener.interrupt();
             notificationInputStream.close();
             notificationOutputStream.close();
             notificationSenderSocket.close();
