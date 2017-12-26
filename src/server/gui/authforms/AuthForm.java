@@ -150,6 +150,7 @@ public class AuthForm extends JFrame {
             IDGenerator.getInstance(journal.getMaxId());
             mainForm.setJournal(journal);
             mainForm.setVisible(true);
+            this.dispose();
         }
     }
 }
