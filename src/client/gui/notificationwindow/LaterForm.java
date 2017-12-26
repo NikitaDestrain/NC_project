@@ -68,7 +68,7 @@ public class LaterForm extends JFrame {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + (int) this.hoursSpinner.getValue() * 60 * 60000
                             + (int) this.minutesSpinner.getValue() * 60000));
-                    commandSender.sendLaterCommand(task, clientFacade.getDataOutputStream());
+                    commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
                 }
                 else
                     JOptionPane.showMessageDialog(null, "No task to perform this action!",
@@ -101,7 +101,7 @@ public class LaterForm extends JFrame {
                 if(task != null) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 5 * 60000));
-                    commandSender.sendLaterCommand(task, clientFacade.getDataOutputStream());
+                    commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
                 }
                 else
                     JOptionPane.showMessageDialog(null, "No task to perform this action!",
@@ -113,7 +113,7 @@ public class LaterForm extends JFrame {
                 if(task != null) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 15 * 60000));
-                    commandSender.sendLaterCommand(task, clientFacade.getDataOutputStream());
+                    commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
                 }
                 else
                     JOptionPane.showMessageDialog(null, "No task to perform this action!",
@@ -125,7 +125,7 @@ public class LaterForm extends JFrame {
                 if(task != null) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 30 * 60000));
-                    commandSender.sendLaterCommand(task, clientFacade.getDataOutputStream());
+                    commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
                 }
                 else
                     JOptionPane.showMessageDialog(null, "No task to perform this action!",
@@ -137,7 +137,7 @@ public class LaterForm extends JFrame {
                 if(task != null) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 60 * 60000));
-                    commandSender.sendLaterCommand(task, clientFacade.getDataOutputStream());
+                    commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
                 }
                 else
                     JOptionPane.showMessageDialog(null, "No task to perform this action!",

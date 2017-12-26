@@ -27,6 +27,7 @@ public class MonoClientThread extends Thread {
     private DataInputStream notificationInputStream;
     private ServerCommandParser commandParser = ServerCommandParser.getInstance();
     private ServerNetworkFacade serverNetworkFacade = ServerNetworkFacade.getInstance();
+    private ServerNotificationListener serverNotificationListener;
 
     public MonoClientThread(Socket socket, int notificationPort) {
         this.clientDataSocket = socket;
@@ -71,6 +72,8 @@ public class MonoClientThread extends Thread {
             notificationInputStream = new DataInputStream(notificationSocket.getInputStream());
             System.out.println("Notification InputStream created");
             serverNetworkFacade.addNotificationOutputStream(notificationPort, notificationOutputStream);
+            serverNotificationListener = new ServerNotificationListener(notificationInputStream, notificationPort);
+            serverNotificationListener.start();
         }
         catch (IOException e) {
             e.getMessage();
@@ -79,6 +82,7 @@ public class MonoClientThread extends Thread {
 
     private void finish() {
         try {
+            serverNotificationListener.interrupt();
             dataInputStream.close();
             dataOutputStream.close();
             clientDataSocket.close();
