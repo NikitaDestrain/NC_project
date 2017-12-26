@@ -14,7 +14,7 @@ public class EditCommandHandler implements CommandHandler {
     public synchronized void handle(Command command) {
         Controller controller = Controller.getInstance();
         controller.editTask((Task) command.getObject());
-        for (DataOutputStream out: ServerNetworkFacade.getInstance().getClientDataInputStreams())
+        for (DataOutputStream out: ServerNetworkFacade.getInstance().getClientDataOutputStreams())
             CommandSender.getInstance().sendUpdateCommand(controller.getJournal(), out);
     }
 }

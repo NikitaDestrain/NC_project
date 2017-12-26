@@ -14,7 +14,7 @@ public class LaterCommandHandler implements CommandHandler {
     public synchronized void handle(Command command) {
         Controller controller = Controller.getInstance();
         controller.updateNotification(((Task) command.getObject()).getId());
-        for (DataOutputStream out: ServerNetworkFacade.getInstance().getClientDataInputStreams())
+        for (DataOutputStream out: ServerNetworkFacade.getInstance().getClientNotificationOutputStreams())
             CommandSender.getInstance().sendUpdateCommand(controller.getJournal(), out);
     }
 }

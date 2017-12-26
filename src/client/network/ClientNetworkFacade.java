@@ -1,5 +1,7 @@
 package client.network;
 
+import client.commandprocessor.Command;
+import client.commandprocessor.CommandParser;
 import client.commandprocessor.CommandSender;
 
 import java.io.*;
@@ -20,6 +22,7 @@ public class ClientNetworkFacade extends Thread {
     private DataInputStream notificationInputStream;
     private static ClientNetworkFacade instance;
     private CommandSender commandSender = CommandSender.getInstance();
+    private CommandParser commandParser = CommandParser.getInstance();
 
     private ClientNetworkFacade() {}
 
@@ -34,6 +37,7 @@ public class ClientNetworkFacade extends Thread {
         System.out.println();
         serverPort = DEFAULT_SERVER_PORT;
         Scanner scanner = new Scanner(System.in);
+        //временное
         while(true) {
             if(connect(serverPort) == 0)
                 break;
@@ -43,6 +47,7 @@ public class ClientNetworkFacade extends Thread {
             System.out.println();
         }
         createNotificationChanel(notificationPort);
+        commandRelay();
     }
 
     private int connect(int port) {
@@ -96,6 +101,21 @@ public class ClientNetworkFacade extends Thread {
         }
     }
 
+    private void commandRelay() {
+        try {
+            while (true) {
+                if(dataInputStream.available() > 0) {
+                    byte[] tmp_buffer = new byte[dataInputStream.available()];
+                    int tmp_trash = dataInputStream.read(tmp_buffer);
+                    Command command = commandParser.parseToCommand(tmp_buffer);
+                    System.out.println(command);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public DataOutputStream getDataOutputStream()
     {
         return dataOutputStream;
@@ -118,7 +138,5 @@ public class ClientNetworkFacade extends Thread {
 
     public int getNotificationPort() { return notificationPort; }
 
-    public boolean isServerAvailable() {
-        return !clientDataSocket.isClosed();
-    }
+
 }

@@ -1,11 +1,12 @@
 package client.commandprocessor;
 
-
 import client.commandprocessor.commandhandlers.*;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class CommandParser {
@@ -24,19 +25,23 @@ public class CommandParser {
         return instance;
     }
 
-    public Command parseToCommand (InputStream in) {
+    public Command parseToCommand(byte[] dataArr) {
         Command command;
         try {
             JAXBContext context = JAXBContext.newInstance(server.commandproccessor.Command.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            command = (Command) unmarshaller.unmarshal(in);
+            InputStream is = new ByteArrayInputStream(dataArr);
+            command = (Command) unmarshaller.unmarshal(is);
+            is.close();
+            return command;
         } catch (JAXBException e) {
             e.printStackTrace();
             e.getMessage();
             System.out.println("Parse error!");
-            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return command;
+        return null;
     }
 
     public void doCommandAction(Command command) {

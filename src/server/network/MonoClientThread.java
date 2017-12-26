@@ -45,7 +45,7 @@ public class MonoClientThread extends Thread {
             System.out.println("DataOutputStream  created");
             dataInputStream = new DataInputStream(clientDataSocket.getInputStream());
             System.out.println("DataInputStream created");
-            serverNetworkFacade.addClientDataInputStreams(notificationPort, dataOutputStream);
+            serverNetworkFacade.addClientDataOutputStreams(notificationPort, dataOutputStream);
         }
         catch (IOException e) {
             e.getMessage();
@@ -76,7 +76,7 @@ public class MonoClientThread extends Thread {
             clientDataSocket.close();
             System.out.printf("Client with port %d is disconnected", notificationPort);
             serverNetworkFacade.removeNotificationOutputStream(notificationPort);
-            serverNetworkFacade.removeClientDataInputStreams(notificationPort);
+            serverNetworkFacade.removeClientDataOutputStreams(notificationPort);
         }
         catch (IOException e) {
             e.getMessage();

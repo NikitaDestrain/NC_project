@@ -14,7 +14,7 @@ public class AddCommandHandler implements CommandHandler {
     public synchronized void handle(Command command) {
         Controller controller = Controller.getInstance();
         controller.addTask((Task) command.getObject());
-        for (DataOutputStream out: ServerNetworkFacade.getInstance().getClientDataInputStreams())
+        for (DataOutputStream out: ServerNetworkFacade.getInstance().getClientNotificationOutputStreams())
             CommandSender.getInstance().sendUpdateCommand(controller.getJournal(), out);
     }
 }

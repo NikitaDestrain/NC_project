@@ -19,7 +19,7 @@ public class ServerNetworkFacade extends Thread {
     private Socket clientDataSocket;
     private ExecutorService executeIt;
     private Map<Integer, DataOutputStream> clientNotificationOutputStreams;
-    private Map<Integer, DataOutputStream> clientDataInputStreams;
+    private Map<Integer, DataOutputStream> clientDataOutputStreams;
     private static ServerNetworkFacade instance;
     private int clientCount;
 
@@ -59,7 +59,7 @@ public class ServerNetworkFacade extends Thread {
             executeIt = Executors.newFixedThreadPool(nThreads);
             clientCount = DEFAULT_CURRENT_CNT_CLIENTS;
             clientNotificationOutputStreams = new HashMap<>();
-            clientDataInputStreams = new HashMap<>();
+            clientDataOutputStreams = new HashMap<>();
             serverDataSocket = new ServerSocket(port);
         }
         catch (IOException e) {
@@ -71,8 +71,8 @@ public class ServerNetworkFacade extends Thread {
         return new LinkedList<>(clientNotificationOutputStreams.values());
     }
 
-    public LinkedList<DataOutputStream> getClientDataInputStreams() {
-        return new LinkedList<>(clientDataInputStreams.values());
+    public LinkedList<DataOutputStream> getClientDataOutputStreams() {
+        return new LinkedList<>(clientDataOutputStreams.values());
     }
 
     public void removeNotificationOutputStream(Integer key) {
@@ -83,12 +83,12 @@ public class ServerNetworkFacade extends Thread {
         clientNotificationOutputStreams.put(key, dataOutputStream);
     }
 
-    public void addClientDataInputStreams(Integer key, DataOutputStream dataOutputStream) {
-        clientDataInputStreams.put(key, dataOutputStream);
+    public void addClientDataOutputStreams(Integer key, DataOutputStream dataOutputStream) {
+        clientDataOutputStreams.put(key, dataOutputStream);
     }
 
-    public void removeClientDataInputStreams(Integer key) {
-        clientDataInputStreams.remove(key);
+    public void removeClientDataOutputStreams(Integer key) {
+        clientDataOutputStreams.remove(key);
         --clientCount;
     }
 }
