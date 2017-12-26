@@ -7,6 +7,8 @@ import client.model.Task;
 public class NotificationCommandHandler implements CommandHandler {
     @Override
     public synchronized void handle(Command command) {
-        new NotificationForm().setTask((Task) command.getObject());
+        NotificationForm notificationForm = new NotificationForm();
+        notificationForm.setTask((Task) command.getObject());
+        notificationForm.setVisible(true);
     }
 }

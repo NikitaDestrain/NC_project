@@ -2,11 +2,16 @@ package server.network;
 
 import server.commandproccessor.Command;
 import server.commandproccessor.CommandParser;
+import server.commandproccessor.CommandSender;
+import server.controller.Controller;
+import server.model.Task;
+import server.model.TaskStatus;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Date;
 
 import static java.lang.Thread.sleep;
 
@@ -35,6 +40,9 @@ public class MonoClientThread extends Thread {
         System.out.printf("Client with port %d is connected\n", number);
         init();
         connectToNotificationChanel();
+        //todo test it
+        //CommandSender.getInstance().sendUpdateCommand(Controller.getInstance().getJournal(), dataOutputStream);
+        //CommandSender.getInstance().sendNotificationCommand(new Task("sds", TaskStatus.Planned, "sfsaf", new Date(), new Date(), 1), notificationOutputStream);
         commandRelay();
         finish();
     }

@@ -6,6 +6,7 @@ import java.util.*;
 
 @XmlRootElement(name = "journal")
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlSeeAlso({Task.class, TaskStatus.class})
 public class Journal implements Serializable {
     @XmlElement (name = "task")
     private Map<Integer, Task> tasks;

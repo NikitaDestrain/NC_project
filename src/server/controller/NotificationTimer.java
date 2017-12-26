@@ -26,8 +26,12 @@ public class NotificationTimer extends TimerTask {
     @Override
     public void run() {
         clients = ServerNetworkFacade.getInstance().getClientNotificationOutputStreams();
-        for (DataOutputStream client: clients)
+        System.out.println(clients);
+        for (DataOutputStream client: clients) {
+            System.out.println("Send notification to client");
             commandSender.sendNotificationCommand(task, client);
+            System.out.println("Success");
+        }
         notificationForm = new NotificationForm();
         notificationForm.setTask(task);
         notificationForm.setVisible(true);

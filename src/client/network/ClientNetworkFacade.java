@@ -105,8 +105,8 @@ public class ClientNetworkFacade extends Thread {
         try {
             while (true) {
                 if(dataInputStream.available() > 0) {
-                    byte[] tmp_buffer = new byte[dataInputStream.available()];
-                    int tmp_trash = dataInputStream.read(tmp_buffer);
+                    byte[] tmp_buffer = new byte[notificationInputStream.available()];
+                    int tmp_trash = notificationInputStream.read(tmp_buffer);
                     Command command = commandParser.parseToCommand(tmp_buffer);
                     System.out.print("Server send: ");
                     System.out.println(command);

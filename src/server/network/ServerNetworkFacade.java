@@ -44,8 +44,6 @@ public class ServerNetworkFacade extends Thread {
                 MonoClientThread monoClientThread = new MonoClientThread(clientDataSocket, clientNotificationPort);
                 executeIt.execute(monoClientThread);
                 clientCount++;
-                /*if (scanner.nextLine().equalsIgnoreCase("stop"))
-                    serverDataSocket.close();*/
             }
             catch (IOException e) {
                 e.getMessage();

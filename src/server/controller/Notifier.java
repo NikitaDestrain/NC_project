@@ -9,7 +9,7 @@ public class Notifier {
     private Map<Integer, Timer> timers;
 
     protected Notifier() {
-        timers = new HashMap<Integer, Timer>();
+        timers = new HashMap<>();
     }
 
     //выставление таймера для таски
