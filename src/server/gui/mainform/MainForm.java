@@ -32,7 +32,8 @@ public class MainForm extends JFrame {
         instance = this;
         fileChooser = new JFileChooser();
         journalBackup = new XMLSerializer();
-        this.journal = new Journal();
+        Journal backup = Controller.getInstance().getJournal();
+        this.journal = backup == null ? new Journal() : backup ;
         try {
             icon = new ImageIcon(ParserProperties.getInstance().getProperties("MAIN_FORM_ICON"));
         } catch (IllegalPropertyException e) {

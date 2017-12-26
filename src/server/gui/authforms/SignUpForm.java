@@ -2,7 +2,9 @@ package server.gui.authforms;
 
 import server.commandproccessor.User;
 import server.controller.Controller;
+import server.controller.IDGenerator;
 import server.gui.mainform.MainForm;
+import server.model.Journal;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -162,7 +164,9 @@ public class SignUpForm extends JFrame {
             MainForm mainForm = MainForm.getInstance();
             if (mainForm == null) mainForm = new MainForm();
             mainForm.setUsername(login);
-            mainForm.setJournal(controller.getJournal());
+            Journal journal = controller.getJournal();
+            IDGenerator.getInstance(journal.getMaxId());
+            mainForm.setJournal(journal);
             mainForm.setVisible(true);
         }
     }
