@@ -110,6 +110,7 @@ public class ClientNetworkFacade extends Thread {
                     Command command = commandParser.parseToCommand(tmp_buffer);
                     System.out.print("Server send: ");
                     System.out.println(command);
+                    commandParser.doCommandAction(command);
                 }
             }
         } catch (IOException e) {

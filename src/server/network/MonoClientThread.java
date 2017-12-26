@@ -93,7 +93,7 @@ public class MonoClientThread extends Thread {
                     byte[] tmp_buffer = new byte[dataInputStream.available()];
                     int tmp_trash = dataInputStream.read(tmp_buffer);
                     Command command = commandParser.parseToCommand(tmp_buffer);
-                    System.out.printf("Client №%d send: ", number);
+                    System.out.printf("Client with port %d send: ", number);
                     System.out.println(command);
                     if(commandParser.doCommandAction(command) == 1)
                         break;
