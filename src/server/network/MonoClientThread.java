@@ -41,7 +41,7 @@ public class MonoClientThread extends Thread {
         init();
         connectToNotificationChanel();
         //todo test it
-        //ServerCommandSender.getInstance().sendUpdateCommand(Controller.getInstance().getJournal(), dataOutputStream);
+        ServerCommandSender.getInstance().sendUpdateCommand(Controller.getInstance().getJournal(), dataOutputStream);
         //ServerCommandSender.getInstance().sendNotificationCommand(new Task("sds", TaskStatus.Planned, "sfsaf", new Date(), new Date(), 1), dataOutputStream);
         commandRelay();
         finish();
