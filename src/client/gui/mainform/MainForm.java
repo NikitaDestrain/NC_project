@@ -25,7 +25,7 @@ public class MainForm extends JFrame {
     private TaskSender taskSender = TaskSender.getInstance();
     private ClientNetworkFacade clientFacade = ClientNetworkFacade.getInstance();
     private ClientCommandSender commandSender = ClientCommandSender.getInstance();
-    private JLabel usernameLabel = new JLabel("You logged as: ");
+    private JLabel usernameLabel = new JLabel("Your status is Client. You logged as: ");
 
     public MainForm() {
         super("Task Scheduler");
