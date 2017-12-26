@@ -11,7 +11,7 @@ public class StartClient {
         ClientNetworkFacade cnf = ClientNetworkFacade.getInstance();
         cnf.start();
         SwingUtilities.invokeLater(() -> {
-            new MainForm().setVisible(true);
+            new AuthForm().setVisible(true);
         });
     }
 }

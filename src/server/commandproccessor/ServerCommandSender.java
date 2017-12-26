@@ -50,7 +50,7 @@ public class ServerCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ServerCommandFactory.createCommand("Successful auth", null), out);
+            marshaller.marshal(ServerCommandFactory.createCommand("Successful auth", new User()), out);
         } catch (JAXBException e) {
             e.printStackTrace();
         }
@@ -61,7 +61,7 @@ public class ServerCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ServerCommandFactory.createCommand("Unsuccessful auth", null), out);
+            marshaller.marshal(ServerCommandFactory.createCommand("Unsuccessful auth", new User()), out);
         } catch (JAXBException e) {
             e.printStackTrace();
         }
@@ -72,7 +72,7 @@ public class ServerCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ServerCommandFactory.createCommand("Unsuccessful sign up", null),
+            marshaller.marshal(ServerCommandFactory.createCommand("Unsuccessful sign up", new User()),
                     out);
         } catch (JAXBException e) {
             e.printStackTrace();
@@ -84,7 +84,7 @@ public class ServerCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ServerCommandFactory.createCommand("Unsuccessfully", null), out);
+            marshaller.marshal(ServerCommandFactory.createCommand("Unsuccessfully", new User()), out);
             out.flush();
         } catch (JAXBException | IOException e) {
             e.getMessage();
