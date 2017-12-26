@@ -9,19 +9,19 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class CommandParser {
+public class ClientCommandParser {
     private static final String UPDATE = "Update";
     private static final String NOTIFICATION = "Notification";
     private static final String UNSUCCESSFUL_AUTH = "Unsuccessful auth";
     private static final String UNSUCCESSFUL_SIGN_UP = "Unsuccessful sign up";
     private static final String SUCCESSFUL_AUTH = "Successful auth";
     private static final String UNSUCCESSFUL_ACTION = "Unsuccessfully";
-    private static CommandParser instance;
+    private static ClientCommandParser instance;
 
-    private CommandParser() {}
+    private ClientCommandParser() {}
 
-    public static CommandParser getInstance() {
-        if (instance == null) instance = new CommandParser();
+    public static ClientCommandParser getInstance() {
+        if (instance == null) instance = new ClientCommandParser();
         return instance;
     }
 

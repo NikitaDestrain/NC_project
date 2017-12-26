@@ -1,6 +1,6 @@
 package client.gui.mainform;
 
-import client.commandprocessor.CommandSender;
+import client.commandprocessor.ClientCommandSender;
 import client.model.Task;
 import client.model.TaskStatus;
 import client.network.ClientNetworkFacade;
@@ -22,7 +22,7 @@ public class TablePanel extends JPanel {
     private MainForm form;
     private TaskSender taskSender;
     private static TablePanel instance;
-    private CommandSender commandSender = CommandSender.getInstance();
+    private ClientCommandSender commandSender = ClientCommandSender.getInstance();
 
     public TablePanel(MainForm form) {
         this.form = form;

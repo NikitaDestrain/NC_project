@@ -1,17 +1,12 @@
 package server.network;
 
 import server.commandproccessor.Command;
-import server.commandproccessor.CommandParser;
-import server.commandproccessor.CommandSender;
-import server.controller.Controller;
-import server.model.Task;
-import server.model.TaskStatus;
+import server.commandproccessor.ServerCommandParser;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Date;
 
 import static java.lang.Thread.sleep;
 
@@ -25,7 +20,7 @@ public class MonoClientThread extends Thread {
     private DataInputStream dataInputStream;
     private DataOutputStream notificationOutputStream;
     private DataInputStream notificationInputStream;
-    private CommandParser commandParser = CommandParser.getInstance();
+    private ServerCommandParser commandParser = ServerCommandParser.getInstance();
     private ServerNetworkFacade serverNetworkFacade = ServerNetworkFacade.getInstance();
 
     public MonoClientThread(Socket socket, int notificationPort) {
@@ -41,8 +36,8 @@ public class MonoClientThread extends Thread {
         init();
         connectToNotificationChanel();
         //todo test it
-        //CommandSender.getInstance().sendUpdateCommand(Controller.getInstance().getJournal(), dataOutputStream);
-        //CommandSender.getInstance().sendNotificationCommand(new Task("sds", TaskStatus.Planned, "sfsaf", new Date(), new Date(), 1), notificationOutputStream);
+        //ClientCommandSender.getInstance().sendUpdateCommand(Controller.getInstance().getJournal(), dataOutputStream);
+        //ClientCommandSender.getInstance().sendNotificationCommand(new Task("sds", TaskStatus.Planned, "sfsaf", new Date(), new Date(), 1), notificationOutputStream);
         commandRelay();
         finish();
     }

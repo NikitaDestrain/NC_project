@@ -1,9 +1,8 @@
 package client.gui.authforms;
 
-import client.commandprocessor.CommandSender;
+import client.commandprocessor.ClientCommandSender;
 import client.gui.UserContainer;
 import client.network.ClientNetworkFacade;
-import server.gui.mainform.MainForm;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -20,7 +19,7 @@ public class SignUpForm extends JFrame {
     private JPasswordField confirmPasswordField;
     private static SignUpForm instance;
     private ClientNetworkFacade clientFacade;
-    private CommandSender commandSender = CommandSender.getInstance();
+    private ClientCommandSender commandSender = ClientCommandSender.getInstance();
     private UserContainer userContainer = UserContainer.getInstance();
 
     public SignUpForm() {

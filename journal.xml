@@ -2,25 +2,14 @@
 <journal>
     <tasks>
         <entry>
-            <key>0</key>
-            <value>
-                <id>0</id>
-                <name>1</name>
-                <description>11</description>
-                <status>Cancelled</status>
-                <notificationDate>2017-12-15T12:19:21.821+04:00</notificationDate>
-                <plannedDate>2017-12-15T12:19:21.821+04:00</plannedDate>
-            </value>
-        </entry>
-        <entry>
             <key>1</key>
             <value>
                 <id>1</id>
-                <name>2</name>
-                <description>22</description>
-                <status>Cancelled</status>
-                <notificationDate>2017-12-15T12:19:21.821+04:00</notificationDate>
-                <plannedDate>2017-12-15T12:19:21.821+04:00</plannedDate>
+                <name>1</name>
+                <description>1</description>
+                <status>Planned</status>
+                <notificationDate>2017-12-28T00:00:00+04:00</notificationDate>
+                <plannedDate>2017-12-28T00:00:00+04:00</plannedDate>
             </value>
         </entry>
         <entry>
@@ -28,10 +17,10 @@
             <value>
                 <id>2</id>
                 <name>3</name>
-                <description>33</description>
-                <status>Cancelled</status>
-                <notificationDate>2017-12-15T12:19:21.821+04:00</notificationDate>
-                <plannedDate>2017-12-15T12:19:21.821+04:00</plannedDate>
+                <description>3</description>
+                <status>Planned</status>
+                <notificationDate>2017-12-29T00:00:00+04:00</notificationDate>
+                <plannedDate>2017-12-29T00:00:00+04:00</plannedDate>
             </value>
         </entry>
     </tasks>

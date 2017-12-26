@@ -1,13 +1,12 @@
 package server.commandproccessor.commandhandlers;
 
 import server.commandproccessor.Command;
-import server.commandproccessor.CommandSender;
+import server.commandproccessor.ServerCommandSender;
 import server.controller.Controller;
 import server.model.Task;
 import server.network.ServerNetworkFacade;
 
 import java.io.DataOutputStream;
-import java.io.OutputStream;
 
 public class LaterCommandHandler implements CommandHandler {
     @Override
@@ -15,6 +14,6 @@ public class LaterCommandHandler implements CommandHandler {
         Controller controller = Controller.getInstance();
         controller.updateNotification(((Task) command.getObject()).getId());
         for (DataOutputStream out: ServerNetworkFacade.getInstance().getClientNotificationOutputStreams())
-            CommandSender.getInstance().sendUpdateCommand(controller.getJournal(), out);
+            ServerCommandSender.getInstance().sendUpdateCommand(controller.getJournal(), out);
     }
 }

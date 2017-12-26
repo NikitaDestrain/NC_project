@@ -1,15 +1,13 @@
 package server.commandproccessor;
 
 import server.commandproccessor.commandhandlers.*;
-import server.controller.Controller;
-import server.model.Task;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
 
-public class CommandParser {
+public class ServerCommandParser {
     private static final String ADD = "Add";
     private static final String EDIT = "Edit";
     private static final String DELETE = "Delete";
@@ -19,12 +17,12 @@ public class CommandParser {
     private static final String SIGN_IN = "Sign in";
     private static final String SIGN_UP = "Sign up";
     private static final String DISCONNECT = "Disconnect";
-    private static CommandParser instance;
+    private static ServerCommandParser instance;
 
-    private CommandParser() {}
+    private ServerCommandParser() {}
 
-    public static CommandParser getInstance() {
-        if (instance == null) instance = new CommandParser();
+    public static ServerCommandParser getInstance() {
+        if (instance == null) instance = new ServerCommandParser();
         return instance;
     }
 

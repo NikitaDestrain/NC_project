@@ -8,6 +8,7 @@ import server.model.TaskStatus;
 import server.properties.ParserProperties;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,19 +19,28 @@ public class Controller {
     private Notifier notifier;
     private static Controller instance;
     private MainForm mainForm = MainForm.getInstance();
-    private Map<String, String> usersAuthData;
+    private Map<String, String> userData;
     private XMLSerializer serializer;
+    private UserDataSerializer userDataSerializer;
 
     private Controller() {
         this.journal = new Journal();
         this.notifier = new Notifier();
-        this.usersAuthData = new HashMap<>();
+        this.userDataSerializer = new UserDataSerializer();
+        try {
+            this.userData = userDataSerializer.readData(ParserProperties.getInstance()
+                    .getProperties("USER_DATA"));
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Could not load user data from file!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
         this.serializer = new XMLSerializer();
         try {
             setJournal(serializer.readJournal(ParserProperties.getInstance().getProperties("XML_FILE")));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Could not load journal from file!",
                     "Error", JOptionPane.ERROR_MESSAGE);
+            setJournal(new Journal());
         }
     }
 
@@ -78,7 +88,9 @@ public class Controller {
     }
 
     public void updateMainForm() {
-        mainForm.updateJournal();
+        mainForm = MainForm.getInstance();
+        if (mainForm != null)
+            mainForm.updateJournal();
     }
 
     /**
@@ -89,7 +101,7 @@ public class Controller {
     public void addTask(Task task) {
         journal.addTask(task);
         notifier.addNotification(task);
-        mainForm.updateJournal();
+        updateMainForm();
     }
 
     /**
@@ -100,7 +112,7 @@ public class Controller {
     public void removeTask(int id){
         notifier.cancelNotification(id);
         journal.removeTask(id);
-        mainForm.updateJournal();
+        updateMainForm();
     }
 
     /**
@@ -112,7 +124,7 @@ public class Controller {
     public void cancelNotification(int id){
         notifier.cancelNotification(id);
         journal.getTask(id).setStatus(TaskStatus.Cancelled);
-        mainForm.updateJournal();
+        updateMainForm();
     }
 
     /**
@@ -124,7 +136,7 @@ public class Controller {
     public void finishNotification(int id) {
         notifier.cancelNotification(id);
         journal.getTask(id).setStatus(TaskStatus.Completed);
-        mainForm.updateJournal();
+        updateMainForm();
     }
 
     /**
@@ -137,7 +149,7 @@ public class Controller {
         Task task = journal.getTask(id);
         task.setStatus(TaskStatus.Rescheduled);
         notifier.editNotification(task);
-        mainForm.updateJournal();
+        updateMainForm();
     }
 
     /**
@@ -148,7 +160,7 @@ public class Controller {
 
     public void editTask(Task task){
         notifier.editNotification(task);
-        mainForm.updateJournal();
+        updateMainForm();
     }
 
     /**
@@ -157,17 +169,26 @@ public class Controller {
 
     public boolean isUserDataCorrect(User user) {
         if (user == null) return false;
-        return usersAuthData.containsKey(user.getLogin()) &&
-                usersAuthData.get(user.getLogin()).equals(user.getPassword());
+        return userData.containsKey(user.getLogin()) &&
+                userData.get(user.getLogin()).equals(user.getPassword());
     }
 
     public boolean isSuchLoginExists(String login) {
-        return usersAuthData.containsKey(login);
+        return userData.containsKey(login);
     }
 
     public void addUser(User user) {
         if (user != null) {
-            usersAuthData.put(user.getLogin(), user.getPassword());
+            userData.put(user.getLogin(), user.getPassword());
+        }
+    }
+
+    public void writeUserData(String path) {
+        try {
+            userDataSerializer.writeData(this.userData, path);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Could not write user data to file!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

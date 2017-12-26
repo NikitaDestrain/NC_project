@@ -144,6 +144,7 @@ public class AuthForm extends JFrame {
             MainForm mainForm = MainForm.getInstance();
             if (mainForm == null) mainForm = new MainForm();
             mainForm.setUsername(loginField.getText());
+            mainForm.setJournal(controller.getJournal());
             mainForm.setVisible(true);
         }
     }

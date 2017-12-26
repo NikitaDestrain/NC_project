@@ -1,7 +1,6 @@
 package client.gui.notificationwindow;
 
-import client.commandprocessor.Command;
-import client.commandprocessor.CommandSender;
+import client.commandprocessor.ClientCommandSender;
 import client.gui.mainform.MainForm;
 import client.exceptions.IllegalPropertyException;
 import client.model.Task;
@@ -19,7 +18,7 @@ public class NotificationForm extends JFrame {
     private ImageIcon icon;
     private MainForm mainForm = MainForm.getInstance();
     private ClientNetworkFacade clientFacade = ClientNetworkFacade.getInstance();
-    private CommandSender commandSender = CommandSender.getInstance();
+    private ClientCommandSender commandSender = ClientCommandSender.getInstance();
 
     public NotificationForm() {
         super("Alarm!");

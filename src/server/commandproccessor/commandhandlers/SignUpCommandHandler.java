@@ -1,7 +1,7 @@
 package server.commandproccessor.commandhandlers;
 
 import server.commandproccessor.Command;
-import server.commandproccessor.CommandSender;
+import server.commandproccessor.ServerCommandSender;
 import server.commandproccessor.User;
 import server.controller.Controller;
 
@@ -13,7 +13,7 @@ public class SignUpCommandHandler implements CommandHandler {
         Controller controller = Controller.getInstance();
         User user = ((User) command.getObject());
         OutputStream out = null;
-        CommandSender commandSender = CommandSender.getInstance();
+        ServerCommandSender commandSender = ServerCommandSender.getInstance();
         if (controller.isSuchLoginExists(user.getLogin())) // пользователь с таким логином существует
             commandSender.sendUnsuccessfulAuthCommand(out); // тут будет нужный поток вывода
         else {

@@ -2,6 +2,7 @@ package server.gui.mainform;
 
 import server.controller.Controller;
 import server.controller.ObjectSerializer;
+import server.controller.UserDataSerializer;
 import server.controller.XMLSerializer;
 import server.exceptions.IllegalPropertyException;
 import server.gui.taskwindow.TaskWindow;
@@ -200,13 +201,15 @@ public class MainForm extends JFrame {
 
                 if (action == JOptionPane.OK_OPTION) {
                     try {
-                        String path = ParserProperties.getInstance().getProperties("PATH_TO_JOURNAL");
+                        String path = ParserProperties.getInstance().getProperties("XML_FILE");
                         if (path == null)
                             JOptionPane.showMessageDialog(MainForm.this,
                                     "Incorrect file path",
                                     "Error", JOptionPane.ERROR_MESSAGE);
                         else {
                             journalBackup.writeJournal(journal, path);
+                            Controller.getInstance().writeUserData(ParserProperties.getInstance()
+                                    .getProperties("USER_DATA"));
                             System.exit(0);
                         }
                     } catch (IllegalPropertyException ex) {
@@ -271,7 +274,7 @@ public class MainForm extends JFrame {
 
             if (action == JOptionPane.OK_OPTION) {
                 try {
-                    journalBackup.writeJournal(this.journal, ParserProperties.getInstance().getProperties("PATH_TO_JOURNAL"));//todo захардкоженные значения стоит выносить в константы
+                    journalBackup.writeJournal(this.journal, ParserProperties.getInstance().getProperties("XML_FILE"));//todo захардкоженные значения стоит выносить в константы
                 } catch (IllegalPropertyException ex) {
                     JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
                             "Error", JOptionPane.ERROR_MESSAGE);
@@ -286,7 +289,7 @@ public class MainForm extends JFrame {
         exportJournal.addActionListener((ActionEvent e) -> {
 
             try {
-                journalBackup.writeJournal(journal, ParserProperties.getInstance().getProperties("PATH_TO_JOURNAL"));
+                journalBackup.writeJournal(journal, ParserProperties.getInstance().getProperties("XML_FILE"));
             } catch (IllegalPropertyException ex) {
                 JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
                         "Error", JOptionPane.ERROR_MESSAGE);

@@ -1,6 +1,6 @@
 package client.gui.mainform;
 
-import client.commandprocessor.CommandSender;
+import client.commandprocessor.ClientCommandSender;
 import client.model.Task;
 import client.model.TaskStatus;
 import client.network.ClientNetworkFacade;
@@ -16,7 +16,7 @@ public class JournalTableModel extends AbstractTableModel {
     private String[] columnNames = {"*", "Status", "Name", "Description", "Planned date", "Planned time", "Notification date",
             "Notification time"};
     private Object[][] data;
-    private CommandSender commandSender = CommandSender.getInstance();
+    private ClientCommandSender commandSender = ClientCommandSender.getInstance();
     private ClientNetworkFacade clientFacade = ClientNetworkFacade.getInstance();
 
     // TODO CHECKBOXES, КНОПКИ ЛАЙФСАЙКЛА - отменить, отложить

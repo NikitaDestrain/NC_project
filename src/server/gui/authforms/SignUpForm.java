@@ -1,8 +1,5 @@
 package server.gui.authforms;
 
-import client.commandprocessor.CommandSender;
-import client.gui.UserContainer;
-import client.network.ClientNetworkFacade;
 import server.commandproccessor.User;
 import server.controller.Controller;
 import server.gui.mainform.MainForm;

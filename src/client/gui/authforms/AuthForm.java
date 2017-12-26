@@ -2,7 +2,7 @@ package client.gui.authforms;
 
 import client.gui.UserContainer;
 import client.network.ClientNetworkFacade;
-import client.commandprocessor.CommandSender;
+import client.commandprocessor.ClientCommandSender;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -20,7 +20,7 @@ public class AuthForm extends JFrame {
     private JButton registrationButton;
     private ClientNetworkFacade clientFacade;
     private static AuthForm instance;
-    private CommandSender commandSender = CommandSender.getInstance();
+    private ClientCommandSender commandSender = ClientCommandSender.getInstance();
     private UserContainer userContainer = UserContainer.getInstance();
 
     public AuthForm() {

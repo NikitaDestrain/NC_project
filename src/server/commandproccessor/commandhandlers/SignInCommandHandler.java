@@ -1,7 +1,7 @@
 package server.commandproccessor.commandhandlers;
 
 import server.commandproccessor.Command;
-import server.commandproccessor.CommandSender;
+import server.commandproccessor.ServerCommandSender;
 import server.commandproccessor.User;
 import server.controller.Controller;
 
@@ -11,7 +11,7 @@ public class SignInCommandHandler implements CommandHandler {
     @Override
     public synchronized void handle(Command command) {
         OutputStream out = null;
-        CommandSender commandSender = CommandSender.getInstance();
+        ServerCommandSender commandSender = ServerCommandSender.getInstance();
         Controller controller = Controller.getInstance();
         if (controller.isUserDataCorrect(((User) command.getObject()))) { // верные логин и пароль
             commandSender.sendSuccessfulAuthCommand(out); // тут будет нужный поток вывода

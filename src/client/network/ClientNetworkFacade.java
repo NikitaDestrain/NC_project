@@ -1,8 +1,8 @@
 package client.network;
 
+import client.commandprocessor.ClientCommandSender;
 import client.commandprocessor.Command;
-import client.commandprocessor.CommandParser;
-import client.commandprocessor.CommandSender;
+import client.commandprocessor.ClientCommandParser;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -21,8 +21,8 @@ public class ClientNetworkFacade extends Thread {
     private DataOutputStream notificationOutputStream;
     private DataInputStream notificationInputStream;
     private static ClientNetworkFacade instance;
-    private CommandSender commandSender = CommandSender.getInstance();
-    private CommandParser commandParser = CommandParser.getInstance();
+    private ClientCommandSender commandSender = ClientCommandSender.getInstance();
+    private ClientCommandParser commandParser = ClientCommandParser.getInstance();
 
     private ClientNetworkFacade() {}
 
@@ -90,7 +90,7 @@ public class ClientNetworkFacade extends Thread {
 
     public void finish() {
         try {
-            CommandSender.getInstance().sendDisconnectCommand(dataOutputStream);
+            ClientCommandSender.getInstance().sendDisconnectCommand(dataOutputStream);
             notificationInputStream.close();
             notificationOutputStream.close();
             notificationSenderSocket.close();

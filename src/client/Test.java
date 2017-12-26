@@ -19,7 +19,7 @@ public class Test {
         }
 
         try {
-            server.commandproccessor.Command command = CommandParser.parseToCommand(
+            server.commandproccessor.Command command = ClientCommandParser.parseToCommand(
                     new FileInputStream("src/client/test.xml"));
             System.out.println(command.toString());
         } catch (FileNotFoundException e) {

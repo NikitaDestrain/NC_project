@@ -1,6 +1,6 @@
 package client.gui.mainform;
 
-import client.commandprocessor.CommandSender;
+import client.commandprocessor.ClientCommandSender;
 import client.gui.taskwindow.TaskWindow;
 import client.exceptions.IllegalPropertyException;
 import client.model.Journal;
@@ -24,7 +24,7 @@ public class MainForm extends JFrame {
     private static MainForm instance;
     private TaskSender taskSender = TaskSender.getInstance();
     private ClientNetworkFacade clientFacade = ClientNetworkFacade.getInstance();
-    private CommandSender commandSender = CommandSender.getInstance();
+    private ClientCommandSender commandSender = ClientCommandSender.getInstance();
     private JLabel usernameLabel = new JLabel("You logged as: ");
 
     public MainForm() {
@@ -197,7 +197,7 @@ public class MainForm extends JFrame {
                         MainForm.this, "Do you really want to close the app?",
                         "Warning!",
                         JOptionPane.YES_NO_OPTION);
-                CommandSender.getInstance().sendDisconnectCommand(clientFacade.getDataOutputStream());
+                ClientCommandSender.getInstance().sendDisconnectCommand(clientFacade.getDataOutputStream());
                 clientFacade.finish();
                 if (action == JOptionPane.OK_OPTION)
                     System.exit(0);

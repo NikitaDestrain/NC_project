@@ -10,13 +10,13 @@ import javax.xml.bind.Marshaller;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class CommandSender {
-    private static CommandSender instance;
+public class ClientCommandSender {
+    private static ClientCommandSender instance;
 
-    private CommandSender() {}
+    private ClientCommandSender() {}
 
-    public static CommandSender getInstance() {
-        if (instance == null) instance = new CommandSender();
+    public static ClientCommandSender getInstance() {
+        if (instance == null) instance = new ClientCommandSender();
         return instance;
     }
 

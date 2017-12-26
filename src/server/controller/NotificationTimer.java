@@ -1,6 +1,6 @@
 package server.controller;
 
-import server.commandproccessor.CommandSender;
+import server.commandproccessor.ServerCommandSender;
 import server.gui.notificationwindow.NotificationForm;
 import server.gui.notificationwindow.Sound;
 import server.model.Task;
@@ -9,15 +9,13 @@ import server.properties.ParserProperties;
 
 import java.io.DataOutputStream;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
 import java.util.TimerTask;
 
 public class NotificationTimer extends TimerTask {
     private NotificationForm notificationForm;
     private Task task;
     private LinkedList<DataOutputStream> clients;
-    private CommandSender commandSender = CommandSender.getInstance();
+    private ServerCommandSender commandSender = ServerCommandSender.getInstance();
 
     protected NotificationTimer(Task task) {
         this.task = task;

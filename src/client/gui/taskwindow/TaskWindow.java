@@ -1,7 +1,7 @@
 package client.gui.taskwindow;
 
 
-import client.commandprocessor.CommandSender;
+import client.commandprocessor.ClientCommandSender;
 import client.factories.TaskFactory;
 import client.gui.mainform.MainForm;
 import client.model.Task;
@@ -62,7 +62,7 @@ public class TaskWindow extends JFrame {
     private Date notificationDate; //время уведомления
 
     private ClientNetworkFacade clientFacade = ClientNetworkFacade.getInstance();
-    private CommandSender commandSender = CommandSender.getInstance();
+    private ClientCommandSender commandSender = ClientCommandSender.getInstance();
 
     //Перегруженные конструкторы для создания и просмотра/редактирования
     public TaskWindow(MainForm owner) {

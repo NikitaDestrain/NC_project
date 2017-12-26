@@ -1,6 +1,6 @@
 package client.gui.notificationwindow;
 
-import client.commandprocessor.CommandSender;
+import client.commandprocessor.ClientCommandSender;
 import client.exceptions.IllegalPropertyException;
 import client.model.Task;
 import client.network.ClientNetworkFacade;
@@ -18,7 +18,7 @@ public class LaterForm extends JFrame {
     private WriteLaterPanel writeLaterPanel;
     private ImageIcon icon;
     private ClientNetworkFacade clientFacade = ClientNetworkFacade.getInstance();
-    private CommandSender commandSender = CommandSender.getInstance();
+    private ClientCommandSender commandSender = ClientCommandSender.getInstance();
 
     public LaterForm(Task task){
         setLayout(new GridLayout(3,1));
