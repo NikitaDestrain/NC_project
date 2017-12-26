@@ -197,6 +197,8 @@ public class MainForm extends JFrame {
                         MainForm.this, "Do you really want to close the app?",
                         "Warning!",
                         JOptionPane.YES_NO_OPTION);
+                CommandSender.getInstance().sendDisconnectCommand(clientFacade.getDataOutputStream());
+                clientFacade.finish();
                 if (action == JOptionPane.OK_OPTION)
                     System.exit(0);
             }

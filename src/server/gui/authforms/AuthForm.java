@@ -22,8 +22,8 @@ public class AuthForm extends JFrame {
     public AuthForm() {
         super("Authorization");
         instance = this;
-        okButton = new JButton("OK");
-        registrationButton = new JButton("Registration");
+        okButton = new JButton("Sign in");
+        registrationButton = new JButton("Sign up");
         loginField = new JTextField(10);
         passwordField = new JPasswordField(10);
         passwordField.setEchoChar('*'); // что отображается при вводе пароля

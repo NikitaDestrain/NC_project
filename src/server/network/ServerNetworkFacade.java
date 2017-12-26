@@ -3,17 +3,25 @@ package server.network;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ServerNetworkFacade extends Thread {
-    private static int DEFAULT_PORT = 1337;
+    private static final int DEFAULT_PORT = 1337;
+    private static final int DEFAULT_MAX_CNT_CLIENTS = 20;
+    private static final int DEFAULT_CURRENT_CNT_CLIENTS = 0;
     private int serverPort;
     private ServerSocket serverDataSocket;
     private Socket clientDataSocket;
     private ExecutorService executeIt;
-    public static ServerNetworkFacade instance;
+    private Map<Integer, DataOutputStream> clientNotificationOutputStreams;
+    private Map<Integer, DataOutputStream> clientDataInputStreams;
+    private static ServerNetworkFacade instance;
+    private int clientCount;
 
     private ServerNetworkFacade() {}
 
@@ -26,15 +34,18 @@ public class ServerNetworkFacade extends Thread {
     public void run() {
         System.out.println("Server logs:");
         serverPort = DEFAULT_PORT;
-        start(serverPort, 20);
+        start(serverPort, DEFAULT_MAX_CNT_CLIENTS);
 
         Scanner scanner = new Scanner(System.in);
         while (!serverDataSocket.isClosed()) {
             try {
                 clientDataSocket = serverDataSocket.accept();
-                executeIt.execute(new MonoClientThread(clientDataSocket));
-                if (scanner.nextLine().equalsIgnoreCase("stop"))
-                    serverDataSocket.close();
+                int clientNotificationPort = PortGenerator.getInstance().createPort();
+                MonoClientThread monoClientThread = new MonoClientThread(clientDataSocket, clientNotificationPort);
+                executeIt.execute(monoClientThread);
+                clientCount++;
+                /*if (scanner.nextLine().equalsIgnoreCase("stop"))
+                    serverDataSocket.close();*/
             }
             catch (IOException e) {
                 e.getMessage();
@@ -46,10 +57,38 @@ public class ServerNetworkFacade extends Thread {
     private void start(int port, int nThreads) {
         try {
             executeIt = Executors.newFixedThreadPool(nThreads);
+            clientCount = DEFAULT_CURRENT_CNT_CLIENTS;
+            clientNotificationOutputStreams = new HashMap<>();
+            clientDataInputStreams = new HashMap<>();
             serverDataSocket = new ServerSocket(port);
         }
         catch (IOException e) {
             e.getMessage();
         }
+    }
+
+    public LinkedList<DataOutputStream> getClientNotificationOutputStreams() {
+        return new LinkedList<>(clientNotificationOutputStreams.values());
+    }
+
+    public LinkedList<DataOutputStream> getClientDataInputStreams() {
+        return new LinkedList<>(clientDataInputStreams.values());
+    }
+
+    public void removeNotificationOutputStream(Integer key) {
+        clientNotificationOutputStreams.remove(key);
+    }
+
+    public void addNotificationOutputStream(Integer key, DataOutputStream dataOutputStream) {
+        clientNotificationOutputStreams.put(key, dataOutputStream);
+    }
+
+    public void addClientDataInputStreams(Integer key, DataOutputStream dataOutputStream) {
+        clientDataInputStreams.put(key, dataOutputStream);
+    }
+
+    public void removeClientDataInputStreams(Integer key) {
+        clientDataInputStreams.remove(key);
+        --clientCount;
     }
 }

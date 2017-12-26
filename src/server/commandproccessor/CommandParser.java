@@ -18,6 +18,7 @@ public class CommandParser {
     private static final String CANCEL = "Cancel";
     private static final String SIGN_IN = "Sign in";
     private static final String SIGN_UP = "Sign up";
+    private static final String DISCONNECT = "Disconnect";
     private static CommandParser instance;
 
     private CommandParser() {}
@@ -27,60 +28,26 @@ public class CommandParser {
         return instance;
     }
 
-    public Command parseToCommand(InputStream in) {
-        Command command;
-        try {
-            System.out.println("Start reading command");
-            JAXBContext context = JAXBContext.newInstance(Command.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            byte[] mData;
-            try {
-                mData = new byte[in.available()];
-                in.read(mData);
-                InputStream is = new ByteArrayInputStream(mData);
-                command = (Command) unmarshaller.unmarshal(is);
-                return command;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            System.out.println("Command reading success");
-        } catch (JAXBException e) {
-            e.printStackTrace();
-            e.getMessage();
-            System.out.println("Parse error!");
-            return null;
-        }
-        return null;
-    }
-
     public Command parseToCommand(byte[] dataArr) {
         Command command;
         try {
-            System.out.println("Start reading command");
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            byte[] mData;
-
-
             InputStream is = new ByteArrayInputStream(dataArr);
             command = (Command) unmarshaller.unmarshal(is);
-            System.out.println("Command reading success");
             is.close();
             return command;
-
-
         } catch (JAXBException e) {
             e.printStackTrace();
             e.getMessage();
             System.out.println("Parse error!");
-            return null;
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public void doCommandAction(Command command) {
+    public int doCommandAction(Command command) {
         if (command != null) {
             switch (command.getName()) {
                 case ADD:
@@ -107,7 +74,10 @@ public class CommandParser {
                 case SIGN_UP:
                     new SignUpCommandHandler().handle(command);
                     break;
+                case DISCONNECT:
+                    return 1;
             }
         }
+        return 0;
     }
 }

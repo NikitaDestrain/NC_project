@@ -17,9 +17,7 @@ public class NotificationServerListener extends Thread {
         System.out.println("\nЗапущен NotificationServerListener\n");
         BufferedReader buffInput = new BufferedReader(new InputStreamReader(dataInputstream));
         while (true) {
-            //парсинг
-            //вызов класса который это команду обрабатывает
-           // InputCommandHandler.readInputCommand(command);
+
         }
     }
 }

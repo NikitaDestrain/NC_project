@@ -10,10 +10,10 @@ import java.net.Socket;
 
 import static java.lang.Thread.sleep;
 
-public class MonoClientThread implements Runnable {
+public class MonoClientThread extends Thread {
 
     private int notificationPort;
-    private static int number = 0;
+    private int number;
     private Socket clientDataSocket;
     private Socket notificationSocket;
     private DataOutputStream dataOutputStream;
@@ -21,45 +21,31 @@ public class MonoClientThread implements Runnable {
     private DataOutputStream notificationOutputStream;
     private DataInputStream notificationInputStream;
     private CommandParser commandParser = CommandParser.getInstance();
+    private ServerNetworkFacade serverNetworkFacade = ServerNetworkFacade.getInstance();
 
-    public MonoClientThread(Socket socket) {
-        clientDataSocket = socket;
+    public MonoClientThread(Socket socket, int notificationPort) {
+        this.clientDataSocket = socket;
+        this.notificationPort = notificationPort;
+        this.number = notificationPort;
     }
 
     @Override
     public void run() {
-        System.out.printf("\nConnection accepted.");
-        System.out.printf("Client №%d is connected\n", ++number);
-        start();
+        System.out.printf("\nConnection accepted.\n");
+        System.out.printf("Client with port %d is connected\n", number);
+        init();
         connectToNotificationChanel();
-        try {
-
-//sleep (5000);
-               while (true) {
-                   // читаем данные в буфер
-                   if(dataInputStream.available()>0) {
-                       byte[] buffer = new byte[dataInputStream.available()];
-                       int readBytesCount = dataInputStream.read(buffer);
-                       System.out.println("размер прочитанного" + readBytesCount);
-                       System.out.println("читаем из потока");
-                           Command com = commandParser.parseToCommand(buffer);
-                           System.out.println(com);
-                   }
-               }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        commandRelay();
         finish();
     }
 
-    private void start() {
+    private void init() {
         try {
             dataOutputStream = new DataOutputStream(clientDataSocket.getOutputStream());
             System.out.println("DataOutputStream  created");
             dataInputStream = new DataInputStream(clientDataSocket.getInputStream());
             System.out.println("DataInputStream created");
+            serverNetworkFacade.addClientDataInputStreams(notificationPort, dataOutputStream);
         }
         catch (IOException e) {
             e.getMessage();
@@ -68,8 +54,6 @@ public class MonoClientThread implements Runnable {
 
     private void connectToNotificationChanel() {
         System.out.println("Creating Notification Chanel");
-        notificationPort = PortGenerator.getInstance().createPort();
-        System.out.println("Port: " + notificationPort);
         try {
             dataOutputStream.writeInt(notificationPort);
             dataOutputStream.flush();
@@ -78,6 +62,7 @@ public class MonoClientThread implements Runnable {
             System.out.println("Notification OutputStream created");
             notificationInputStream = new DataInputStream(notificationSocket.getInputStream());
             System.out.println("Notification InputStream created");
+            serverNetworkFacade.addNotificationOutputStream(notificationPort, notificationOutputStream);
         }
         catch (IOException e) {
             e.getMessage();
@@ -89,10 +74,30 @@ public class MonoClientThread implements Runnable {
             dataInputStream.close();
             dataOutputStream.close();
             clientDataSocket.close();
-            System.out.println("Closing connections & channels - DONE.");
+            System.out.printf("Client with port %d is disconnected", notificationPort);
+            serverNetworkFacade.removeNotificationOutputStream(notificationPort);
+            serverNetworkFacade.removeClientDataInputStreams(notificationPort);
         }
         catch (IOException e) {
             e.getMessage();
+        }
+    }
+
+    private void commandRelay() {
+        try {
+            while (true) {
+                if(dataInputStream.available() > 0) {
+                    byte[] tmp_buffer = new byte[dataInputStream.available()];
+                    int tmp_trash = dataInputStream.read(tmp_buffer);
+                    Command command = commandParser.parseToCommand(tmp_buffer);
+                    System.out.printf("Client №%d send: ", number);
+                    System.out.println(command);
+                    if(commandParser.doCommandAction(command) == 1)
+                        break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

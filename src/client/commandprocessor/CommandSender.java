@@ -2,6 +2,7 @@ package client.commandprocessor;
 
 import client.factories.ClientCommandFactory;
 import client.model.Task;
+import client.network.ClientNetworkFacade;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -21,13 +22,11 @@ public class CommandSender {
 
     public void sendAddCommand(Task task, OutputStream out) {
         try {
-            System.out.println("Sending command...");
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(ClientCommandFactory.createCommand("Add", task), out);
             out.flush();
-            System.out.println("Sending success");
         }
         catch(JAXBException | IOException e){
             e.printStackTrace();
@@ -120,6 +119,19 @@ public class CommandSender {
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(ClientCommandFactory.createCommand("Sign up", new User(login, password)), out);
+            out.flush();
+        }
+        catch (JAXBException | IOException e) {
+            e.getMessage();
+        }
+    }
+
+    public void sendDisconnectCommand(OutputStream out) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(Command.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.marshal(ClientCommandFactory.createCommand("Disconnect", ClientNetworkFacade.getInstance().getNotificationPort()), out);
             out.flush();
         }
         catch (JAXBException | IOException e) {

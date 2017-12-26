@@ -24,7 +24,7 @@ public class SignUpForm extends JFrame {
     private UserContainer userContainer = UserContainer.getInstance();
 
     public SignUpForm() {
-        super("Registration");
+        super("Sign up");
         instance = this;
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         okButton = new JButton("OK");

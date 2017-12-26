@@ -27,13 +27,9 @@ public class CommandParser {
     public Command parseToCommand (InputStream in) {
         Command command;
         try {
-            System.out.println("Start reading command");
             JAXBContext context = JAXBContext.newInstance(server.commandproccessor.Command.class);
-            System.out.println("1");
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            System.out.println("2");
             command = (Command) unmarshaller.unmarshal(in);
-            System.out.println("Command reading success");
         } catch (JAXBException e) {
             e.printStackTrace();
             e.getMessage();

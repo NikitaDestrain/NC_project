@@ -1,16 +1,14 @@
 package client.network;
 
 import client.commandprocessor.CommandSender;
-import client.model.Task;
-import client.model.TaskStatus;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Date;
 import java.util.Scanner;
 
 public class ClientNetworkFacade extends Thread {
+    private static final int DEFAULT_SERVER_PORT = 1337;
     private int notificationPort;
     private int serverPort;
     private Socket clientDataSocket;
@@ -34,48 +32,42 @@ public class ClientNetworkFacade extends Thread {
     public void run() {
         System.out.println("Client logs:");
         System.out.println();
-        serverPort = 1337;
-        connect(serverPort);
-        createNotificationChanel(notificationPort);
-
+        serverPort = DEFAULT_SERVER_PORT;
         Scanner scanner = new Scanner(System.in);
-
-        DataServerListener datalistener = new DataServerListener(dataInputStream);
-        datalistener.start();//todo not needed
-        NotificationServerListener notiflistener = new NotificationServerListener(notificationInputStream);
-        notiflistener.start();
-
-       while(true) {
-            //test
-            commandSender.sendAddCommand(new Task("sss", TaskStatus.Planned, "s", new Date(), new Date(), 0), dataOutputStream);
-            if (scanner.nextLine().equalsIgnoreCase("stop")) {
+        while(true) {
+            if(connect(serverPort) == 0)
                 break;
-            }
+            System.out.print("Write \"1\" for reconnect:");
+            if(!scanner.nextLine().equalsIgnoreCase("1"))
+                break;
+            System.out.println();
         }
-        System.out.println("Finish.");
-       finish();
-
+        createNotificationChanel(notificationPort);
     }
 
-    private void connect(int port) {
+    private int connect(int port) {
         try {
             clientDataSocket = new Socket("localhost", port);
             dataOutputStream = new DataOutputStream(clientDataSocket.getOutputStream());
             System.out.println("DataOutputStream created");
             dataInputStream = new DataInputStream(clientDataSocket.getInputStream());
             System.out.println("DataInputStream created");
+            while(true) {
+                if(dataInputStream.available() > 0)
+                    break;
+            }
             notificationPort = dataInputStream.readInt();
             System.out.println("Port: " + notificationPort);
+            return 0;
         }
         catch (IOException e) {
-            System.out.println("Server is offline");
-
+            System.out.println("Server is offline!");
         }
+        return 1;
     }
 
     private void createNotificationChanel(int port) {
         try {
-            //todo port create  sync
             System.out.println("Creating chanel for Notifications");
             notificationSocket = new ServerSocket(port);
             notificationSenderSocket = notificationSocket.accept();
@@ -91,8 +83,9 @@ public class ClientNetworkFacade extends Thread {
         }
     }
 
-    private void finish() {
+    public void finish() {
         try {
+            CommandSender.getInstance().sendDisconnectCommand(dataOutputStream);
             notificationInputStream.close();
             notificationOutputStream.close();
             notificationSenderSocket.close();
@@ -102,7 +95,6 @@ public class ClientNetworkFacade extends Thread {
             e.getMessage();
         }
     }
-
 
     public DataOutputStream getDataOutputStream()
     {
@@ -122,5 +114,11 @@ public class ClientNetworkFacade extends Thread {
     public DataInputStream getNotificationInputStream()
     {
         return notificationInputStream;
+    }
+
+    public int getNotificationPort() { return notificationPort; }
+
+    public boolean isServerAvailable() {
+        return !clientDataSocket.isClosed();
     }
 }
