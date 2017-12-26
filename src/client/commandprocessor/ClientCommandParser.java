@@ -28,7 +28,7 @@ public class ClientCommandParser {
     public Command parseToCommand(byte[] dataArr) {
         Command command;
         try {
-            JAXBContext context = JAXBContext.newInstance(server.commandproccessor.Command.class);
+            JAXBContext context = JAXBContext.newInstance(Command.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             InputStream is = new ByteArrayInputStream(dataArr);
             command = (Command) unmarshaller.unmarshal(is);

@@ -1,6 +1,5 @@
 package server.model;
 
-
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.Date;

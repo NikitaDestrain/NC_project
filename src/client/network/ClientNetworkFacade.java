@@ -139,6 +139,4 @@ public class ClientNetworkFacade extends Thread {
     }
 
     public int getNotificationPort() { return notificationPort; }
-
-
 }

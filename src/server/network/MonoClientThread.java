@@ -4,11 +4,14 @@ import server.commandproccessor.Command;
 import server.commandproccessor.ServerCommandParser;
 import server.commandproccessor.ServerCommandSender;
 import server.controller.Controller;
+import server.model.Task;
+import server.model.TaskStatus;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Date;
 
 import static java.lang.Thread.sleep;
 
@@ -39,7 +42,7 @@ public class MonoClientThread extends Thread {
         connectToNotificationChanel();
         //todo test it
         //ServerCommandSender.getInstance().sendUpdateCommand(Controller.getInstance().getJournal(), dataOutputStream);
-        //ClientCommandSender.getInstance().sendNotificationCommand(new Task("sds", TaskStatus.Planned, "sfsaf", new Date(), new Date(), 1), notificationOutputStream);
+        //ServerCommandSender.getInstance().sendNotificationCommand(new Task("sds", TaskStatus.Planned, "sfsaf", new Date(), new Date(), 1), dataOutputStream);
         commandRelay();
         finish();
     }
