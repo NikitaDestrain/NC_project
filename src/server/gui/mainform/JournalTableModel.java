@@ -1,10 +1,14 @@
 package server.gui.mainform;
 
+import server.commandproccessor.ServerCommandSender;
+import server.controller.Controller;
 import server.model.Task;
 import server.model.TaskStatus;
+import server.network.ServerNetworkFacade;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import java.io.DataOutputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -14,6 +18,8 @@ public class JournalTableModel extends AbstractTableModel {
     private String[] columnNames = {"*", "Status", "Name", "Description", "Planned date", "Planned time", "Notification date",
             "Notification time"};
     private Object[][] data;
+    private ServerCommandSender commandSender = ServerCommandSender.getInstance();
+    private ServerNetworkFacade facade = ServerNetworkFacade.getInstance();
 
     // TODO CHECKBOXES, КНОПКИ ЛАЙФСАЙКЛА - отменить, отложить
 
@@ -103,11 +109,17 @@ public class JournalTableModel extends AbstractTableModel {
                             "Task name should not be empty!",
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                else
+                else {
                     task.setName((String) aValue);
+                    for (DataOutputStream out: facade.getClientDataOutputStreams())
+                        commandSender.sendUpdateCommand(Controller.getInstance().getJournal(), out);
+
+                }
                 return;
             case 3:
                 task.setDescription((String) aValue);
+                for (DataOutputStream out: facade.getClientDataOutputStreams())
+                    commandSender.sendUpdateCommand(Controller.getInstance().getJournal(), out);
                 return;
         }
     }

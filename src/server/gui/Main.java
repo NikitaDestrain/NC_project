@@ -10,9 +10,11 @@ import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            //IDGenerator.getInstance(Controller.getInstance().getJournal().getMaxId());
-            new AuthForm().setVisible(true);
-        });
+//        SwingUtilities.invokeLater(() -> {
+//            //IDGenerator.getInstance(Controller.getInstance().getJournal().getMaxId());
+//            new AuthForm().setVisible(true);
+//        });
+
+
     }
 }

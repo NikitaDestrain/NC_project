@@ -1,13 +1,16 @@
 package server.gui.notificationwindow;
 
+import server.commandproccessor.ServerCommandSender;
 import server.controller.Controller;
 import server.exceptions.IllegalPropertyException;
 import server.model.Task;
+import server.network.ServerNetworkFacade;
 import server.properties.ParserProperties;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.DataOutputStream;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -16,6 +19,8 @@ public class LaterForm extends JFrame {
     private ButtonLaterPanel buttonLaterPanel;
     private WriteLaterPanel writeLaterPanel;
     private ImageIcon icon;
+    private ServerCommandSender commandSender = ServerCommandSender.getInstance();
+    private ServerNetworkFacade facade = ServerNetworkFacade.getInstance();
 
     public LaterForm(Task task){
         setLayout(new GridLayout(3,1));
@@ -67,6 +72,8 @@ public class LaterForm extends JFrame {
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + (int) this.hoursSpinner.getValue() * 60 * 60000
                             + (int) this.minutesSpinner.getValue() * 60000));
                     controller.updateNotification(task.getId());
+                    for (DataOutputStream out: facade.getClientDataOutputStreams())
+                        commandSender.sendUpdateCommand(controller.getJournal(), out);
                 }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
@@ -101,6 +108,8 @@ public class LaterForm extends JFrame {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 5 * 60000));
                     controller.updateNotification(task.getId());
+                    for (DataOutputStream out: facade.getClientDataOutputStreams())
+                        commandSender.sendUpdateCommand(controller.getJournal(), out);
                 }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
@@ -113,6 +122,8 @@ public class LaterForm extends JFrame {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 15 * 60000));
                     controller.updateNotification(task.getId());
+                    for (DataOutputStream out: facade.getClientDataOutputStreams())
+                        commandSender.sendUpdateCommand(controller.getJournal(), out);
                 }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
@@ -125,6 +136,8 @@ public class LaterForm extends JFrame {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 30 * 60000));
                     controller.updateNotification(task.getId());
+                    for (DataOutputStream out: facade.getClientDataOutputStreams())
+                        commandSender.sendUpdateCommand(controller.getJournal(), out);
                 }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
@@ -137,6 +150,8 @@ public class LaterForm extends JFrame {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 60 * 60000));
                     controller.updateNotification(task.getId());
+                    for (DataOutputStream out: facade.getClientDataOutputStreams())
+                        commandSender.sendUpdateCommand(controller.getJournal(), out);
                 }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",

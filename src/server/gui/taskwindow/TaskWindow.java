@@ -1,16 +1,19 @@
 package server.gui.taskwindow;
 
 
+import server.commandproccessor.ServerCommandSender;
 import server.controller.Controller;
 import server.factories.TaskFactory;
 import server.gui.mainform.MainForm;
 import server.model.Task;
 import server.model.TaskStatus;
+import server.network.ServerNetworkFacade;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataOutputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -63,6 +66,8 @@ public class TaskWindow extends JFrame {
 
     private Date plannedDate;//запланированное время
     private Date notificationDate; //время уведомления
+    private ServerCommandSender commandSender = ServerCommandSender.getInstance();
+    private ServerNetworkFacade facade = ServerNetworkFacade.getInstance();
 
     //Перегруженные конструкторы для создания и просмотра/редактирования
     public TaskWindow(MainForm owner) {
@@ -622,13 +627,13 @@ public class TaskWindow extends JFrame {
         calend.set(Calendar.MILLISECOND, 0);
         plan = calend.getTime();
         this.plannedDate = plan;
-
     }
 
     private void mainFormAddTask(Task newTask) //вызываю методы MAINform для записи изменений
     {
-
         controller.addTask(newTask);
+        for (DataOutputStream out: facade.getClientDataOutputStreams())
+            commandSender.sendUpdateCommand(controller.getJournal(), out);
         owner.updateJournal();
     }
 
@@ -636,12 +641,11 @@ public class TaskWindow extends JFrame {
 
 
         if ((loadTask.getStatus() != TaskStatus.Completed) && (loadTask.getStatus() != TaskStatus.Cancelled)) {
-            controller.editTask(taskSet);
             taskSet.setStatus(TaskStatus.Rescheduled);
-
+            controller.editTask(taskSet);
+            for (DataOutputStream out: facade.getClientDataOutputStreams())
+                commandSender.sendUpdateCommand(controller.getJournal(), out);
         }
-
         owner.updateJournal();
     }
-
 }

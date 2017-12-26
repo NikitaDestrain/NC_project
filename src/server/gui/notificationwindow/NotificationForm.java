@@ -1,22 +1,27 @@
 package server.gui.notificationwindow;
 
+import server.commandproccessor.ServerCommandSender;
 import server.exceptions.IllegalPropertyException;
 import server.controller.Controller;
 import server.gui.mainform.MainForm;
 import server.model.Task;
+import server.network.ServerNetworkFacade;
 import server.properties.ParserProperties;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.DataOutputStream;
 
 public class NotificationForm extends JFrame {
     private Task task;
     private ButtonPanel buttonPanel;
     private LabelPanel labelPanel;
     private ImageIcon icon;
-    private Controller controller = Controller.getInstance();;
+    private Controller controller = Controller.getInstance();
     private MainForm mainForm = MainForm.getInstance();
+    private ServerCommandSender commandSender = ServerCommandSender.getInstance();
+    private ServerNetworkFacade facade = ServerNetworkFacade.getInstance();
 
     public NotificationForm() {
         super("Alarm!");
@@ -73,8 +78,11 @@ public class NotificationForm extends JFrame {
             });
 
             finish.addActionListener((ActionEvent e) -> {
-                if(controller.getJournal().getTask(task.getId()) != null)
+                if(controller.getJournal().getTask(task.getId()) != null) {
                     controller.finishNotification(task.getId());
+                    for (DataOutputStream out: facade.getClientDataOutputStreams())
+                        commandSender.sendUpdateCommand(controller.getJournal(), out);
+                }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be finished!",
                             "Error", JOptionPane.ERROR_MESSAGE);
@@ -83,8 +91,11 @@ public class NotificationForm extends JFrame {
             });
 
             cancel.addActionListener((ActionEvent e) -> {
-                if(controller.getJournal().getTask(task.getId()) != null)
+                if(controller.getJournal().getTask(task.getId()) != null) {
                     controller.cancelNotification(task.getId());
+                    for (DataOutputStream out: facade.getClientDataOutputStreams())
+                        commandSender.sendUpdateCommand(controller.getJournal(), out);
+                }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be canceled!",
                             "Error", JOptionPane.ERROR_MESSAGE);
