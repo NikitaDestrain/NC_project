@@ -25,7 +25,7 @@ public class MainForm extends JFrame {
     private SystemTray systemTray = SystemTray.getSystemTray();
     private static MainForm instance;
     private TaskSender taskSender = TaskSender.getInstance();
-    private JLabel usernameLabel = new JLabel("You logged as: ");
+    private JLabel usernameLabel = new JLabel("Your status is Server. You logged as: ");
 
     public MainForm() {
         super("Task Scheduler");
@@ -254,7 +254,7 @@ public class MainForm extends JFrame {
     private JMenuBar createMenu() {
         JMenuBar menu = new JMenuBar();
 
-        JMenu fileMenu = new JMenu("File");
+        /*JMenu fileMenu = new JMenu("File");
         menu.add(fileMenu);
 
         JMenuItem exportJournal = new JMenuItem("Export journal...");//todo эти пункты сейчас ничего полезного не делают
@@ -317,7 +317,7 @@ public class MainForm extends JFrame {
                 JOptionPane.showMessageDialog(MainForm.this, "Could not load journal from file",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-        });
+        });*/
 
         return menu;
     }
