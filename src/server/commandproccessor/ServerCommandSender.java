@@ -51,7 +51,10 @@ public class ServerCommandSender {
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(ServerCommandFactory.createCommand("Notification", task), out);
+            out.flush();
         } catch (JAXBException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -62,7 +65,10 @@ public class ServerCommandSender {
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(ServerCommandFactory.createCommand("Successful auth", new User()), out);
+            out.flush();
         } catch (JAXBException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -73,7 +79,10 @@ public class ServerCommandSender {
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(ServerCommandFactory.createCommand("Unsuccessful auth", new User()), out);
+            out.flush();
         } catch (JAXBException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -85,7 +94,10 @@ public class ServerCommandSender {
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(ServerCommandFactory.createCommand("Unsuccessful sign up", new User()),
                     out);
+            out.flush();
         } catch (JAXBException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
