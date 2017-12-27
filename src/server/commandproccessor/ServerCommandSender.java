@@ -7,10 +7,7 @@ import server.model.Task;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 
 public class ServerCommandSender {
     private static ServerCommandSender instance;
@@ -28,10 +25,24 @@ public class ServerCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ServerCommandFactory.createCommand("Update", journal), out);
+            //записываем в файл-буффер
+            marshaller.marshal( ServerCommandFactory.createCommand("Update", journal),new File("test_update.xml"));
+          //  System.out.println("пробуем запихнуть весь журнал в поток сокета");
+            byte[] buffer = new byte[(int) new File("test_update.xml").length()];
+            FileInputStream inF = new FileInputStream("test_update.xml");
+            inF.read(buffer);
+           // System.out.println(new File("test_update.xml").length()+" размеры оптравленного журнала");
+            out.write(buffer);
+            out.flush();
         } catch (JAXBException e) {
             e.printStackTrace();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
     }
 
     public void sendNotificationCommand(Task task, OutputStream out) {
