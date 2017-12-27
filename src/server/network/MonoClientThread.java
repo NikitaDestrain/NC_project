@@ -95,6 +95,7 @@ public class MonoClientThread extends Thread {
     private void commandRelay() {
         try {
             while (true) {
+                Thread.sleep(500);
                 if(dataInputStream.available() > 0) {
                     byte[] tmp_buffer = new byte[dataInputStream.available()];
                     int tmp_trash = dataInputStream.read(tmp_buffer);
@@ -105,7 +106,7 @@ public class MonoClientThread extends Thread {
                         break;
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

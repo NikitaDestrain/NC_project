@@ -21,6 +21,7 @@ public class ServerNotificationListener extends Thread{
         System.out.printf("Notification listener for client with port %d starts\n", port);
         try {
             while (true) {
+                Thread.sleep(500);
                 if(notificationInputStream.available() > 0) {
                     byte[] tmp_buffer = new byte[notificationInputStream.available()];
                     int tmp_trash = notificationInputStream.read(tmp_buffer);
@@ -30,7 +31,7 @@ public class ServerNotificationListener extends Thread{
                     commandParser.doCommandAction(command);
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

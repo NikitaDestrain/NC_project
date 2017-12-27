@@ -20,8 +20,8 @@ public class ClientNotificationListener extends Thread {
         System.out.println("Notification listener starts");
         try {
             while (true) {
+                Thread.sleep(500);
                 if(notificationInputStream.available() > 0) {
-                    //todo thread sleep
                     byte[] tmp_buffer = new byte[notificationInputStream.available()];
                     int tmp_trash = notificationInputStream.read(tmp_buffer);
                     Command command = commandParser.parseToCommand(tmp_buffer);
@@ -30,7 +30,7 @@ public class ClientNotificationListener extends Thread {
                     commandParser.doCommandAction(command);
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

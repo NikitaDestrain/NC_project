@@ -58,9 +58,14 @@ public class ClientNetworkFacade extends Thread {
             dataInputStream = new DataInputStream(clientDataSocket.getInputStream());
             System.out.println("DataInputStream created");
             while(true) {
-                //todo thread sleep
-                if(dataInputStream.available() > 0)
-                    break;
+                try {
+                    Thread.sleep(500);
+                    if (dataInputStream.available() > 0)
+                        break;
+                }
+                catch (InterruptedException e) {
+                    e.getMessage();
+                }
             }
             notificationPort = dataInputStream.readInt();
             System.out.println("Port: " + notificationPort);
@@ -108,8 +113,8 @@ public class ClientNetworkFacade extends Thread {
     private void commandRelay() {
         try {
             while (true) {
+                Thread.sleep(500);
                 if(dataInputStream.available() > 0) {
-                    //todo thread sleep
                     byte[] tmp_buffer = new byte[dataInputStream.available()];
                     int tmp_trash = dataInputStream.read(tmp_buffer);
                     Command command = commandParser.parseToCommand(tmp_buffer);
@@ -118,7 +123,7 @@ public class ClientNetworkFacade extends Thread {
                     commandParser.doCommandAction(command);
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
