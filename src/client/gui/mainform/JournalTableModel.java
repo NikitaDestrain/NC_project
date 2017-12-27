@@ -95,6 +95,7 @@ public class JournalTableModel extends AbstractTableModel {
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         Task task = tasks.get(rowIndex);
+        System.out.println(task);
         switch (columnIndex) {
             case 0:
                 data[rowIndex][0] = aValue;

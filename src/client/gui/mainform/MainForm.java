@@ -116,7 +116,7 @@ public class MainForm extends JFrame {
                                 break;
                             case TaskActionListener.DELETE_TASK:
                                 for (int i = 0; i < rows.length; i++) {
-                                    journal.removeTask(rows[i]);
+                                    journal.removeTask(rows[i]); // todo исправить через контроллер
                                     tablePanel.refresh();
                                     tablePanel.setData(journal.getTasks());
                                     buttonPanel.setJTable((tablePanel.getTable()));

@@ -152,10 +152,11 @@ public class AuthForm extends JFrame {
     }
 
     public void showUnsuccessfulAuthMessage() {
-        JOptionPane.showMessageDialog(null,
-                "User with such login and password does not exists! You should sign up now!",
-                "Error", JOptionPane.ERROR_MESSAGE);
-        this.dispose();
-        callSignUpForm();
+        if (JOptionPane.showConfirmDialog(null,
+                "User with such login and password does not exists! Do you want to sign up now?",
+                "Error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            this.dispose();
+            callSignUpForm();
+        }
     }
 }

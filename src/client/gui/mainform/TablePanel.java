@@ -52,6 +52,7 @@ public class TablePanel extends JPanel {
             public void mousePressed(MouseEvent e) {
                 int row = table.rowAtPoint(e.getPoint());
                 int col = table.columnAtPoint(e.getPoint());
+                System.out.println(row + " " + col);
                 table.getSelectionModel().setSelectionInterval(row, row);
                 Task task = taskList.get(row);
 

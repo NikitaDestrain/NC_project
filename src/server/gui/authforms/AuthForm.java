@@ -137,11 +137,12 @@ public class AuthForm extends JFrame {
                     "Incorrect login or password!", "Error", JOptionPane.ERROR_MESSAGE);
         } else if (!controller.isUserDataCorrect(new User(loginField.getText(),
                 String.valueOf(passwordField.getPassword()), -1))) {
-            JOptionPane.showMessageDialog(null,
-                    "User with such login and password does not exists! You should sign up now!",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-            new SignUpForm().setVisible(true);
-            this.dispose();
+            if (JOptionPane.showConfirmDialog(null,
+                    "User with such login and password does not exists! Do you want to sign up now?",
+                    "Error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                new SignUpForm().setVisible(true);
+                this.dispose();
+            }
         } else {
             MainForm mainForm = MainForm.getInstance();
             if (mainForm == null) mainForm = new MainForm();
