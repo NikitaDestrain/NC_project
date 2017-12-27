@@ -8,6 +8,7 @@ import server.exceptions.IllegalPropertyException;
 import server.gui.taskwindow.TaskWindow;
 import server.model.Journal;
 import server.model.Task;
+import server.network.ServerNetworkFacade;
 import server.properties.ParserProperties;
 
 import javax.swing.*;
@@ -211,6 +212,7 @@ public class MainForm extends JFrame {
                             journalBackup.writeJournal(journal, path);
                             Controller.getInstance().writeUserData(ParserProperties.getInstance()
                                     .getProperties("USER_DATA"));
+                            // todo finish ServerNetworkFacade.getInstance().finish();
                             System.exit(0);
                         }
                     } catch (IllegalPropertyException ex) {

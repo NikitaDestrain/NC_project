@@ -58,6 +58,7 @@ public class ClientNetworkFacade extends Thread {
             dataInputStream = new DataInputStream(clientDataSocket.getInputStream());
             System.out.println("DataInputStream created");
             while(true) {
+                //todo thread sleep
                 if(dataInputStream.available() > 0)
                     break;
             }
@@ -108,6 +109,7 @@ public class ClientNetworkFacade extends Thread {
         try {
             while (true) {
                 if(dataInputStream.available() > 0) {
+                    //todo thread sleep
                     byte[] tmp_buffer = new byte[dataInputStream.available()];
                     int tmp_trash = dataInputStream.read(tmp_buffer);
                     Command command = commandParser.parseToCommand(tmp_buffer);

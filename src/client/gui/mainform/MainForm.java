@@ -199,8 +199,10 @@ public class MainForm extends JFrame {
                         JOptionPane.YES_NO_OPTION);
                 ClientCommandSender.getInstance().sendDisconnectCommand(clientFacade.getDataOutputStream());
                 clientFacade.finish();
-                if (action == JOptionPane.OK_OPTION)
+                if (action == JOptionPane.OK_OPTION) {
+                    ClientNetworkFacade.getInstance().finish();
                     System.exit(0);
+                }
             }
         });
 

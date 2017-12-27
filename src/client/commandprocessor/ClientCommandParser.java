@@ -46,7 +46,7 @@ public class ClientCommandParser {
 
     public void doCommandAction(Command command) {
         if (command != null) {
-            switch (command.getName()) {
+            switch (command.getName()) { // todo мапа с хэндлерами
                 case UPDATE :
                     new UpdateCommandHandler().handle(command);
                     break;

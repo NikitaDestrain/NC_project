@@ -21,6 +21,7 @@ public class ClientNotificationListener extends Thread {
         try {
             while (true) {
                 if(notificationInputStream.available() > 0) {
+                    //todo thread sleep
                     byte[] tmp_buffer = new byte[notificationInputStream.available()];
                     int tmp_trash = notificationInputStream.read(tmp_buffer);
                     Command command = commandParser.parseToCommand(tmp_buffer);

@@ -8,8 +8,8 @@
                 <name>admin</name>
                 <description></description>
                 <status>Planned</status>
-                <notificationDate>2017-12-28T01:20:00+03:00</notificationDate>
-                <plannedDate>2017-12-28T01:20:00+03:00</plannedDate>
+                <notificationDate>2017-12-28T02:20:00+04:00</notificationDate>
+                <plannedDate>2017-12-28T02:20:00+04:00</plannedDate>
             </value>
         </entry>
         <entry>
@@ -18,9 +18,20 @@
                 <id>2</id>
                 <name>weew</name>
                 <description></description>
-                <status>Planned</status>
-                <notificationDate>2017-12-27T01:25:00+03:00</notificationDate>
-                <plannedDate>2017-12-27T01:25:00+03:00</plannedDate>
+                <status>Overdue</status>
+                <notificationDate>2017-12-27T02:25:00+04:00</notificationDate>
+                <plannedDate>2017-12-27T02:25:00+04:00</plannedDate>
+            </value>
+        </entry>
+        <entry>
+            <key>3</key>
+            <value>
+                <id>3</id>
+                <name>1231231</name>
+                <description></description>
+                <status>Cancelled</status>
+                <notificationDate>2017-12-27T16:28:00+04:00</notificationDate>
+                <plannedDate>2017-12-27T16:28:00+04:00</plannedDate>
             </value>
         </entry>
     </tasks>
