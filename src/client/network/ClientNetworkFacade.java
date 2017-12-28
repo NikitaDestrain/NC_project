@@ -3,7 +3,9 @@ package client.network;
 import client.commandprocessor.ClientCommandSender;
 import client.commandprocessor.Command;
 import client.commandprocessor.ClientCommandParser;
+import server.gui.mainform.MainForm;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -13,6 +15,7 @@ public class ClientNetworkFacade extends Thread {
     private static final int DEFAULT_SERVER_PORT = 1337;
     private int notificationPort;
     private int serverPort;
+    private boolean successConnect;
     private Socket clientDataSocket;
     private Socket notificationSenderSocket;
     private DataOutputStream dataOutputStream;
@@ -24,7 +27,9 @@ public class ClientNetworkFacade extends Thread {
     private ClientCommandParser commandParser = ClientCommandParser.getInstance();
     private ClientNotificationListener clientNotificationListener;
 
-    private ClientNetworkFacade() {}
+    private ClientNetworkFacade() {
+        successConnect = false;
+    }
 
     public static ClientNetworkFacade getInstance() {
         if (instance == null) instance = new ClientNetworkFacade();
@@ -35,24 +40,20 @@ public class ClientNetworkFacade extends Thread {
     public void run() {
         System.out.println("Client logs:");
         System.out.println();
-        serverPort = DEFAULT_SERVER_PORT;
-        Scanner scanner = new Scanner(System.in);
-        //временное
-        while(true) { //
-            if(connect(serverPort) == 0)
-                break;
-            System.out.print("Write \"1\" for reconnect:");
-            if(!scanner.nextLine().equalsIgnoreCase("1"))
-                break;
-            System.out.println();
+        while(true) {
+            try {
+                Thread.sleep(250);
+                if (successConnect)
+                    break;
+            } catch (InterruptedException e) {}
         }
-        createNotificationChanel(notificationPort);
         commandRelay();
     }
 
-    private int connect(int port) {
+    public int connect() {
         try {
-            clientDataSocket = new Socket("localhost", port);
+            serverPort = DEFAULT_SERVER_PORT;
+            clientDataSocket = new Socket("localhost", serverPort);
             dataOutputStream = new DataOutputStream(clientDataSocket.getOutputStream());
             System.out.println("DataOutputStream created");
             dataInputStream = new DataInputStream(clientDataSocket.getInputStream());
@@ -64,15 +65,18 @@ public class ClientNetworkFacade extends Thread {
                         break;
                 }
                 catch (InterruptedException e) {
-                    e.getMessage();//todo vlla это не обработка ошибки
+                    JOptionPane.showMessageDialog(MainForm.getInstance(), "Something is going wrong! For correct work you should restart application!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
             notificationPort = dataInputStream.readInt();
             System.out.println("Port: " + notificationPort);
+            createNotificationChanel(notificationPort);
             return 0;
         }
         catch (IOException e) {
-            System.out.println("Server is offline!");
+            JOptionPane.showMessageDialog(null,
+                    "Server is not available! Try later!", "Error", JOptionPane.ERROR_MESSAGE);
         }
         return 1;
     }
@@ -89,9 +93,11 @@ public class ClientNetworkFacade extends Thread {
             System.out.println("Notification InputStream created");
             clientNotificationListener = new ClientNotificationListener(notificationInputStream);
             clientNotificationListener.start();
+            successConnect = true;
         }
-        catch (IOException e){
-            e.getMessage();//todo vlla это не обработка ошибки
+        catch (IOException e) {
+            JOptionPane.showMessageDialog(MainForm.getInstance(), "Something is going wrong! For correct work you should restart application!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -105,7 +111,8 @@ public class ClientNetworkFacade extends Thread {
             System.out.println("Closing notification connections & channels - DONE.");
         }
         catch (IOException e) {
-            e.getMessage();//todo vlla это не обработка ошибки
+            JOptionPane.showMessageDialog(MainForm.getInstance(), "Crush finish! Something is going wrong!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -123,7 +130,8 @@ public class ClientNetworkFacade extends Thread {
                 }
             }
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(MainForm.getInstance(), "Something is going wrong! For correct work you should restart application!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -132,19 +140,9 @@ public class ClientNetworkFacade extends Thread {
         return dataOutputStream;
     }
 
-    public DataInputStream getDataInputStream()
-    {
-        return dataInputStream;
-    }
-
     public DataOutputStream getNotificationOutputStream()
     {
         return notificationOutputStream;
-    }
-
-    public DataInputStream getNotificationInputStream()
-    {
-        return notificationInputStream;
     }
 
     public int getNotificationPort() { return notificationPort; }

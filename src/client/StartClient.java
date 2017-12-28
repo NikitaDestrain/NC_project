@@ -9,8 +9,6 @@ import javax.swing.*;
 public class StartClient {
 
     public static void main(String[] args) {
-        ClientNetworkFacade cnf = ClientNetworkFacade.getInstance();
-        cnf.start();
         SwingUtilities.invokeLater(() -> {
             new AuthForm().setVisible(true);
         });

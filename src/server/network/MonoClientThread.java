@@ -19,6 +19,7 @@ public class MonoClientThread extends Thread {
 
     private int notificationPort;
     private int number;
+    private boolean successNotificationConnect;
     private Socket clientDataSocket;
     private Socket notificationSocket;
     private DataOutputStream dataOutputStream;
@@ -26,23 +27,29 @@ public class MonoClientThread extends Thread {
     private DataOutputStream notificationOutputStream;
     private DataInputStream notificationInputStream;
     private ServerCommandParser commandParser = ServerCommandParser.getInstance();
+    private ServerCommandSender commandSender = ServerCommandSender.getInstance();
     private ServerNetworkFacade serverNetworkFacade = ServerNetworkFacade.getInstance();
     private ServerNotificationListener serverNotificationListener;
+    private boolean stopCommandRelay;
 
     public MonoClientThread(Socket socket, int notificationPort) {
         this.clientDataSocket = socket;
         this.notificationPort = notificationPort;
         this.number = notificationPort;
+        this.successNotificationConnect = true;
+        this.stopCommandRelay = false;
     }
 
     @Override
     public void run() {
         System.out.printf("\nConnection accepted.\n");
-        System.out.printf("Client with port %d is connected\n", number);
+        System.out.printf("Client with port %d connected\n", number);
         init();
         connectToNotificationChanel();
-        commandRelay();
-        finish();
+        if(successNotificationConnect)
+            commandRelay();
+        else
+            finish();
     }
 
     private void init() {
@@ -54,8 +61,7 @@ public class MonoClientThread extends Thread {
             serverNetworkFacade.addClientDataOutputStreams(notificationPort, dataOutputStream);
         }
         catch (IOException e) {
-            System.out.println("Error! Client can not be connected!");
-            e.getMessage();//todo vlla это не обработка ошибки
+            System.out.printf("Error! Client with port %d can not be connected!\n", notificationPort);
         }
     }
 
@@ -74,22 +80,25 @@ public class MonoClientThread extends Thread {
             serverNotificationListener.start();
         }
         catch (IOException e) {
-            e.getMessage();//todo vlla это не обработка ошибки
+            commandSender.sendUnsuccessfulActionCommand("Error! Server can not connect to notification channels! Application has been finished!", dataOutputStream);
+            successNotificationConnect = false;
         }
     }
 
-    private void finish() {
+    protected void finish() {
         try {
+            stopCommandRelay = true;
             serverNotificationListener.interrupt();
             dataInputStream.close();
             dataOutputStream.close();
             clientDataSocket.close();
-            System.out.printf("Client with port %d is disconnected", number);
+            System.out.printf("Client with port %d disconnected.\n", number);
             serverNetworkFacade.removeNotificationOutputStream(notificationPort);
             serverNetworkFacade.removeClientDataOutputStreams(notificationPort);
         }
         catch (IOException e) {
-            e.getMessage();//todo vlla это не обработка ошибки
+            serverNetworkFacade.removeNotificationOutputStream(notificationPort);
+            serverNetworkFacade.removeClientDataOutputStreams(notificationPort);
         }
     }
 
@@ -104,6 +113,8 @@ public class MonoClientThread extends Thread {
                     System.out.printf("Client with port %d send: ", number);
                     System.out.println(command);
                     if(commandParser.doCommandAction(command) == 1)
+                        commandSender.sendUnsuccessfulActionCommand("Error! Unknown command!", dataOutputStream);
+                    if(stopCommandRelay)
                         break;
                 }
             }

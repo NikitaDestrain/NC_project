@@ -125,7 +125,6 @@ public class MainForm extends JFrame {
                                     builder.append(task.getId());
                                     builder.append(",");
                                 }
-
                                 commandSender.sendDeleteCommand(builder.toString(), clientFacade.getDataOutputStream());
                                 break;
                         }
@@ -200,10 +199,8 @@ public class MainForm extends JFrame {
                         MainForm.this, "Do you really want to close the app?",
                         "Warning!",
                         JOptionPane.YES_NO_OPTION);
-                ClientCommandSender.getInstance().sendDisconnectCommand(clientFacade.getDataOutputStream());
-                clientFacade.finish();
                 if (action == JOptionPane.OK_OPTION) {
-                    ClientNetworkFacade.getInstance().finish();
+                    clientFacade.finish();
                     System.exit(0);
                 }
             }

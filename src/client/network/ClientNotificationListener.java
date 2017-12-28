@@ -31,7 +31,7 @@ public class ClientNotificationListener extends Thread {
                 }
             }
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            e.getMessage();
         }
     }
 }

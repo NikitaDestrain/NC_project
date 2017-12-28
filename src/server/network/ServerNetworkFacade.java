@@ -20,6 +20,7 @@ public class ServerNetworkFacade extends Thread {
     private ExecutorService executeIt;
     private Map<Integer, DataOutputStream> clientNotificationOutputStreams;
     private Map<Integer, DataOutputStream> clientDataOutputStreams;
+    private Map<Integer, MonoClientThread> clients;
     private static ServerNetworkFacade instance;
     private int clientCount;
 
@@ -41,10 +42,11 @@ public class ServerNetworkFacade extends Thread {
                 int clientNotificationPort = PortGenerator.getInstance().createPort();
                 MonoClientThread monoClientThread = new MonoClientThread(clientDataSocket, clientNotificationPort);
                 executeIt.execute(monoClientThread);
+                clients.put(clientNotificationPort, monoClientThread);
                 clientCount++;
             }
             catch (IOException e) {
-                e.getMessage();//todo vlla это не обработка ошибки
+
             }
         }
         executeIt.shutdown();
@@ -56,6 +58,7 @@ public class ServerNetworkFacade extends Thread {
             clientCount = DEFAULT_CURRENT_CNT_CLIENTS;
             clientNotificationOutputStreams = new HashMap<>();
             clientDataOutputStreams = new HashMap<>();
+            clients = new HashMap<>();
             serverDataSocket = new ServerSocket(port);
         }
         catch (IOException e) {
@@ -71,19 +74,19 @@ public class ServerNetworkFacade extends Thread {
         return new LinkedList<>(clientDataOutputStreams.values());
     }
 
-    public void removeNotificationOutputStream(Integer key) {
+    protected void removeNotificationOutputStream(Integer key) {
         clientNotificationOutputStreams.remove(key);
     }
 
-    public void addNotificationOutputStream(Integer key, DataOutputStream dataOutputStream) {
+    protected void addNotificationOutputStream(Integer key, DataOutputStream dataOutputStream) {
         clientNotificationOutputStreams.put(key, dataOutputStream);
     }
 
-    public void addClientDataOutputStreams(Integer key, DataOutputStream dataOutputStream) {
+    protected void addClientDataOutputStreams(Integer key, DataOutputStream dataOutputStream) {
         clientDataOutputStreams.put(key, dataOutputStream);
     }
 
-    public void removeClientDataOutputStreams(Integer key) {
+    protected void removeClientDataOutputStreams(Integer key) {
         clientDataOutputStreams.remove(key);
         --clientCount;
     }
@@ -91,4 +94,10 @@ public class ServerNetworkFacade extends Thread {
     public DataOutputStream getDataOutputStream(int key) {
         return clientDataOutputStreams.get(key);
     }
+
+    public void finishClient(int port) {
+        clients.get(port).finish();
+        clients.remove(port);
+    }
+
 }

@@ -29,20 +29,25 @@ public class AuthForm extends JFrame {
         loginField = new JTextField(10);
         passwordField = new JPasswordField(10);
         passwordField.setEchoChar('*'); // что отображается при вводе пароля
+        clientFacade = ClientNetworkFacade.getInstance();
+        if (!clientFacade.isAlive()) clientFacade.start();
 
         layoutComponents();
 
         okButton.addActionListener((ActionEvent e) -> {
-            sendData();
+            if (loginField.getText() == null || loginField.getText().length() == 0
+                    || passwordField.getPassword().length == 0)
+                JOptionPane.showMessageDialog(null,
+                        "Incorrect login or password!", "Error", JOptionPane.ERROR_MESSAGE);
+            else
+                if (clientFacade.connect() == 0)
+                    sendData();
         });
 
         registrationButton.addActionListener((ActionEvent e) -> {
             this.dispose();
             callSignUpForm();
         });
-
-        clientFacade = ClientNetworkFacade.getInstance();
-        if (!clientFacade.isAlive()) clientFacade.start();
 
         setSize(new Dimension(320, 230));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -134,22 +139,12 @@ public class AuthForm extends JFrame {
     }
 
     private void sendData() {
-        if (loginField.getText() == null || loginField.getText().length() == 0
-                || passwordField.getPassword().length == 0) {
-            JOptionPane.showMessageDialog(null,
-                    "Incorrect login or password!", "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            if (clientFacade.getDataOutputStream() == null)
-                JOptionPane.showMessageDialog(null,
-                        "Server is not available!", "Error", JOptionPane.ERROR_MESSAGE);
-            else {
-                userContainer.setUsername(loginField.getText());
-                commandSender.sendSignInCommand(loginField.getText(),
-                        String.valueOf(passwordField.getPassword()),
-                        clientFacade.getDataOutputStream());
-            }
-        }
+        userContainer.setUsername(loginField.getText());
+        commandSender.sendSignInCommand(loginField.getText(),
+                String.valueOf(passwordField.getPassword()),
+                clientFacade.getDataOutputStream());
     }
+
 
     public void showUnsuccessfulAuthMessage() {
         if (JOptionPane.showConfirmDialog(null,

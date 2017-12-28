@@ -5,6 +5,7 @@ import server.controller.Controller;
 import server.controller.IDGenerator;
 import server.gui.mainform.MainForm;
 import server.model.Journal;
+import server.network.ServerNetworkFacade;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -19,16 +20,19 @@ public class AuthForm extends JFrame {
     private JPasswordField passwordField;
     private JButton registrationButton;
     private Controller controller = Controller.getInstance();
+    private ServerNetworkFacade serverFacade;
     private static AuthForm instance;
 
     public AuthForm() {
         super("Authorization");
+        serverFacade = ServerNetworkFacade.getInstance();
         instance = this;
         okButton = new JButton("Sign in");
         registrationButton = new JButton("Sign up");
         loginField = new JTextField(10);
         passwordField = new JPasswordField(10);
         passwordField.setEchoChar('*'); // что отображается при вводе пароля
+        if(!serverFacade.isAlive()) serverFacade.start();
 
         layoutComponents();
 

@@ -32,6 +32,7 @@ public class ServerCommandParser {
         handlers.put(CANCEL, new CancelCommandHandler());
         handlers.put(SIGN_IN, new SignInCommandHandler());
         handlers.put(SIGN_UP, new SignUpCommandHandler());
+        handlers.put(DISCONNECT, new DisconnectCommandHandler());
     }
 
     public static ServerCommandParser getInstance() {
@@ -49,8 +50,6 @@ public class ServerCommandParser {
             is.close();
             return command;
         } catch (JAXBException e) {
-            e.printStackTrace();
-            e.getMessage();
             System.out.println("Parse error!");
         } catch (IOException e) {
             e.printStackTrace();
@@ -59,13 +58,10 @@ public class ServerCommandParser {
     }
 
     public int doCommandAction(Command command) {
-        if (command != null) {
-            if (handlers.containsKey(command.getName())) {
+        if (command != null)
+            if (handlers.containsKey(command.getName()))
                 handlers.get(command.getName()).handle(command);
-            }
-            else if (command.getName().equals(DISCONNECT))
-                return 1;
-        }
+            else return 1;
         return 0;
     }
 }

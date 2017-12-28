@@ -46,8 +46,6 @@ public class ClientCommandParser {
             is.close();
             return command;
         } catch (JAXBException e) {
-            e.printStackTrace();
-            e.getMessage();
             System.out.println("Parse error!");
         } catch (IOException e) {
             e.printStackTrace();

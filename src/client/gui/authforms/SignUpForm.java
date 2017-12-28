@@ -26,6 +26,8 @@ public class SignUpForm extends JFrame {
         super("Sign up");
         instance = this;
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        clientFacade = ClientNetworkFacade.getInstance();
+        if (!clientFacade.isAlive()) clientFacade.start();
         okButton = new JButton("OK");
         clearButton = new JButton("Clear");
         loginField = new JTextField(10);
@@ -37,7 +39,8 @@ public class SignUpForm extends JFrame {
         layoutComponents();
 
         okButton.addActionListener((ActionEvent e) -> {
-            registration();
+            if(clientFacade.connect() == 0)
+                registration();
         });
 
         clearButton.addActionListener((ActionEvent e) -> {
@@ -60,9 +63,6 @@ public class SignUpForm extends JFrame {
 
 
         setSize(new Dimension(320, 230));
-
-        clientFacade = ClientNetworkFacade.getInstance();
-        if (!clientFacade.isAlive()) clientFacade.start();
 
         setLocationRelativeTo(null);
         setResizable(false);

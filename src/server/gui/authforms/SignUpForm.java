@@ -5,6 +5,7 @@ import server.controller.Controller;
 import server.controller.IDGenerator;
 import server.gui.mainform.MainForm;
 import server.model.Journal;
+import server.network.ServerNetworkFacade;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -21,6 +22,7 @@ public class SignUpForm extends JFrame {
     private JPasswordField confirmPasswordField;
     private static SignUpForm instance;
     private Controller controller = Controller.getInstance();
+    private ServerNetworkFacade serverFacade;
 
     public SignUpForm() {
         super("Sign up");
@@ -33,6 +35,8 @@ public class SignUpForm extends JFrame {
         passwordField.setEchoChar('*'); // что отображается при вводе пароля
         confirmPasswordField = new JPasswordField(10);
         confirmPasswordField.setEchoChar('*');
+        serverFacade = ServerNetworkFacade.getInstance();
+        if(!serverFacade.isAlive()) serverFacade.start();
 
         layoutComponents();
 

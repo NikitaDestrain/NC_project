@@ -22,8 +22,11 @@ public class ClientCommandSender {
     private static final String SIGN_IN = "Sign in";
     private static final String SIGN_UP = "Sign up";
     private static final String DISCONNECT = "Disconnect";
+    private ClientNetworkFacade clientNetworkFacade;
 
-    private ClientCommandSender() {}
+    private ClientCommandSender() {
+        clientNetworkFacade = ClientNetworkFacade.getInstance();
+    }
 
     public static ClientCommandSender getInstance() {
         if (instance == null) instance = new ClientCommandSender();
@@ -39,7 +42,6 @@ public class ClientCommandSender {
             out.flush();
         }
         catch(JAXBException | IOException e){
-            e.printStackTrace();
             e.getMessage();
         }
     }
@@ -114,7 +116,7 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(SIGN_IN, new User(login, password, ClientNetworkFacade.getInstance().getNotificationPort())), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(SIGN_IN, new User(login, password, clientNetworkFacade.getNotificationPort())), out);
             out.flush();
         }
         catch (JAXBException | IOException e) {
@@ -128,7 +130,7 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(SIGN_UP, new User(login, password, ClientNetworkFacade.getInstance().getNotificationPort())), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(SIGN_UP, new User(login, password, clientNetworkFacade.getNotificationPort())), out);
             out.flush();
         }
         catch (JAXBException | IOException e) {
@@ -141,7 +143,7 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(DISCONNECT, ClientNetworkFacade.getInstance().getNotificationPort()), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(DISCONNECT, clientNetworkFacade.getNotificationPort()), out);
             out.flush();
         }
         catch (JAXBException | IOException e) {

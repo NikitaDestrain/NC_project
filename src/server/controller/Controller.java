@@ -169,8 +169,6 @@ public class Controller {
      */
 
     public void updateNotification(Task task) {
-        /*if(journal.getTask(task.getId()).getStatus() == TaskStatus.Cancelled || journal.getTask(task.getId()).getStatus() == TaskStatus.Completed)
-            commandSender.sendUnsuccessfulActionCommand("Another user already has changed this!", null);*/
         journal.removeTask(task.getId());
         task.setStatus(TaskStatus.Rescheduled);
         journal.addTask(task);
