@@ -1,13 +1,16 @@
 package server.controller;
 
+import server.commandproccessor.ServerCommandSender;
 import server.commandproccessor.User;
 import server.gui.mainform.MainForm;
 import server.model.Journal;
 import server.model.Task;
 import server.model.TaskStatus;
+import server.network.ServerNetworkFacade;
 import server.properties.ParserProperties;
 
 import javax.swing.*;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,6 +25,8 @@ public class Controller {
     private Map<String, String> userData;
     private XMLSerializer serializer;
     private UserDataSerializer userDataSerializer;
+    private ServerCommandSender commandSender = ServerCommandSender.getInstance();
+    private ServerNetworkFacade facade = ServerNetworkFacade.getInstance();
 
     private Controller() {
         this.journal = new Journal();
@@ -87,6 +92,11 @@ public class Controller {
         }
     }
 
+    private void sendUpdateCommand() {
+        for (DataOutputStream out: facade.getClientDataOutputStreams())
+            commandSender.sendUpdateCommand(this.journal, out);
+    }
+
     public void updateMainForm() {
         mainForm = MainForm.getInstance();
         if (mainForm != null)
@@ -102,6 +112,7 @@ public class Controller {
         journal.addTask(task);
         notifier.addNotification(task);
         updateMainForm();
+        sendUpdateCommand();
     }
 
     /**
@@ -113,6 +124,7 @@ public class Controller {
         notifier.cancelNotification(id);
         journal.removeTask(id);
         updateMainForm();
+        sendUpdateCommand();
     }
 
     /**
@@ -125,6 +137,7 @@ public class Controller {
         notifier.cancelNotification(id);
         journal.getTask(id).setStatus(TaskStatus.Cancelled);
         updateMainForm();
+        sendUpdateCommand();
     }
 
     /**
@@ -137,19 +150,22 @@ public class Controller {
         notifier.cancelNotification(id);
         journal.getTask(id).setStatus(TaskStatus.Completed);
         updateMainForm();
+        sendUpdateCommand();
     }
 
     /**
      * Updates a notification for the task in the current <code>Journal</code>
-     * @param id of task to be updated
+     * @param task task to be updated
      * @see Notifier#editNotification(Task)
      */
 
-    public void updateNotification(int id){
-        Task task = journal.getTask(id);
+    public void updateNotification(Task task){
+        journal.removeTask(task.getId());
         task.setStatus(TaskStatus.Rescheduled);
+        journal.addTask(task);
         notifier.editNotification(task);
         updateMainForm();
+        sendUpdateCommand();
     }
 
     /**
@@ -160,7 +176,10 @@ public class Controller {
 
     public void editTask(Task task){
         notifier.editNotification(task);
+        journal.removeTask(task.getId());
+        journal.addTask(task);
         updateMainForm();
+        sendUpdateCommand();
     }
 
     /**

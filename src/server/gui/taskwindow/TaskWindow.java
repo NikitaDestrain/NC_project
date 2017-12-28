@@ -632,20 +632,12 @@ public class TaskWindow extends JFrame {
     private void mainFormAddTask(Task newTask) //вызываю методы MAINform для записи изменений
     {
         controller.addTask(newTask);
-        for (DataOutputStream out: facade.getClientDataOutputStreams())
-            commandSender.sendUpdateCommand(controller.getJournal(), out);
-        owner.updateJournal();
     }
 
     private void mainFormEditTask(Task taskSet) {
-
-
         if ((loadTask.getStatus() != TaskStatus.Completed) && (loadTask.getStatus() != TaskStatus.Cancelled)) {
             taskSet.setStatus(TaskStatus.Rescheduled);
             controller.editTask(taskSet);
-            for (DataOutputStream out: facade.getClientDataOutputStreams())
-                commandSender.sendUpdateCommand(controller.getJournal(), out);
         }
-        owner.updateJournal();
     }
 }

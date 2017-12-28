@@ -71,9 +71,7 @@ public class LaterForm extends JFrame {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + (int) this.hoursSpinner.getValue() * 60 * 60000
                             + (int) this.minutesSpinner.getValue() * 60000));
-                    controller.updateNotification(task.getId());
-                    for (DataOutputStream out: facade.getClientDataOutputStreams())
-                        commandSender.sendUpdateCommand(controller.getJournal(), out);
+                    controller.updateNotification(task);
                 }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
@@ -107,9 +105,7 @@ public class LaterForm extends JFrame {
                 if(controller.getJournal().getTask(task.getId()) != null) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 5 * 60000));
-                    controller.updateNotification(task.getId());
-                    for (DataOutputStream out: facade.getClientDataOutputStreams())
-                        commandSender.sendUpdateCommand(controller.getJournal(), out);
+                    controller.updateNotification(task);
                 }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
@@ -121,9 +117,7 @@ public class LaterForm extends JFrame {
                 if(controller.getJournal().getTask(task.getId()) != null) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 15 * 60000));
-                    controller.updateNotification(task.getId());
-                    for (DataOutputStream out: facade.getClientDataOutputStreams())
-                        commandSender.sendUpdateCommand(controller.getJournal(), out);
+                    controller.updateNotification(task);
                 }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
@@ -135,9 +129,7 @@ public class LaterForm extends JFrame {
                 if(controller.getJournal().getTask(task.getId()) != null) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 30 * 60000));
-                    controller.updateNotification(task.getId());
-                    for (DataOutputStream out: facade.getClientDataOutputStreams())
-                        commandSender.sendUpdateCommand(controller.getJournal(), out);
+                    controller.updateNotification(task);
                 }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
@@ -149,9 +141,7 @@ public class LaterForm extends JFrame {
                 if(controller.getJournal().getTask(task.getId()) != null) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 60 * 60000));
-                    controller.updateNotification(task.getId());
-                    for (DataOutputStream out: facade.getClientDataOutputStreams())
-                        commandSender.sendUpdateCommand(controller.getJournal(), out);
+                    controller.updateNotification(task);
                 }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",

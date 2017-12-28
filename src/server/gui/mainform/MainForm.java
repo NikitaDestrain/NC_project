@@ -68,8 +68,6 @@ public class MainForm extends JFrame {
                                 for (int i = 0; i < rows.length; i++) {
                                     Task task = journal.getTasks().get(rows[i]);
                                     Controller.getInstance().removeTask(task.getId());
-                                    updateJournal();
-                                    buttonPanel.setJtable((tablePanel.getTable()));
                                     for (int j = i + 1; j < rows.length; j++) {
                                         rows[j]--;
                                     }
@@ -119,13 +117,12 @@ public class MainForm extends JFrame {
                                 break;
                             case TaskActionListener.DELETE_TASK:
                                 for (int i = 0; i < rows.length; i++) {
-                                    journal.removeTask(rows[i]);
-                                    tablePanel.refresh();
-                                    tablePanel.setData(journal.getTasks());
-                                    buttonPanel.setJtable((tablePanel.getTable()));
+                                    Task task = journal.getTasks().get(rows[i]);
+                                    Controller.getInstance().removeTask(task.getId());
                                     for (int j = i + 1; j < rows.length; j++) {
                                         rows[j]--;
                                     }
+                                    taskSender.clearTask();
                                 }
                                 break;
                         }
@@ -349,6 +346,7 @@ public class MainForm extends JFrame {
         Controller controller = Controller.getInstance();
         this.journal = controller.getJournal();
         tablePanel.setData(this.journal.getTasks());
+        buttonPanel.setJtable((tablePanel.getTable()));
         tablePanel.refresh();
     }
 }

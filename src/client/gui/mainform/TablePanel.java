@@ -52,11 +52,11 @@ public class TablePanel extends JPanel {
             public void mousePressed(MouseEvent e) {
                 int row = table.rowAtPoint(e.getPoint());
                 int col = table.columnAtPoint(e.getPoint());
-                System.out.println(row + " " + col);
+                //System.out.println(row + " " + col);
                 table.getSelectionModel().setSelectionInterval(row, row);
                 Task task = taskList.get(row);
 
-                if (e.getButton() == MouseEvent.BUTTON3) { // правой удаляем
+                if (e.getButton() == MouseEvent.BUTTON3) { // правой вызывем popup menu
                     popupMenu.show(table, e.getX(), e.getY());
                     taskSender.setTask(task);
                 } else if (e.getButton() == MouseEvent.BUTTON1) { // левой выделяем для редактирования
@@ -64,7 +64,7 @@ public class TablePanel extends JPanel {
                         Boolean b = (Boolean) table.getValueAt(row, col);
                         table.setValueAt(!b, row, col);
                     }
-                        taskSender.setTask(task);
+                    taskSender.setTask(task);
                 }
             }
 
@@ -74,7 +74,6 @@ public class TablePanel extends JPanel {
             }
         });
         cancelItem.addActionListener((ActionEvent ev) -> {
-            MainForm mainForm = MainForm.getInstance();
             TaskSender sender = TablePanel.getInstance().getTaskSender();
             Task task = sender.getTask();
             if (task.getStatus() == TaskStatus.Completed)
@@ -83,7 +82,6 @@ public class TablePanel extends JPanel {
                         "Error", JOptionPane.ERROR_MESSAGE);
             else {
                 task.setStatus(TaskStatus.Cancelled);
-                //controller.cancelNotification(task.getId());
                 commandSender.sendCancelCommand(task, ClientNetworkFacade.getInstance().getDataOutputStream());
                 refresh();
             }
@@ -104,6 +102,7 @@ public class TablePanel extends JPanel {
 
     /**
      * Set tasks to be representing at table
+     *
      * @param taskList list with tasks
      */
     public void setData(List<Task> taskList) {
@@ -113,6 +112,7 @@ public class TablePanel extends JPanel {
 
     /**
      * Set listener to the <code>TablePanel</code> which listens commands for tasks representing at the table
+     *
      * @param listener
      */
 
@@ -122,6 +122,7 @@ public class TablePanel extends JPanel {
 
     /**
      * Get <code>JTable</code> of this <code>TablePanel</code>
+     *
      * @return
      */
 

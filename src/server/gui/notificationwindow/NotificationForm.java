@@ -80,26 +80,20 @@ public class NotificationForm extends JFrame {
             finish.addActionListener((ActionEvent e) -> {
                 if(controller.getJournal().getTask(task.getId()) != null) {
                     controller.finishNotification(task.getId());
-                    for (DataOutputStream out: facade.getClientDataOutputStreams())
-                        commandSender.sendUpdateCommand(controller.getJournal(), out);
                 }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be finished!",
                             "Error", JOptionPane.ERROR_MESSAGE);
-                mainForm.updateJournal();
                 dispose();
             });
 
             cancel.addActionListener((ActionEvent e) -> {
                 if(controller.getJournal().getTask(task.getId()) != null) {
                     controller.cancelNotification(task.getId());
-                    for (DataOutputStream out: facade.getClientDataOutputStreams())
-                        commandSender.sendUpdateCommand(controller.getJournal(), out);
                 }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be canceled!",
                             "Error", JOptionPane.ERROR_MESSAGE);
-                mainForm.updateJournal();
                 dispose();
             });
         }

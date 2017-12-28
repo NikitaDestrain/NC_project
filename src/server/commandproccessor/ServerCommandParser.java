@@ -6,6 +6,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServerCommandParser {
     private static final String ADD = "Add";
@@ -18,8 +20,19 @@ public class ServerCommandParser {
     private static final String SIGN_UP = "Sign up";
     private static final String DISCONNECT = "Disconnect";
     private static ServerCommandParser instance;
+    private Map<String, CommandHandler> handlers;
 
-    private ServerCommandParser() {}
+    private ServerCommandParser() {
+        handlers = new HashMap<>();
+        handlers.put(ADD, new AddCommandHandler());
+        handlers.put(EDIT, new EditCommandHandler());
+        handlers.put(DELETE, new DeleteCommandHandler());
+        handlers.put(LATER, new LaterCommandHandler());
+        handlers.put(FINISH, new FinishCommandHandler());
+        handlers.put(CANCEL, new CancelCommandHandler());
+        handlers.put(SIGN_IN, new SignInCommandHandler());
+        handlers.put(SIGN_UP, new SignUpCommandHandler());
+    }
 
     public static ServerCommandParser getInstance() {
         if (instance == null) instance = new ServerCommandParser();
@@ -47,34 +60,11 @@ public class ServerCommandParser {
 
     public int doCommandAction(Command command) {
         if (command != null) {
-            switch (command.getName()) {
-                case ADD:
-                    new AddCommandHandler().handle(command);
-                    break;
-                case EDIT:
-                    new EditCommandHandler().handle(command);
-                    break;
-                case DELETE:
-                    new DeleteCommandHandler().handle(command);
-                    break;
-                case LATER:
-                    new LaterCommandHandler().handle(command);
-                    break;
-                case FINISH:
-                    new FinishCommandHandler().handle(command);
-                    break;
-                case CANCEL:
-                    new CancelCommandHandler().handle(command);
-                    break;
-                case SIGN_IN:
-                    new SignInCommandHandler().handle(command);
-                    break;
-                case SIGN_UP:
-                    new SignUpCommandHandler().handle(command);
-                    break;
-                case DISCONNECT:
-                    return 1;
+            if (handlers.containsKey(command.getName())) {
+                handlers.get(command.getName()).handle(command);
             }
+            else if (command.getName().equals(DISCONNECT))
+                return 1;
         }
         return 0;
     }

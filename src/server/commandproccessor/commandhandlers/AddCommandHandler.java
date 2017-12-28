@@ -16,8 +16,5 @@ public class AddCommandHandler implements CommandHandler {
         Task tmp_task = (Task) command.getObject();
         controller.addTask(TaskFactory.createTask(tmp_task.getName(), tmp_task.getStatus(), tmp_task.getDescription(),
                 tmp_task.getNotificationDate(), tmp_task.getPlannedDate()));
-        for (DataOutputStream out : ServerNetworkFacade.getInstance().getClientNotificationOutputStreams()) {
-            ServerCommandSender.getInstance().sendUpdateCommand(controller.getJournal(), out);
-        }
     }
 }

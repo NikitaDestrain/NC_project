@@ -59,12 +59,12 @@ public class ServerCommandSender {
         }
     }
 
-    public void sendSuccessfulAuthCommand(OutputStream out) {
+    public void sendSuccessfulAuthCommand(Journal journal, OutputStream out) {
         try {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ServerCommandFactory.createCommand("Successful auth", new User()), out);
+            marshaller.marshal(ServerCommandFactory.createCommand("Successful auth", journal), out);
             out.flush();
         } catch (JAXBException e) {
             e.printStackTrace();

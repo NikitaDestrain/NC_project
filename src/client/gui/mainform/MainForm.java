@@ -64,9 +64,7 @@ public class MainForm extends JFrame {
                             case TaskActionListener.DELETE_TASK:
                                 for (int i = 0; i < rows.length; i++) {
                                     Task task = journal.getTasks().get(rows[i]);
-                                    //Controller.getInstance().removeTask(task.getId());
                                     commandSender.sendDeleteCommand(task, clientFacade.getDataOutputStream());
-                                    buttonPanel.setJTable((tablePanel.getTable()));
                                     for (int j = i + 1; j < rows.length; j++) {
                                         rows[j]--;
                                     }
@@ -116,13 +114,12 @@ public class MainForm extends JFrame {
                                 break;
                             case TaskActionListener.DELETE_TASK:
                                 for (int i = 0; i < rows.length; i++) {
-                                    journal.removeTask(rows[i]); // todo исправить через контроллер
-                                    tablePanel.refresh();
-                                    tablePanel.setData(journal.getTasks());
-                                    buttonPanel.setJTable((tablePanel.getTable()));
+                                    Task task = journal.getTasks().get(rows[i]);
+                                    commandSender.sendDeleteCommand(task, clientFacade.getDataOutputStream());
                                     for (int j = i + 1; j < rows.length; j++) {
                                         rows[j]--;
                                     }
+                                    taskSender.clearTask();
                                 }
                                 break;
                         }
@@ -314,6 +311,7 @@ public class MainForm extends JFrame {
             this.journal = journal;
             tablePanel.setData(this.journal.getTasks());
             tablePanel.refresh();
+            buttonPanel.setJTable(tablePanel.getTable());
         } else
             JOptionPane.showMessageDialog(MainForm.this,
                     "Incorrect journal!",

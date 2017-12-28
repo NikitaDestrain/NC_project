@@ -73,7 +73,6 @@ public class TaskWindow extends JFrame {
         this.jButton_create_or_set.setText("Create");
         this.jButton_cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
                 dispose();
             }
         });
@@ -630,6 +629,9 @@ public class TaskWindow extends JFrame {
         if ((loadTask.getStatus() != TaskStatus.Completed) && (loadTask.getStatus() != TaskStatus.Cancelled)) {
             taskSet.setStatus(TaskStatus.Rescheduled);
             commandSender.sendEditCommand(taskSet, clientFacade.getDataOutputStream());
-        }
+        } else
+            JOptionPane.showMessageDialog(null,
+                    "You can not reschedule cancelled or completed task!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
     }
 }

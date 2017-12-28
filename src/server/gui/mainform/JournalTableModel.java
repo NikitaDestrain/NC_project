@@ -111,15 +111,13 @@ public class JournalTableModel extends AbstractTableModel {
                 }
                 else {
                     task.setName((String) aValue);
-                    for (DataOutputStream out: facade.getClientDataOutputStreams())
-                        commandSender.sendUpdateCommand(Controller.getInstance().getJournal(), out);
+                    Controller.getInstance().editTask(task);
 
                 }
                 return;
             case 3:
                 task.setDescription((String) aValue);
-                for (DataOutputStream out: facade.getClientDataOutputStreams())
-                    commandSender.sendUpdateCommand(Controller.getInstance().getJournal(), out);
+                Controller.getInstance().editTask(task);
                 return;
         }
     }
