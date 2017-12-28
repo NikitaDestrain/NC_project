@@ -19,7 +19,7 @@ public class Controller {
     private Notifier notifier;
     private static Controller instance;
     private MainForm mainForm = MainForm.getInstance();
-    private Map<String, String> userData;
+    private Map<String, String> userData; //todo vlla серьезное нарушение принципа одной ответственности. Почему у вас контроллер и журналом управляет, и пользователей авторизует? Высести авторизацию отдельно!
     private XMLSerializer serializer;
     private UserDataSerializer userDataSerializer;
 
@@ -29,14 +29,15 @@ public class Controller {
         this.userDataSerializer = new UserDataSerializer();
         try {
             this.userData = userDataSerializer.readData(ParserProperties.getInstance()
-                    .getProperties("USER_DATA"));
+                    .getProperties("USER_DATA"));//todo vlla вынести все константы в специаьный класс
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Could not load user data from file!",
                     "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        } //todo vlla этот блок кода встречается в программе просто кучу раз, меняются только сообщения об ошибке. Не было бы лучше просто пробрасывать свои собственные
+        // эксепшены сквозь весь код до какой-то верхней точки обработки, и в этом месте их обрабатывать (доставать error message и показывать окно пользователю?)
         this.serializer = new XMLSerializer();
         try {
-            setJournal(serializer.readJournal(ParserProperties.getInstance().getProperties("XML_FILE")));
+            setJournal(serializer.readJournal(ParserProperties.getInstance().getProperties("XML_FILE")));//todo vlla вынести все константы в специаьный класс
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Could not load journal from file!",
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -87,7 +88,8 @@ public class Controller {
         }
     }
 
-    public void updateMainForm() {
+    public void updateMainForm() { //todo vlla я не согласен с тем, что этот метод вообще должен быть в контроллере. Контроллер не должен управлять Формой, Форма должна управлять контроллером
+        // (тем ботее у вас все равно вызов этого самого updateJournal дублируется почти везде)
         mainForm = MainForm.getInstance();
         if (mainForm != null)
             mainForm.updateJournal();
@@ -123,7 +125,10 @@ public class Controller {
 
     public void cancelNotification(int id){
         notifier.cancelNotification(id);
-        journal.getTask(id).setStatus(TaskStatus.Cancelled);
+        journal.getTask(id).setStatus(TaskStatus.Cancelled); //todo vlla а где собственно происходит, что смена стратуса - валидна? На сколько я помню, мы договорились, что статус таски должен меняться усключительно согласно графу переходов
+        // а у вас в кучу мест кода просто вызывается setStatus, без какие либо проверок. Подключаем сюда несколько пользователей и гарантированно ловим ситуацию, когда статусы будут менять в обход графа переходов.
+        // часть со статусами надо серьезно доделать: выделить сущность, когда будет ответственной только за контроль смены статусов тасок (это может быть контроллер, но я советую завести какой нибудь LifecycleManager)
+        // в этом классе реализуем корректный перевод таски из одного статуса в дргуой: если переход разрешен согласно графу переходов - меняем статус, если запрещем - выдаем специальный эксепшен и корректно обрабатываем его выше.
         updateMainForm();
     }
 

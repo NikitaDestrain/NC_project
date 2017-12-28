@@ -35,7 +35,7 @@ public class ServerCommandSender {
             out.write(buffer);
             out.flush();
         } catch (JAXBException e) {
-            e.printStackTrace();
+            e.printStackTrace();//todo vlla и это тоже не обработка ошибки...
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -64,7 +64,8 @@ public class ServerCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ServerCommandFactory.createCommand("Successful auth", new User()), out);
+            marshaller.marshal(ServerCommandFactory.createCommand("Successful auth", new User()), out);//todo vlla константы нужны для того, чтобы их использовать!
+            // У вас же есть эта константа в Client Command Parser, почему здесь то просто строковый литерал?
             out.flush();
         } catch (JAXBException e) {
             e.printStackTrace();

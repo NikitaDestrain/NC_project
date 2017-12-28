@@ -13,7 +13,7 @@ public class UserDataSerializer {
                     new FileOutputStream(path));
             objectOutputStream.writeObject(userData);
         } catch (IOException e) {
-            e.getMessage();
+            e.getMessage();//todo vlla аналогично
         }
     }
 
@@ -23,9 +23,9 @@ public class UserDataSerializer {
                 new FileInputStream(path))) {
             userData = (Map<String, String>) objectInputStream.readObject();
         } catch (EOFException e) {
-            return null;
+            return null;//todo vlla аналогично
         } catch (ClassNotFoundException e1) {
-            return null;
+            return null;//todo vlla аналогично
         }
         return userData;
     }

@@ -30,9 +30,9 @@ public class NotificationTimer extends TimerTask {
             commandSender.sendNotificationCommand(task, client);
             System.out.println("Success");
         }
-        notificationForm = new NotificationForm();
+        notificationForm = new NotificationForm();//todo vlla с сервера нотификации убираем
         notificationForm.setTask(task);
         notificationForm.setVisible(true);
-        Sound.playSound(ParserProperties.getInstance().getProperties("NOTIF_SOUND"));
+        Sound.playSound(ParserProperties.getInstance().getProperties("NOTIF_SOUND"));//todo vlla вынести все константы в специаьный класс
     }
 }

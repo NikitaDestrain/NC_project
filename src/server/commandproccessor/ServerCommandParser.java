@@ -47,7 +47,7 @@ public class ServerCommandParser {
 
     public int doCommandAction(Command command) {
         if (command != null) {
-            switch (command.getName()) {
+            switch (command.getName()) {//todo vlla сделать мапу хендлеров и выбирать хендлер из нее по типу команды
                 case ADD:
                     new AddCommandHandler().handle(command);
                     break;

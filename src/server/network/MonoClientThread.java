@@ -54,7 +54,7 @@ public class MonoClientThread extends Thread {
             serverNetworkFacade.addClientDataOutputStreams(notificationPort, dataOutputStream);
         }
         catch (IOException e) {
-            e.getMessage();
+            e.getMessage();//todo vlla это не обработка ошибки
         }
     }
 
@@ -73,7 +73,7 @@ public class MonoClientThread extends Thread {
             serverNotificationListener.start();
         }
         catch (IOException e) {
-            e.getMessage();
+            e.getMessage();//todo vlla это не обработка ошибки
         }
     }
 
@@ -88,7 +88,7 @@ public class MonoClientThread extends Thread {
             serverNetworkFacade.removeClientDataOutputStreams(notificationPort);
         }
         catch (IOException e) {
-            e.getMessage();
+            e.getMessage();//todo vlla это не обработка ошибки
         }
     }
 

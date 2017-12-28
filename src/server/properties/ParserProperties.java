@@ -10,12 +10,12 @@ import java.util.Properties;
  * A class that allows you to read the configuration file. It also provides globally access to the server.exceptions.properties described in the configuration file
  */
 
-public class ParserProperties //todo к сожалению, это не синглетон. инстанс создается, но не используется.
+public class ParserProperties
 {
     /**
      * Path to the configuration file
      */
-   private static  String PATH_TO_CONFIG = "Config.properties";//todo не храните проперти в пакетах исходного кода.
+   private static  String PATH_TO_CONFIG = "Config.properties";
     // Проперти это что-то, что может поменять конечный пользователь. Они должны лежать отдельно, конечному пользователю нет нужны лезть в сорцы
     /**
      * Object of current class
@@ -24,7 +24,7 @@ public class ParserProperties //todo к сожалению, это не синг
     /**
      * Object helper class for reading and displaying server.exceptions.properties
      */
-    private static Properties props;
+    private static Properties props;//todo vlla для чего здесь static?
 
 
 
@@ -50,10 +50,12 @@ public class ParserProperties //todo к сожалению, это не синг
             try {
                 instance = new ParserProperties();
             } catch (IOException e) {
-               return null;
+               return null;//todo vlla э не, так не пойдет. Возвращать null - это вообще подло. Это 100% приведет к NPE в каком-нибудь рандомном месте кода.
+                // если уж мы словили IOException при парсинге пропертей - его нужно обработать.
+                // Я вижу два варианта: либо написать в лог и выдать что-то дефолтное, либо пробросить выше и корректно завершить приложение
             }
         }
-    return  instance;
+    return  instance;//todo vlla сделайте нормаьную лесенку, пожалуйста. Даже IDEA это сама умеет : Ctrl + Alt + I. В остальных местах тоже. Помним про требование соблюдать Java Code Convention.
     }
 
     /**
@@ -72,7 +74,7 @@ public class ParserProperties //todo к сожалению, это не синг
     }
 
 
-    /*  public static synchronized String  getProperties(String key) throws IOException { //todo каждый раз, когда нужно получить значение по ключу, мы заново загружаем весь файл.
+    /*  public static synchronized String  getProperties(String key) throws IOException {
         // А если у нас не одна пропертя, а 500? Весь смысл парсера пропертей в том, чтобы предоставить простой программный доступ к пропертям, которые хранятся где-то извне.
         // Стандартный подход - при запуске приложения один раз прочитать файл, сохранить результаты в переменную и потом предоставлять всему приложению быстрый доступ к пропертям.
 */

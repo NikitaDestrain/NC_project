@@ -38,7 +38,7 @@ public class ClientNetworkFacade extends Thread {
         serverPort = DEFAULT_SERVER_PORT;
         Scanner scanner = new Scanner(System.in);
         //временное
-        while(true) {
+        while(true) { //
             if(connect(serverPort) == 0)
                 break;
             System.out.print("Write \"1\" for reconnect:");
@@ -64,7 +64,7 @@ public class ClientNetworkFacade extends Thread {
                         break;
                 }
                 catch (InterruptedException e) {
-                    e.getMessage();
+                    e.getMessage();//todo vlla это не обработка ошибки
                 }
             }
             notificationPort = dataInputStream.readInt();
@@ -91,7 +91,7 @@ public class ClientNetworkFacade extends Thread {
             clientNotificationListener.start();
         }
         catch (IOException e){
-            e.getMessage();
+            e.getMessage();//todo vlla это не обработка ошибки
 
         }
     }
@@ -106,7 +106,7 @@ public class ClientNetworkFacade extends Thread {
             System.out.println("Closing notification connections & channels - DONE.");
         }
         catch (IOException e) {
-            e.getMessage();
+            e.getMessage();//todo vlla это не обработка ошибки
         }
     }
 
