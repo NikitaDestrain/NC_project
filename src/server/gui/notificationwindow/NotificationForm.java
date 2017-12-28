@@ -26,7 +26,7 @@ public class NotificationForm extends JFrame {
     public NotificationForm() {
         super("Alarm!");
         try {
-            icon = new ImageIcon(ParserProperties.getInstance().getProperties("MAIN_FORM_ICON"));
+            icon = new ImageIcon(ParserProperties.getInstance().getProperties("MAIN_FORM_ICON"));//todo vlla вынести все константы в специаьный класс
         } catch (IllegalPropertyException e) {
             JOptionPane.showMessageDialog(null, "Illegal value of property",
                     "Error", JOptionPane.ERROR_MESSAGE);

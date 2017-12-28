@@ -44,7 +44,7 @@ public class ServerNetworkFacade extends Thread {
                 clientCount++;
             }
             catch (IOException e) {
-                e.getMessage();
+                e.getMessage();//todo vlla это не обработка ошибки
             }
         }
         executeIt.shutdown();
@@ -59,12 +59,12 @@ public class ServerNetworkFacade extends Thread {
             serverDataSocket = new ServerSocket(port);
         }
         catch (IOException e) {
-            e.getMessage();
+            e.getMessage();//todo vlla это не обработка ошибки
         }
     }
 
     public LinkedList<DataOutputStream> getClientNotificationOutputStreams() {
-        return new LinkedList<>(clientNotificationOutputStreams.values());
+        return new LinkedList<>(clientNotificationOutputStreams.values()); //todo vlla чем вам коллекция то не угодила, зачем обязательно ее в List оборачивать? К тому же помним правило: отдаем коллекцию наружу - делаем ее unmodifiable
     }
 
     public LinkedList<DataOutputStream> getClientDataOutputStreams() {

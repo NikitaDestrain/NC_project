@@ -36,7 +36,7 @@ public class MainForm extends JFrame {
         Journal backup = Controller.getInstance().getJournal();
         this.journal = backup == null ? new Journal() : backup ;
         try {
-            icon = new ImageIcon(ParserProperties.getInstance().getProperties("MAIN_FORM_ICON"));
+            icon = new ImageIcon(ParserProperties.getInstance().getProperties("MAIN_FORM_ICON"));//todo vlla вынести все константы в специаьный класс
         } catch (IllegalPropertyException e) {
             JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -200,7 +200,7 @@ public class MainForm extends JFrame {
 
                 if (action == JOptionPane.OK_OPTION) {
                     try {
-                        String path = ParserProperties.getInstance().getProperties("XML_FILE");
+                        String path = ParserProperties.getInstance().getProperties("XML_FILE");//todo vlla вынести все константы в специаьный класс
                         if (path == null)
                             JOptionPane.showMessageDialog(MainForm.this,
                                     "Incorrect file path",

@@ -18,9 +18,9 @@ public class XMLSerializer implements Serializer {
             OutputStream out = new FileOutputStream(path);
             marshaller.marshal(journal, out);
         } catch (JAXBException e) {
-            e.getMessage();
+            e.getMessage();//todo vlla аналогично
         } catch (IOException e){
-            e.getMessage();
+            e.getMessage();//todo vlla аналогично
         }
     }
 
@@ -33,9 +33,9 @@ public class XMLSerializer implements Serializer {
             Unmarshaller unmarshaller = context.createUnmarshaller();
             journal = (Journal) unmarshaller.unmarshal(in);
         } catch (JAXBException e) {
-            return null;
+            return null;//todo vlla аналогично
         } catch (IOException e) {
-            return null;
+            return null;//todo vlla аналогично
         }
         return journal;
     }

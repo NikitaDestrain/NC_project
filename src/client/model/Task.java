@@ -10,7 +10,10 @@ import java.util.Date;
 @XmlType(propOrder = {"id", "name", "description", "status", "notificationDate", "plannedDate"}, name = "task")
 @XmlRootElement(name = "task")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Task implements Comparable<Task>, Serializable {
+public class Task implements Comparable<Task>, Serializable { //todo vlla нет смысла дублировать классы модели у клиента.
+// Клиент может спокойно использовать классы из пакета сервера, они точно такие же. Тем более, предположим, мы чуть чуть поменяем класс на сервере. Поле там добавим.
+// И при попытке десериализации на клиенте мы получим ошибку, потому что пришедшие данные не соответсвуют нашему контракту класса.
+// Это относится ко всем классам модели.
     /** Task name */
     private String name;
     /** Task status @see TaskStatus */
