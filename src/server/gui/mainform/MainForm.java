@@ -199,7 +199,7 @@ public class MainForm extends JFrame {
 
                 if (action == JOptionPane.OK_OPTION) {
                     try {
-                        String path = ParserProperties.getInstance().getProperties("XML_FILE");//todo vlla вынести все константы в специаьный класс
+                        String path = ParserProperties.getInstance().getProperties(PropertiesConstant.XML_FILE.toString());
                         if (path == null)
                             JOptionPane.showMessageDialog(MainForm.this,
                                     "Incorrect file path",

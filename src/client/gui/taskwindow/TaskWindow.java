@@ -1,6 +1,5 @@
 package client.gui.taskwindow;
 
-
 import client.commandprocessor.ClientCommandSender;
 import client.factories.TaskFactory;
 import client.gui.mainform.MainForm;

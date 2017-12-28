@@ -1,11 +1,8 @@
 package server.controller;
 
 import server.commandproccessor.ServerCommandSender;
-import server.gui.notificationwindow.Sound;
 import server.model.Task;
 import server.network.ServerNetworkFacade;
-import server.properties.ParserProperties;
-import server.properties.PropertiesConstant;
 
 import java.io.DataOutputStream;
 import java.util.LinkedList;
@@ -35,6 +32,5 @@ public class NotificationTimer extends TimerTask {
         if(overdue) {
             Controller.getInstance().setOverdue(task.getId());
         }
-        Sound.playSound(ParserProperties.getInstance().getProperties(PropertiesConstant.NOTIF_SOUND.toString()));
     }
 }
