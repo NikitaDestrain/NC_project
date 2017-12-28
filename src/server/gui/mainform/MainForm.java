@@ -14,6 +14,7 @@ import server.properties.ParserProperties;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,7 +51,8 @@ public class MainForm extends JFrame {
         buttonPanel.setJtable((tablePanel.getTable()));
 
         buttonPanel.setTableListener(new TableListener() {
-            private List<Task> tasksToDelete = new LinkedList<>();
+            private List<Integer> tasksToDelete = new ArrayList<>();
+            private StringBuilder builder = new StringBuilder();
             @Override
             public void rowDeleted(Integer... rows) {
                 buttonPanel.setListener(new TaskActionListener() {
@@ -71,10 +73,10 @@ public class MainForm extends JFrame {
                                 taskSender.clearTask();
                                 for (int i = 0; i < rows.length; i++) {
                                     Task task = journal.getTasks().get(rows[i]);
-                                    tasksToDelete.add(task);
+                                    builder.append(task.getId());
+                                    builder.append(",");
                                 }
-                                for (Task t : tasksToDelete)
-                                    Controller.getInstance().removeTask(t.getId());
+                                Controller.getInstance().removeTask(builder.toString());
                                 break;
                         }
                     }
@@ -101,7 +103,8 @@ public class MainForm extends JFrame {
         });
 
         tablePanel.setTableListener(new TableListener() {
-            private List<Task> tasksToDelete = new LinkedList<>();
+            private List<Integer> tasksToDelete = new LinkedList<>();
+            private StringBuilder builder = new StringBuilder();
             @Override
             public void rowDeleted(Integer... rows) {
                 buttonPanel.setListener(new TaskActionListener() {
@@ -122,10 +125,10 @@ public class MainForm extends JFrame {
                                 taskSender.clearTask();
                                 for (int i = 0; i < rows.length; i++) {
                                     Task task = journal.getTasks().get(rows[i]);
-                                    tasksToDelete.add(task);
+                                    builder.append(task.getId());
+                                    builder.append(",");
                                 }
-                                for (Task t : tasksToDelete)
-                                    Controller.getInstance().removeTask(t.getId());
+                                Controller.getInstance().removeTask(builder.toString());
                                 break;
                         }
                     }

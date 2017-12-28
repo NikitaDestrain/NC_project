@@ -9,6 +9,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 public class ClientCommandSender {
     private static ClientCommandSender instance;
@@ -34,7 +35,7 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(ADD, task), out);//todo vlla константы DONE
+            marshaller.marshal(ClientCommandFactory.createCommand(ADD, task), out);
             out.flush();
         }
         catch(JAXBException | IOException e){
@@ -56,12 +57,12 @@ public class ClientCommandSender {
         }
     }
 
-    public void sendDeleteCommand(Task task, OutputStream out) {
+    public void sendDeleteCommand(String tasksNums, OutputStream out) {
         try {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(DELETE, task), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(DELETE, tasksNums), out);
             out.flush();
         }
         catch(JAXBException | IOException e){

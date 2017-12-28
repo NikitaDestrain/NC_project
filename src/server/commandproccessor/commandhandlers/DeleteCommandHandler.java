@@ -7,11 +7,12 @@ import server.model.Task;
 import server.network.ServerNetworkFacade;
 
 import java.io.DataOutputStream;
+import java.util.List;
 
 public class DeleteCommandHandler implements CommandHandler {
     @Override
     public synchronized void handle(Command command) {
         Controller controller = Controller.getInstance();
-        controller.removeTask(((Task) command.getObject()).getId());
+        controller.removeTask(((String) command.getObject()));
     }
 }

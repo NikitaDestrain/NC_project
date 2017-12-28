@@ -12,10 +12,7 @@ import server.properties.ParserProperties;
 import javax.swing.*;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Controller {
     private Journal journal;
@@ -122,12 +119,15 @@ public class Controller {
 
     /**
      * Removes a task from current journal, cancels a notification for it and updates a table in <code>MainForm</code>
-     * @param id of task to be removed
+     * @param tasksNums string with id of tasks to be removed splitted with ','
      */
 
-    public void removeTask(int id){
-        notifier.cancelNotification(id);
-        journal.removeTask(id);
+    public void removeTask(String tasksNums){
+        String[] tasks = tasksNums.split(",");
+        for (int i = 0; i < tasks.length; i++) {
+            notifier.cancelNotification(Integer.parseInt(tasks[i]));
+            journal.removeTask(Integer.parseInt(tasks[i]));
+        }
         updateMainForm();
         sendUpdateCommand();
     }
