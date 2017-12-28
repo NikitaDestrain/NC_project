@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.LinkedList;
+import java.util.List;
 
 public class MainForm extends JFrame {
     private JFileChooser fileChooser;
@@ -45,6 +46,7 @@ public class MainForm extends JFrame {
         buttonPanel.setJTable((tablePanel.getTable()));
 
         buttonPanel.setTableListener(new TableListener() {
+            private List<Task> tasksToDelete = new LinkedList<>();
             @Override
             public void rowDeleted(Integer... rows) {
                 buttonPanel.setListener(new TaskActionListener() {
@@ -62,14 +64,13 @@ public class MainForm extends JFrame {
                                 new TaskWindow(MainForm.this);
                                 break;
                             case TaskActionListener.DELETE_TASK:
+                                taskSender.clearTask();
                                 for (int i = 0; i < rows.length; i++) {
                                     Task task = journal.getTasks().get(rows[i]);
-                                    commandSender.sendDeleteCommand(task, clientFacade.getDataOutputStream());
-                                    for (int j = i + 1; j < rows.length; j++) {
-                                        rows[j]--;
-                                    }
-                                    taskSender.clearTask();
+                                    tasksToDelete.add(task);
                                 }
+                                for (Task t : tasksToDelete)
+                                    commandSender.sendDeleteCommand(t, clientFacade.getDataOutputStream());
                                 break;
                         }
                     }
@@ -96,6 +97,7 @@ public class MainForm extends JFrame {
         });
 
         tablePanel.setTableListener(new TableListener() {
+            private List<Task> tasksToDelete = new LinkedList<>();
             @Override
             public void rowDeleted(Integer... rows) {
                 buttonPanel.setListener(new TaskActionListener() {
@@ -113,14 +115,13 @@ public class MainForm extends JFrame {
                                 new TaskWindow(MainForm.this);
                                 break;
                             case TaskActionListener.DELETE_TASK:
+                                taskSender.clearTask();
                                 for (int i = 0; i < rows.length; i++) {
                                     Task task = journal.getTasks().get(rows[i]);
-                                    commandSender.sendDeleteCommand(task, clientFacade.getDataOutputStream());
-                                    for (int j = i + 1; j < rows.length; j++) {
-                                        rows[j]--;
-                                    }
-                                    taskSender.clearTask();
+                                    tasksToDelete.add(task);
                                 }
+                                for (Task t : tasksToDelete)
+                                    commandSender.sendDeleteCommand(t, clientFacade.getDataOutputStream());
                                 break;
                         }
                     }
@@ -323,9 +324,6 @@ public class MainForm extends JFrame {
     }
 
     public void updateJournal() {
-        //server.exceptions.controller = Controller.getInstance();//todo нет нужны каждый раз перезаписывать поле. Синглетон на то и синглетон, что он всегда один и тот же.
-        // Можно или один раз инициализировать поле или вообще отказаться от поля и каждый раз просто вызывать Controller.getInstance()
-        //this.journal = Controller.getInstance().getJournal();
         tablePanel.setData(this.journal.getTasks());
         tablePanel.refresh();
     }

@@ -11,6 +11,12 @@ import java.io.*;
 
 public class ServerCommandSender {
     private static ServerCommandSender instance;
+    private static final String UPDATE = "Update";
+    private static final String NOTIFICATION = "Notification";
+    private static final String UNSUCCESSFUL_SIGN_IN = "Unsuccessful auth";
+    private static final String UNSUCCESSFUL_SIGN_UP = "Unsuccessful sign up";
+    private static final String SUCCESSFUL_AUTH = "Successful auth";
+    private static final String UNSUCCESSFUL_ACTION = "Unsuccessfully";
 
     private ServerCommandSender() {
     }
@@ -26,7 +32,7 @@ public class ServerCommandSender {
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             //записываем в файл-буффер
-            marshaller.marshal( ServerCommandFactory.createCommand("Update", journal),new File("test_update.xml"));
+            marshaller.marshal( ServerCommandFactory.createCommand(UPDATE, journal),new File("test_update.xml"));
           //  System.out.println("пробуем запихнуть весь журнал в поток сокета");
             byte[] buffer = new byte[(int) new File("test_update.xml").length()];
             FileInputStream inF = new FileInputStream("test_update.xml");
@@ -50,7 +56,7 @@ public class ServerCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ServerCommandFactory.createCommand("Notification", task), out);
+            marshaller.marshal(ServerCommandFactory.createCommand(NOTIFICATION, task), out);
             out.flush();
         } catch (JAXBException e) {
             e.printStackTrace();
@@ -64,7 +70,7 @@ public class ServerCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ServerCommandFactory.createCommand("Successful auth", journal), out);
+            marshaller.marshal(ServerCommandFactory.createCommand(SUCCESSFUL_AUTH, journal), out);
             out.flush();
         } catch (JAXBException e) {
             e.printStackTrace();
@@ -78,7 +84,7 @@ public class ServerCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ServerCommandFactory.createCommand("Unsuccessful auth", new User()), out);
+            marshaller.marshal(ServerCommandFactory.createCommand(UNSUCCESSFUL_SIGN_IN, new User()), out);
             out.flush();
         } catch (JAXBException e) {
             e.printStackTrace();
@@ -92,7 +98,7 @@ public class ServerCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ServerCommandFactory.createCommand("Unsuccessful sign up", new User()),
+            marshaller.marshal(ServerCommandFactory.createCommand(UNSUCCESSFUL_SIGN_UP, new User()),
                     out);
             out.flush();
         } catch (JAXBException e) {
@@ -107,7 +113,7 @@ public class ServerCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ServerCommandFactory.createCommand("Unsuccessfully", new User()), out);
+            marshaller.marshal(ServerCommandFactory.createCommand(UNSUCCESSFUL_ACTION, new User()), out);
             out.flush();
         } catch (JAXBException | IOException e) {
             e.getMessage();

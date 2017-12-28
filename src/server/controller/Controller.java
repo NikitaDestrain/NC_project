@@ -36,8 +36,13 @@ public class Controller {
             this.userData = userDataSerializer.readData(ParserProperties.getInstance()
                     .getProperties("USER_DATA"));
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Could not load user data from file!",
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            if (JOptionPane.showConfirmDialog(null,
+                    "Could not load user data from file!\nDo you want to create new file with user's data?\n" +
+                            "If you choose NO, the program execution will be stopped!",
+                    "Error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                userData = new HashMap<>();
+            }
+            else System.exit(1);
         }
         this.serializer = new XMLSerializer();
         try {

@@ -21,8 +21,6 @@ public class JournalTableModel extends AbstractTableModel {
     private ServerCommandSender commandSender = ServerCommandSender.getInstance();
     private ServerNetworkFacade facade = ServerNetworkFacade.getInstance();
 
-    // TODO CHECKBOXES, КНОПКИ ЛАЙФСАЙКЛА - отменить, отложить
-
     public JournalTableModel() {
     }
 

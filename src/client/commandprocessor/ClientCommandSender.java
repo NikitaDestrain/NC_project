@@ -12,6 +12,15 @@ import java.io.OutputStream;
 
 public class ClientCommandSender {
     private static ClientCommandSender instance;
+    private static final String ADD = "Add";
+    private static final String EDIT = "Edit";
+    private static final String DELETE = "Delete";
+    private static final String LATER = "Later";
+    private static final String FINISH = "Finish";
+    private static final String CANCEL = "Cancel";
+    private static final String SIGN_IN = "Sign in";
+    private static final String SIGN_UP = "Sign up";
+    private static final String DISCONNECT = "Disconnect";
 
     private ClientCommandSender() {}
 
@@ -25,7 +34,7 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand("Add", task), out);//todo vlla константы
+            marshaller.marshal(ClientCommandFactory.createCommand(ADD, task), out);//todo vlla константы DONE
             out.flush();
         }
         catch(JAXBException | IOException e){
@@ -39,7 +48,7 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand("Edit", task), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(EDIT, task), out);
             out.flush();
         }
         catch(JAXBException | IOException e){
@@ -52,7 +61,7 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand("Delete", task), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(DELETE, task), out);
             out.flush();
         }
         catch(JAXBException | IOException e){
@@ -65,7 +74,7 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand("Later", task), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(LATER, task), out);
             out.flush();
         }
         catch(JAXBException | IOException e){
@@ -78,7 +87,7 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand("Finish", task), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(FINISH, task), out);
             out.flush();
         }
         catch(JAXBException | IOException e){
@@ -91,7 +100,7 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand("Cancel", task), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(CANCEL, task), out);
             out.flush();
         }
         catch(JAXBException | IOException e){
@@ -104,7 +113,7 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand("Sign in", new User(login, password, ClientNetworkFacade.getInstance().getNotificationPort())), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(SIGN_IN, new User(login, password, ClientNetworkFacade.getInstance().getNotificationPort())), out);
             out.flush();
         }
         catch (JAXBException | IOException e) {
@@ -118,7 +127,7 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand("Sign up", new User(login, password, ClientNetworkFacade.getInstance().getNotificationPort())), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(SIGN_UP, new User(login, password, ClientNetworkFacade.getInstance().getNotificationPort())), out);
             out.flush();
         }
         catch (JAXBException | IOException e) {
@@ -131,7 +140,7 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand("Disconnect", ClientNetworkFacade.getInstance().getNotificationPort()), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(DISCONNECT, ClientNetworkFacade.getInstance().getNotificationPort()), out);
             out.flush();
         }
         catch (JAXBException | IOException e) {

@@ -62,7 +62,7 @@ public class TablePanel extends JPanel {
                         Boolean b = (Boolean) table.getValueAt(row, col);
                         table.setValueAt(!b, row, col);
                     }
-                        taskSender.setTask(task);
+                    taskSender.setTask(task);
                 }
             }
 
@@ -106,6 +106,7 @@ public class TablePanel extends JPanel {
 
     /**
      * Set tasks to be representing at table
+     *
      * @param taskList list with tasks
      */
     public void setData(List<Task> taskList) {
@@ -115,6 +116,7 @@ public class TablePanel extends JPanel {
 
     /**
      * Set listener to the <code>TablePanel</code> which listens commands for tasks representing at the table
+     *
      * @param listener
      */
 
@@ -124,6 +126,7 @@ public class TablePanel extends JPanel {
 
     /**
      * Get <code>JTable</code> of this <code>TablePanel</code>
+     *
      * @return
      */
 

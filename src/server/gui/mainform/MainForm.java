@@ -14,6 +14,8 @@ import server.properties.ParserProperties;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MainForm extends JFrame {
     private JFileChooser fileChooser;
@@ -48,6 +50,7 @@ public class MainForm extends JFrame {
         buttonPanel.setJtable((tablePanel.getTable()));
 
         buttonPanel.setTableListener(new TableListener() {
+            private List<Task> tasksToDelete = new LinkedList<>();
             @Override
             public void rowDeleted(Integer... rows) {
                 buttonPanel.setListener(new TaskActionListener() {
@@ -65,14 +68,13 @@ public class MainForm extends JFrame {
                                 new TaskWindow(MainForm.this);
                                 break;
                             case TaskActionListener.DELETE_TASK:
+                                taskSender.clearTask();
                                 for (int i = 0; i < rows.length; i++) {
                                     Task task = journal.getTasks().get(rows[i]);
-                                    Controller.getInstance().removeTask(task.getId());
-                                    for (int j = i + 1; j < rows.length; j++) {
-                                        rows[j]--;
-                                    }
-                                    taskSender.clearTask();
+                                    tasksToDelete.add(task);
                                 }
+                                for (Task t : tasksToDelete)
+                                    Controller.getInstance().removeTask(t.getId());
                                 break;
                         }
                     }
@@ -99,6 +101,7 @@ public class MainForm extends JFrame {
         });
 
         tablePanel.setTableListener(new TableListener() {
+            private List<Task> tasksToDelete = new LinkedList<>();
             @Override
             public void rowDeleted(Integer... rows) {
                 buttonPanel.setListener(new TaskActionListener() {
@@ -116,14 +119,13 @@ public class MainForm extends JFrame {
                                 new TaskWindow(MainForm.this);
                                 break;
                             case TaskActionListener.DELETE_TASK:
+                                taskSender.clearTask();
                                 for (int i = 0; i < rows.length; i++) {
                                     Task task = journal.getTasks().get(rows[i]);
-                                    Controller.getInstance().removeTask(task.getId());
-                                    for (int j = i + 1; j < rows.length; j++) {
-                                        rows[j]--;
-                                    }
-                                    taskSender.clearTask();
+                                    tasksToDelete.add(task);
                                 }
+                                for (Task t : tasksToDelete)
+                                    Controller.getInstance().removeTask(t.getId());
                                 break;
                         }
                     }
