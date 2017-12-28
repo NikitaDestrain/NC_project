@@ -1,18 +1,14 @@
 package server.controller;
 
 import server.commandproccessor.ServerCommandSender;
-import server.gui.notificationwindow.NotificationForm;
-import server.gui.notificationwindow.Sound;
 import server.model.Task;
 import server.network.ServerNetworkFacade;
-import server.properties.ParserProperties;
 
 import java.io.DataOutputStream;
 import java.util.LinkedList;
 import java.util.TimerTask;
 
 public class NotificationTimer extends TimerTask {
-    private NotificationForm notificationForm;
     private Task task;
     private LinkedList<DataOutputStream> clients;
     private ServerCommandSender commandSender = ServerCommandSender.getInstance();
@@ -23,16 +19,18 @@ public class NotificationTimer extends TimerTask {
 
     @Override
     public void run() {
+        boolean overdue = true;
         clients = ServerNetworkFacade.getInstance().getClientNotificationOutputStreams();
-        System.out.println(clients);
-        for (DataOutputStream client: clients) {
-            System.out.println("Send notification to client");
-            commandSender.sendNotificationCommand(task, client);
-            System.out.println("Success");
+        if(clients != null) {
+            for (DataOutputStream client : clients) {
+                System.out.println("Send notification to client");
+                commandSender.sendNotificationCommand(task, client);
+                System.out.println("Success");
+                overdue = false;
+            }
         }
-        notificationForm = new NotificationForm();//todo vlla с сервера нотификации убираем
-        notificationForm.setTask(task);
-        notificationForm.setVisible(true);
-        Sound.playSound(ParserProperties.getInstance().getProperties("NOTIF_SOUND"));//todo vlla вынести все константы в специаьный класс
+        if(overdue) {
+            Controller.getInstance().setOverdue(task.getId());
+        }
     }
 }

@@ -1,15 +1,12 @@
 package server.gui.mainform;
 
-import server.controller.Controller;
-import server.controller.ObjectSerializer;
-import server.controller.UserDataSerializer;
-import server.controller.XMLSerializer;
+import server.controller.*;
 import server.exceptions.IllegalPropertyException;
 import server.gui.taskwindow.TaskWindow;
 import server.model.Journal;
 import server.model.Task;
-import server.network.ServerNetworkFacade;
 import server.properties.ParserProperties;
+import server.properties.PropertiesConstant;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +36,7 @@ public class MainForm extends JFrame {
         Journal backup = Controller.getInstance().getJournal();
         this.journal = backup == null ? new Journal() : backup ;
         try {
-            icon = new ImageIcon(ParserProperties.getInstance().getProperties("MAIN_FORM_ICON"));//todo vlla вынести все константы в специаьный класс
+            icon = new ImageIcon(ParserProperties.getInstance().getProperties(PropertiesConstant.MAIN_FORM_ICON.toString()));
         } catch (IllegalPropertyException e) {
             JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -205,7 +202,7 @@ public class MainForm extends JFrame {
 
                 if (action == JOptionPane.OK_OPTION) {
                     try {
-                        String path = ParserProperties.getInstance().getProperties("XML_FILE");//todo vlla вынести все константы в специаьный класс
+                        String path = ParserProperties.getInstance().getProperties(PropertiesConstant.XML_FILE.toString());
                         if (path == null)
                             JOptionPane.showMessageDialog(MainForm.this,
                                     "Incorrect file path",

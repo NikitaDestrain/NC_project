@@ -1,7 +1,8 @@
-package client.network;
+package client;
 
 import client.gui.authforms.AuthForm;
 import client.gui.mainform.MainForm;
+import client.network.ClientNetworkFacade;
 
 import javax.swing.*;
 

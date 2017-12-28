@@ -54,6 +54,7 @@ public class MonoClientThread extends Thread {
             serverNetworkFacade.addClientDataOutputStreams(notificationPort, dataOutputStream);
         }
         catch (IOException e) {
+            System.out.println("Error! Client can not be connected!");
             e.getMessage();//todo vlla это не обработка ошибки
         }
     }

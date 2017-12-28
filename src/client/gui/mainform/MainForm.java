@@ -324,6 +324,10 @@ public class MainForm extends JFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
     }
 
+    public Journal getJournal() {
+        return journal;
+    }
+
     public static MainForm getInstance() {
         return instance;
     }

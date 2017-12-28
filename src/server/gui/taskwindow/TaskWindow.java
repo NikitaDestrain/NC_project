@@ -1,19 +1,15 @@
 package server.gui.taskwindow;
 
-
-import server.commandproccessor.ServerCommandSender;
 import server.controller.Controller;
 import server.factories.TaskFactory;
 import server.gui.mainform.MainForm;
 import server.model.Task;
 import server.model.TaskStatus;
-import server.network.ServerNetworkFacade;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.DataOutputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -23,53 +19,40 @@ public class TaskWindow extends JFrame {
     private MainForm owner;
     private Controller controller;
     private Task loadTask;
-
     private JLabel jLabel_remind_for;
     private JComboBox jComboBox_remindBefore;
     private JLabel jLabel1_before_the;
-
-
     private JLabel JTabe_nameTask;
     private JButton jButton_cancel;
     private JButton jButton_create_or_set;
     private JButton jButton_CancelTask;
     private JButton jButton_TaskCompleted;
-    private JComboBox<String> jComboBox_changeStatus;
     private com.toedter.calendar.JDateChooser jDateChooser_PlannedDate;
     private com.toedter.calendar.JDateChooser jDateChooser_notificationDate;
     private JLabel jLabel_Hours;
     private JLabel jLabel_dics;
-    private javax.swing.JLabel jLabel_minutes;
-    private javax.swing.JLabel jLabel_notifMinutes;
-    private javax.swing.JLabel jLabel_notification_date;
-    private javax.swing.JLabel jLabel_planned_date;
-    private javax.swing.JLabel jLabel_status;
-    private javax.swing.JLabel jLabel_statusInfo;
-    private javax.swing.JLabel jLable_jangeStatus;
-    private javax.swing.JLabel jLable_notifhour;
-
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-
-    private javax.swing.JSpinner jSpinner_plannedHour;
-    private javax.swing.JSpinner jSpinner_plannedMin;
-    private javax.swing.JSpinner jSpinner_notifHour;
-    private javax.swing.JSpinner jSpinner_notifMinutes;
-    private javax.swing.JTextArea jTextArea_descriprion;
-    private javax.swing.JTextField jTextField_name;
-
+    private JLabel jLabel_minutes;
+    private JLabel jLabel_notifMinutes;
+    private JLabel jLabel_notification_date;
+    private JLabel jLabel_planned_date;
+    private JLabel jLabel_status;
+    private JLabel jLabel_statusInfo;
+    private JLabel jLable_notifhour;
+    private JPanel jPanel1;
+    private JScrollPane jScrollPane1;
+    private JSpinner jSpinner_plannedHour;
+    private JSpinner jSpinner_plannedMin;
+    private JSpinner jSpinner_notifHour;
+    private JSpinner jSpinner_notifMinutes;
+    private JTextArea jTextArea_descriprion;
+    private JTextField jTextField_name;
     private JSpinner jSpinner_remindBefore_hour;
     private JSpinner jSpinner_remindMinutes;
     private JLabel jLabel_remindHours;
     private JLabel jLabel_RemindBefore_minutes;
+    private Date plannedDate;
+    private Date notificationDate;
 
-
-    private Date plannedDate;//запланированное время
-    private Date notificationDate; //время уведомления
-    private ServerCommandSender commandSender = ServerCommandSender.getInstance();
-    private ServerNetworkFacade facade = ServerNetworkFacade.getInstance();
-
-    //Перегруженные конструкторы для создания и просмотра/редактирования
     public TaskWindow(MainForm owner) {
 
         super("Create new task");
@@ -79,89 +62,69 @@ public class TaskWindow extends JFrame {
         this.jButton_create_or_set.setText("Create");
         this.jButton_cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
                 dispose();
             }
         });
-        //создаем новую таску
+
         this.jButton_create_or_set.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
                 Task newTask = createTask();
-
                 if (newTask != null) {
                     mainFormAddTask(newTask);
                     dispose();
                 }
-
             }
         });
         setVisible(true);
     }
 
     public TaskWindow(MainForm owner, Task task) {
-
         super("Task Info");
         this.owner = owner;
         this.loadTask = task;
         this.controller = Controller.getInstance();
-        setLocationRelativeTo(null); //установка по центру экрана
+        setLocationRelativeTo(null);
         this.initComponentsEditTask();
         this.paintTask(task);
-        //закрываем по cancel
+
         this.jButton_cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
-
             }
         });
-        //сохраняем изменения в новую таску
+
         this.jButton_create_or_set.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
                 if (saveTask()) {
-
                     mainFormEditTask(loadTask);
                     dispose();
-
                 }
-
             }
         });
+
         this.jButton_CancelTask.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
-
                 controller.cancelNotification(loadTask.getId());
                 owner.updateJournal();
                 dispose();
-
             }
         });
 
         this.jButton_TaskCompleted.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
-
-
-                 /*   server.exceptions.controller.cancelNotification(loadTask.getId());
-                    loadTask.setStatus(TaskStatus.Completed);*/
                 controller.finishNotification(loadTask.getId());
                 owner.updateJournal();
                 dispose();
-
             }
         });
         setVisible(true);
     }
 
-
     private void initComponentsCreateTask() {
-
         setSize(new java.awt.Dimension(417, 301));
         setResizable(false);
 
-        setLocationRelativeTo(null); //установка по центру экрана
+        setLocationRelativeTo(null);
 
         JTabe_nameTask = new JLabel("Task name:");
         jTextField_name = new JTextField();
@@ -169,7 +132,7 @@ public class TaskWindow extends JFrame {
         jLabel_planned_date = new JLabel("Planned date:");
         jDateChooser_PlannedDate = new com.toedter.calendar.JDateChooser();
         jDateChooser_PlannedDate.setLocale(Locale.ENGLISH);
-        jDateChooser_PlannedDate.setMaxSelectableDate(new java.util.Date(253370840399000L));//max data
+        jDateChooser_PlannedDate.setMaxSelectableDate(new java.util.Date(253370840399000L));
         jDateChooser_PlannedDate.setMinSelectableDate(new java.util.Date(System.currentTimeMillis()));
 
         jComboBox_remindBefore = new javax.swing.JComboBox<>();
@@ -178,9 +141,8 @@ public class TaskWindow extends JFrame {
         jLabel_remind_for = new JLabel("Remind for");
         jLabel1_before_the = new JLabel("before the start.");
 
-        jLabel_Hours = new javax.swing.JLabel("Hours");
-        jLabel_minutes = new javax.swing.JLabel("Minutes");
-
+        jLabel_Hours = new JLabel("Hours");
+        jLabel_minutes = new JLabel("Minutes");
 
         jLabel_dics = new JLabel("Description:");
 
@@ -196,19 +158,17 @@ public class TaskWindow extends JFrame {
         jButton_cancel = new JButton();
         jButton_cancel.setText("Cancel");
 
-
         jSpinner_plannedMin = new JSpinner();
         jSpinner_plannedHour = new JSpinner();
         jSpinner_remindBefore_hour = new JSpinner();
         jSpinner_remindMinutes = new JSpinner();
         jSpinner_plannedHour.setModel(new SpinnerNumberModel(0, 0, 23, 1));
         jSpinner_plannedMin.setModel(new SpinnerNumberModel(0, 0, 59, 1));
-        jSpinner_remindMinutes.setModel(new javax.swing.SpinnerNumberModel(0, 0, 59, 1));
-        jSpinner_remindBefore_hour.setModel(new javax.swing.SpinnerNumberModel(0, 0, 23, 1));
+        jSpinner_remindMinutes.setModel(new SpinnerNumberModel(0, 0, 59, 1));
+        jSpinner_remindBefore_hour.setModel(new SpinnerNumberModel(0, 0, 23, 1));
 
         jLabel_RemindBefore_minutes = new JLabel("minutes");
         jLabel_remindHours = new JLabel("hours");
-
 
         jScrollPane1.setViewportView(jTextArea_descriprion);
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -221,7 +181,6 @@ public class TaskWindow extends JFrame {
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
-
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -306,16 +265,14 @@ public class TaskWindow extends JFrame {
                                         .addComponent(jButton_cancel))
                                 .addContainerGap())
         );
-
         pack();
     }
 
     private void initComponentsEditTask() {
-
         setSize(new java.awt.Dimension(424, 343));
         setResizable(false);
 
-        setLocationRelativeTo(null); //установка по центру экрана
+        setLocationRelativeTo(null);
 
         JTabe_nameTask = new JLabel("Task name:");
         jTextField_name = new JTextField();
@@ -323,14 +280,13 @@ public class TaskWindow extends JFrame {
         jLabel_planned_date = new JLabel("Planned date:");
         jDateChooser_PlannedDate = new com.toedter.calendar.JDateChooser();
         jDateChooser_PlannedDate.setLocale(Locale.ENGLISH);
-        jDateChooser_PlannedDate.setMaxSelectableDate(new java.util.Date(253370840399000L));//max data
+        jDateChooser_PlannedDate.setMaxSelectableDate(new java.util.Date(253370840399000L));
         jDateChooser_PlannedDate.setMinSelectableDate(new java.util.Date(System.currentTimeMillis()));
 
         jDateChooser_notificationDate = new com.toedter.calendar.JDateChooser();
         jDateChooser_notificationDate.setLocale(Locale.ENGLISH);
-        jDateChooser_notificationDate.setMaxSelectableDate(new java.util.Date(253370840399000L));//max data
+        jDateChooser_notificationDate.setMaxSelectableDate(new java.util.Date(253370840399000L));
         jDateChooser_notificationDate.setMinSelectableDate(new java.util.Date(System.currentTimeMillis()));
-
 
         jLabel_Hours = new javax.swing.JLabel("Hours");
         jLabel_minutes = new javax.swing.JLabel("Minutes");
@@ -357,11 +313,9 @@ public class TaskWindow extends JFrame {
         jButton_CancelTask = new JButton();
         jButton_CancelTask.setText("Cancel task");
 
-
         jLabel_status = new JLabel("Status: ");
         jLabel_status.setFont(new java.awt.Font("Tahoma", 0, 12));
         jLabel_status.setForeground(new java.awt.Color(0, 0, 255));
-
 
         jSpinner_plannedMin = new JSpinner();
         jSpinner_plannedHour = new JSpinner();
@@ -374,7 +328,6 @@ public class TaskWindow extends JFrame {
         jSpinner_notifMinutes.setModel(new SpinnerNumberModel(0, 0, 59, 1));
 
         jLabel_statusInfo = new JLabel("");
-
 
         jScrollPane1.setViewportView(jTextArea_descriprion);
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -482,21 +435,16 @@ public class TaskWindow extends JFrame {
                                         .addComponent(jButton_cancel))
                                 .addContainerGap())
         );
-
         pack();
     }
 
-    private Task createTask() //для создания task
-    {
-        if (checkTask()) //проверка на валидность
-        {
-            calcPlannedDate(); //считаем и заносим в поля
-            //вычисляем дату нотификации
+    private Task createTask() {
+        if (checkTask()) {
+            calcPlannedDate();
             int before_h = 0, before_m = 0;
             before_h = (int) this.jSpinner_remindBefore_hour.getValue();
             before_m = (int) this.jSpinner_remindMinutes.getValue();
             this.notificationDate = new Date((this.plannedDate.getTime() - (before_h * 60 * 60 * 1000) - (before_m * 60 * 1000)));
-
 
             if (this.plannedDate.before(Calendar.getInstance().getTime())) {
                 JOptionPane.showMessageDialog(this, "The planned time has passed!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -506,16 +454,13 @@ public class TaskWindow extends JFrame {
                 JOptionPane.showMessageDialog(this, "Task you intended to add has incorrect notification time!", "Error", JOptionPane.ERROR_MESSAGE);
                 return null;
             }
-
             return TaskFactory.createTask(this.jTextField_name.getText().toString(), TaskStatus.Planned, this.jTextArea_descriprion.getText(), this.notificationDate, this.plannedDate);
         }
         return null;
     }
 
-    private boolean saveTask() //СОхранение измененной задачи 
-    {
-        if (checkTask()) //проверка на валидность
-        {
+    private boolean saveTask() {
+        if (checkTask()) {
             if ((loadTask.getStatus() == TaskStatus.Cancelled) || (loadTask.getStatus() == TaskStatus.Completed)) {
                 this.loadTask.setName(jTextField_name.getText().toString());
                 this.loadTask.setDescription(this.jTextArea_descriprion.getText().toString());
@@ -529,42 +474,28 @@ public class TaskWindow extends JFrame {
                     JOptionPane.showMessageDialog(this, "Task you intended to add has incorrect notification time!", "Error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
-
                 this.loadTask.setPlannedDate(this.plannedDate);
                 this.loadTask.setNotificationDate(this.notificationDate);
             }
-
             return true;
         }
-
-
         return false;
     }
 
-    private boolean checkTask()// проверка заполнения необходимых полей
-    {
-
+    private boolean checkTask() {
 
         if (this.jTextField_name.getText().length() == 0) {
-
-
             JOptionPane.showMessageDialog(this, "Enter task name!", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
-
         }
         if (this.jDateChooser_PlannedDate.getDate() == null) {
             JOptionPane.showMessageDialog(this, "Enter planned date!", "Error", JOptionPane.ERROR_MESSAGE);
-
             return false;
         }
-
-
         return true;
     }
 
-    private void calcNotificationDate() //высчитываетяс конечное время с учетом времени оповещения
-    {
-
+    private void calcNotificationDate() {
         int notif_h, notif_m;
         Calendar calend = Calendar.getInstance();
         notif_h = (int) this.jSpinner_notifHour.getValue();
@@ -577,12 +508,9 @@ public class TaskWindow extends JFrame {
         calend.set(Calendar.MILLISECOND, 0);
         notif = calend.getTime();
         this.notificationDate = notif;
-
-
     }
 
-    private void paintTask(Task task)//заполняет поля формы
-    {
+    private void paintTask(Task task){
         this.jTextField_name.setText(task.getName());
         this.jDateChooser_PlannedDate.setDate(task.getPlannedDate());
         this.jDateChooser_notificationDate.setDate(task.getNotificationDate());
@@ -606,20 +534,15 @@ public class TaskWindow extends JFrame {
             this.jSpinner_plannedHour.setEnabled(false);
             this.jButton_CancelTask.setEnabled(false);
             this.jButton_TaskCompleted.setEnabled(false);
-
         }
     }
 
-    public void calcPlannedDate() ///метод получения запланированной даты
-    {
+    public void calcPlannedDate() {
         int h, m;
-
         h = (int) this.jSpinner_plannedHour.getValue();
         m = (int) this.jSpinner_plannedMin.getValue();
-
-
-        Date plan = this.jDateChooser_PlannedDate.getDate(); //Получаем дату (время не верное)
-        Calendar calend = Calendar.getInstance(); //Создание даты уведомления (перерасчет через Calendar)
+        Date plan = this.jDateChooser_PlannedDate.getDate();
+        Calendar calend = Calendar.getInstance();
         calend.setTime(plan);
         calend.set(Calendar.HOUR_OF_DAY, h);
         calend.set(Calendar.MINUTE, m);
@@ -629,8 +552,7 @@ public class TaskWindow extends JFrame {
         this.plannedDate = plan;
     }
 
-    private void mainFormAddTask(Task newTask) //вызываю методы MAINform для записи изменений
-    {
+    private void mainFormAddTask(Task newTask) {
         controller.addTask(newTask);
     }
 
