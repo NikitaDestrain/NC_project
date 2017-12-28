@@ -92,7 +92,6 @@ public class ClientNetworkFacade extends Thread {
         }
         catch (IOException e){
             e.getMessage();//todo vlla это не обработка ошибки
-
         }
     }
 

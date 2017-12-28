@@ -31,14 +31,12 @@ public class ServerCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            //записываем в файл-буффер
-            marshaller.marshal( ServerCommandFactory.createCommand(UPDATE, journal),new File("test_update.xml"));
-          //  System.out.println("пробуем запихнуть весь журнал в поток сокета");
+            /*marshaller.marshal(ServerCommandFactory.createCommand(UPDATE, journal), new File("test_update.xml"));
             byte[] buffer = new byte[(int) new File("test_update.xml").length()];
             FileInputStream inF = new FileInputStream("test_update.xml");
             inF.read(buffer);
-           // System.out.println(new File("test_update.xml").length()+" размеры оптравленного журнала");
-            out.write(buffer);
+            out.write(buffer);*/
+            marshaller.marshal(ServerCommandFactory.createCommand(UPDATE, journal), out);
             out.flush();
         } catch (JAXBException e) {
             e.printStackTrace();
@@ -108,12 +106,12 @@ public class ServerCommandSender {
         }
     }
 
-    public void sendUnsuccessfulActionCommand(OutputStream out) {
+    public void sendUnsuccessfulActionCommand(String string, OutputStream out) {
         try {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ServerCommandFactory.createCommand(UNSUCCESSFUL_ACTION, new User()), out);
+            marshaller.marshal(ServerCommandFactory.createCommand(UNSUCCESSFUL_ACTION, string), out);
             out.flush();
         } catch (JAXBException | IOException e) {
             e.getMessage();

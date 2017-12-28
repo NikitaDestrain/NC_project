@@ -15,7 +15,7 @@ public class ParserProperties //todo к сожалению, это не синг
     /**
      * Path to the configuration file
      */
-   private static  String PATH_TO_CONFIG = "Config.properties";//todo не храните проперти в пакетах исходного кода.
+   private static  String PATH_TO_CONFIG = "config.properties";//todo не храните проперти в пакетах исходного кода.
     // Проперти это что-то, что может поменять конечный пользователь. Они должны лежать отдельно, конечному пользователю нет нужны лезть в сорцы
     /**
      * Object of current class

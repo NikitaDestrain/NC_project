@@ -8,14 +8,12 @@ import server.model.Task;
 import server.model.TaskStatus;
 import server.network.ServerNetworkFacade;
 import server.properties.ParserProperties;
+import server.properties.PropertiesConstant;
 
 import javax.swing.*;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Controller {
     private Journal journal;
@@ -34,7 +32,7 @@ public class Controller {
         this.userDataSerializer = new UserDataSerializer();
         try {
             this.userData = userDataSerializer.readData(ParserProperties.getInstance()
-                    .getProperties("USER_DATA"));
+                    .getProperties(PropertiesConstant.USER_DATA.toString()));
         } catch (IOException e) {
             if (JOptionPane.showConfirmDialog(null,
                     "Could not load user data from file!\nDo you want to create new file with user's data?\n" +
@@ -46,7 +44,7 @@ public class Controller {
         }
         this.serializer = new XMLSerializer();
         try {
-            setJournal(serializer.readJournal(ParserProperties.getInstance().getProperties("XML_FILE")));
+            setJournal(serializer.readJournal(ParserProperties.getInstance().getProperties(PropertiesConstant.XML_FILE.toString())));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Could not load journal from file!",
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -98,8 +96,11 @@ public class Controller {
     }
 
     private void sendUpdateCommand() {
-        for (DataOutputStream out: facade.getClientDataOutputStreams())
-            commandSender.sendUpdateCommand(this.journal, out);
+        LinkedList<DataOutputStream> streams = facade.getClientDataOutputStreams();
+        if(streams != null) {
+            for (DataOutputStream out : streams)
+                commandSender.sendUpdateCommand(this.journal, out);
+        }
     }
 
     public void updateMainForm() {
@@ -164,7 +165,9 @@ public class Controller {
      * @see Notifier#editNotification(Task)
      */
 
-    public void updateNotification(Task task){
+    public void updateNotification(Task task) {
+        /*if(journal.getTask(task.getId()).getStatus() == TaskStatus.Cancelled || journal.getTask(task.getId()).getStatus() == TaskStatus.Completed)
+            commandSender.sendUnsuccessfulActionCommand("Another user already has changed this!", null);*/
         journal.removeTask(task.getId());
         task.setStatus(TaskStatus.Rescheduled);
         journal.addTask(task);
@@ -185,6 +188,11 @@ public class Controller {
         journal.addTask(task);
         updateMainForm();
         sendUpdateCommand();
+    }
+
+    public void setOverdue(int id) {
+        journal.getTask(id).setStatus(TaskStatus.Overdue);
+        updateMainForm();
     }
 
     /**

@@ -32,7 +32,8 @@ public class ServerNotificationListener extends Thread{
                 }
             }
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            System.out.printf("Connection with client (port %d) was lost\n", port);
+            ServerNetworkFacade.getInstance().removeNotificationOutputStream(port);
         }
     }
 }

@@ -34,7 +34,7 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(ADD, task), out);//todo vlla константы DONE
+            marshaller.marshal(ClientCommandFactory.createCommand(ADD, task), out);
             out.flush();
         }
         catch(JAXBException | IOException e){

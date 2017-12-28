@@ -1,6 +1,7 @@
 package server.gui.notificationwindow;
 
 import server.commandproccessor.ServerCommandSender;
+import server.properties.PropertiesConstant;
 import server.exceptions.IllegalPropertyException;
 import server.controller.Controller;
 import server.gui.mainform.MainForm;
@@ -11,7 +12,6 @@ import server.properties.ParserProperties;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.DataOutputStream;
 
 public class NotificationForm extends JFrame {
     private Task task;
@@ -26,7 +26,7 @@ public class NotificationForm extends JFrame {
     public NotificationForm() {
         super("Alarm!");
         try {
-            icon = new ImageIcon(ParserProperties.getInstance().getProperties("MAIN_FORM_ICON"));//todo vlla вынести все константы в специаьный класс
+            icon = new ImageIcon(ParserProperties.getInstance().getProperties(PropertiesConstant.MAIN_FORM_ICON.toString()));
         } catch (IllegalPropertyException e) {
             JOptionPane.showMessageDialog(null, "Illegal value of property",
                     "Error", JOptionPane.ERROR_MESSAGE);

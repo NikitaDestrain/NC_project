@@ -10,13 +10,11 @@ import java.util.Properties;
  * A class that allows you to read the configuration file. It also provides globally access to the server.exceptions.properties described in the configuration file
  */
 
-public class ParserProperties
-{
+public class ParserProperties {
     /**
      * Path to the configuration file
      */
-   private static  String PATH_TO_CONFIG = "Config.properties";
-    // Проперти это что-то, что может поменять конечный пользователь. Они должны лежать отдельно, конечному пользователю нет нужны лезть в сорцы
+   private static String PATH_TO_CONFIG = "data/config.properties";
     /**
      * Object of current class
      */
@@ -24,17 +22,12 @@ public class ParserProperties
     /**
      * Object helper class for reading and displaying server.exceptions.properties
      */
-    private static Properties props;//todo vlla для чего здесь static?
+    private Properties props;
 
-
-
-    private ParserProperties() throws IOException //указываем конкретный путь в файлу с конфигурацией
-    {
-
+    private ParserProperties() throws IOException {
         this.props = new Properties();
         FileInputStream fin = new FileInputStream(PATH_TO_CONFIG);
         this.props.load(fin);
-        System.out.println(props.propertyNames());
         fin.close();
     }
 
@@ -42,9 +35,8 @@ public class ParserProperties
     /**
      * A method that allows you to get an object of this class
      * @return class object<b> ParserProperties </b>  if the configuration file was read successfully, else return <b>null</b>
-
      */
-    public static  ParserProperties getInstance () {
+    public static ParserProperties getInstance() {
         if(instance == null)
         {
             try {
@@ -55,7 +47,7 @@ public class ParserProperties
                 // Я вижу два варианта: либо написать в лог и выдать что-то дефолтное, либо пробросить выше и корректно завершить приложение
             }
         }
-    return  instance;//todo vlla сделайте нормаьную лесенку, пожалуйста. Даже IDEA это сама умеет : Ctrl + Alt + I. В остальных местах тоже. Помним про требование соблюдать Java Code Convention.
+        return instance;
     }
 
     /**
@@ -72,13 +64,6 @@ public class ParserProperties
             return s;
         }
     }
-
-
-    /*  public static synchronized String  getProperties(String key) throws IOException {
-        // А если у нас не одна пропертя, а 500? Весь смысл парсера пропертей в том, чтобы предоставить простой программный доступ к пропертям, которые хранятся где-то извне.
-        // Стандартный подход - при запуске приложения один раз прочитать файл, сохранить результаты в переменную и потом предоставлять всему приложению быстрый доступ к пропертям.
-*/
-
 }
 
 
