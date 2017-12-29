@@ -42,7 +42,7 @@ public class MainForm extends JFrame {
             JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
                     "Error", JOptionPane.ERROR_MESSAGE);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "The configuration file is corrupt or missing!",
+            JOptionPane.showMessageDialog(null, "The configuration file is corrupted or missing!",
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         tablePanel = new TablePanel(this);

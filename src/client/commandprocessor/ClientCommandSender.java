@@ -35,8 +35,6 @@ public class ClientCommandSender {
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.ADD, task), out);
             out.flush();
 
-        } catch (PropertyException e) {
-            System.out.println("Ошибка при setProperty");
         } catch (JAXBException | IOException e) {
             JOptionPane.showMessageDialog(null, "Could not send this command! Server is offline!",
                     "Connection error", JOptionPane.ERROR_MESSAGE);
@@ -51,9 +49,6 @@ public class ClientCommandSender {
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.EDIT, task), out);
             out.flush();
-        }
-        catch (PropertyException e) {
-            System.out.println("Ошибка при setProperty");
         } catch (JAXBException | IOException e) {
             JOptionPane.showMessageDialog(null, "Could not send this command! Server is offline!",
                     "Connection error", JOptionPane.ERROR_MESSAGE);
@@ -67,9 +62,6 @@ public class ClientCommandSender {
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.DELETE, tasksNums), out);
             out.flush();
-        }
-        catch (PropertyException e) {
-            System.out.println("Ошибка при setProperty");
         } catch (JAXBException | IOException e) {
             JOptionPane.showMessageDialog(null, "Could not send this command! Server is offline!",
                     "Connection error", JOptionPane.ERROR_MESSAGE);
@@ -83,9 +75,6 @@ public class ClientCommandSender {
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.LATER, task), out);
             out.flush();
-        }
-        catch (PropertyException e) {
-            System.out.println("Ошибка при setProperty");
         } catch (JAXBException | IOException e) {
             JOptionPane.showMessageDialog(null, "Could not send this command! Server is offline!",
                     "Connection error", JOptionPane.ERROR_MESSAGE);
@@ -99,9 +88,6 @@ public class ClientCommandSender {
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.FINISH, task), out);
             out.flush();
-        }
-        catch (PropertyException e) {
-            System.out.println("Ошибка при setProperty");
         } catch (JAXBException | IOException e) {
             JOptionPane.showMessageDialog(null, "Could not send this command! Server is offline!",
                     "Connection error", JOptionPane.ERROR_MESSAGE);
@@ -115,9 +101,6 @@ public class ClientCommandSender {
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.CANCEL, task), out);
             out.flush();
-        }
-        catch (PropertyException e) {
-            System.out.println("Ошибка при setProperty");
         } catch (JAXBException | IOException e) {
             JOptionPane.showMessageDialog(null, "Could not send this command! Server is offline!",
                     "Connection error", JOptionPane.ERROR_MESSAGE);
@@ -132,9 +115,6 @@ public class ClientCommandSender {
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.SIGN_IN,
                     new User(login, password, clientNetworkFacade.getNotificationPort())), out);
             out.flush();
-        }
-        catch (PropertyException e) {
-            System.out.println("Ошибка при setProperty");
         } catch (JAXBException | IOException e) {
             JOptionPane.showMessageDialog(null, "Could not send this command! Server is offline!",
                     "Connection error", JOptionPane.ERROR_MESSAGE);
@@ -150,9 +130,6 @@ public class ClientCommandSender {
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.SIGN_UP,
                     new User(login, password, clientNetworkFacade.getNotificationPort())), out);
             out.flush();
-        }
-        catch (PropertyException e) {
-            System.out.println("Ошибка при setProperty");
         } catch (JAXBException | IOException e) {
             JOptionPane.showMessageDialog(null, "Could not send this command! Server is offline!",
                     "Connection error", JOptionPane.ERROR_MESSAGE);
@@ -167,11 +144,9 @@ public class ClientCommandSender {
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.DISCONNECT,
                     clientNetworkFacade.getNotificationPort()), out);
             out.flush();
-        }
-        catch (PropertyException e) {
-            System.out.println("Ошибка при setProperty");
         } catch (JAXBException | IOException e) {
-            //если серв и так оффлайн то ничего не показываем
+            JOptionPane.showMessageDialog(null, "Could not send this command! Server is offline!",
+                    "Connection error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

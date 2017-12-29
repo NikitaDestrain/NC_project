@@ -83,10 +83,7 @@ public class ServerCommandSender {
             marshaller.marshal(ServerCommandFactory.createCommand(ConstantsClass.UNSUCCESSFUL_SIGN_UP, new User()),
                     out);
             out.flush();
-        } catch (JAXBException e) {
-            JOptionPane.showMessageDialog(null, "Could not send this command!",
-                    "Incorrect command!", JOptionPane.ERROR_MESSAGE);
-        } catch (IOException e) {
+        } catch (JAXBException | IOException e) {
             JOptionPane.showMessageDialog(null, "Could not send this command!",
                     "Incorrect command!", JOptionPane.ERROR_MESSAGE);
         }

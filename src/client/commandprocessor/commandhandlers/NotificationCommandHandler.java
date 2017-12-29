@@ -18,7 +18,7 @@ public class NotificationCommandHandler implements CommandHandler {
             Sound.playSound(ParserProperties.getInstance().getProperties(PropertiesConstant.NOTIF_SOUND.toString()));
         }
         catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "The configuration file is corrupt or missing!",
+            JOptionPane.showMessageDialog(null, "The configuration file is corrupted or missing!",
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
 

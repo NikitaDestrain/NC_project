@@ -12,7 +12,5 @@ public class UnsuccessfulSignInCommandHandler implements CommandHandler {
         if (authForm == null) authForm = new AuthForm();
         authForm.setVisible(true);
         authForm.showUnsuccessfulAuthMessage();
-        JOptionPane.showMessageDialog(authForm,
-                "Wrong password/login", "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
