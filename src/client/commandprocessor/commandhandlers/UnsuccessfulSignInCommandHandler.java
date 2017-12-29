@@ -3,6 +3,8 @@ package client.commandprocessor.commandhandlers;
 import client.commandprocessor.Command;
 import client.gui.authforms.AuthForm;
 
+import javax.swing.*;
+
 public class UnsuccessfulSignInCommandHandler implements CommandHandler {
     @Override
     public synchronized void handle(Command command) {
@@ -10,5 +12,7 @@ public class UnsuccessfulSignInCommandHandler implements CommandHandler {
         if (authForm == null) authForm = new AuthForm();
         authForm.setVisible(true);
         authForm.showUnsuccessfulAuthMessage();
+        JOptionPane.showMessageDialog(authForm,
+                "Wrong password/login", "Error", JOptionPane.ERROR_MESSAGE);
     }
 }

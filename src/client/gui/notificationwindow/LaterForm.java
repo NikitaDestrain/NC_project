@@ -11,6 +11,7 @@ import client.properties.ParserProperties;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -30,6 +31,9 @@ public class LaterForm extends JFrame {
             icon = new ImageIcon(ParserProperties.getInstance().getProperties("MAIN_FORM_ICON"));
         } catch (IllegalPropertyException e) {
             JOptionPane.showMessageDialog(null, "Illegal value of property",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "The configuration file is corrupt or missing!",
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         message = new JLabel("Choose the time for reschedule");

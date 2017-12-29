@@ -11,6 +11,7 @@ import client.properties.ParserProperties;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 public class NotificationForm extends JFrame {
     private Task task;
@@ -27,6 +28,9 @@ public class NotificationForm extends JFrame {
             icon = new ImageIcon(ParserProperties.getInstance().getProperties("MAIN_FORM_ICON"));
         } catch (IllegalPropertyException e) {
             JOptionPane.showMessageDialog(null, "Illegal value of property",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "The configuration file is corrupt or missing",
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         buttonPanel = new ButtonPanel();
