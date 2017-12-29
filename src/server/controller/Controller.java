@@ -1,18 +1,16 @@
 package server.controller;
 
+import constants.ConstantsClass;
 import server.commandproccessor.ServerCommandSender;
-import server.commandproccessor.User;
 import server.gui.mainform.MainForm;
 import server.model.Journal;
 import server.model.Task;
 import server.model.TaskStatus;
 import server.network.ServerNetworkFacade;
 import server.properties.ParserProperties;
-import server.properties.PropertiesConstant;
 
 import javax.swing.*;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.*;
 
 public class Controller {
@@ -29,7 +27,7 @@ public class Controller {
         this.notifier = new Notifier();
         this.serializer = new XMLSerializer();
         try {
-            setJournal(serializer.readJournal(ParserProperties.getInstance().getProperties(PropertiesConstant.XML_FILE.toString())));
+            setJournal(serializer.readJournal(ParserProperties.getInstance().getProperties(ConstantsClass.XML_FILE)));
         } catch (Exception e) {
             if (JOptionPane.showConfirmDialog(null,
                     "Could not load journal from file!\nDo you want to create a new one?\n" +

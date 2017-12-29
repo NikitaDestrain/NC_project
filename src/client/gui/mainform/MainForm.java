@@ -7,15 +7,13 @@ import client.model.Journal;
 import client.model.Task;
 import client.network.ClientNetworkFacade;
 import client.properties.ParserProperties;
-import client.properties.PropertiesConstant;
+import constants.ConstantsClass;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 public class MainForm extends JFrame {
     private Journal journal;
@@ -35,7 +33,7 @@ public class MainForm extends JFrame {
         instance = this;
         this.journal = new Journal();
         try {
-            icon = new ImageIcon(ParserProperties.getInstance().getProperties(PropertiesConstant.MAIN_FORM_ICON.toString()));
+            icon = new ImageIcon(ParserProperties.getInstance().getProperties(ConstantsClass.MAIN_FORM_ICON));
         } catch (IllegalPropertyException e) {
             JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
                     "Error", JOptionPane.ERROR_MESSAGE);

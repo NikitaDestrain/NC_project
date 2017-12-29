@@ -7,6 +7,7 @@ import client.model.Task;
 import client.model.TaskStatus;
 import client.network.ClientNetworkFacade;
 import client.properties.ParserProperties;
+import constants.ConstantsClass;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +29,7 @@ public class LaterForm extends JFrame {
         task = t;
         setLayout(new GridLayout(3,1));
         try {
-            icon = new ImageIcon(ParserProperties.getInstance().getProperties("MAIN_FORM_ICON"));
+            icon = new ImageIcon(ParserProperties.getInstance().getProperties(ConstantsClass.MAIN_FORM_ICON));
         } catch (IllegalPropertyException e) {
             JOptionPane.showMessageDialog(null, "Illegal value of property",
                     "Error", JOptionPane.ERROR_MESSAGE);

@@ -1,20 +1,17 @@
 package server.gui.mainform;
 
+import server.properties.ParserProperties;
+import constants.ConstantsClass;
 import server.controller.*;
 import server.exceptions.IllegalPropertyException;
 import server.gui.taskwindow.TaskWindow;
 import server.model.Journal;
 import server.model.Task;
-import server.properties.ParserProperties;
-import server.properties.PropertiesConstant;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 public class MainForm extends JFrame {
     private JFileChooser fileChooser;
@@ -38,7 +35,7 @@ public class MainForm extends JFrame {
         Journal backup = Controller.getInstance().getJournal();
         this.journal = backup == null ? new Journal() : backup ;
         try {
-            icon = new ImageIcon(ParserProperties.getInstance().getProperties(PropertiesConstant.MAIN_FORM_ICON.toString()));
+            icon = new ImageIcon(ParserProperties.getInstance().getProperties(ConstantsClass.MAIN_FORM_ICON));
         } catch (IllegalPropertyException e) {
             JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -206,7 +203,7 @@ public class MainForm extends JFrame {
 
                 if (action == JOptionPane.OK_OPTION) {
                     try {
-                        String path = ParserProperties.getInstance().getProperties(PropertiesConstant.XML_FILE.toString());
+                        String path = ParserProperties.getInstance().getProperties(ConstantsClass.XML_FILE);
                         if (path == null)
                             JOptionPane.showMessageDialog(MainForm.this,
                                     "Incorrect file path",
@@ -214,7 +211,7 @@ public class MainForm extends JFrame {
                         else {
                             journalBackup.writeJournal(journal, path);
                             UserAuthorizer.getInstance().writeUserData(ParserProperties.getInstance()
-                                    .getProperties(PropertiesConstant.USER_DATA.toString()));
+                                    .getProperties(ConstantsClass.USER_DATA));
                             System.exit(0);
                         }
                     } catch (IllegalPropertyException ex) {

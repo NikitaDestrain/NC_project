@@ -1,8 +1,8 @@
 package server.controller;
 
+import constants.ConstantsClass;
 import server.commandproccessor.User;
 import server.properties.ParserProperties;
-import server.properties.PropertiesConstant;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class UserAuthorizer {
         this.userDataSerializer = new UserDataSerializer();
         try {
             this.userData = userDataSerializer.readData(ParserProperties.getInstance()
-                    .getProperties(PropertiesConstant.USER_DATA.toString()));
+                    .getProperties(ConstantsClass.USER_DATA));
         } catch (IOException e) {
             if (JOptionPane.showConfirmDialog(null,
                     "Could not load user data from file!\nDo you want to create new file with user's data?\n" +

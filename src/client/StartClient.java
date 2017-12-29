@@ -1,10 +1,9 @@
 package client;
 
 import client.gui.authforms.AuthForm;
-import client.gui.mainform.MainForm;
-import client.network.ClientNetworkFacade;
+import client.properties.ParserProperties;
+import constants.ConstantsClass;
 import server.exceptions.IllegalPropertyException;
-import server.properties.ParserProperties;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -12,11 +11,9 @@ import java.io.IOException;
 public class StartClient {
 
     public static void main(String[] args) {
-
         try {
-            ParserProperties.getInstance();
-            ParserProperties.getInstance().getProperties("MAIN_FORM_ICON");
-            ParserProperties.getInstance().getProperties("NOTIF_SOUND");
+            ParserProperties.getInstance().getProperties(ConstantsClass.MAIN_FORM_ICON);
+            ParserProperties.getInstance().getProperties(ConstantsClass.NOTIF_SOUND);
         }
         catch (IllegalPropertyException e)
         {

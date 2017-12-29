@@ -14,7 +14,7 @@ public class ParserProperties {
     /**
      * Path to the configuration file
      */
-   private static String PATH_TO_CONFIG = "data/config.properties";
+    private static String PATH_TO_CONFIG = "data/config.properties";
     /**
      * Object of current class
      */
@@ -31,15 +31,13 @@ public class ParserProperties {
         fin.close();
     }
 
-
     /**
      * A method that allows you to get an object of this class
+     *
      * @return class object<b> ParserProperties </b>  if the configuration file was read successfully, else return <b>null</b>
      */
-    public static ParserProperties getInstance() throws IOException{
-        if(instance == null)
-        {
-
+    public static ParserProperties getInstance() throws IOException {
+        if (instance == null) {
             instance = new ParserProperties();
             //todo vlla э не, так не пойдет. Возвращать null - это вообще подло. Это 100% приведет к NPE в каком-нибудь рандомном месте кода.
             // если уж мы словили IOException при парсинге пропертей - его нужно обработать.
@@ -50,11 +48,12 @@ public class ParserProperties {
 
     /**
      * The method allows you to get the property found by the <b>key</b>
+     *
      * @param key key corresponding to a certain property
      * @return property corresponding to the specified <b>key</b>
-     * @throws IllegalPropertyException  if no property is found that matches the specified <b>key</b>
+     * @throws IllegalPropertyException if no property is found that matches the specified <b>key</b>
      */
-    public  synchronized String getProperties(String key) throws IllegalPropertyException {
+    public synchronized String getProperties(String key) throws IllegalPropertyException {
         String s = props.getProperty(key);
         if (s == null) {
             throw new IllegalPropertyException();
@@ -63,9 +62,3 @@ public class ParserProperties {
         }
     }
 }
-
-
-
-
-
-
