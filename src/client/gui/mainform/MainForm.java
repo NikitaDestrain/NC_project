@@ -7,6 +7,7 @@ import client.model.Journal;
 import client.model.Task;
 import client.network.ClientNetworkFacade;
 import client.properties.ParserProperties;
+import client.properties.PropertiesConstant;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +36,7 @@ public class MainForm extends JFrame {
         fileChooser = new JFileChooser();
         this.journal = new Journal();
         try {
-            icon = new ImageIcon(ParserProperties.getInstance().getProperties("MAIN_FORM_ICON"));
+            icon = new ImageIcon(ParserProperties.getInstance().getProperties(PropertiesConstant.MAIN_FORM_ICON.toString()));
         } catch (IllegalPropertyException e) {
             JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
                     "Error", JOptionPane.ERROR_MESSAGE);
