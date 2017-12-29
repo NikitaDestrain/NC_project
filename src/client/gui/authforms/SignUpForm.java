@@ -14,7 +14,7 @@ import java.awt.event.WindowEvent;
 public class SignUpForm extends JFrame {
     private JButton okButton;
     private JButton clearButton;
-    private JButton back_to_authForm;
+    private JButton backToAuthForm;
     private JTextField loginField;
     private JPasswordField passwordField;
     private JPasswordField confirmPasswordField;
@@ -34,7 +34,7 @@ public class SignUpForm extends JFrame {
 
         okButton = new JButton("OK");
         clearButton = new JButton("Clear");
-        back_to_authForm = new JButton("Back");
+        backToAuthForm = new JButton("Back");
         loginField = new JTextField(10);
         passwordField = new JPasswordField(10);
         passwordField.setEchoChar('*'); // что отображается при вводе пароля
@@ -54,7 +54,7 @@ public class SignUpForm extends JFrame {
             confirmPasswordField.setText("");
         });
 
-        back_to_authForm.addActionListener((ActionEvent e) -> {
+        backToAuthForm.addActionListener((ActionEvent e) -> {
             this.dispose();
             new AuthForm().setVisible(true);
         });
@@ -143,7 +143,7 @@ public class SignUpForm extends JFrame {
         buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         buttonsPanel.add(okButton, gc);
         buttonsPanel.add(clearButton, gc);
-        buttonsPanel.add(back_to_authForm,gc);
+        buttonsPanel.add(backToAuthForm, gc);
 
         Dimension btnSize = clearButton.getPreferredSize();
        okButton.setPreferredSize(btnSize);
