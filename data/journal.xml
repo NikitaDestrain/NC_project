@@ -8,8 +8,8 @@
                 <name>1</name>
                 <description></description>
                 <status>Planned</status>
-                <notificationDate>2017-12-30T00:00:00+03:00</notificationDate>
-                <plannedDate>2017-12-30T00:00:00+03:00</plannedDate>
+                <notificationDate>2017-12-30T02:00:00+05:00</notificationDate>
+                <plannedDate>2017-12-30T02:00:00+05:00</plannedDate>
             </value>
         </entry>
         <entry>
@@ -19,8 +19,8 @@
                 <name>1</name>
                 <description></description>
                 <status>Planned</status>
-                <notificationDate>2017-12-30T00:00:00+03:00</notificationDate>
-                <plannedDate>2017-12-30T00:00:00+03:00</plannedDate>
+                <notificationDate>2017-12-30T02:00:00+05:00</notificationDate>
+                <plannedDate>2017-12-30T02:00:00+05:00</plannedDate>
             </value>
         </entry>
         <entry>
@@ -30,8 +30,8 @@
                 <name>2</name>
                 <description></description>
                 <status>Planned</status>
-                <notificationDate>2017-12-30T00:00:00+03:00</notificationDate>
-                <plannedDate>2017-12-30T00:00:00+03:00</plannedDate>
+                <notificationDate>2017-12-30T02:00:00+05:00</notificationDate>
+                <plannedDate>2017-12-30T02:00:00+05:00</plannedDate>
             </value>
         </entry>
     </tasks>
