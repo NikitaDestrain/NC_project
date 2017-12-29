@@ -52,6 +52,8 @@ public class ClientNetworkFacade extends Thread {
 
     public int connect() {
         try {
+            if(successConnect)
+                return 0;
             serverPort = ConstantsClass.DEFAULT_SERVER_PORT;
             clientDataSocket = new Socket("localhost", serverPort);
             dataOutputStream = new DataOutputStream(clientDataSocket.getOutputStream());

@@ -41,8 +41,8 @@ public class AuthForm extends JFrame {
                 JOptionPane.showMessageDialog(null,
                         "Incorrect login or password!", "Error", JOptionPane.ERROR_MESSAGE);
             else
-            if (clientFacade.connect() == 0)
-                sendData();
+                if (clientFacade.connect() == 0)
+                    sendData();
         });
 
         registrationButton.addActionListener((ActionEvent e) -> {
