@@ -76,7 +76,7 @@ public class ClientNetworkFacade extends Thread {
         }
         catch (IOException e) {
             JOptionPane.showMessageDialog(null,
-                    "Server is not available! Try later!", "Error", JOptionPane.ERROR_MESSAGE);
+                    "Server is not available! Try later!", "Connection error", JOptionPane.ERROR_MESSAGE);
         }
         return 1;
     }
