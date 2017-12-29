@@ -3,16 +3,13 @@ package client.gui.authforms;
 import client.gui.UserContainer;
 import client.network.ClientNetworkFacade;
 import client.commandprocessor.ClientCommandSender;
-import server.exceptions.IllegalPropertyException;
-import server.properties.ParserProperties;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
+
 
 public class AuthForm extends JFrame {
     private JButton okButton;
@@ -44,8 +41,8 @@ public class AuthForm extends JFrame {
                 JOptionPane.showMessageDialog(null,
                         "Incorrect login or password!", "Error", JOptionPane.ERROR_MESSAGE);
             else
-                if (clientFacade.connect() == 0)
-                    sendData();
+            if (clientFacade.connect() == 0)
+                sendData();
         });
 
         registrationButton.addActionListener((ActionEvent e) -> {
@@ -148,12 +145,16 @@ public class AuthForm extends JFrame {
     }
 
 
-    public void showUnsuccessfulAuthMessage() {
-        if (JOptionPane.showConfirmDialog(null,
+  /*  public void showUnsuccessfulAuthMessage() {
+         if (JOptionPane.showConfirmDialog(null,
                 "User with such login and password does not exists! Do you want to sign up now?",
                 "Error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-           this.dispose();
+            this.dispose();
             callSignUpForm();
         }
+    }*/
+
+    public void showUnsuccessfulAuthMessage() {
+        JOptionPane.showMessageDialog(null, "Incorrect login or password!", "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
