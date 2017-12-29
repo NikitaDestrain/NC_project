@@ -20,35 +20,24 @@ public class Controller {
     private Notifier notifier;
     private static Controller instance;
     private MainForm mainForm = MainForm.getInstance();
-    private Map<String, String> userData;
     private XMLSerializer serializer;
-    private UserDataSerializer userDataSerializer;
     private ServerCommandSender commandSender = ServerCommandSender.getInstance();
     private ServerNetworkFacade facade = ServerNetworkFacade.getInstance();
 
     private Controller() {
         this.journal = new Journal();
         this.notifier = new Notifier();
-        this.userDataSerializer = new UserDataSerializer();
-        try {
-            this.userData = userDataSerializer.readData(ParserProperties.getInstance()
-                    .getProperties(PropertiesConstant.USER_DATA.toString()));
-        } catch (IOException e) {
-            if (JOptionPane.showConfirmDialog(null,
-                    "Could not load user data from file!\nDo you want to create new file with user's data?\n" +
-                            "If you choose NO, the program execution will be stopped!",
-                    "Error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                userData = new HashMap<>();
-            }
-            else System.exit(1);
-        }
         this.serializer = new XMLSerializer();
         try {
             setJournal(serializer.readJournal(ParserProperties.getInstance().getProperties(PropertiesConstant.XML_FILE.toString())));
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Could not load journal from file!",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-            setJournal(new Journal());
+            if (JOptionPane.showConfirmDialog(null,
+                    "Could not load journal from file!\nDo you want to create a new one?\n" +
+                            "If you choose NO, the program execution will be stopped!",
+                    "Error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                setJournal(new Journal());
+            }
+            else System.exit(1);
         }
     }
 
@@ -103,6 +92,14 @@ public class Controller {
         }
     }
 
+    private void sendUnsuccessfulCommand() {
+        LinkedList<DataOutputStream> streams = facade.getClientDataOutputStreams();
+        if(streams != null) {
+            for (DataOutputStream out : streams)
+                commandSender.sendUnsuccessfulActionCommand("Error! Incorrect action with task status!", out);
+        }
+    }
+
     public void updateMainForm() {
         mainForm = MainForm.getInstance();
         if (mainForm != null)
@@ -143,10 +140,14 @@ public class Controller {
      */
 
     public void cancelNotification(int id){
-        notifier.cancelNotification(id);
-        journal.getTask(id).setStatus(TaskStatus.Cancelled);
-        updateMainForm();
-        sendUpdateCommand();
+        Task task = journal.getTask(id);
+        if (task.getStatus() != TaskStatus.Completed) {
+            notifier.cancelNotification(id);
+            journal.getTask(id).setStatus(TaskStatus.Cancelled);
+            updateMainForm();
+            sendUpdateCommand();
+        }
+        else sendUnsuccessfulCommand();
     }
 
     /**
@@ -156,10 +157,13 @@ public class Controller {
      */
 
     public void finishNotification(int id) {
-        notifier.cancelNotification(id);
-        journal.getTask(id).setStatus(TaskStatus.Completed);
-        updateMainForm();
-        sendUpdateCommand();
+        if (journal.getTask(id).getStatus() != TaskStatus.Cancelled) {
+            notifier.cancelNotification(id);
+            journal.getTask(id).setStatus(TaskStatus.Completed);
+            updateMainForm();
+            sendUpdateCommand();
+        }
+        else sendUnsuccessfulCommand();
     }
 
     /**
@@ -169,12 +173,15 @@ public class Controller {
      */
 
     public void updateNotification(Task task) {
-        journal.removeTask(task.getId());
-        task.setStatus(TaskStatus.Rescheduled);
-        journal.addTask(task);
-        notifier.editNotification(task);
-        updateMainForm();
-        sendUpdateCommand();
+        if (task.getStatus() != TaskStatus.Completed && task.getStatus() != TaskStatus.Cancelled) {
+            journal.removeTask(task.getId());
+            task.setStatus(TaskStatus.Rescheduled);
+            journal.addTask(task);
+            notifier.editNotification(task);
+            updateMainForm();
+            sendUpdateCommand();
+        }
+        else sendUnsuccessfulCommand();
     }
 
     /**
@@ -194,34 +201,5 @@ public class Controller {
     public void setOverdue(int id) {
         journal.getTask(id).setStatus(TaskStatus.Overdue);
         updateMainForm();
-    }
-
-    /**
-     * Checks if user with current login exists in user's map and its password equals password from parameter
-     */
-
-    public boolean isUserDataCorrect(User user) {
-        if (user == null) return false;
-        return userData.containsKey(user.getLogin()) &&
-                userData.get(user.getLogin()).equals(user.getPassword());
-    }
-
-    public boolean isSuchLoginExists(String login) {
-        return userData.containsKey(login);
-    }
-
-    public void addUser(User user) {
-        if (user != null) {
-            userData.put(user.getLogin(), user.getPassword());
-        }
-    }
-
-    public void writeUserData(String path) {
-        try {
-            userDataSerializer.writeData(this.userData, path);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Could not write user data to file!",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
     }
 }

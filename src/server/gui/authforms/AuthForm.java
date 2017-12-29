@@ -3,6 +3,7 @@ package server.gui.authforms;
 import server.commandproccessor.User;
 import server.controller.Controller;
 import server.controller.IDGenerator;
+import server.controller.UserAuthorizer;
 import server.gui.mainform.MainForm;
 import server.model.Journal;
 import server.network.ServerNetworkFacade;
@@ -20,6 +21,7 @@ public class AuthForm extends JFrame {
     private JPasswordField passwordField;
     private JButton registrationButton;
     private Controller controller = Controller.getInstance();
+    private UserAuthorizer authorizer = UserAuthorizer.getInstance();
     private ServerNetworkFacade serverFacade;
     private static AuthForm instance;
 
@@ -139,7 +141,7 @@ public class AuthForm extends JFrame {
                 || passwordField.getPassword().length == 0) {
             JOptionPane.showMessageDialog(null,
                     "Incorrect login or password!", "Error", JOptionPane.ERROR_MESSAGE);
-        } else if (!controller.isUserDataCorrect(new User(loginField.getText(),
+        } else if (!authorizer.isUserDataCorrect(new User(loginField.getText(),
                 String.valueOf(passwordField.getPassword()), -1))) {
             if (JOptionPane.showConfirmDialog(null,
                     "User with such login and password does not exists! Do you want to sign up now?",

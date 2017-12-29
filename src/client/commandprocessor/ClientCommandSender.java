@@ -3,7 +3,9 @@ package client.commandprocessor;
 import client.factories.ClientCommandFactory;
 import client.model.Task;
 import client.network.ClientNetworkFacade;
+import constants.ConstantsClass;
 
+import javax.swing.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -13,15 +15,6 @@ import java.util.List;
 
 public class ClientCommandSender {
     private static ClientCommandSender instance;
-    private static final String ADD = "Add";
-    private static final String EDIT = "Edit";
-    private static final String DELETE = "Delete";
-    private static final String LATER = "Later";
-    private static final String FINISH = "Finish";
-    private static final String CANCEL = "Cancel";
-    private static final String SIGN_IN = "Sign in";
-    private static final String SIGN_UP = "Sign up";
-    private static final String DISCONNECT = "Disconnect";
     private ClientNetworkFacade clientNetworkFacade;
 
     private ClientCommandSender() {
@@ -38,11 +31,12 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(ADD, task), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.ADD, task), out);
             out.flush();
         }
         catch(JAXBException | IOException e){
-            e.getMessage();
+            JOptionPane.showMessageDialog(null, "Could not send this command!",
+                    "Incorrect command!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -51,11 +45,12 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(EDIT, task), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.EDIT, task), out);
             out.flush();
         }
         catch(JAXBException | IOException e){
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Could not send this command!",
+                    "Incorrect command!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -64,11 +59,12 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(DELETE, tasksNums), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.DELETE, tasksNums), out);
             out.flush();
         }
         catch(JAXBException | IOException e){
-            e.getMessage();
+            JOptionPane.showMessageDialog(null, "Could not send this command!",
+                    "Incorrect command!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -77,11 +73,12 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(LATER, task), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.LATER, task), out);
             out.flush();
         }
         catch(JAXBException | IOException e){
-            e.getMessage();
+            JOptionPane.showMessageDialog(null, "Could not send this command!",
+                    "Incorrect command!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -90,11 +87,12 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(FINISH, task), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.FINISH, task), out);
             out.flush();
         }
         catch(JAXBException | IOException e){
-            e.getMessage();
+            JOptionPane.showMessageDialog(null, "Could not send this command!",
+                    "Incorrect command!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -103,11 +101,12 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(CANCEL, task), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.CANCEL, task), out);
             out.flush();
         }
         catch(JAXBException | IOException e){
-            e.getMessage();
+            JOptionPane.showMessageDialog(null, "Could not send this command!",
+                    "Incorrect command!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -116,11 +115,13 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(SIGN_IN, new User(login, password, clientNetworkFacade.getNotificationPort())), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.SIGN_IN,
+                    new User(login, password, clientNetworkFacade.getNotificationPort())), out);
             out.flush();
         }
         catch (JAXBException | IOException e) {
-            e.getMessage();
+            JOptionPane.showMessageDialog(null, "Could not send this command!",
+                    "Incorrect command!", JOptionPane.ERROR_MESSAGE);
         }
 
     }
@@ -130,11 +131,13 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(SIGN_UP, new User(login, password, clientNetworkFacade.getNotificationPort())), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.SIGN_UP,
+                    new User(login, password, clientNetworkFacade.getNotificationPort())), out);
             out.flush();
         }
         catch (JAXBException | IOException e) {
-            e.getMessage();
+            JOptionPane.showMessageDialog(null, "Could not send this command!",
+                    "Incorrect command!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -143,11 +146,13 @@ public class ClientCommandSender {
             JAXBContext context = JAXBContext.newInstance(Command.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(DISCONNECT, clientNetworkFacade.getNotificationPort()), out);
+            marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.DISCONNECT,
+                    clientNetworkFacade.getNotificationPort()), out);
             out.flush();
         }
         catch (JAXBException | IOException e) {
-            e.getMessage();
+            JOptionPane.showMessageDialog(null, "Could not send this command!",
+                    "Incorrect command!", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

@@ -1,7 +1,9 @@
 package client.commandprocessor;
 
 import client.commandprocessor.commandhandlers.*;
+import constants.ConstantsClass;
 
+import javax.swing.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -12,23 +14,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ClientCommandParser {
-    private static final String UPDATE = "Update";
-    private static final String NOTIFICATION = "Notification";
-    private static final String UNSUCCESSFUL_SIGN_IN = "Unsuccessful auth";
-    private static final String UNSUCCESSFUL_SIGN_UP = "Unsuccessful sign up";
-    private static final String SUCCESSFUL_AUTH = "Successful auth";
-    private static final String UNSUCCESSFUL_ACTION = "Unsuccessfully";
     private static ClientCommandParser instance;
     private Map<String, CommandHandler> handlers;
 
     private ClientCommandParser() {
         handlers = new HashMap<>();
-        handlers.put(UPDATE, new UpdateCommandHandler());
-        handlers.put(NOTIFICATION, new NotificationCommandHandler());
-        handlers.put(UNSUCCESSFUL_SIGN_IN, new UnsuccessfulSignInCommandHandler());
-        handlers.put(UNSUCCESSFUL_SIGN_UP, new UnsuccessfulSignUpCommandHandler());
-        handlers.put(SUCCESSFUL_AUTH, new SuccessfulAuthCommandHandler());
-        handlers.put(UNSUCCESSFUL_ACTION, new UnsuccessfulActionCommandHandler());
+        handlers.put(ConstantsClass.UPDATE, new UpdateCommandHandler());
+        handlers.put(ConstantsClass.NOTIFICATION, new NotificationCommandHandler());
+        handlers.put(ConstantsClass.UNSUCCESSFUL_SIGN_IN, new UnsuccessfulSignInCommandHandler());
+        handlers.put(ConstantsClass.UNSUCCESSFUL_SIGN_UP, new UnsuccessfulSignUpCommandHandler());
+        handlers.put(ConstantsClass.SUCCESSFUL_AUTH, new SuccessfulAuthCommandHandler());
+        handlers.put(ConstantsClass.UNSUCCESSFUL_ACTION, new UnsuccessfulActionCommandHandler());
     }
 
     public static ClientCommandParser getInstance() {
@@ -45,10 +41,9 @@ public class ClientCommandParser {
             command = (Command) unmarshaller.unmarshal(is);
             is.close();
             return command;
-        } catch (JAXBException e) {
-            System.out.println("Parse error!");
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (JAXBException | IOException e) {
+            JOptionPane.showMessageDialog(null, "Incorrect command!",
+                    "Parse error!", JOptionPane.ERROR_MESSAGE);
         }
         return null;
     }

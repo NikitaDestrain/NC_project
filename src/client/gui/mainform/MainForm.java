@@ -48,8 +48,7 @@ public class MainForm extends JFrame {
         buttonPanel.setJTable((tablePanel.getTable()));
 
         buttonPanel.setTableListener(new TableListener() {
-            private List<Integer> tasksToDelete = new ArrayList<>();
-            private StringBuilder builder = new StringBuilder();
+            private StringBuilder builder = new StringBuilder("");
             @Override
             public void rowDeleted(Integer... rows) {
                 buttonPanel.setListener(new TaskActionListener() {
@@ -73,8 +72,8 @@ public class MainForm extends JFrame {
                                     builder.append(task.getId());
                                     builder.append(",");
                                 }
-
-                                commandSender.sendDeleteCommand(builder.toString(), clientFacade.getDataOutputStream());
+                                if (!builder.toString().equals(""))
+                                    commandSender.sendDeleteCommand(builder.toString(), clientFacade.getDataOutputStream());
                                 break;
                         }
                     }
@@ -101,8 +100,7 @@ public class MainForm extends JFrame {
         });
 
         tablePanel.setTableListener(new TableListener() {
-            private List<Integer> tasksToDelete = new ArrayList<>();
-            private StringBuilder builder = new StringBuilder();
+            private StringBuilder builder = new StringBuilder("");
             @Override
             public void rowDeleted(Integer... rows) {
                 buttonPanel.setListener(new TaskActionListener() {
@@ -126,7 +124,8 @@ public class MainForm extends JFrame {
                                     builder.append(task.getId());
                                     builder.append(",");
                                 }
-                                commandSender.sendDeleteCommand(builder.toString(), clientFacade.getDataOutputStream());
+                                if (!builder.toString().equals(""))
+                                    commandSender.sendDeleteCommand(builder.toString(), clientFacade.getDataOutputStream());
                                 break;
                         }
                     }

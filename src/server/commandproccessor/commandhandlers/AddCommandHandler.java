@@ -14,7 +14,6 @@ public class AddCommandHandler implements CommandHandler {
     public synchronized void handle(Command command) {
         Controller controller = Controller.getInstance();
         Task tmp_task = (Task) command.getObject();
-        controller.addTask(TaskFactory.createTask(tmp_task.getName(), tmp_task.getStatus(), tmp_task.getDescription(),
-                tmp_task.getNotificationDate(), tmp_task.getPlannedDate()));
+        controller.addTask(TaskFactory.createTask(tmp_task));
     }
 }

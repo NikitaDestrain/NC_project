@@ -3,6 +3,7 @@ package server.gui.authforms;
 import server.commandproccessor.User;
 import server.controller.Controller;
 import server.controller.IDGenerator;
+import server.controller.UserAuthorizer;
 import server.gui.mainform.MainForm;
 import server.model.Journal;
 import server.network.ServerNetworkFacade;
@@ -22,6 +23,7 @@ public class SignUpForm extends JFrame {
     private JPasswordField confirmPasswordField;
     private static SignUpForm instance;
     private Controller controller = Controller.getInstance();
+    private UserAuthorizer authorizer = UserAuthorizer.getInstance();
     private ServerNetworkFacade serverFacade;
 
     public SignUpForm() {
@@ -159,12 +161,12 @@ public class SignUpForm extends JFrame {
             JOptionPane.showMessageDialog(this,
                     "Passwords do not match!",
                     "Error", JOptionPane.ERROR_MESSAGE);
-        } else if (controller.isSuchLoginExists(login)) {
+        } else if (authorizer.isSuchLoginExists(login)) {
             JOptionPane.showMessageDialog(this,
                     "User with such login already exists!",
                     "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            controller.addUser(new User(login, password, -1));
+            authorizer.addUser(new User(login, password, -1));
             MainForm mainForm = MainForm.getInstance();
             if (mainForm == null) mainForm = new MainForm();
             mainForm.setUsername(login);

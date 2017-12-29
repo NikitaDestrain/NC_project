@@ -21,4 +21,9 @@ public class TaskFactory {
     public static Task createTask(String name, TaskStatus status, String description, Date notificationDate, Date plannedDate) {
         return new Task(name, status, description, notificationDate, plannedDate, IDGenerator.getInstance().createId());
     }
+
+    public static Task createTask(Task task) {
+        return new Task(task.getName(), task.getStatus(), task.getDescription(), task.getNotificationDate(),
+                task.getPlannedDate(), IDGenerator.getInstance().createId());
+    }
 }

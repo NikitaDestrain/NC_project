@@ -48,8 +48,7 @@ public class MainForm extends JFrame {
         buttonPanel.setJtable((tablePanel.getTable()));
 
         buttonPanel.setTableListener(new TableListener() {
-            private List<Integer> tasksToDelete = new ArrayList<>();
-            private StringBuilder builder = new StringBuilder();
+            private StringBuilder builder = new StringBuilder("");
             @Override
             public void rowDeleted(Integer... rows) {
                 buttonPanel.setListener(new TaskActionListener() {
@@ -73,7 +72,8 @@ public class MainForm extends JFrame {
                                     builder.append(task.getId());
                                     builder.append(",");
                                 }
-                                Controller.getInstance().removeTask(builder.toString());
+                                if (!builder.toString().equals(""))
+                                    Controller.getInstance().removeTask(builder.toString());
                                 break;
                         }
                     }
@@ -100,8 +100,7 @@ public class MainForm extends JFrame {
         });
 
         tablePanel.setTableListener(new TableListener() {
-            private List<Integer> tasksToDelete = new LinkedList<>();
-            private StringBuilder builder = new StringBuilder();
+            private StringBuilder builder = new StringBuilder("");
             @Override
             public void rowDeleted(Integer... rows) {
                 buttonPanel.setListener(new TaskActionListener() {
@@ -125,7 +124,8 @@ public class MainForm extends JFrame {
                                     builder.append(task.getId());
                                     builder.append(",");
                                 }
-                                Controller.getInstance().removeTask(builder.toString());
+                                if (!builder.toString().equals(""))
+                                    Controller.getInstance().removeTask(builder.toString());
                                 break;
                         }
                     }
@@ -209,9 +209,8 @@ public class MainForm extends JFrame {
                                     "Error", JOptionPane.ERROR_MESSAGE);
                         else {
                             journalBackup.writeJournal(journal, path);
-                            Controller.getInstance().writeUserData(ParserProperties.getInstance()
-                                    .getProperties("USER_DATA"));
-                            // todo finish ServerNetworkFacade.getInstance().finish();
+                            UserAuthorizer.getInstance().writeUserData(ParserProperties.getInstance()
+                                    .getProperties(PropertiesConstant.USER_DATA.toString()));
                             System.exit(0);
                         }
                     } catch (IllegalPropertyException ex) {
