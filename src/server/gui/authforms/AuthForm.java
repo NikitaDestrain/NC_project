@@ -115,10 +115,6 @@ public class AuthForm extends JFrame {
         buttonsPanel.add(okButton, gc);
         buttonsPanel.add(registrationButton, gc);
 
-
-        //Dimension btnSize = cancelButton.getPreferredSize();
-        //okButton.setPreferredSize(btnSize);
-
         ///////Adding panels to frame
         setLayout(new BorderLayout());
         add(controlsPanel, BorderLayout.CENTER);

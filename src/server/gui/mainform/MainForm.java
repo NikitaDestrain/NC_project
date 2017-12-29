@@ -11,6 +11,7 @@ import server.properties.PropertiesConstant;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,6 +40,9 @@ public class MainForm extends JFrame {
             icon = new ImageIcon(ParserProperties.getInstance().getProperties(PropertiesConstant.MAIN_FORM_ICON.toString()));
         } catch (IllegalPropertyException e) {
             JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "The configuration file is corrupt or missing!",
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         tablePanel = new TablePanel(this);
