@@ -1,8 +1,6 @@
 package server.controller;
 
 import server.commandproccessor.User;
-import server.properties.ParserProperties;
-import server.properties.PropertiesConstant;
 
 import javax.swing.*;
 import java.io.IOException;

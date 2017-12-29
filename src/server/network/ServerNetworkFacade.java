@@ -2,6 +2,7 @@ package server.network;
 
 import constants.ConstantsClass;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -61,7 +62,7 @@ public class ServerNetworkFacade extends Thread {
             serverDataSocket = new ServerSocket(port);
         }
         catch (IOException e) {
-            e.getMessage();//todo vlla это не обработка ошибки
+            JOptionPane.showMessageDialog(null, "Server can not start! Restart application!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

@@ -1,7 +1,5 @@
 package server.exceptions;
 
-import server.properties.ParserProperties;
-
 /**
  * @see ParserProperties#getProperties(String)
  */

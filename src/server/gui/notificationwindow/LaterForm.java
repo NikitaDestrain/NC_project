@@ -1,9 +1,8 @@
 package server.gui.notificationwindow;
 
-import client.gui.mainform.MainForm;
+import constants.ConstantsClass;
 import server.commandproccessor.ServerCommandSender;
 import server.controller.Controller;
-import server.properties.PropertiesConstant;
 import server.exceptions.IllegalPropertyException;
 import server.model.Task;
 import server.network.ServerNetworkFacade;
@@ -27,7 +26,7 @@ public class LaterForm extends JFrame {
     public LaterForm(Task task){
         setLayout(new GridLayout(3,1));
         try {
-            icon = new ImageIcon(ParserProperties.getInstance().getProperties(PropertiesConstant.MAIN_FORM_ICON.toString()));
+            icon = new ImageIcon(ParserProperties.getInstance().getProperties(ConstantsClass.MAIN_FORM_ICON));
         } catch (IllegalPropertyException e) {
             JOptionPane.showMessageDialog(null, "Illegal value of property",
                     "Error", JOptionPane.ERROR_MESSAGE);

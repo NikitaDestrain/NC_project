@@ -9,7 +9,7 @@ public class UpdateCommandHandler implements CommandHandler {
     public synchronized void handle(Command command) {
         MainForm mainForm = MainForm.getInstance();
         if (mainForm == null) mainForm = new MainForm();
-        mainForm.setJournal((Journal) command.getObject()); // при update приходит журнал
+        mainForm.setJournal((Journal) command.getObject());
         mainForm.setVisible(true);
     }
 }

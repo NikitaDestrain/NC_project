@@ -23,4 +23,10 @@ public class ConstantsClass {
     public static final int SLEEP_FOR_500_SEC = 500;
     public static final int DEFAULT_MAX_COUNT_CLIENTS = 20;
     public static final int DEFAULT_CURRENT_COUNT_CLIENTS = 0;
+
+    public static final String PATH_TO_JOURNAL = "PATH_TO_JOURNAL";
+    public static final String MAIN_FORM_ICON = "MAIN_FORM_ICON";
+    public static final String NOTIF_SOUND = "NOTIF_SOUND";
+    public static final String XML_FILE = "XML_FILE";
+    public static final String USER_DATA = "USER_DATA";
 }

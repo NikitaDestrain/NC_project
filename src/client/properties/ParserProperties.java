@@ -38,9 +38,7 @@ public class ParserProperties {
      */
     public static ParserProperties getInstance() throws IOException {
         if (instance == null) {
-
             instance = new ParserProperties();
-
             //todo vlla э не, так не пойдет. Возвращать null - это вообще подло. Это 100% приведет к NPE в каком-нибудь рандомном месте кода.
             // если уж мы словили IOException при парсинге пропертей - его нужно обработать.
             // Я вижу два варианта: либо написать в лог и выдать что-то дефолтное, либо пробросить выше и корректно завершить приложение

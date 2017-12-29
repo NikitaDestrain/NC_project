@@ -1,18 +1,14 @@
 package server.controller;
 
 import server.commandproccessor.ServerCommandSender;
-import server.commandproccessor.User;
 import server.gui.mainform.MainForm;
 import server.model.Journal;
 import server.model.Task;
 import server.model.TaskStatus;
 import server.network.ServerNetworkFacade;
-import server.properties.ParserProperties;
-import server.properties.PropertiesConstant;
 
 import javax.swing.*;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.*;
 
 public class Controller {
