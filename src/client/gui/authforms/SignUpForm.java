@@ -14,6 +14,7 @@ import java.awt.event.WindowEvent;
 public class SignUpForm extends JFrame {
     private JButton okButton;
     private JButton clearButton;
+    private JButton back_to_authForm;
     private JTextField loginField;
     private JPasswordField passwordField;
     private JPasswordField confirmPasswordField;
@@ -21,6 +22,7 @@ public class SignUpForm extends JFrame {
     private ClientNetworkFacade clientFacade;
     private ClientCommandSender commandSender = ClientCommandSender.getInstance();
     private UserContainer userContainer = UserContainer.getInstance();
+
 
     public SignUpForm() {
         super("Sign up");
@@ -30,6 +32,7 @@ public class SignUpForm extends JFrame {
         if (!clientFacade.isAlive()) clientFacade.start();
         okButton = new JButton("OK");
         clearButton = new JButton("Clear");
+        back_to_authForm = new JButton("Back");
         loginField = new JTextField(10);
         passwordField = new JPasswordField(10);
         passwordField.setEchoChar('*'); // что отображается при вводе пароля
@@ -49,6 +52,10 @@ public class SignUpForm extends JFrame {
             confirmPasswordField.setText("");
         });
 
+        back_to_authForm.addActionListener((ActionEvent e) -> {
+            this.dispose();
+            new AuthForm().setVisible(true);
+        });
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -130,13 +137,14 @@ public class SignUpForm extends JFrame {
         gc.anchor = GridBagConstraints.LINE_START;
         controlsPanel.add(confirmPasswordField, gc);
 
-        ///////////////// OK and Cancel buttons
+        /////////////////  buttons
         buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         buttonsPanel.add(okButton, gc);
         buttonsPanel.add(clearButton, gc);
+        buttonsPanel.add(back_to_authForm,gc);
 
         Dimension btnSize = clearButton.getPreferredSize();
-        okButton.setPreferredSize(btnSize);
+       okButton.setPreferredSize(btnSize);
 
         ///////Adding panels to frame
         setLayout(new BorderLayout());
