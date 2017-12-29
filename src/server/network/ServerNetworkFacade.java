@@ -1,5 +1,7 @@
 package server.network;
 
+import constants.ConstantsClass;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,9 +13,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ServerNetworkFacade extends Thread {
-    private static final int DEFAULT_PORT = 1337;
-    private static final int DEFAULT_MAX_CNT_CLIENTS = 20;
-    private static final int DEFAULT_CURRENT_CNT_CLIENTS = 0;
     private int serverPort;
     private ServerSocket serverDataSocket;
     private Socket clientDataSocket;
@@ -34,8 +33,8 @@ public class ServerNetworkFacade extends Thread {
     @Override
     public void run() {
         System.out.println("Server logs:");
-        serverPort = DEFAULT_PORT;
-        start(serverPort, DEFAULT_MAX_CNT_CLIENTS);
+        serverPort = ConstantsClass.DEFAULT_SERVER_PORT;
+        start(serverPort, ConstantsClass.DEFAULT_MAX_COUNT_CLIENTS);
         while (!serverDataSocket.isClosed()) {
             try {
                 clientDataSocket = serverDataSocket.accept();
@@ -55,7 +54,7 @@ public class ServerNetworkFacade extends Thread {
     private void start(int port, int nThreads) {
         try {
             executeIt = Executors.newFixedThreadPool(nThreads);
-            clientCount = DEFAULT_CURRENT_CNT_CLIENTS;
+            clientCount = ConstantsClass.DEFAULT_CURRENT_COUNT_CLIENTS;
             clientNotificationOutputStreams = new HashMap<>();
             clientDataOutputStreams = new HashMap<>();
             clients = new HashMap<>();

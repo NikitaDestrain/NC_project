@@ -17,4 +17,10 @@ public class ConstantsClass {
     public static final String UNSUCCESSFUL_SIGN_UP = "Unsuccessful sign up";
     public static final String SUCCESSFUL_AUTH = "Successful auth";
     public static final String UNSUCCESSFUL_ACTION = "Unsuccessfully";
+
+    public static final int DEFAULT_SERVER_PORT = 1337;
+    public static final int SLEEP_FOR_250_SEC = 250;
+    public static final int SLEEP_FOR_500_SEC = 500;
+    public static final int DEFAULT_MAX_COUNT_CLIENTS = 20;
+    public static final int DEFAULT_CURRENT_COUNT_CLIENTS = 0;
 }

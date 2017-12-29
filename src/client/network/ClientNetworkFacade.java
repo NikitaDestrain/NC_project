@@ -3,6 +3,7 @@ package client.network;
 import client.commandprocessor.ClientCommandSender;
 import client.commandprocessor.Command;
 import client.commandprocessor.ClientCommandParser;
+import constants.ConstantsClass;
 import server.gui.mainform.MainForm;
 
 import javax.swing.*;
@@ -12,7 +13,6 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class ClientNetworkFacade extends Thread {
-    private static final int DEFAULT_SERVER_PORT = 1337;
     private int notificationPort;
     private int serverPort;
     private boolean successConnect;
@@ -42,7 +42,7 @@ public class ClientNetworkFacade extends Thread {
         System.out.println();
         while(true) {
             try {
-                Thread.sleep(250);
+                Thread.sleep(ConstantsClass.SLEEP_FOR_250_SEC);
                 if (successConnect)
                     break;
             } catch (InterruptedException e) {}
@@ -52,7 +52,7 @@ public class ClientNetworkFacade extends Thread {
 
     public int connect() {
         try {
-            serverPort = DEFAULT_SERVER_PORT;
+            serverPort = ConstantsClass.DEFAULT_SERVER_PORT;
             clientDataSocket = new Socket("localhost", serverPort);
             dataOutputStream = new DataOutputStream(clientDataSocket.getOutputStream());
             System.out.println("DataOutputStream created");
@@ -60,7 +60,7 @@ public class ClientNetworkFacade extends Thread {
             System.out.println("DataInputStream created");
             while(true) {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(ConstantsClass.SLEEP_FOR_500_SEC);
                     if (dataInputStream.available() > 0)
                         break;
                 }
@@ -119,7 +119,7 @@ public class ClientNetworkFacade extends Thread {
     private void commandRelay() {
         try {
             while (true) {
-                Thread.sleep(500);
+                Thread.sleep(ConstantsClass.SLEEP_FOR_500_SEC);
                 if(dataInputStream.available() > 0) {
                     byte[] tmp_buffer = new byte[dataInputStream.available()];
                     int tmp_trash = dataInputStream.read(tmp_buffer);

@@ -28,8 +28,10 @@ public class SignUpForm extends JFrame {
         super("Sign up");
         instance = this;
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+
         clientFacade = ClientNetworkFacade.getInstance();
         if (!clientFacade.isAlive()) clientFacade.start();
+
         okButton = new JButton("OK");
         clearButton = new JButton("Clear");
         back_to_authForm = new JButton("Back");
