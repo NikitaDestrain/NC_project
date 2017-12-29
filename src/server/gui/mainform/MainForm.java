@@ -28,6 +28,7 @@ public class MainForm extends JFrame {
     private static MainForm instance;
     private TaskSender taskSender = TaskSender.getInstance();
     private JLabel usernameLabel = new JLabel("Your status is Server. You logged as: ");
+    private Controller controller = Controller.getInstance();
 
     public MainForm() {
         super("Task Scheduler");
@@ -77,7 +78,7 @@ public class MainForm extends JFrame {
                                     builder.append(",");
                                 }
                                 if (!builder.toString().equals(""))
-                                    Controller.getInstance().removeTask(builder.toString());
+                                    controller.removeTask(builder.toString());
                                 break;
                         }
                     }
@@ -129,7 +130,7 @@ public class MainForm extends JFrame {
                                     builder.append(",");
                                 }
                                 if (!builder.toString().equals(""))
-                                    Controller.getInstance().removeTask(builder.toString());
+                                    controller.removeTask(builder.toString());
                                 break;
                         }
                     }
@@ -137,7 +138,6 @@ public class MainForm extends JFrame {
             }
         });
 
-        setJMenuBar(createMenu());
         setLayout(new BorderLayout());
         add(tablePanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
@@ -256,77 +256,6 @@ public class MainForm extends JFrame {
             usernameLabel.setText(usernameLabel.getText() + username);
     }
 
-    private JMenuBar createMenu() {
-        JMenuBar menu = new JMenuBar();
-
-        /*JMenu fileMenu = new JMenu("File");
-        menu.add(fileMenu);
-
-        JMenuItem exportJournal = new JMenuItem("Export journal...");//todo эти пункты сейчас ничего полезного не делают
-        JMenuItem importJournal = new JMenuItem("Import journal...");
-        JMenuItem exit = new JMenuItem("Exit");
-
-        fileMenu.add(exportJournal);
-        fileMenu.add(importJournal);
-        fileMenu.addSeparator();
-        fileMenu.add(exit);
-
-        exit.addActionListener((ActionEvent e) -> {
-            int action = JOptionPane.showConfirmDialog(
-                    MainForm.this, "Do you really want to close the app?",
-                    "Warning!",
-                    JOptionPane.YES_NO_OPTION);//todo No и Cancel делаю ровно то же самое.
-
-            if (action == JOptionPane.OK_OPTION) {
-                try {
-                    journalBackup.writeJournal(this.journal, ParserProperties.getInstance().getProperties("XML_FILE"));//todo захардкоженные значения стоит выносить в константы
-                } catch (IllegalPropertyException ex) {
-                    JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file ",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                System.exit(0);
-            }
-        });
-
-        exportJournal.addActionListener((ActionEvent e) -> {
-
-            try {
-                journalBackup.writeJournal(journal, ParserProperties.getInstance().getProperties("XML_FILE"));
-            } catch (IllegalPropertyException ex) {
-                JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(MainForm.this, "Could not save journal to file",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-
-        importJournal.addActionListener((ActionEvent e) -> {
-            try {
-                this.journal = journalBackup.readJournal(ParserProperties.getInstance().getProperties("PATH_TO_JOURNAL"));
-                if (this.journal != null) {
-                    Controller.getInstance().setJournal(this.journal);
-                    tablePanel.setData(journal.getTasks());
-                    tablePanel.refresh();
-                } else
-                    JOptionPane.showMessageDialog(MainForm.this,
-                            "Could not load journal from file",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (IllegalPropertyException ex) {
-                JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(MainForm.this, "Could not load journal from file",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });*/
-
-        return menu;
-    }
-
     /**
      * Sets journal to be represented at this <code>mainform</code>
      *
@@ -346,9 +275,6 @@ public class MainForm extends JFrame {
     }
 
     public void updateJournal() {
-        //server.exceptions.controller = Controller.getInstance();//todo нет нужны каждый раз перезаписывать поле. Синглетон на то и синглетон, что он всегда один и тот же.
-        // Можно или один раз инициализировать поле или вообще отказаться от поля и каждый раз просто вызывать Controller.getInstance()
-        Controller controller = Controller.getInstance();
         this.journal = controller.getJournal();
         tablePanel.setData(this.journal.getTasks());
         buttonPanel.setJtable((tablePanel.getTable()));
