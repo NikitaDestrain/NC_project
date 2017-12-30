@@ -27,7 +27,7 @@ public class ConnectionThread extends Thread {
     private DataInputStream notificationInputStream;
 
     private ClientCommandParser commandParser = ClientCommandParser.getInstance();
-    private ClientNotificationListener clientNotificationListener;
+    //private ClientNotificationListener clientNotificationListener;
 
     public void run() {
         this.successConnect=false;
@@ -85,8 +85,8 @@ public class ConnectionThread extends Thread {
             System.out.println("Notification OutputStream  created");
             notificationInputStream = new DataInputStream(notificationSenderSocket.getInputStream());
             System.out.println("Notification InputStream created");
-            clientNotificationListener = new ClientNotificationListener(notificationInputStream);
-            clientNotificationListener.start();
+ //           clientNotificationListener = new ClientNotificationListener(notificationInputStream);
+   //         clientNotificationListener.start();
             successConnect = true;
         } catch (IOException e) {
             JOptionPane.showMessageDialog(MainForm.getInstance(), "Something is going wrong! For correct work you should restart application!",
@@ -99,7 +99,7 @@ public class ConnectionThread extends Thread {
         try {
 
             ClientCommandSender.getInstance().sendDisconnectCommand(dataOutputStream);
-            clientNotificationListener.interrupt();
+     //       clientNotificationListener.interrupt();
             notificationInputStream.close();
             notificationOutputStream.close();
             notificationSenderSocket.close();

@@ -157,16 +157,10 @@ public class SignUpForm extends JFrame {
     }
 
     private void registration() {
-        String login, password;
+        String login;
         login = this.loginField.getText();
-        password = String.valueOf(this.passwordField.getPassword());
-        String password2 = null;
-        try {
-            password2 = encoder.encode(String.valueOf(this.confirmPasswordField.getPassword()));
-        } catch (NoSuchAlgorithmException e) {
-            JOptionPane.showMessageDialog(null, "Can not send this command!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-
+        String password = String.valueOf(this.passwordField.getPassword());
+        String password2 = String.valueOf(this.confirmPasswordField.getPassword());
         if ((login.length() == 0) || (password.length() == 0) || (password2.length() == 0)) {
             JOptionPane.showMessageDialog(this,
                     "Fill up all the fields!",
@@ -180,6 +174,11 @@ public class SignUpForm extends JFrame {
                 JOptionPane.showMessageDialog(null,
                         "Server is not available!", "Error", JOptionPane.ERROR_MESSAGE);
             else {
+                try {
+                    password = encoder.encode(String.valueOf(this.passwordField.getPassword()));
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
                 userContainer.setUsername(login);
                 commandSender.sendSignUpCommand(login, password, clientFacade.getDataOutputStream());
             }

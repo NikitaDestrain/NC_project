@@ -17,10 +17,8 @@ public class XMLSerializer implements Serializer {
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             OutputStream out = new FileOutputStream(path);
             marshaller.marshal(journal, out);
-        } catch (JAXBException e) {
-            e.getMessage();//todo vlla аналогично
-        } catch (IOException e){
-            e.getMessage();//todo vlla аналогично
+        } catch (Exception e) {
+            throw new Exception();
         }
     }
 
@@ -32,10 +30,8 @@ public class XMLSerializer implements Serializer {
             InputStream in = new FileInputStream(path);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             journal = (Journal) unmarshaller.unmarshal(in);
-        } catch (JAXBException e) {
-            return null;//todo vlla аналогично
-        } catch (IOException e) {
-            return null;//todo vlla аналогично
+        } catch (Exception e) {
+            throw new Exception();
         }
         return journal;
     }

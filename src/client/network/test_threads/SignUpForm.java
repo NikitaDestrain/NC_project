@@ -44,7 +44,7 @@ public class SignUpForm extends JFrame {
 
         okButton.addActionListener((ActionEvent e) -> {
 
-            ClientNetworkFacade.getInstance().connection();
+            //ClientNetworkFacade.getInstance().connection();
                 registration();
         });
 
@@ -56,7 +56,7 @@ public class SignUpForm extends JFrame {
 
         back_to_authForm.addActionListener((ActionEvent e) -> {
             this.dispose();
-            new AuthForm().setVisible(true);
+            //new AuthForm().setVisible(true);
         });
 
         addWindowListener(new WindowAdapter() {

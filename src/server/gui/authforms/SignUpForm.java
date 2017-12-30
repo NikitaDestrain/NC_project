@@ -153,22 +153,8 @@ public class SignUpForm extends JFrame {
     private void registration() {
         String login;
         login = this.loginField.getText();
-        String password = null;
-        try {
-            password = encoder.encode(String.valueOf(this.passwordField.getPassword()));
-        } catch (NoSuchAlgorithmException e) {
-            JOptionPane.showMessageDialog(this,
-                    "Could not perform this action!",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        String password2 = null;
-        try {
-            password2 = encoder.encode(String.valueOf(this.confirmPasswordField.getPassword()));
-        } catch (NoSuchAlgorithmException e) {
-            JOptionPane.showMessageDialog(this,
-                    "Could not perform this action!",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        String password = String.valueOf(this.passwordField.getPassword());
+        String password2 = String.valueOf(this.confirmPasswordField.getPassword());
 
         if ((login.length() == 0) || (password.length() == 0) || (password2.length() == 0)) {
             JOptionPane.showMessageDialog(this,
@@ -183,6 +169,13 @@ public class SignUpForm extends JFrame {
                     "User with such login already exists!",
                     "Error", JOptionPane.ERROR_MESSAGE);
         } else {
+            try {
+                password = encoder.encode(String.valueOf(this.passwordField.getPassword()));
+            } catch (NoSuchAlgorithmException e) {
+                JOptionPane.showMessageDialog(this,
+                        "Could not perform this action!",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
             authorizer.addUser(new User(login, password, -1));
             MainForm mainForm = MainForm.getInstance();
             if (mainForm == null) mainForm = new MainForm();

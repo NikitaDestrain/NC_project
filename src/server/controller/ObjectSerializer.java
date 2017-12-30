@@ -18,8 +18,8 @@ public class ObjectSerializer implements Serializer {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(
                     new FileOutputStream(path));
             objectOutputStream.writeObject(journal);
-        } catch (IOException e) {
-            e.getMessage();//todo vlla это не обработка ошибки
+        } catch (Exception e) {
+            throw new Exception();
         }
     }
 
@@ -36,12 +36,8 @@ public class ObjectSerializer implements Serializer {
         try (ObjectInputStream objectInputStream = new ObjectInputStream(
                 new FileInputStream(path))) {
             journal = (Journal) objectInputStream.readObject();
-        } catch (EOFException e) {
-            return null;//todo vlla и это тоже
-        } catch (ClassNotFoundException e1) {
-            return null;//todo vlla и вот это
-            //вообще, если подумать - что произойдет, если мы отдадим наружу null? Произойдет NPE которое уронит всю программу. Какой смысл отдавать null? Никакого.
-            // Гораздо правильнее - выбросить исключение, обработать его (показать пользоваетлю сообщение об ошибке) и корректно завершить программу.
+        } catch (Exception e) {
+            throw new Exception();
         }
         return journal;
     }
