@@ -5,6 +5,15 @@ import java.security.NoSuchAlgorithmException;
 
 public class PasswordEncoder {
 
+    private static PasswordEncoder instance;
+
+    private PasswordEncoder() {}
+
+    public static PasswordEncoder getInstance() {
+        if (instance == null) instance = new PasswordEncoder();
+        return instance;
+    }
+
     /**
      * Encodes user's password using MD5 algorithm
      * @param password user's password
@@ -12,7 +21,7 @@ public class PasswordEncoder {
      * @throws NoSuchAlgorithmException
      */
 
-    public static String encode(String password) throws NoSuchAlgorithmException {
+    public String encode(String password) throws NoSuchAlgorithmException {
         MessageDigest md5 = MessageDigest.getInstance("MD5");
         md5.update(password.getBytes());
 

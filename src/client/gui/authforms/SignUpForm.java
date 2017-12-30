@@ -1,6 +1,7 @@
 package client.gui.authforms;
 
 import client.commandprocessor.ClientCommandSender;
+import client.commandprocessor.PasswordEncoder;
 import client.gui.UserContainer;
 import client.network.ClientNetworkFacade;
 
@@ -10,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.security.NoSuchAlgorithmException;
 
 public class SignUpForm extends JFrame {
     private JButton okButton;
@@ -22,7 +24,7 @@ public class SignUpForm extends JFrame {
     private ClientNetworkFacade clientFacade;
     private ClientCommandSender commandSender = ClientCommandSender.getInstance();
     private UserContainer userContainer = UserContainer.getInstance();
-
+    private PasswordEncoder encoder = PasswordEncoder.getInstance();
 
     public SignUpForm() {
         super("Sign up");
@@ -155,10 +157,15 @@ public class SignUpForm extends JFrame {
     }
 
     private void registration() {
-        String login, password, password2;
+        String login, password;
         login = this.loginField.getText();
         password = String.valueOf(this.passwordField.getPassword());
-        password2 = String.valueOf(this.confirmPasswordField.getPassword());
+        String password2 = null;
+        try {
+            password2 = encoder.encode(String.valueOf(this.confirmPasswordField.getPassword()));
+        } catch (NoSuchAlgorithmException e) {
+            JOptionPane.showMessageDialog(null, "Can not send this command!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
 
         if ((login.length() == 0) || (password.length() == 0) || (password2.length() == 0)) {
             JOptionPane.showMessageDialog(this,

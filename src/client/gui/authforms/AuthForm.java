@@ -1,5 +1,6 @@
 package client.gui.authforms;
 
+import client.commandprocessor.PasswordEncoder;
 import client.gui.UserContainer;
 import client.network.ClientNetworkFacade;
 import client.commandprocessor.ClientCommandSender;
@@ -9,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.security.NoSuchAlgorithmException;
 
 
 public class AuthForm extends JFrame {
@@ -20,6 +22,7 @@ public class AuthForm extends JFrame {
     private static AuthForm instance;
     private ClientCommandSender commandSender = ClientCommandSender.getInstance();
     private UserContainer userContainer = UserContainer.getInstance();
+    private PasswordEncoder encoder = PasswordEncoder.getInstance();
 
     public AuthForm() {
         super("Authorization");
@@ -139,9 +142,13 @@ public class AuthForm extends JFrame {
 
     private void sendData() {
         userContainer.setUsername(loginField.getText());
-        commandSender.sendSignInCommand(loginField.getText(),
-                String.valueOf(passwordField.getPassword()),
-                clientFacade.getDataOutputStream());
+        try {
+            commandSender.sendSignInCommand(loginField.getText(),
+                    encoder.encode(String.valueOf(passwordField.getPassword())),
+                    clientFacade.getDataOutputStream());
+        } catch (NoSuchAlgorithmException e) {
+            JOptionPane.showMessageDialog(null, "Can not send this command!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 

@@ -11,6 +11,10 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Parses an incoming command on the server side
+ */
+
 public class ServerCommandParser {
     private static ServerCommandParser instance;
     private Map<String, CommandHandler> handlers;
@@ -33,6 +37,12 @@ public class ServerCommandParser {
         return instance;
     }
 
+    /**
+     * Parses an incoming command from byte array of XML context using Unmarshaller
+     * @param dataArr incoming data array
+     * @return Command object
+     */
+
     public Command parseToCommand(byte[] dataArr) {
         Command command;
         try {
@@ -48,6 +58,11 @@ public class ServerCommandParser {
         }
         return null;
     }
+
+    /**
+     * Performs an execution of an incoming command using its name
+     * @param command to be executed
+     */
 
     public int doCommandAction(Command command) {
         if (command != null)

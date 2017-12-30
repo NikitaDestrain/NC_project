@@ -1,5 +1,6 @@
 package server.gui.authforms;
 
+import client.commandprocessor.PasswordEncoder;
 import server.commandproccessor.User;
 import server.controller.Controller;
 import server.controller.IDGenerator;
@@ -14,6 +15,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.security.NoSuchAlgorithmException;
 
 public class AuthForm extends JFrame {
     private JButton okButton;
@@ -24,6 +26,7 @@ public class AuthForm extends JFrame {
     private UserAuthorizer authorizer = UserAuthorizer.getInstance();
     private ServerNetworkFacade serverFacade;
     private static AuthForm instance;
+    private PasswordEncoder encoder = PasswordEncoder.getInstance();
 
     public AuthForm() {
         super("Authorization");
@@ -133,12 +136,20 @@ public class AuthForm extends JFrame {
     }
 
     private void signIn() {
+        String password = null;
+        try {
+            password = encoder.encode(String.valueOf(passwordField.getPassword()));
+        } catch (NoSuchAlgorithmException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Could not perform this action!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
         if (loginField.getText() == null || loginField.getText().length() == 0
                 || passwordField.getPassword().length == 0) {
             JOptionPane.showMessageDialog(null,
                     "Incorrect login or password!", "Error", JOptionPane.ERROR_MESSAGE);
         } else if (!authorizer.isUserDataCorrect(new User(loginField.getText(),
-                String.valueOf(passwordField.getPassword()), -1))) {
+                password, -1))) {
             if (JOptionPane.showConfirmDialog(null,
                     "User with such login and password does not exists! Do you want to sign up now?",
                     "Error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {

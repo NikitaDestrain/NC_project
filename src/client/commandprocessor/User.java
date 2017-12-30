@@ -3,6 +3,10 @@ package client.commandprocessor;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 
+/**
+ * Object with login, password and port of a user
+ */
+
 @XmlType(propOrder = {"login", "password", "port"}, name = "user")
 @XmlRootElement(name = "user")
 @XmlAccessorType(XmlAccessType.FIELD)

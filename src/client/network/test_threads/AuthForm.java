@@ -40,7 +40,7 @@ public class AuthForm extends JFrame {
                 JOptionPane.showMessageDialog(null,
                         "Incorrect login or password!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                ClientNetworkFacade.getInstance().connection();
+                //ClientNetworkFacade.getInstance().connection();
                 if (ClientNetworkFacade.getInstance().getDataOutputStream() == null) {
                     JOptionPane.showMessageDialog(null, "Server is not available! Try later!", "Connection error",
                              JOptionPane.ERROR_MESSAGE);
@@ -138,9 +138,9 @@ public class AuthForm extends JFrame {
     }
 
     private void callSignUpForm() {
-        SignUpForm signUpForm = SignUpForm.getInstance();
-        if (signUpForm == null) signUpForm = new SignUpForm();
-        signUpForm.setVisible(true);
+//        SignUpForm signUpForm = SignUpForm.getInstance();
+//        if (signUpForm == null) signUpForm = new SignUpForm();
+//        signUpForm.setVisible(true);
     }
 
     private void sendData() {

@@ -11,13 +11,27 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 
+/**
+ * An object that used for transferring a required command via streams of a client and a server
+ */
+
 @XmlType(propOrder = {"name", "object"}, name = "Command")
 @XmlRootElement(name = "command")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({Task.class, Journal.class, User.class})
 public class Command implements Serializable {
+
+    /**
+     * Name of the command. The scenario of a processing of a command depends on it
+     */
+
     @XmlElement (name = "name")
     private String name;
+
+    /**
+     * Object that is transferred with the Command object and that is used for processing of a command
+     */
+
     @XmlElement (name = "object")
     private Object object;
 

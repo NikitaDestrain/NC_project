@@ -1,5 +1,6 @@
 package server.gui.authforms;
 
+import client.commandprocessor.PasswordEncoder;
 import server.commandproccessor.User;
 import server.controller.Controller;
 import server.controller.IDGenerator;
@@ -14,6 +15,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.security.NoSuchAlgorithmException;
 
 public class SignUpForm extends JFrame {
     private JButton okButton;
@@ -25,6 +27,7 @@ public class SignUpForm extends JFrame {
     private Controller controller = Controller.getInstance();
     private UserAuthorizer authorizer = UserAuthorizer.getInstance();
     private ServerNetworkFacade serverFacade;
+    private PasswordEncoder encoder = PasswordEncoder.getInstance();
 
     public SignUpForm() {
         super("Sign up");
@@ -148,10 +151,24 @@ public class SignUpForm extends JFrame {
     }
 
     private void registration() {
-        String login, password, password2;
+        String login;
         login = this.loginField.getText();
-        password = String.valueOf(this.passwordField.getPassword());
-        password2 = String.valueOf(this.confirmPasswordField.getPassword());
+        String password = null;
+        try {
+            password = encoder.encode(String.valueOf(this.passwordField.getPassword()));
+        } catch (NoSuchAlgorithmException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Could not perform this action!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        String password2 = null;
+        try {
+            password2 = encoder.encode(String.valueOf(this.confirmPasswordField.getPassword()));
+        } catch (NoSuchAlgorithmException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Could not perform this action!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
 
         if ((login.length() == 0) || (password.length() == 0) || (password2.length() == 0)) {
             JOptionPane.showMessageDialog(this,

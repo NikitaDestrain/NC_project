@@ -13,6 +13,10 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Parses an incoming command on the client side
+ */
+
 public class ClientCommandParser {
     private static ClientCommandParser instance;
     private Map<String, CommandHandler> handlers;
@@ -32,6 +36,12 @@ public class ClientCommandParser {
         return instance;
     }
 
+    /**
+     * Parses an incoming command from byte array of XML context using Unmarshaller
+     * @param dataArr incoming data array
+     * @return Command object
+     */
+
     public Command parseToCommand(byte[] dataArr) {
         Command command;
         try {
@@ -47,6 +57,11 @@ public class ClientCommandParser {
         }
         return null;
     }
+
+    /**
+     * Performs an execution of an incoming command using its name
+     * @param command to be executed
+     */
 
     public void doCommandAction(Command command) {
         if (command != null && handlers.containsKey(command.getName())) {
