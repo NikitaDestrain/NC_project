@@ -46,7 +46,7 @@ public class ClientCommandSender {
             out.flush();
 
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "Could not send this command! Server is offline!",
+            JOptionPane.showMessageDialog(null, "You should restart application! Connection with server was lost!",
                     "Connection error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -65,7 +65,7 @@ public class ClientCommandSender {
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.EDIT, task), out);
             out.flush();
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "Could not send this command! Server is offline!",
+            JOptionPane.showMessageDialog(null, "You should restart application! Connection with server was lost!",
                     "Connection error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -84,7 +84,7 @@ public class ClientCommandSender {
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.DELETE, tasksNumbers), out);
             out.flush();
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "Could not send this command! Server is offline!",
+            JOptionPane.showMessageDialog(null, "You should restart application! Connection with server was lost!",
                     "Connection error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -103,7 +103,7 @@ public class ClientCommandSender {
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.LATER, task), out);
             out.flush();
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "Could not send this command! Server is offline!",
+            JOptionPane.showMessageDialog(null, "You should restart application! Connection with server was lost!",
                     "Connection error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -122,7 +122,7 @@ public class ClientCommandSender {
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.FINISH, task), out);
             out.flush();
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "Could not send this command! Server is offline!",
+            JOptionPane.showMessageDialog(null, "You should restart application! Connection with server was lost!",
                     "Connection error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -141,7 +141,7 @@ public class ClientCommandSender {
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.CANCEL, task), out);
             out.flush();
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "Could not send this command! Server is offline!",
+            JOptionPane.showMessageDialog(null, "You should restart application! Connection with server was lost!",
                     "Connection error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -162,7 +162,7 @@ public class ClientCommandSender {
                     new User(login, password, clientNetworkFacade.getNotificationPort())), out);
             out.flush();
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "Could not send this command! Server is offline!",
+            JOptionPane.showMessageDialog(null, "You should restart application! Connection with server was lost!",
                     "Connection error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -183,7 +183,7 @@ public class ClientCommandSender {
                     new User(login, password, clientNetworkFacade.getNotificationPort())), out);
             out.flush();
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "Could not send this command! Server is offline!",
+            JOptionPane.showMessageDialog(null, "You should restart application! Connection with server was lost!",
                     "Connection error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -202,7 +202,7 @@ public class ClientCommandSender {
                     clientNetworkFacade.getNotificationPort()), out);
             out.flush();
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "Could not send this command! Server is offline!",
+            JOptionPane.showMessageDialog(null, "Crush disconnect! Server is offline!",
                     "Connection error", JOptionPane.ERROR_MESSAGE);
         }
     }

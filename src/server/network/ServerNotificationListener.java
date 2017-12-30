@@ -6,6 +6,10 @@ import server.commandproccessor.ServerCommandParser;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+/**
+ * Listener for notification from client
+ */
+
 public class ServerNotificationListener extends Thread{
 
     private DataInputStream notificationInputStream;

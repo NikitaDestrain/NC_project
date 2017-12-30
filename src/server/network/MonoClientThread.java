@@ -15,6 +15,10 @@ import java.util.Date;
 
 import static java.lang.Thread.sleep;
 
+/**
+ * Thread for work with the client
+ */
+
 public class MonoClientThread extends Thread {
 
     private int notificationPort;
@@ -84,6 +88,10 @@ public class MonoClientThread extends Thread {
             successNotificationConnect = false;
         }
     }
+
+    /**
+     * Finishes client's thread and close all channels
+     */
 
     protected void finish() {
         try {

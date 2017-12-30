@@ -1,5 +1,9 @@
 package server.network;
 
+/**
+ * Generate unique port for client's notification channel
+ */
+
 public class PortGenerator {
     private int nextPort;
     private static PortGenerator instance;
@@ -13,6 +17,11 @@ public class PortGenerator {
             instance = new PortGenerator(1000);
         return instance;
     }
+
+    /**
+      Creates unique port
+      * @return unique port
+     */
 
     public synchronized int createPort() {
         return ++nextPort;

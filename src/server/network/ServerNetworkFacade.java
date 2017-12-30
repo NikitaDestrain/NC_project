@@ -13,6 +13,10 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Facade for managing client's threads and their channels
+ */
+
 public class ServerNetworkFacade extends Thread {
     private int serverPort;
     private ServerSocket serverDataSocket;
@@ -66,9 +70,21 @@ public class ServerNetworkFacade extends Thread {
         }
     }
 
+    /**
+     * Returns list of actual channels for notification to clients
+     * @return LinkedList
+     */
+
     public LinkedList<DataOutputStream> getClientNotificationOutputStreams() {
-        return new LinkedList<>(clientNotificationOutputStreams.values()); //todo vlla чем вам коллекция то не угодила, зачем обязательно ее в List оборачивать? К тому же помним правило: отдаем коллекцию наружу - делаем ее unmodifiable
+        return new LinkedList<>(clientNotificationOutputStreams.values());
+        //todo vlla чем вам коллекция то не угодила, зачем обязательно ее в List оборачивать? К тому же помним правило: отдаем коллекцию наружу - делаем ее unmodifiable
+        //!!!Не делается unmodified, преобразуется в лист для более быстрой итерации, так как ключи уже не будут играть роли
     }
+
+    /**
+     * Returns list of actual channels for communicate to clients
+     * @return LinkedList
+     */
 
     public LinkedList<DataOutputStream> getClientDataOutputStreams() {
         return new LinkedList<>(clientDataOutputStreams.values());
@@ -94,6 +110,11 @@ public class ServerNetworkFacade extends Thread {
     public DataOutputStream getDataOutputStream(int key) {
         return clientDataOutputStreams.get(key);
     }
+
+    /**
+     * Deletes client's information from map
+     * @param port
+     */
 
     public void finishClient(int port) {
         clients.get(port).finish();
