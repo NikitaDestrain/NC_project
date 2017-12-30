@@ -36,7 +36,7 @@ public class ParserProperties {
      *
      * @return class object<b> ParserProperties </b>  if the configuration file was read successfully, else return <b>null</b>
      */
-    public static ParserProperties getInstance() throws IOException {
+    public static ParserProperties getInstance() throws IOException { //todo vlla synchronized
         if (instance == null) {
             instance = new ParserProperties();
         }
@@ -50,7 +50,8 @@ public class ParserProperties {
      * @return property corresponding to the specified <b>key</b>
      * @throws IllegalPropertyException if no property is found that matches the specified <b>key</b>
      */
-    public synchronized String getProperties(String key) throws IllegalPropertyException {
+    public synchronized String getProperties(String key) throws IllegalPropertyException { //todo vlla стоит переименовать метод в getProperty, он все таки одну пропертю возвращает
+        //todo vlla зачем здесь синхронизацция?
         String s = props.getProperty(key);
         if (s == null) {
             throw new IllegalPropertyException();

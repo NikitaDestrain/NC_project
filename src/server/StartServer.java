@@ -19,7 +19,7 @@ public class StartServer {
                     "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        catch (IOException e) {
+        catch (IOException e) { //todo vlla multicatching
             JOptionPane.showMessageDialog(null, "The configuration file is corrupt or missing!. The application will be closed",
                     "Error", JOptionPane.ERROR_MESSAGE);
             return;

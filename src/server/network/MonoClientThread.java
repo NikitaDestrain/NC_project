@@ -95,13 +95,16 @@ public class MonoClientThread extends Thread {
 
     protected void finish() {
         try {
+            //todo vlla вот, этот метод выглядит как корретное освобождение всех ресурсов. Такие же надо сделать везде.
             stopCommandRelay = true;
-            serverNotificationListener.interrupt();
+            serverNotificationListener.interrupt();//todo vlla интеррапт - это хорошо и правильно. Только вот в самом потоме этот интеррапт никак не обрабатывается.
+            // нужно всю логику завершения потоков сделать на интерраптах, while(true) - это только на первое время
             dataInputStream.close();
             dataOutputStream.close();
             clientDataSocket.close();
+            //todo vlla а сокет нотификаций закрыть?
             System.out.printf("Client with port %d disconnected.\n", number);
-            serverNetworkFacade.removeNotificationOutputStream(notificationPort);
+            serverNetworkFacade.removeNotificationOutputStream(notificationPort);//todo vlla а в методе ремува - закрывать стримы
             serverNetworkFacade.removeClientDataOutputStreams(notificationPort);
         }
         catch (IOException e) {
@@ -113,7 +116,7 @@ public class MonoClientThread extends Thread {
     private void commandRelay() {
         try {
             while (true) {
-                Thread.sleep(500);
+                Thread.sleep(500);//todo vlla magic numbers -> constants
                 if(dataInputStream.available() > 0) {
                     byte[] tmp_buffer = new byte[dataInputStream.available()];
                     int tmp_trash = dataInputStream.read(tmp_buffer);

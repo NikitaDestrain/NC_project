@@ -25,7 +25,7 @@ public class ServerNotificationListener extends Thread{
         System.out.printf("Notification listener for client with port %d starts\n", port);
         try {
             while (true) {
-                Thread.sleep(500);
+                Thread.sleep(500);//todo vlla magic value -> constant
                 if(notificationInputStream.available() > 0) {
                     byte[] tmp_buffer = new byte[notificationInputStream.available()];
                     int tmp_trash = notificationInputStream.read(tmp_buffer);
@@ -36,6 +36,7 @@ public class ServerNotificationListener extends Thread{
                 }
             }
         } catch (IOException | InterruptedException e) {
+            //todo vlla то есть что бы не случилось - мы сразу рвем соединение с клиентом? Не слишком радикально?
             System.out.printf("Connection with client (port %d) was closed.\n", port);
             ServerNetworkFacade.getInstance().removeNotificationOutputStream(port);
         }

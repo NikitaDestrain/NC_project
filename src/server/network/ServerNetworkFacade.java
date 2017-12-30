@@ -31,6 +31,10 @@ public class ServerNetworkFacade extends Thread {
     private ServerNetworkFacade() {}
 
     public static ServerNetworkFacade getInstance() {
+        //todo vlla - тред-синглетон, это что-то странное. Давайте мы этот класс распилим на два?
+        // Первый - который хранит в себе все мапы потоков и производит с ними махинации
+        // Второй - просто тред, который просто будет ждать подключения новых клиентов.
+        // Это все же разные обязанности.
         if (instance == null) instance = new ServerNetworkFacade();
         return instance;
     }
@@ -50,7 +54,7 @@ public class ServerNetworkFacade extends Thread {
                 clientCount++;
             }
             catch (IOException e) {
-
+                //todo vlla поздравляю, вы выиграли приз за самую ужасную обработку исключительной ситуации в истории явы )
             }
         }
         executeIt.shutdown();
@@ -79,6 +83,9 @@ public class ServerNetworkFacade extends Thread {
         return new LinkedList<>(clientNotificationOutputStreams.values());
         //todo vlla чем вам коллекция то не угодила, зачем обязательно ее в List оборачивать? К тому же помним правило: отдаем коллекцию наружу - делаем ее unmodifiable
         //!!!Не делается unmodified, преобразуется в лист для более быстрой итерации, так как ключи уже не будут играть роли
+
+        //todo vlla 2 unmodified сделать все таки нужно. Выигрыш, получаемый от более быстрой итерации нивелируется накладными расходами по клонированию коллекции.
+        // Ключи и не нужны - clientNotificationOutputStreams.values() уже возвращает только коллекцию значений
     }
 
     /**
@@ -92,6 +99,7 @@ public class ServerNetworkFacade extends Thread {
 
     protected void removeNotificationOutputStream(Integer key) {
         clientNotificationOutputStreams.remove(key);
+        //todo vlla просто удалить стрим из мапы - не достаточно. Стримы всегда надо закрывать.
     }
 
     protected void addNotificationOutputStream(Integer key, DataOutputStream dataOutputStream) {

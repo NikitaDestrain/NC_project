@@ -19,6 +19,7 @@ import java.util.List;
  */
 
 public class ClientCommandSender {
+    //todo vlla все те же замечания, что и для ServerCommandSender
     private static ClientCommandSender instance;
     private ClientNetworkFacade clientNetworkFacade;
 

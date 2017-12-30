@@ -35,7 +35,7 @@ public class ClientNetworkFacade extends Thread {
         successConnect = false;
     }
 
-    public static ClientNetworkFacade getInstance() {
+    public static ClientNetworkFacade getInstance() { //todo-vlla снова треды-синглетоны.
         if (instance == null) instance = new ClientNetworkFacade();
         return instance;
     }
@@ -49,7 +49,9 @@ public class ClientNetworkFacade extends Thread {
                 Thread.sleep(ConstantsClass.SLEEP_FOR_250_SEC);
                 if (successConnect)
                     break;
-            } catch (InterruptedException e) {}
+            } catch (InterruptedException e) {
+                //todo vlla сами знаете
+            }
         }
         commandRelay();
     }
@@ -119,6 +121,7 @@ public class ClientNetworkFacade extends Thread {
     public void finish() {
         try {
             ClientCommandSender.getInstance().sendDisconnectCommand(dataOutputStream);
+            ////todo vlla не закрывается clientDataSocket. Проверить все остальное
             clientNotificationListener.interrupt();
             notificationInputStream.close();
             notificationOutputStream.close();

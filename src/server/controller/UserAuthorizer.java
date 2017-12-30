@@ -30,7 +30,7 @@ public class UserAuthorizer {
         }
     }
 
-    public static UserAuthorizer getInstance() {
+    public static UserAuthorizer getInstance() { //todo vlla synchronized
         if (instance == null) instance = new UserAuthorizer();
         return instance;
     }
