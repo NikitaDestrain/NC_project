@@ -12,6 +12,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
 
+/**
+ * Facade for connection with server
+ */
+
 public class ClientNetworkFacade extends Thread {
     private int notificationPort;
     private int serverPort;
@@ -49,6 +53,11 @@ public class ClientNetworkFacade extends Thread {
         }
         commandRelay();
     }
+
+    /**
+     * Connects to server, creates data channels and call method for create notification channels with listener
+     * @return 0 or 1 (success or not success connection)
+     */
 
     public int connect() {
         try {
@@ -102,6 +111,10 @@ public class ClientNetworkFacade extends Thread {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    /**
+     * Finishes facade and closes all channels
+     */
 
     public void finish() {
         try {
