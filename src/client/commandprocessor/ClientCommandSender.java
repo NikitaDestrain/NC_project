@@ -46,8 +46,10 @@ public class ClientCommandSender {
             out.flush();
 
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "You should restart application! Connection with server was lost!",
-                    "Connection error", JOptionPane.ERROR_MESSAGE);
+            if (JOptionPane.showConfirmDialog(null, "You should restart application! Connection with server was lost! Close the app?",
+                    "Connection error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                System.exit(1);
+            }
         }
     }
 
@@ -65,8 +67,10 @@ public class ClientCommandSender {
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.EDIT, task), out);
             out.flush();
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "You should restart application! Connection with server was lost!",
-                    "Connection error", JOptionPane.ERROR_MESSAGE);
+            if (JOptionPane.showConfirmDialog(null, "You should restart application! Connection with server was lost! Close the app?",
+                    "Connection error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                System.exit(1);
+            }
         }
     }
 
@@ -84,8 +88,10 @@ public class ClientCommandSender {
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.DELETE, tasksNumbers), out);
             out.flush();
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "You should restart application! Connection with server was lost!",
-                    "Connection error", JOptionPane.ERROR_MESSAGE);
+            if (JOptionPane.showConfirmDialog(null, "You should restart application! Connection with server was lost! Close the app?",
+                    "Connection error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                System.exit(1);
+            }
         }
     }
 
@@ -103,8 +109,10 @@ public class ClientCommandSender {
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.LATER, task), out);
             out.flush();
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "You should restart application! Connection with server was lost!",
-                    "Connection error", JOptionPane.ERROR_MESSAGE);
+            if (JOptionPane.showConfirmDialog(null, "You should restart application! Connection with server was lost! Close the app?",
+                    "Connection error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                System.exit(1);
+            }
         }
     }
 
@@ -122,8 +130,10 @@ public class ClientCommandSender {
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.FINISH, task), out);
             out.flush();
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "You should restart application! Connection with server was lost!",
-                    "Connection error", JOptionPane.ERROR_MESSAGE);
+            if (JOptionPane.showConfirmDialog(null, "You should restart application! Connection with server was lost! Close the app?",
+                    "Connection error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                System.exit(1);
+            }
         }
     }
 
@@ -141,8 +151,10 @@ public class ClientCommandSender {
             marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.CANCEL, task), out);
             out.flush();
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "You should restart application! Connection with server was lost!",
-                    "Connection error", JOptionPane.ERROR_MESSAGE);
+            if (JOptionPane.showConfirmDialog(null, "You should restart application! Connection with server was lost! Close the app?",
+                    "Connection error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                System.exit(1);
+            }
         }
     }
 
@@ -162,8 +174,10 @@ public class ClientCommandSender {
                     new User(login, password, clientNetworkFacade.getNotificationPort())), out);
             out.flush();
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "You should restart application! Connection with server was lost!",
-                    "Connection error", JOptionPane.ERROR_MESSAGE);
+            if (JOptionPane.showConfirmDialog(null, "You should restart application! Connection with server was lost! Close the app?",
+                    "Connection error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                System.exit(1);
+            }
         }
     }
 
@@ -183,8 +197,10 @@ public class ClientCommandSender {
                     new User(login, password, clientNetworkFacade.getNotificationPort())), out);
             out.flush();
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "You should restart application! Connection with server was lost!",
-                    "Connection error", JOptionPane.ERROR_MESSAGE);
+            if (JOptionPane.showConfirmDialog(null, "You should restart application! Connection with server was lost! Close the app?",
+                    "Connection error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                System.exit(1);
+            }
         }
     }
 
