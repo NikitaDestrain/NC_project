@@ -2,7 +2,7 @@ package client;
 
 import client.gui.authforms.AuthForm;
 import client.properties.ParserProperties;
-import constants.ConstantsClass;
+import auxiliaryclasses.ConstantsClass;
 import server.exceptions.IllegalPropertyException;
 
 import javax.swing.*;

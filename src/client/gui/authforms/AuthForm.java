@@ -4,6 +4,8 @@ import client.commandprocessor.PasswordEncoder;
 import client.gui.UserContainer;
 import client.network.ClientNetworkFacade;
 import client.commandprocessor.ClientCommandSender;
+import server.exceptions.UnsuccessfulCommandActionException;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -146,8 +148,8 @@ public class AuthForm extends JFrame {
             commandSender.sendSignInCommand(loginField.getText(),
                     encoder.encode(String.valueOf(passwordField.getPassword())),
                     clientFacade.getDataOutputStream());
-        } catch (NoSuchAlgorithmException e) {
-            JOptionPane.showMessageDialog(null, "Can not send this command!", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (UnsuccessfulCommandActionException | NoSuchAlgorithmException e) {
+            JOptionPane.showMessageDialog(null, "Could not send Sign In command!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

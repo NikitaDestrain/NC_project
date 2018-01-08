@@ -3,23 +3,22 @@ package client.commandprocessor;
 import client.factories.ClientCommandFactory;
 import client.model.Task;
 import client.network.ClientNetworkFacade;
-import constants.ConstantsClass;
+import auxiliaryclasses.ConstantsClass;
+import server.exceptions.UnsuccessfulCommandActionException;
 
 import javax.swing.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.PropertyException;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
 
 /**
  * Sends a command to the server side
  */
 
 public class ClientCommandSender {
-    //todo vlla все те же замечания, что и для ServerCommandSender
+    //todo vlla все те же замечания, что и для ServerCommandSender DONE
     private static ClientCommandSender instance;
     private ClientNetworkFacade clientNetworkFacade;
 
@@ -27,9 +26,17 @@ public class ClientCommandSender {
         clientNetworkFacade = ClientNetworkFacade.getInstance();
     }
 
-    public static ClientCommandSender getInstance() {
+    public synchronized static ClientCommandSender getInstance() {
         if (instance == null) instance = new ClientCommandSender();
         return instance;
+    }
+
+    private synchronized void sendCommand(Object object, String commandName, OutputStream out) throws JAXBException, IOException {
+        JAXBContext context = JAXBContext.newInstance(Command.class);
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        marshaller.marshal(ClientCommandFactory.createCommand(commandName, object), out);
+        out.flush();
     }
 
     /**
@@ -40,17 +47,9 @@ public class ClientCommandSender {
 
     public void sendAddCommand(Task task, OutputStream out) {
         try {
-            JAXBContext context = JAXBContext.newInstance(Command.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.ADD, task), out);
-            out.flush();
-
+            sendCommand(task, ConstantsClass.ADD, out);
         } catch (JAXBException | IOException e) {
-            if (JOptionPane.showConfirmDialog(null, "You should restart application! Connection with server was lost! Close the app?",
-                    "Connection error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                System.exit(1);
-            }
+            throw new UnsuccessfulCommandActionException();
         }
     }
 
@@ -62,16 +61,9 @@ public class ClientCommandSender {
 
     public void sendEditCommand(Task task, OutputStream out) {
         try {
-            JAXBContext context = JAXBContext.newInstance(Command.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.EDIT, task), out);
-            out.flush();
+            sendCommand(task, ConstantsClass.EDIT, out);
         } catch (JAXBException | IOException e) {
-            if (JOptionPane.showConfirmDialog(null, "You should restart application! Connection with server was lost! Close the app?",
-                    "Connection error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                System.exit(1);
-            }
+            throw new UnsuccessfulCommandActionException();
         }
     }
 
@@ -83,16 +75,9 @@ public class ClientCommandSender {
 
     public void sendDeleteCommand(String tasksNumbers, OutputStream out) {
         try {
-            JAXBContext context = JAXBContext.newInstance(Command.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.DELETE, tasksNumbers), out);
-            out.flush();
+            sendCommand(tasksNumbers, ConstantsClass.DELETE, out);
         } catch (JAXBException | IOException e) {
-            if (JOptionPane.showConfirmDialog(null, "You should restart application! Connection with server was lost! Close the app?",
-                    "Connection error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                System.exit(1);
-            }
+            throw new UnsuccessfulCommandActionException();
         }
     }
 
@@ -104,16 +89,9 @@ public class ClientCommandSender {
 
     public void sendLaterCommand(Task task, OutputStream out) {
         try {
-            JAXBContext context = JAXBContext.newInstance(Command.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.LATER, task), out);
-            out.flush();
+            sendCommand(task, ConstantsClass.LATER, out);
         } catch (JAXBException | IOException e) {
-            if (JOptionPane.showConfirmDialog(null, "You should restart application! Connection with server was lost! Close the app?",
-                    "Connection error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                System.exit(1);
-            }
+            throw new UnsuccessfulCommandActionException();
         }
     }
 
@@ -125,16 +103,9 @@ public class ClientCommandSender {
 
     public void sendFinishCommand(Task task, OutputStream out) {
         try {
-            JAXBContext context = JAXBContext.newInstance(Command.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.FINISH, task), out);
-            out.flush();
+            sendCommand(task, ConstantsClass.FINISH, out);
         } catch (JAXBException | IOException e) {
-            if (JOptionPane.showConfirmDialog(null, "You should restart application! Connection with server was lost! Close the app?",
-                    "Connection error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                System.exit(1);
-            }
+            throw new UnsuccessfulCommandActionException();
         }
     }
 
@@ -146,16 +117,9 @@ public class ClientCommandSender {
 
     public void sendCancelCommand(Task task, OutputStream out) {
         try {
-            JAXBContext context = JAXBContext.newInstance(Command.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.CANCEL, task), out);
-            out.flush();
+            sendCommand(task, ConstantsClass.CANCEL, out);
         } catch (JAXBException | IOException e) {
-            if (JOptionPane.showConfirmDialog(null, "You should restart application! Connection with server was lost! Close the app?",
-                    "Connection error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                System.exit(1);
-            }
+            throw new UnsuccessfulCommandActionException();
         }
     }
 
@@ -168,17 +132,10 @@ public class ClientCommandSender {
 
     public void sendSignInCommand(String login, String password, OutputStream out) {
         try {
-            JAXBContext context = JAXBContext.newInstance(Command.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.SIGN_IN,
-                    new User(login, password, clientNetworkFacade.getNotificationPort())), out);
+            sendCommand(new User(login, password, clientNetworkFacade.getNotificationPort()), ConstantsClass.SIGN_IN, out);
             out.flush();
         } catch (JAXBException | IOException e) {
-            if (JOptionPane.showConfirmDialog(null, "You should restart application! Connection with server was lost! Close the app?",
-                    "Connection error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                System.exit(1);
-            }
+            throw new UnsuccessfulCommandActionException();
         }
     }
 
@@ -191,17 +148,10 @@ public class ClientCommandSender {
 
     public void sendSignUpCommand(String login, String password, OutputStream out) {
         try {
-            JAXBContext context = JAXBContext.newInstance(Command.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.SIGN_UP,
-                    new User(login, password, clientNetworkFacade.getNotificationPort())), out);
+            sendCommand(new User(login, password, clientNetworkFacade.getNotificationPort()), ConstantsClass.SIGN_UP, out);
             out.flush();
         } catch (JAXBException | IOException e) {
-            if (JOptionPane.showConfirmDialog(null, "You should restart application! Connection with server was lost! Close the app?",
-                    "Connection error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                System.exit(1);
-            }
+            throw new UnsuccessfulCommandActionException();
         }
     }
 
@@ -212,15 +162,9 @@ public class ClientCommandSender {
 
     public void sendDisconnectCommand(OutputStream out) {
         try {
-            JAXBContext context = JAXBContext.newInstance(Command.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(ClientCommandFactory.createCommand(ConstantsClass.DISCONNECT,
-                    clientNetworkFacade.getNotificationPort()), out);
-            out.flush();
+            sendCommand(clientNetworkFacade.getNotificationPort(), ConstantsClass.DISCONNECT, out);
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "Crush disconnect! Server is offline!",
-                    "Connection error", JOptionPane.ERROR_MESSAGE);
+            throw new UnsuccessfulCommandActionException();
         }
     }
 }

@@ -1,9 +1,11 @@
 package client.gui.mainform;
 
+import auxiliaryclasses.MessageBox;
 import client.commandprocessor.ClientCommandSender;
 import client.model.Task;
 import client.model.TaskStatus;
 import client.network.ClientNetworkFacade;
+import server.exceptions.UnsuccessfulCommandActionException;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -76,15 +78,12 @@ public class TablePanel extends JPanel {
         cancelItem.addActionListener((ActionEvent ev) -> {
             TaskSender sender = TablePanel.getInstance().getTaskSender();
             Task task = sender.getTask();
-            if (task.getStatus() == TaskStatus.Completed)
-                JOptionPane.showMessageDialog(null,
-                        "You can not cancel already completed task!",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            else {
-                task.setStatus(TaskStatus.Cancelled);
+            try {
                 commandSender.sendCancelCommand(task, ClientNetworkFacade.getInstance().getDataOutputStream());
-                refresh();
+            } catch (UnsuccessfulCommandActionException e) {
+                MessageBox.getInstance().showMessage("Could not send cancel command!");
             }
+            refresh();
         });
 
         setLayout(new BorderLayout());

@@ -1,9 +1,11 @@
 package server.gui.notificationwindow;
 
-import constants.ConstantsClass;
+import auxiliaryclasses.ConstantsClass;
 import server.commandproccessor.ServerCommandSender;
 import server.exceptions.IllegalPropertyException;
 import server.controller.Controller;
+import server.exceptions.IncorrectTaskStatusConversionException;
+import server.gui.ServerTreatmentDetector;
 import server.gui.mainform.MainForm;
 import server.model.Task;
 import server.network.ServerNetworkFacade;
@@ -23,11 +25,12 @@ public class NotificationForm extends JFrame {
     private MainForm mainForm = MainForm.getInstance();
     private ServerCommandSender commandSender = ServerCommandSender.getInstance();
     private ServerNetworkFacade facade = ServerNetworkFacade.getInstance();
+    private static ServerTreatmentDetector detector = ServerTreatmentDetector.getInstance();
 
     public NotificationForm() {
         super("Alarm!");
         try {
-            icon = new ImageIcon(ParserProperties.getInstance().getProperties(ConstantsClass.MAIN_FORM_ICON));
+            icon = new ImageIcon(ParserProperties.getInstance().getProperty(ConstantsClass.MAIN_FORM_ICON));
         } catch (IllegalPropertyException e) {
             JOptionPane.showMessageDialog(null, "Illegal value of property",
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -83,7 +86,13 @@ public class NotificationForm extends JFrame {
 
             finish.addActionListener((ActionEvent e) -> {
                 if(controller.getJournal().getTask(task.getId()) != null) {
-                    controller.finishNotification(task.getId());
+                    try {
+                        detector.serverTreatment();
+                        controller.finishNotification(task.getId());
+                    } catch (IncorrectTaskStatusConversionException e1) {
+                        JOptionPane.showMessageDialog(null, "Could not finish this task!",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be finished!",
@@ -92,12 +101,13 @@ public class NotificationForm extends JFrame {
             });
 
             cancel.addActionListener((ActionEvent e) -> {
-                if(controller.getJournal().getTask(task.getId()) != null) {
+                try {
+                    detector.serverTreatment();
                     controller.cancelNotification(task.getId());
-                }
-                else
-                    JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be canceled!",
+                } catch (IncorrectTaskStatusConversionException ex) {
+                    JOptionPane.showMessageDialog(null, "This task can not be cancelled!",
                             "Error", JOptionPane.ERROR_MESSAGE);
+                }
                 dispose();
             });
         }

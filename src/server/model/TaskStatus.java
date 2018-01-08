@@ -1,7 +1,7 @@
 package server.model;
 
 /**
- * possible statuses of the task
+ * Possible statuses of the task
  * <b>Planned,
  Completed,
  Rescheduled,
@@ -9,7 +9,6 @@ package server.model;
  Overdue.</b>
  */
 public enum TaskStatus {
-
     Planned,
     Completed,
     Rescheduled,

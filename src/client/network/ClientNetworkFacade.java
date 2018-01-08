@@ -1,16 +1,17 @@
 package client.network;
 
+import auxiliaryclasses.MessageBox;
 import client.commandprocessor.ClientCommandSender;
 import client.commandprocessor.Command;
 import client.commandprocessor.ClientCommandParser;
-import constants.ConstantsClass;
+import auxiliaryclasses.ConstantsClass;
+import server.exceptions.UnsuccessfulCommandActionException;
 import server.gui.mainform.MainForm;
 
 import javax.swing.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 
 /**
  * Facade for connection with server
@@ -30,6 +31,7 @@ public class ClientNetworkFacade extends Thread {
     private static ClientNetworkFacade instance;
     private ClientCommandParser commandParser = ClientCommandParser.getInstance();
     private ClientNotificationListener clientNotificationListener;
+    private MessageBox messageBox = MessageBox.getInstance();
 
     private ClientNetworkFacade() {
         successConnect = false;
@@ -78,8 +80,7 @@ public class ClientNetworkFacade extends Thread {
                         break;
                 }
                 catch (InterruptedException e) {
-                    JOptionPane.showMessageDialog(MainForm.getInstance(), "Something is going wrong! For correct work you should restart application!",
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    messageBox.showMessage("Something is going wrong! For correct work you should restart application!");
                 }
             }
             notificationPort = dataInputStream.readInt();
@@ -88,8 +89,7 @@ public class ClientNetworkFacade extends Thread {
             return 0;
         }
         catch (IOException e) {
-            JOptionPane.showMessageDialog(null,
-                    "Server is not available! Try later!", "Connection error", JOptionPane.ERROR_MESSAGE);
+            messageBox.showMessage("Server is not available! Try later!");
         }
         return 1;
     }
@@ -109,8 +109,7 @@ public class ClientNetworkFacade extends Thread {
             successConnect = true;
         }
         catch (IOException e) {
-            JOptionPane.showMessageDialog(MainForm.getInstance(), "Something is going wrong! For correct work you should restart application!",
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            messageBox.showMessage("Something is going wrong! For correct work you should restart application!");
         }
     }
 
@@ -127,10 +126,10 @@ public class ClientNetworkFacade extends Thread {
             notificationOutputStream.close();
             notificationSenderSocket.close();
             System.out.println("Closing notification connections & channels - DONE.");
-        }
-        catch (IOException e) {
-            JOptionPane.showMessageDialog(MainForm.getInstance(), "Crush finish! Something is going wrong!",
-                    "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (UnsuccessfulCommandActionException e) {
+            messageBox.showMessage("Could not send Disconnect command!");
+        } catch (IOException e) {
+            messageBox.showMessage("Crush finish! Something is going wrong!");
         }
     }
 
@@ -148,8 +147,7 @@ public class ClientNetworkFacade extends Thread {
                 }
             }
         } catch (IOException | InterruptedException e) {
-            JOptionPane.showMessageDialog(MainForm.getInstance(), "Something is going wrong! For correct work you should restart application!",
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            messageBox.showMessage("Something is going wrong! For correct work you should restart application!");
         }
     }
 

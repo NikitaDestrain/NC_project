@@ -1,9 +1,11 @@
 package server.gui.notificationwindow;
 
-import constants.ConstantsClass;
+import auxiliaryclasses.ConstantsClass;
 import server.commandproccessor.ServerCommandSender;
 import server.controller.Controller;
 import server.exceptions.IllegalPropertyException;
+import server.exceptions.IncorrectTaskStatusConversionException;
+import server.gui.ServerTreatmentDetector;
 import server.model.Task;
 import server.network.ServerNetworkFacade;
 import server.properties.ParserProperties;
@@ -22,11 +24,12 @@ public class LaterForm extends JFrame {
     private ImageIcon icon;
     private ServerCommandSender commandSender = ServerCommandSender.getInstance();
     private ServerNetworkFacade facade = ServerNetworkFacade.getInstance();
+    private static ServerTreatmentDetector detector = ServerTreatmentDetector.getInstance();
 
     public LaterForm(Task task){
         setLayout(new GridLayout(3,1));
         try {
-            icon = new ImageIcon(ParserProperties.getInstance().getProperties(ConstantsClass.MAIN_FORM_ICON));
+            icon = new ImageIcon(ParserProperties.getInstance().getProperty(ConstantsClass.MAIN_FORM_ICON));
         } catch (IllegalPropertyException e) {
             JOptionPane.showMessageDialog(null, "Illegal value of property",
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -75,7 +78,13 @@ public class LaterForm extends JFrame {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + (int) this.hoursSpinner.getValue() * 60 * 60000
                             + (int) this.minutesSpinner.getValue() * 60000));
-                    controller.updateNotification(task);
+                    try {
+                        detector.serverTreatment();
+                        controller.updateNotification(task);
+                    } catch (IncorrectTaskStatusConversionException e1) {
+                        JOptionPane.showMessageDialog(null, "Could not reschedule this task!",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
@@ -109,7 +118,13 @@ public class LaterForm extends JFrame {
                 if(controller.getJournal().getTask(task.getId()) != null) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 5 * 60000));
-                    controller.updateNotification(task);
+                    try {
+                        detector.serverTreatment();
+                        controller.updateNotification(task);
+                    } catch (IncorrectTaskStatusConversionException e1) {
+                        JOptionPane.showMessageDialog(null, "Could not reschedule this task!",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
@@ -121,7 +136,13 @@ public class LaterForm extends JFrame {
                 if(controller.getJournal().getTask(task.getId()) != null) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 15 * 60000));
-                    controller.updateNotification(task);
+                    try {
+                        detector.serverTreatment();
+                        controller.updateNotification(task);
+                    } catch (IncorrectTaskStatusConversionException e1) {
+                        JOptionPane.showMessageDialog(null, "Could not reschedule this task!",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
@@ -133,7 +154,13 @@ public class LaterForm extends JFrame {
                 if(controller.getJournal().getTask(task.getId()) != null) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 30 * 60000));
-                    controller.updateNotification(task);
+                    try {
+                        detector.serverTreatment();
+                        controller.updateNotification(task);
+                    } catch (IncorrectTaskStatusConversionException e1) {
+                        JOptionPane.showMessageDialog(null, "Could not reschedule this task!",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
@@ -145,7 +172,13 @@ public class LaterForm extends JFrame {
                 if(controller.getJournal().getTask(task.getId()) != null) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 60 * 60000));
-                    controller.updateNotification(task);
+                    try {
+                        detector.serverTreatment();
+                        controller.updateNotification(task);
+                    } catch (IncorrectTaskStatusConversionException e1) {
+                        JOptionPane.showMessageDialog(null, "Could not reschedule this task!",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",

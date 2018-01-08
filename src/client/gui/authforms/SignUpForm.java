@@ -4,6 +4,7 @@ import client.commandprocessor.ClientCommandSender;
 import client.commandprocessor.PasswordEncoder;
 import client.gui.UserContainer;
 import client.network.ClientNetworkFacade;
+import server.exceptions.UnsuccessfulCommandActionException;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -176,11 +177,12 @@ public class SignUpForm extends JFrame {
             else {
                 try {
                     password = encoder.encode(String.valueOf(this.passwordField.getPassword()));
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
+                    userContainer.setUsername(login);
+                    commandSender.sendSignUpCommand(login, password, clientFacade.getDataOutputStream());
+                } catch (NoSuchAlgorithmException | UnsuccessfulCommandActionException e) {
+                    JOptionPane.showMessageDialog(null,
+                            "Could not send Sign Up command!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                userContainer.setUsername(login);
-                commandSender.sendSignUpCommand(login, password, clientFacade.getDataOutputStream());
             }
         }
     }

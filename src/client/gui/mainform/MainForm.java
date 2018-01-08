@@ -1,13 +1,14 @@
 package client.gui.mainform;
 
 import client.commandprocessor.ClientCommandSender;
+import client.exceptions.UnsuccessfulCommandActionException;
 import client.gui.taskwindow.TaskWindow;
 import client.exceptions.IllegalPropertyException;
 import client.model.Journal;
 import client.model.Task;
 import client.network.ClientNetworkFacade;
 import client.properties.ParserProperties;
-import constants.ConstantsClass;
+import auxiliaryclasses.ConstantsClass;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,7 +74,13 @@ public class MainForm extends JFrame {
                                     builder.append(",");
                                 }
                                 if (!builder.toString().equals(""))
-                                    commandSender.sendDeleteCommand(builder.toString(), clientFacade.getDataOutputStream());
+                                    try {
+                                        commandSender.sendDeleteCommand(builder.toString(), clientFacade.getDataOutputStream());
+                                    } catch (UnsuccessfulCommandActionException e) {
+                                        JOptionPane.showMessageDialog(MainForm.this,
+                                                "Could not send delete command!",
+                                                "Error", JOptionPane.ERROR_MESSAGE);
+                                    }
                                 break;
                         }
                     }

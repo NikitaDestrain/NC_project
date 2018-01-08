@@ -1,7 +1,7 @@
 package client.commandprocessor;
 
 import client.commandprocessor.commandhandlers.*;
-import constants.ConstantsClass;
+import auxiliaryclasses.ConstantsClass;
 
 import javax.swing.*;
 import javax.xml.bind.JAXBContext;

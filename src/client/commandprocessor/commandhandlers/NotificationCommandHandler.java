@@ -5,7 +5,7 @@ import client.gui.notificationwindow.NotificationForm;
 import client.gui.notificationwindow.Sound;
 import client.model.Task;
 import client.properties.ParserProperties;
-import constants.ConstantsClass;
+import auxiliaryclasses.ConstantsClass;
 
 import javax.swing.*;
 import java.io.IOException;

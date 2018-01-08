@@ -1,9 +1,12 @@
 package client.gui.mainform;
 
+import auxiliaryclasses.MessageBox;
 import client.commandprocessor.ClientCommandSender;
 import client.model.Task;
 import client.model.TaskStatus;
 import client.network.ClientNetworkFacade;
+import client.factories.TaskFactory;
+import server.exceptions.UnsuccessfulCommandActionException;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -18,6 +21,7 @@ public class JournalTableModel extends AbstractTableModel {
     private Object[][] data;
     private ClientCommandSender commandSender = ClientCommandSender.getInstance();
     private ClientNetworkFacade clientFacade = ClientNetworkFacade.getInstance();
+    private MessageBox messageBox = MessageBox.getInstance();
 
     public JournalTableModel() {
     }
@@ -98,23 +102,33 @@ public class JournalTableModel extends AbstractTableModel {
             case 0:
                 data[rowIndex][0] = aValue;
                 fireTableCellUpdated(rowIndex, columnIndex);
-                return;
+                break;
             case 2:
                 String value = (String) aValue;
                 if (value.equals("")) {
                     JOptionPane.showMessageDialog(null,
                             "Task name should not be empty!",
                             "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                else {
-                    task.setName((String) aValue);
-                    commandSender.sendEditCommand(task, clientFacade.getDataOutputStream());
-                    return;
+                    break;
+                } else {
+                    try {
+                        Task task1 = task;
+                        task1.setName((String) aValue);
+                        commandSender.sendEditCommand(task1, clientFacade.getDataOutputStream());
+                    } catch (UnsuccessfulCommandActionException e) {
+                        messageBox.showMessage("Could not send Edit command!");
+                    }
+                    break;
                 }
             case 3:
-                task.setDescription((String) aValue);
-                commandSender.sendEditCommand(task, clientFacade.getDataOutputStream());
-                return;
+                try {
+                    Task task1 = task;
+                    task1.setDescription((String) aValue);
+                    commandSender.sendEditCommand(task1, clientFacade.getDataOutputStream());
+                } catch (UnsuccessfulCommandActionException e) {
+                    messageBox.showMessage("Could not send Edit command!");
+                }
+                break;
         }
     }
 

@@ -1,6 +1,6 @@
 package server.commandproccessor;
 
-import constants.ConstantsClass;
+import auxiliaryclasses.ConstantsClass;
 import server.commandproccessor.commandhandlers.*;
 
 import javax.swing.*;
@@ -32,7 +32,7 @@ public class ServerCommandParser {
         handlers.put(ConstantsClass.DISCONNECT, new DisconnectCommandHandler());
     }
 
-    public static ServerCommandParser getInstance() { //todo vlla synchronized
+    public static synchronized ServerCommandParser getInstance() { //todo vlla synchronized DONE
         if (instance == null) instance = new ServerCommandParser();
         return instance;
     }
@@ -62,6 +62,7 @@ public class ServerCommandParser {
     /**
      * Performs an execution of an incoming command using its name
      * @param command to be executed
+     * @return 0 if the command is not null and the command's name is existing in the handlers map. 1 otherwise
      */
 
     public int doCommandAction(Command command) {
@@ -70,7 +71,7 @@ public class ServerCommandParser {
                 handlers.get(command.getName()).handle(command);
             else return 1;
         return 0;
-        //todo vlla если команда выполнена без проблем или команда = null - возвращаем 0
+        //todo vlla если команда выполнена без проблем или команда = null - возвращаем 0 DONE
         //если команды нет среди зарегистрированных - возвращаем 1
         //очень странная логика
         //и если эта логика соответсвует вашей задумке - ок, но тогда хоть опишите ее в джавадоке

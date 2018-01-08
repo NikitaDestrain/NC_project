@@ -1,13 +1,15 @@
 package client.gui.notificationwindow;
 
+import auxiliaryclasses.MessageBox;
 import client.commandprocessor.ClientCommandSender;
 import client.exceptions.IllegalPropertyException;
+import client.exceptions.UnsuccessfulCommandActionException;
 import client.gui.mainform.MainForm;
 import client.model.Task;
 import client.model.TaskStatus;
 import client.network.ClientNetworkFacade;
 import client.properties.ParserProperties;
-import constants.ConstantsClass;
+import auxiliaryclasses.ConstantsClass;
 
 import javax.swing.*;
 import java.awt.*;
@@ -79,7 +81,12 @@ public class LaterForm extends JFrame {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + (int) this.hoursSpinner.getValue() * 60 * 60000
                             + (int) this.minutesSpinner.getValue() * 60000));
-                    commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
+                    try {
+                        commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
+                    } catch (UnsuccessfulCommandActionException e1) {
+                        JOptionPane.showMessageDialog(null, "Could not send later command!",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 dispose();
             });
@@ -111,7 +118,12 @@ public class LaterForm extends JFrame {
                 if(checkAction()) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 5 * 60000));
-                    commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
+                    try {
+                        commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
+                    } catch (UnsuccessfulCommandActionException e1) {
+                        JOptionPane.showMessageDialog(null, "Could not send later command!",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 dispose();
             });
@@ -120,7 +132,12 @@ public class LaterForm extends JFrame {
                 if(checkAction()) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 15 * 60000));
-                    commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
+                    try {
+                        commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
+                    } catch (UnsuccessfulCommandActionException e1) {
+                        JOptionPane.showMessageDialog(null, "Could not send later command!",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 dispose();
             });
@@ -129,7 +146,12 @@ public class LaterForm extends JFrame {
                 if(checkAction()) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 30 * 60000));
-                    commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
+                    try {
+                        commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
+                    } catch (UnsuccessfulCommandActionException e1) {
+                        JOptionPane.showMessageDialog(null, "Could not send later command!",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 dispose();
             });
@@ -138,7 +160,12 @@ public class LaterForm extends JFrame {
                 if(checkAction()) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 60 * 60000));
-                    commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
+                    try {
+                        commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
+                    } catch (UnsuccessfulCommandActionException e1) {
+                        JOptionPane.showMessageDialog(null, "Could not send later command!",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 dispose();
             });

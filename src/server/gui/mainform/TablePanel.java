@@ -1,6 +1,9 @@
 package server.gui.mainform;
 
+import auxiliaryclasses.MessageBox;
 import server.controller.Controller;
+import server.exceptions.IncorrectTaskStatusConversionException;
+import server.gui.ServerTreatmentDetector;
 import server.model.Task;
 import server.model.TaskStatus;
 
@@ -22,6 +25,8 @@ public class TablePanel extends JPanel {
     private TaskSender taskSender;
     private Controller controller = Controller.getInstance();
     private static TablePanel instance;
+    private static MessageBox messageBox = MessageBox.getInstance();
+    private static ServerTreatmentDetector detector = ServerTreatmentDetector.getInstance();
 
     public TablePanel(MainForm form) {
         this.form = form;
@@ -75,16 +80,14 @@ public class TablePanel extends JPanel {
             MainForm mainForm = MainForm.getInstance();
             TaskSender sender = TablePanel.getInstance().getTaskSender();
             Task task = sender.getTask();
-            if (task.getStatus() == TaskStatus.Completed)
-                JOptionPane.showMessageDialog(null,
-                        "You can not cancel already completed task!",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            else {
-                task.setStatus(TaskStatus.Cancelled);
+            try {
+                detector.serverTreatment();
                 controller.cancelNotification(task.getId());
-                mainForm.updateJournal();
-                refresh();
+            } catch (IncorrectTaskStatusConversionException e) {
+                messageBox.showMessage("This task can not be cancelled!");
             }
+            mainForm.updateJournal();
+            refresh();
         });
 
         setLayout(new BorderLayout());

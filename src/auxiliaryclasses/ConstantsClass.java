@@ -1,4 +1,4 @@
-package constants;
+package auxiliaryclasses;
 
 public class ConstantsClass {
     public static final String ADD = "Add";
@@ -29,4 +29,7 @@ public class ConstantsClass {
     public static final String NOTIF_SOUND = "NOTIF_SOUND";
     public static final String XML_FILE = "XML_FILE";
     public static final String USER_DATA = "USER_DATA";
+
+    public static final int SERVER_TREATMENT = 1;
+    public static final int NOT_SERVER_TREATMENT = 0;
 }

@@ -1,6 +1,6 @@
 package server.controller;
 
-import constants.ConstantsClass;
+import auxiliaryclasses.ConstantsClass;
 import server.commandproccessor.User;
 import server.properties.ParserProperties;
 
@@ -18,7 +18,7 @@ public class UserAuthorizer {
         this.userDataSerializer = new UserDataSerializer();
         try {
             this.userData = userDataSerializer.readData(ParserProperties.getInstance()
-                    .getProperties(ConstantsClass.USER_DATA));
+                    .getProperty(ConstantsClass.USER_DATA));
         } catch (IOException e) {
             if (JOptionPane.showConfirmDialog(null,
                     "Could not load user data from file!\nDo you want to create new file with user's data?\n" +
@@ -30,7 +30,7 @@ public class UserAuthorizer {
         }
     }
 
-    public static UserAuthorizer getInstance() { //todo vlla synchronized
+    public static synchronized UserAuthorizer getInstance() { //todo vlla synchronized DONE
         if (instance == null) instance = new UserAuthorizer();
         return instance;
     }

@@ -1,7 +1,10 @@
 package server.gui.taskwindow;
 
+import auxiliaryclasses.MessageBox;
 import server.controller.Controller;
+import server.exceptions.IncorrectTaskStatusConversionException;
 import server.factories.TaskFactory;
+import server.gui.ServerTreatmentDetector;
 import server.gui.mainform.MainForm;
 import server.model.Task;
 import server.model.TaskStatus;
@@ -52,6 +55,8 @@ public class TaskWindow extends JFrame {
     private JLabel jLabel_RemindBefore_minutes;
     private Date plannedDate;
     private Date notificationDate;
+    private static MessageBox messageBox = MessageBox.getInstance();
+    private static ServerTreatmentDetector detector = ServerTreatmentDetector.getInstance();
 
     public TaskWindow(MainForm owner) {
 
@@ -104,16 +109,28 @@ public class TaskWindow extends JFrame {
 
         this.jButton_CancelTask.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                controller.cancelNotification(loadTask.getId());
-                owner.updateJournal();
+                try {
+                    detector.serverTreatment();
+                    controller.cancelNotification(task.getId());
+                    owner.updateJournal();
+                } catch (IncorrectTaskStatusConversionException ex) {
+                    JOptionPane.showMessageDialog(null, "Could not cancel this task!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
                 dispose();
             }
         });
 
         this.jButton_TaskCompleted.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                controller.finishNotification(loadTask.getId());
-                owner.updateJournal();
+                try {
+                    detector.serverTreatment();
+                    controller.finishNotification(task.getId());
+                    owner.updateJournal();
+                } catch (IncorrectTaskStatusConversionException e1) {
+                    JOptionPane.showMessageDialog(null, "Could not finish this task!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
                 dispose();
             }
         });

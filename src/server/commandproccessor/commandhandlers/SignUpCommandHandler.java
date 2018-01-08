@@ -1,10 +1,12 @@
 package server.commandproccessor.commandhandlers;
 
+import auxiliaryclasses.MessageBox;
 import server.commandproccessor.Command;
 import server.commandproccessor.ServerCommandSender;
 import server.commandproccessor.User;
 import server.controller.Controller;
 import server.controller.UserAuthorizer;
+import server.exceptions.UnsuccessfulCommandActionException;
 import server.network.ServerNetworkFacade;
 
 import java.io.DataOutputStream;
@@ -18,12 +20,20 @@ public class SignUpCommandHandler implements CommandHandler {
         User user = ((User) command.getObject());
         ServerCommandSender commandSender = ServerCommandSender.getInstance();
         if (authorizer.isSuchLoginExists(user.getLogin()))
-            commandSender.sendUnsuccessfulSignUpCommand(ServerNetworkFacade.getInstance().
-                    getDataOutputStream(((User) command.getObject()).getPort()));
+            try {
+                commandSender.sendUnsuccessfulSignUpCommand(ServerNetworkFacade.getInstance().
+                        getDataOutputStream(((User) command.getObject()).getPort()));
+            } catch (UnsuccessfulCommandActionException e) {
+                MessageBox.getInstance().showMessage("Could not send unsuccessful sign up command!");
+            }
         else {
             authorizer.addUser(user);
-            commandSender.sendSuccessfulAuthCommand(controller.getJournal(),
-                    ServerNetworkFacade.getInstance().getDataOutputStream(((User) command.getObject()).getPort()));
+            try {
+                commandSender.sendSuccessfulAuthCommand(controller.getJournal(),
+                        ServerNetworkFacade.getInstance().getDataOutputStream(((User) command.getObject()).getPort()));
+            } catch (UnsuccessfulCommandActionException e) {
+                MessageBox.getInstance().showMessage("Could not send successful auth command!");
+            }
         }
     }
 }

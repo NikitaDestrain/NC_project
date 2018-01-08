@@ -1,5 +1,6 @@
 package server.network;
 
+import auxiliaryclasses.ConstantsClass;
 import server.commandproccessor.Command;
 import server.commandproccessor.ServerCommandParser;
 import server.commandproccessor.ServerCommandSender;
@@ -116,7 +117,7 @@ public class MonoClientThread extends Thread {
     private void commandRelay() {
         try {
             while (true) {
-                Thread.sleep(500);//todo vlla magic numbers -> constants
+                Thread.sleep(ConstantsClass.SLEEP_FOR_500_SEC);//todo vlla magic numbers -> constants DONE
                 if(dataInputStream.available() > 0) {
                     byte[] tmp_buffer = new byte[dataInputStream.available()];
                     int tmp_trash = dataInputStream.read(tmp_buffer);

@@ -1,5 +1,6 @@
 package server.network;
 
+import auxiliaryclasses.ConstantsClass;
 import server.commandproccessor.Command;
 import server.commandproccessor.ServerCommandParser;
 
@@ -25,7 +26,7 @@ public class ServerNotificationListener extends Thread{
         System.out.printf("Notification listener for client with port %d starts\n", port);
         try {
             while (true) {
-                Thread.sleep(500);//todo vlla magic value -> constant
+                Thread.sleep(ConstantsClass.SLEEP_FOR_500_SEC);//todo vlla magic value -> constant DONE
                 if(notificationInputStream.available() > 0) {
                     byte[] tmp_buffer = new byte[notificationInputStream.available()];
                     int tmp_trash = notificationInputStream.read(tmp_buffer);

@@ -17,11 +17,11 @@ public class TaskSender {
         return task;
     }
 
-    public void setTask(Task task) {
+    public synchronized void setTask(Task task) {
         this.task = task;
     }
 
-    public void clearTask() {
+    public synchronized void clearTask() {
         task = null;
     }
 }

@@ -1,6 +1,8 @@
 package server.controller;
 
+import auxiliaryclasses.MessageBox;
 import server.commandproccessor.ServerCommandSender;
+import server.exceptions.UnsuccessfulCommandActionException;
 import server.model.Task;
 import server.network.ServerNetworkFacade;
 
@@ -24,7 +26,11 @@ public class NotificationTimer extends TimerTask {
         if(clients != null) {
             for (DataOutputStream client : clients) {
                 System.out.println("Send notification to client");
-                commandSender.sendNotificationCommand(task, client);
+                try {
+                    commandSender.sendNotificationCommand(task, client);
+                } catch (UnsuccessfulCommandActionException e) {
+                    MessageBox.getInstance().showMessage("Could not send notification command!");
+                }
                 System.out.println("Success");
                 overdue = false;
             }

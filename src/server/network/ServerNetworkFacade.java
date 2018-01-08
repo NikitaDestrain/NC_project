@@ -1,6 +1,7 @@
 package server.network;
 
-import constants.ConstantsClass;
+import auxiliaryclasses.ConstantsClass;
+import auxiliaryclasses.MessageBox;
 
 import javax.swing.*;
 import java.io.*;
@@ -9,7 +10,6 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -26,6 +26,7 @@ public class ServerNetworkFacade extends Thread {
     private Map<Integer, DataOutputStream> clientDataOutputStreams;
     private Map<Integer, MonoClientThread> clients;
     private static ServerNetworkFacade instance;
+    private MessageBox messageBox = MessageBox.getInstance();
     private int clientCount;
 
     private ServerNetworkFacade() {}
@@ -54,7 +55,7 @@ public class ServerNetworkFacade extends Thread {
                 clientCount++;
             }
             catch (IOException e) {
-                //todo vlla поздравляю, вы выиграли приз за самую ужасную обработку исключительной ситуации в истории явы )
+                messageBox.showMessage("MESSAGE");//todo vlla поздравляю, вы выиграли приз за самую ужасную обработку исключительной ситуации в истории явы )
             }
         }
         executeIt.shutdown();
@@ -70,7 +71,7 @@ public class ServerNetworkFacade extends Thread {
             serverDataSocket = new ServerSocket(port);
         }
         catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Server can not start! Restart application!", "Error", JOptionPane.ERROR_MESSAGE);
+            messageBox.showMessage("Server could not start! Restart application!");
         }
     }
 

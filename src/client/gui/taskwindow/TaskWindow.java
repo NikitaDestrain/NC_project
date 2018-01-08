@@ -6,6 +6,7 @@ import client.gui.mainform.MainForm;
 import client.model.Task;
 import client.model.TaskStatus;
 import client.network.ClientNetworkFacade;
+import client.exceptions.UnsuccessfulCommandActionException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -115,23 +116,26 @@ public class TaskWindow extends JFrame {
         this.jButton_CancelTask.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-
-                commandSender.sendCancelCommand(loadTask, clientFacade.getDataOutputStream());
+                try {
+                    commandSender.sendCancelCommand(loadTask, clientFacade.getDataOutputStream());
+                } catch (UnsuccessfulCommandActionException e1) {
+                    JOptionPane.showMessageDialog(null, "Could not send cancel command!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
                 dispose();
-
             }
         });
 
         this.jButton_TaskCompleted.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-
-
-                 /*   server.exceptions.controller.cancelNotification(loadTask.getId());
-                    loadTask.setStatus(TaskStatus.Completed);*/
-                commandSender.sendFinishCommand(loadTask, clientFacade.getDataOutputStream());
+                try {
+                    commandSender.sendFinishCommand(task, clientFacade.getNotificationOutputStream());
+                } catch (UnsuccessfulCommandActionException e1) {
+                    JOptionPane.showMessageDialog(null, "Could not send finish command!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
                 dispose();
-
             }
         });
         setVisible(true);
@@ -579,7 +583,15 @@ public class TaskWindow extends JFrame {
             JOptionPane.showMessageDialog(null,
                     "Server is not available! Try later!", "Error", JOptionPane.ERROR_MESSAGE);
         else
-            commandSender.sendAddCommand(newTask, clientFacade.getDataOutputStream());
+            try {
+                commandSender.sendAddCommand(newTask, clientFacade.getDataOutputStream());
+            } catch (UnsuccessfulCommandActionException e) {
+                if (JOptionPane.showConfirmDialog(null, "You should restart application! Connection with server was lost! Close the app?",
+                        "Connection error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    clientFacade.finish();
+                    System.exit(1);
+                }
+            }
     }
 
     private void mainFormEditTask(Task taskSet) {

@@ -1,13 +1,14 @@
 package client.gui.notificationwindow;
 
 import client.commandprocessor.ClientCommandSender;
+import client.exceptions.UnsuccessfulCommandActionException;
 import client.gui.mainform.MainForm;
 import client.exceptions.IllegalPropertyException;
 import client.model.Task;
 import client.model.TaskStatus;
 import client.network.ClientNetworkFacade;
 import client.properties.ParserProperties;
-import constants.ConstantsClass;
+import auxiliaryclasses.ConstantsClass;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,36 +77,46 @@ public class NotificationForm extends JFrame {
             setPreferredSize(dimension);
 
             later.addActionListener((ActionEvent e) -> {
-                if(checkAction())
+                if (checkAction())
                     SwingUtilities.invokeLater(() -> new LaterForm(task));
                 dispose();
             });
 
             finish.addActionListener((ActionEvent e) -> {
-                if(checkAction())
-                    commandSender.sendFinishCommand(task, clientFacade.getNotificationOutputStream());
+                if (checkAction())
+                    try {
+                        commandSender.sendFinishCommand(task, clientFacade.getNotificationOutputStream());
+                    } catch (UnsuccessfulCommandActionException e1) {
+                        JOptionPane.showMessageDialog(null, "Could not send finish command!",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 dispose();
             });
 
             cancel.addActionListener((ActionEvent e) -> {
-                if(checkAction())
-                    commandSender.sendCancelCommand(task, clientFacade.getNotificationOutputStream());
+                if (checkAction())
+                    try {
+                        commandSender.sendCancelCommand(task, clientFacade.getNotificationOutputStream());
+                    } catch (UnsuccessfulCommandActionException e1) {
+                        JOptionPane.showMessageDialog(null, "Could not send cancel command!",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 dispose();
             });
         }
 
         private boolean checkAction() {
-            if(MainForm.getInstance().getJournal().getTask(task.getId()) == null) {
+            if (MainForm.getInstance().getJournal().getTask(task.getId()) == null) {
                 JOptionPane.showMessageDialog(null, "No task to perform this action",
                         "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            if(MainForm.getInstance().getJournal().getTask(task.getId()).getStatus() == TaskStatus.Completed) {
+            if (MainForm.getInstance().getJournal().getTask(task.getId()).getStatus() == TaskStatus.Completed) {
                 JOptionPane.showMessageDialog(null, "This task has been already completed by another user!",
                         "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            if(MainForm.getInstance().getJournal().getTask(task.getId()).getStatus() == TaskStatus.Cancelled) {
+            if (MainForm.getInstance().getJournal().getTask(task.getId()).getStatus() == TaskStatus.Cancelled) {
                 JOptionPane.showMessageDialog(null, "This task has been already cancelled by another user!",
                         "Error", JOptionPane.ERROR_MESSAGE);
                 return false;

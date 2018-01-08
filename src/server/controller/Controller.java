@@ -1,7 +1,11 @@
 package server.controller;
 
-import constants.ConstantsClass;
+import auxiliaryclasses.ConstantsClass;
+import auxiliaryclasses.MessageBox;
 import server.commandproccessor.ServerCommandSender;
+import server.exceptions.IncorrectTaskStatusConversionException;
+import server.exceptions.UnsuccessfulCommandActionException;
+import server.gui.ServerTreatmentDetector;
 import server.gui.mainform.MainForm;
 import server.model.Journal;
 import server.model.Task;
@@ -21,22 +25,29 @@ public class Controller {
     private XMLSerializer serializer;
     private ServerCommandSender commandSender = ServerCommandSender.getInstance();
     private ServerNetworkFacade facade = ServerNetworkFacade.getInstance();
+    private MessageBox messageBox = MessageBox.getInstance();
+    private LifecycleManager manager = LifecycleManager.getInstance();
+    private ServerTreatmentDetector detector = ServerTreatmentDetector.getInstance();
 
     private Controller() {
         this.journal = new Journal();
         this.notifier = new Notifier();
         this.serializer = new XMLSerializer();
         try {
-            setJournal(serializer.readJournal(ParserProperties.getInstance().getProperties(ConstantsClass.XML_FILE)));
+            setJournal(serializer.readJournal(ParserProperties.getInstance().getProperty(ConstantsClass.XML_FILE)));
         } catch (Exception e) {
-            if (JOptionPane.showConfirmDialog(null,
+            int action = JOptionPane.showConfirmDialog(null,
                     "Could not load journal from file!\nDo you want to create a new one?\n" +
                             "If you choose NO, the program execution will be stopped!",
-                    "Error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    "Error", JOptionPane.YES_NO_OPTION);
+
+            if (action == JOptionPane.YES_OPTION) {
                 setJournal(new Journal());
-                //todo vlla очень плохо читается блок кода. Стоит завести переменную, сохранить в нее рузультат диалогового окна и в if просто сравнить ее с константой
+                //todo vlla очень плохо читается блок кода. Стоит завести переменную, сохранить в нее рузультат диалогового окна и в if просто сравнить ее с константой DONE
             }
-            else System.exit(1); //todo vlla использование System.exit - это дурной тон. В реальном приложении вы никогда не будуте его использовать.
+            else {
+                System.exit(1); //todo vlla использование System.exit - это дурной тон. В реальном приложении вы никогда не будуте его использовать.
+            }
             //Приложение нужно завершать корректно: стримы, файлы и сокеты - закрывать, потоки - интерраптить и завершать.
             //Нужно будет произвести глобальный рефакторинг - обеспечить корретное завершение с освобождение всех ресурсов.
         }
@@ -48,7 +59,7 @@ public class Controller {
      * otherwise returns current instance
      */
 
-    public static Controller getInstance() { //todo vlla потенциальные проблемы с синхронизацией
+    public static synchronized Controller getInstance() { //todo vlla потенциальные проблемы с синхронизацией DONE
         if (instance == null)
             instance = new Controller();
         return instance;
@@ -89,7 +100,11 @@ public class Controller {
         LinkedList<DataOutputStream> streams = facade.getClientDataOutputStreams();
         if(streams != null) {
             for (DataOutputStream out : streams)
-                commandSender.sendUpdateCommand(this.journal, out);
+                try {
+                    commandSender.sendUpdateCommand(this.journal, out);
+                } catch (UnsuccessfulCommandActionException e) {
+                    messageBox.showMessage("Could not send Update command!");
+                }
         }
     }
 
@@ -97,7 +112,11 @@ public class Controller {
         LinkedList<DataOutputStream> streams = facade.getClientDataOutputStreams();
         if(streams != null) {
             for (DataOutputStream out : streams)
-                commandSender.sendUnsuccessfulActionCommand("Error! Incorrect action with task status!", out);
+                try {
+                    commandSender.sendUnsuccessfulActionCommand("Error! Incorrect action with task status!", out);
+                } catch (UnsuccessfulCommandActionException e) {
+                    messageBox.showMessage("Could not send Unsuccessful command!");
+                }
         }
     }
 
@@ -134,6 +153,15 @@ public class Controller {
         sendUpdateCommand();
     }
 
+    private void processException() {
+        if (detector.getDetector() == ConstantsClass.SERVER_TREATMENT) {
+            detector.clearTreatment();
+            throw new IncorrectTaskStatusConversionException();
+        }
+        else if (detector.getDetector() == ConstantsClass.NOT_SERVER_TREATMENT)
+            sendUnsuccessfulCommand();
+    }
+
     /**
      * Cancels a notification for task in current journal, sets it a <code>Cancelled</code> status
      * and updates a <code>MainForm</code>
@@ -142,10 +170,10 @@ public class Controller {
 
     public void cancelNotification(int id){
         Task task = journal.getTask(id);
-        if (task.getStatus() != TaskStatus.Completed) {
+        if (manager.isStatusConversionValid(task.getStatus(), TaskStatus.Cancelled)) {
             notifier.cancelNotification(id);
             journal.getTask(id).setStatus(TaskStatus.Cancelled);
-            //todo vlla а где собственно происходит проверка, что смена стратуса - валидна? На сколько я помню, мы договорились, что статус таски должен меняться усключительно согласно графу переходов
+            //todo vlla а где собственно происходит проверка, что смена стратуса - валидна? На сколько я помню, мы договорились, что статус таски должен меняться усключительно согласно графу переходов DONE
             // а у вас в куче мест кода просто вызывается setStatus, без какие либо проверок. Подключаем сюда несколько пользователей и гарантированно ловим ситуацию, когда статусы будут менять в обход графа переходов.
             // часть со статусами надо серьезно доделать: выделить сущность, когда будет ответственной только за контроль смены статусов тасок (это может быть контроллер, но я советую завести какой нибудь LifecycleManager)
             // в этом классе реализуем корректный перевод таски из одного статуса в друой: если переход разрешен согласно графу переходов - меняем статус, если запрещем - выдаем специальный эксепшен и корректно обрабатываем его выше.
@@ -153,7 +181,9 @@ public class Controller {
             updateMainForm();
             sendUpdateCommand();
         }
-        else sendUnsuccessfulCommand();
+        else {
+            processException();
+        }
     }
 
     /**
@@ -163,13 +193,15 @@ public class Controller {
      */
 
     public void finishNotification(int id) {
-        if (journal.getTask(id).getStatus() != TaskStatus.Cancelled) {
+        if (manager.isStatusConversionValid(journal.getTask(id).getStatus(), TaskStatus.Completed)) {
             notifier.cancelNotification(id);
             journal.getTask(id).setStatus(TaskStatus.Completed);
             updateMainForm();
             sendUpdateCommand();
         }
-        else sendUnsuccessfulCommand();
+        else {
+            processException();
+        }
     }
 
     /**
@@ -179,7 +211,7 @@ public class Controller {
      */
 
     public void updateNotification(Task task) {
-        if (task.getStatus() != TaskStatus.Completed && task.getStatus() != TaskStatus.Cancelled) {
+        if (manager.isStatusConversionValid(task.getStatus(), TaskStatus.Rescheduled)) {
             journal.removeTask(task.getId());
             task.setStatus(TaskStatus.Rescheduled);
             journal.addTask(task);
@@ -187,7 +219,9 @@ public class Controller {
             updateMainForm();
             sendUpdateCommand();
         }
-        else sendUnsuccessfulCommand();
+        else {
+            processException();
+        }
     }
 
     /**
