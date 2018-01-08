@@ -106,9 +106,7 @@ public class JournalTableModel extends AbstractTableModel {
             case 2:
                 String value = (String) aValue;
                 if (value.equals("")) {
-                    JOptionPane.showMessageDialog(null,
-                            "Task name should not be empty!",
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    messageBox.showMessage("Task name should not be empty!");
                     break;
                 } else {
                     try {
