@@ -55,7 +55,7 @@ public class ServerNetworkFacade extends Thread {
                 clientCount++;
             }
             catch (IOException e) {
-                messageBox.showMessage("MESSAGE");//todo vlla поздравляю, вы выиграли приз за самую ужасную обработку исключительной ситуации в истории явы )
+                messageBox.showMessage("Вставь нужное сообщение");//todo vlla поздравляю, вы выиграли приз за самую ужасную обработку исключительной ситуации в истории явы )
             }
         }
         executeIt.shutdown();

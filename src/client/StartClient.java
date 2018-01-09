@@ -14,14 +14,7 @@ public class StartClient {
         try {
             ParserProperties.getInstance().getProperties(ConstantsClass.MAIN_FORM_ICON);
             ParserProperties.getInstance().getProperties(ConstantsClass.NOTIF_SOUND);
-        }
-        catch (IllegalPropertyException e)
-        {
-            JOptionPane.showMessageDialog(null, "The configuration file is corrupt or missing!. The application will be closed",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        catch (IOException e) {
+        } catch (IllegalPropertyException | IOException e) {
             JOptionPane.showMessageDialog(null, "The configuration file is corrupt or missing!. The application will be closed",
                     "Error", JOptionPane.ERROR_MESSAGE);
             return;
