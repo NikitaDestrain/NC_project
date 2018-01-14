@@ -2,8 +2,8 @@ package client.gui.notificationwindow;
 
 import auxiliaryclasses.MessageBox;
 import client.commandprocessor.ClientCommandSender;
-import client.exceptions.IllegalPropertyException;
-import client.exceptions.UnsuccessfulCommandActionException;
+import server.exceptions.IllegalPropertyException;
+import server.exceptions.UnsuccessfulCommandActionException;
 import client.gui.mainform.MainForm;
 import server.model.Task;
 import server.model.TaskStatus;

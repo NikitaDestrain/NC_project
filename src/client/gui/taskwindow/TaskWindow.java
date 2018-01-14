@@ -7,7 +7,7 @@ import client.gui.mainform.MainForm;
 import server.model.Task;
 import server.model.TaskStatus;
 import client.network.ClientNetworkFacade;
-import client.exceptions.UnsuccessfulCommandActionException;
+import server.exceptions.UnsuccessfulCommandActionException;
 
 import javax.swing.*;
 import java.awt.*;

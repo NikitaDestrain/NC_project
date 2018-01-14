@@ -2,9 +2,9 @@ package client.gui.mainform;
 
 import auxiliaryclasses.MessageBox;
 import client.commandprocessor.ClientCommandSender;
-import client.exceptions.UnsuccessfulCommandActionException;
+import server.exceptions.UnsuccessfulCommandActionException;
 import client.gui.taskwindow.TaskWindow;
-import client.exceptions.IllegalPropertyException;
+import server.exceptions.IllegalPropertyException;
 import server.model.Journal;
 import server.model.Task;
 import client.network.ClientNetworkFacade;
@@ -29,6 +29,7 @@ public class MainForm extends JFrame {
     private ClientNetworkFacade clientFacade = ClientNetworkFacade.getInstance();
     private ClientCommandSender commandSender = ClientCommandSender.getInstance();
     private JLabel usernameLabel = new JLabel("Your status is Client. You logged as: ");
+    private MessageBox messageBox = MessageBox.getInstance();
 
     public MainForm() {
         super("Task Scheduler");
@@ -78,7 +79,7 @@ public class MainForm extends JFrame {
                                     try {
                                         commandSender.sendDeleteCommand(builder.toString(), clientFacade.getDataOutputStream());
                                     } catch (UnsuccessfulCommandActionException e) {
-                                        MessageBox.getInstance().showAskForRestartMessage();
+                                        messageBox.showAskForRestartMessage();
                                     }
                                 break;
                         }
@@ -134,7 +135,7 @@ public class MainForm extends JFrame {
                                     try {
                                         commandSender.sendDeleteCommand(builder.toString(), clientFacade.getDataOutputStream());
                                     } catch (UnsuccessfulCommandActionException e) {
-                                        MessageBox.getInstance().showAskForRestartMessage();
+                                        messageBox.showAskForRestartMessage();
                                     }
                                 break;
                         }
