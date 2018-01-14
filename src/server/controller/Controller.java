@@ -97,7 +97,7 @@ public class Controller {
     }
 
     private void sendUpdateCommand() {
-        LinkedList<DataOutputStream> streams = facade.getClientDataOutputStreams();
+        List<DataOutputStream> streams = facade.getClientDataOutputStreams();
         if(streams != null) {
             for (DataOutputStream out : streams)
                 try {
@@ -109,7 +109,7 @@ public class Controller {
     }
 
     private void sendUnsuccessfulCommand() {
-        LinkedList<DataOutputStream> streams = facade.getClientDataOutputStreams();
+        List<DataOutputStream> streams = facade.getClientDataOutputStreams();
         if(streams != null) {
             for (DataOutputStream out : streams)
                 try {

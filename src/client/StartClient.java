@@ -1,5 +1,6 @@
 package client;
 
+import auxiliaryclasses.MessageBox;
 import client.gui.authforms.AuthForm;
 import client.properties.ParserProperties;
 import auxiliaryclasses.ConstantsClass;
@@ -15,8 +16,7 @@ public class StartClient {
             ParserProperties.getInstance().getProperties(ConstantsClass.MAIN_FORM_ICON);
             ParserProperties.getInstance().getProperties(ConstantsClass.NOTIF_SOUND);
         } catch (IllegalPropertyException | IOException e) {
-            JOptionPane.showMessageDialog(null, "The configuration file is corrupt or missing!. The application will be closed",
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            MessageBox.getInstance().showMessage("The configuration file is corrupt or missing!. The application will be closed!");
             return;
         }
         SwingUtilities.invokeLater(() -> {

@@ -7,12 +7,12 @@ import server.model.Task;
 import server.network.ServerNetworkFacade;
 
 import java.io.DataOutputStream;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.TimerTask;
 
 public class NotificationTimer extends TimerTask {
     private Task task;
-    private LinkedList<DataOutputStream> clients;
+    private List<DataOutputStream> clients;
     private ServerCommandSender commandSender = ServerCommandSender.getInstance();
 
     protected NotificationTimer(Task task) {

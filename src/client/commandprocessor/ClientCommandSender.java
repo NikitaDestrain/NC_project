@@ -6,7 +6,6 @@ import client.network.ClientNetworkFacade;
 import auxiliaryclasses.ConstantsClass;
 import server.exceptions.UnsuccessfulCommandActionException;
 
-import javax.swing.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
