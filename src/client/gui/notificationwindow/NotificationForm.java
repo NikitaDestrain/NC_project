@@ -1,5 +1,6 @@
 package client.gui.notificationwindow;
 
+import auxiliaryclasses.MessageBox;
 import client.commandprocessor.ClientCommandSender;
 import client.exceptions.UnsuccessfulCommandActionException;
 import client.gui.mainform.MainForm;
@@ -23,6 +24,7 @@ public class NotificationForm extends JFrame {
     private MainForm mainForm = MainForm.getInstance();
     private ClientNetworkFacade clientFacade = ClientNetworkFacade.getInstance();
     private ClientCommandSender commandSender = ClientCommandSender.getInstance();
+    private MessageBox messageBox = MessageBox.getInstance();
 
     public NotificationForm() {
         super("Alarm!");
@@ -87,8 +89,7 @@ public class NotificationForm extends JFrame {
                     try {
                         commandSender.sendFinishCommand(task, clientFacade.getNotificationOutputStream());
                     } catch (UnsuccessfulCommandActionException e1) {
-                        JOptionPane.showMessageDialog(null, "Could not send finish command!",
-                                "Error", JOptionPane.ERROR_MESSAGE);
+                        messageBox.showAskForRestartMessage();
                     }
                 dispose();
             });
@@ -98,8 +99,7 @@ public class NotificationForm extends JFrame {
                     try {
                         commandSender.sendCancelCommand(task, clientFacade.getNotificationOutputStream());
                     } catch (UnsuccessfulCommandActionException e1) {
-                        JOptionPane.showMessageDialog(null, "Could not send cancel command!",
-                                "Error", JOptionPane.ERROR_MESSAGE);
+                        messageBox.showAskForRestartMessage();
                     }
                 dispose();
             });

@@ -1,5 +1,6 @@
 package client.gui.taskwindow;
 
+import auxiliaryclasses.MessageBox;
 import client.commandprocessor.ClientCommandSender;
 import client.factories.TaskFactory;
 import client.gui.mainform.MainForm;
@@ -56,6 +57,7 @@ public class TaskWindow extends JFrame {
     private Date notificationDate; //время уведомления
     private ClientNetworkFacade clientFacade = ClientNetworkFacade.getInstance();
     private ClientCommandSender commandSender = ClientCommandSender.getInstance();
+    private MessageBox messageBox = MessageBox.getInstance();
 
     //Перегруженные конструкторы для создания и просмотра/редактирования
     public TaskWindow(MainForm owner) {
@@ -119,8 +121,7 @@ public class TaskWindow extends JFrame {
                 try {
                     commandSender.sendCancelCommand(loadTask, clientFacade.getDataOutputStream());
                 } catch (UnsuccessfulCommandActionException e1) {
-                    JOptionPane.showMessageDialog(null, "Could not send cancel command!",
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    messageBox.showAskForRestartMessage();
                 }
                 dispose();
             }
@@ -132,8 +133,7 @@ public class TaskWindow extends JFrame {
                 try {
                     commandSender.sendFinishCommand(task, clientFacade.getNotificationOutputStream());
                 } catch (UnsuccessfulCommandActionException e1) {
-                    JOptionPane.showMessageDialog(null, "Could not send finish command!",
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    messageBox.showAskForRestartMessage();
                 }
                 dispose();
             }
@@ -586,11 +586,7 @@ public class TaskWindow extends JFrame {
             try {
                 commandSender.sendAddCommand(newTask, clientFacade.getDataOutputStream());
             } catch (UnsuccessfulCommandActionException e) {
-                if (JOptionPane.showConfirmDialog(null, "You should restart application! Connection with server was lost! Close the app?",
-                        "Connection error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    clientFacade.finish();
-                    System.exit(1);
-                }
+                messageBox.showAskForRestartMessage();
             }
     }
 

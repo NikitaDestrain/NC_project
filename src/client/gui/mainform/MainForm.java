@@ -1,5 +1,6 @@
 package client.gui.mainform;
 
+import auxiliaryclasses.MessageBox;
 import client.commandprocessor.ClientCommandSender;
 import client.exceptions.UnsuccessfulCommandActionException;
 import client.gui.taskwindow.TaskWindow;
@@ -77,9 +78,7 @@ public class MainForm extends JFrame {
                                     try {
                                         commandSender.sendDeleteCommand(builder.toString(), clientFacade.getDataOutputStream());
                                     } catch (UnsuccessfulCommandActionException e) {
-                                        JOptionPane.showMessageDialog(MainForm.this,
-                                                "Could not send delete command!",
-                                                "Error", JOptionPane.ERROR_MESSAGE);
+                                        MessageBox.getInstance().showAskForRestartMessage();
                                     }
                                 break;
                         }
@@ -132,7 +131,11 @@ public class MainForm extends JFrame {
                                     builder.append(",");
                                 }
                                 if (!builder.toString().equals(""))
-                                    commandSender.sendDeleteCommand(builder.toString(), clientFacade.getDataOutputStream());
+                                    try {
+                                        commandSender.sendDeleteCommand(builder.toString(), clientFacade.getDataOutputStream());
+                                    } catch (UnsuccessfulCommandActionException e) {
+                                        MessageBox.getInstance().showAskForRestartMessage();
+                                    }
                                 break;
                         }
                     }

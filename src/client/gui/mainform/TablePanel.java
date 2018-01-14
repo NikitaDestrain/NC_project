@@ -81,7 +81,7 @@ public class TablePanel extends JPanel {
             try {
                 commandSender.sendCancelCommand(task, ClientNetworkFacade.getInstance().getDataOutputStream());
             } catch (UnsuccessfulCommandActionException e) {
-                MessageBox.getInstance().showMessage("Could not send cancel command!");
+                MessageBox.getInstance().showAskForRestartMessage();
             }
             refresh();
         });
