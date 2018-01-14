@@ -38,8 +38,8 @@ public class ConstantsClass {
     public static final String UNSUCCESSFUL_CONNECTION = "Unsuccessful connection! Restart application for correct work! Restart?";
     public static final String CRASH_FINISH = "Crash finish! Something went wrong!";
     public static final String UNSAFE_FINISH = "Unsafe finish: server is not available! Data may be lost!";
-    public static final String ERROR_SIGN_IN = "Could not send Sign In command!";
-    public static final String ERROR_SIGN_UP = "Could not send Sign Up command!";
+    public static final String ERROR_SIGN_IN = "Could not send Sign In command! Server is offline. Restart application for correct work!";
+    public static final String ERROR_SIGN_UP = "Could not send Sign Up command! Server is offline. Restart application for correct work!";
     public static final String INCORRECT_COMMAND = "Incorrect command!";
     public static final String EXIST_LOGIN = "User with such login already exists!";
     public static final String UNKNOWN_COMMAND = "Error! Unknown command!";

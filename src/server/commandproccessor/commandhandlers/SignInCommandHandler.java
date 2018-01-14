@@ -7,9 +7,7 @@ import server.commandproccessor.User;
 import server.controller.Controller;
 import server.controller.UserAuthorizer;
 import server.exceptions.UnsuccessfulCommandActionException;
-import server.network.ServerNetworkFacade;
-
-import java.io.DataOutputStream;
+import server.network.StreamContainer;
 
 public class SignInCommandHandler implements CommandHandler {
     @Override
@@ -20,14 +18,14 @@ public class SignInCommandHandler implements CommandHandler {
         if (authorizer.isUserDataCorrect(((User) command.getObject()))) {
             try {
                 commandSender.sendSuccessfulAuthCommand(controller.getJournal(),
-                        ServerNetworkFacade.getInstance().getDataOutputStream(((User) command.getObject()).getPort()));
+                        StreamContainer.getInstance().getDataOutputStream(((User) command.getObject()).getPort()));
             } catch (UnsuccessfulCommandActionException e) {
                 MessageBox.getInstance().showMessage("Could not send successful auth command!");
             }
         }
         else
             try {
-                commandSender.sendUnsuccessfulAuthCommand(ServerNetworkFacade.getInstance().
+                commandSender.sendUnsuccessfulAuthCommand(StreamContainer.getInstance().
                         getDataOutputStream(((User) command.getObject()).getPort()));
             } catch (UnsuccessfulCommandActionException e) {
                 MessageBox.getInstance().showMessage("Could not send unsuccessful auth command!");

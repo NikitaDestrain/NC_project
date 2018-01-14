@@ -1,5 +1,6 @@
 package server.gui.mainform;
 
+import server.network.ServerNetworkFacade;
 import server.properties.ParserProperties;
 import auxiliaryclasses.ConstantsClass;
 import server.controller.*;
@@ -203,6 +204,7 @@ public class MainForm extends JFrame {
 
                 if (action == JOptionPane.OK_OPTION) {
                     try {
+                        ServerNetworkFacade.getInstance().finish();
                         String path = ParserProperties.getInstance().getProperty(ConstantsClass.XML_FILE);
                         if (path == null)
                             JOptionPane.showMessageDialog(MainForm.this,

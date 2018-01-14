@@ -44,7 +44,7 @@ public class ServerNotificationListener extends Thread{
             e.printStackTrace();
         }
         catch (InterruptedException e) {
-            ServerNetworkFacade.getInstance().removeNotificationOutputStream(port);
+            StreamContainer.getInstance().removeNotificationOutputStream(port);
             System.out.printf("Connection with client (port %d) was closed.\n", port);
         }
     }

@@ -6,9 +6,7 @@ import client.commandprocessor.Command;
 import client.commandprocessor.ClientCommandParser;
 import auxiliaryclasses.ConstantsClass;
 import server.exceptions.UnsuccessfulCommandActionException;
-import server.gui.mainform.MainForm;
 
-import javax.swing.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -121,7 +119,7 @@ public class ClientNetworkFacade extends Thread {
     public void finish() {
         try {
             ClientCommandSender.getInstance().sendDisconnectCommand(dataOutputStream);
-            ////todo vlla не закрывается clientDataSocket. Проверить все остальное DONE
+            //todo vlla не закрывается clientDataSocket. Проверить все остальное DONE
             clientNotificationListener.interrupt();
             notificationInputStream.close();
             notificationOutputStream.close();

@@ -25,8 +25,7 @@ public class MessageBox {
     }
 
     public synchronized void showAskForRestartMessage() {
-        JOptionPane.showMessageDialog(null, ConstantsClass.UNSUCCESSFUL_CONNECTION,
-                "Error!", JOptionPane.ERROR_MESSAGE);
+        showMessage(ConstantsClass.UNSUCCESSFUL_CONNECTION);
         clientFacade.finish();
         System.exit(0);
     }

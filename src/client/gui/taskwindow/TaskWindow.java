@@ -597,7 +597,12 @@ public class TaskWindow extends JFrame {
         else {
             if ((loadTask.getStatus() != TaskStatus.Completed) && (loadTask.getStatus() != TaskStatus.Cancelled)) {
                 taskSet.setStatus(TaskStatus.Rescheduled);
-                commandSender.sendEditCommand(taskSet, clientFacade.getDataOutputStream());
+                try {
+                    commandSender.sendEditCommand(taskSet, clientFacade.getDataOutputStream());
+                }
+                catch (UnsuccessfulCommandActionException e) {
+                    messageBox.showAskForRestartMessage();
+                }
             } else
                 JOptionPane.showMessageDialog(null,
                         "You can not reschedule cancelled or completed task!",

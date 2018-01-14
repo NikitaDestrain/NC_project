@@ -4,15 +4,11 @@ import auxiliaryclasses.ConstantsClass;
 import server.commandproccessor.Command;
 import server.commandproccessor.ServerCommandParser;
 import server.commandproccessor.ServerCommandSender;
-import server.controller.Controller;
-import server.model.Task;
-import server.model.TaskStatus;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Date;
 
 import static java.lang.Thread.sleep;
 
@@ -34,6 +30,7 @@ public class MonoClientThread extends Thread {
     private ServerCommandParser commandParser = ServerCommandParser.getInstance();
     private ServerCommandSender commandSender = ServerCommandSender.getInstance();
     private ServerNetworkFacade serverNetworkFacade = ServerNetworkFacade.getInstance();
+    private StreamContainer streamContainer = StreamContainer.getInstance();
     private ServerNotificationListener serverNotificationListener;
     private boolean stopCommandRelay;
 
@@ -63,7 +60,7 @@ public class MonoClientThread extends Thread {
             System.out.println("DataOutputStream  created");
             dataInputStream = new DataInputStream(clientDataSocket.getInputStream());
             System.out.println("DataInputStream created");
-            serverNetworkFacade.addClientDataOutputStreams(notificationPort, dataOutputStream);
+            streamContainer.addClientDataOutputStreams(notificationPort, dataOutputStream);
         }
         catch (IOException e) {
             System.out.printf("Error! Client with port %d can not be connected!\n", notificationPort);
@@ -80,7 +77,7 @@ public class MonoClientThread extends Thread {
             System.out.println("Notification OutputStream created");
             notificationInputStream = new DataInputStream(notificationSocket.getInputStream());
             System.out.println("Notification InputStream created");
-            serverNetworkFacade.addNotificationOutputStream(notificationPort, notificationOutputStream);
+            streamContainer.addNotificationOutputStream(notificationPort, notificationOutputStream);
             serverNotificationListener = new ServerNotificationListener(notificationInputStream, notificationPort);
             serverNotificationListener.start();
         }
@@ -109,12 +106,12 @@ public class MonoClientThread extends Thread {
             //todo vlla а сокет нотификаций закрыть? DONE
             // вроде он закрыт, пока что поставлю, что выполнено (уточнить!)
             System.out.printf("Client with port %d disconnected.\n", number);
-            serverNetworkFacade.removeNotificationOutputStream(notificationPort);//todo vlla а в методе ремува - закрывать стримы
-            serverNetworkFacade.removeClientDataOutputStreams(notificationPort);
+            streamContainer.removeNotificationOutputStream(notificationPort);//todo vlla а в методе ремува - закрывать стримы
+            streamContainer.removeClientDataOutputStreams(notificationPort);
         }
         catch (IOException e) {
-            serverNetworkFacade.removeNotificationOutputStream(notificationPort);
-            serverNetworkFacade.removeClientDataOutputStreams(notificationPort);
+            streamContainer.removeNotificationOutputStream(notificationPort);
+            streamContainer.removeClientDataOutputStreams(notificationPort);
         }
     }
 
@@ -135,7 +132,7 @@ public class MonoClientThread extends Thread {
                 }
             }
         } catch (IOException | InterruptedException e) {
-
+            e.printStackTrace();
         }
     }
 }

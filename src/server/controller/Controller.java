@@ -10,7 +10,7 @@ import server.gui.mainform.MainForm;
 import server.model.Journal;
 import server.model.Task;
 import server.model.TaskStatus;
-import server.network.ServerNetworkFacade;
+import server.network.StreamContainer;
 import server.properties.ParserProperties;
 
 import javax.swing.*;
@@ -24,7 +24,7 @@ public class Controller {
     private MainForm mainForm = MainForm.getInstance();
     private XMLSerializer serializer;
     private ServerCommandSender commandSender = ServerCommandSender.getInstance();
-    private ServerNetworkFacade facade = ServerNetworkFacade.getInstance();
+    private StreamContainer streamContainer = StreamContainer.getInstance();
     private MessageBox messageBox = MessageBox.getInstance();
     private LifecycleManager manager = LifecycleManager.getInstance();
     private ServerTreatmentDetector detector = ServerTreatmentDetector.getInstance();
@@ -97,7 +97,7 @@ public class Controller {
     }
 
     private void sendUpdateCommand() {
-        List<DataOutputStream> streams = facade.getClientDataOutputStreams();
+        List<DataOutputStream> streams = streamContainer.getClientDataOutputStreams();
         if(streams != null) {
             for (DataOutputStream out : streams)
                 try {
@@ -109,7 +109,7 @@ public class Controller {
     }
 
     private void sendUnsuccessfulCommand() {
-        List<DataOutputStream> streams = facade.getClientDataOutputStreams();
+        List<DataOutputStream> streams = streamContainer.getClientDataOutputStreams();
         if(streams != null) {
             for (DataOutputStream out : streams)
                 try {

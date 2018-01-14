@@ -3,7 +3,6 @@ package server.network;
 import auxiliaryclasses.ConstantsClass;
 import auxiliaryclasses.MessageBox;
 
-import javax.swing.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -12,7 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Facade for managing client's threads and their channels
+ * Facade for managing client's threads
  */
 
 public class ServerNetworkFacade extends Thread {
@@ -20,8 +19,7 @@ public class ServerNetworkFacade extends Thread {
     private ServerSocket serverDataSocket;
     private Socket clientDataSocket;
     private ExecutorService executeIt;
-    private Map<Integer, DataOutputStream> clientNotificationOutputStreams;
-    private Map<Integer, DataOutputStream> clientDataOutputStreams;
+    private StreamContainer streamContainer = StreamContainer.getInstance();
     private Map<Integer, MonoClientThread> clients;
     private static ServerNetworkFacade instance;
     private MessageBox messageBox = MessageBox.getInstance();
@@ -30,9 +28,9 @@ public class ServerNetworkFacade extends Thread {
     private ServerNetworkFacade() {}
 
     public static ServerNetworkFacade getInstance() {
-        //todo vlla - тред-синглетон, это что-то странное. Давайте мы этот класс распилим на два?
-        // Первый - который хранит в себе все мапы потоков и производит с ними махинации
-        // Второй - просто тред, который просто будет ждать подключения новых клиентов.
+        //todo vlla - тред-синглетон, это что-то странное. Давайте мы этот класс распилим на два? 1/2 DONE
+        // Первый - который хранит в себе все мапы потоков и производит с ними махинации DONE
+        // Второй - просто тред, который просто будет ждать подключения новых клиентов. DONE
         // Это все же разные обязанности.
         if (instance == null) instance = new ServerNetworkFacade();
         return instance;
@@ -56,15 +54,12 @@ public class ServerNetworkFacade extends Thread {
                 messageBox.showMessage(ConstantsClass.ERROR_CLIENT_CONNECTION);//todo vlla поздравляю, вы выиграли приз за самую ужасную обработку исключительной ситуации в истории явы ) DONE
             }
         }
-        executeIt.shutdown();
     }
 
     private void start(int port, int nThreads) {
         try {
             executeIt = Executors.newFixedThreadPool(nThreads);
             clientCount = ConstantsClass.DEFAULT_CURRENT_COUNT_CLIENTS;
-            clientNotificationOutputStreams = new HashMap<>();
-            clientDataOutputStreams = new HashMap<>();
             clients = new HashMap<>();
             serverDataSocket = new ServerSocket(port);
         }
@@ -74,50 +69,18 @@ public class ServerNetworkFacade extends Thread {
     }
 
     /**
-     * Returns list of actual channels for notification to clients
-     * @return LinkedList
+     * Finishes server facade and closes socket
      */
 
-    public List<DataOutputStream> getClientNotificationOutputStreams() {
-        LinkedList <DataOutputStream> list = new LinkedList<>(clientNotificationOutputStreams.values());
-        return Collections.unmodifiableList(list);
-        //todo vlla чем вам коллекция то не угодила, зачем обязательно ее в List оборачивать? К тому же помним правило: отдаем коллекцию наружу - делаем ее unmodifiable
-        //!!!Не делается unmodified, преобразуется в лист для более быстрой итерации, так как ключи уже не будут играть роли
-        //todo vlla 2 unmodified сделать все таки нужно. Выигрыш, получаемый от более быстрой итерации нивелируется накладными расходами по клонированию коллекции. DONE
-        // Ключи и не нужны - clientNotificationOutputStreams.values() уже возвращает только коллекцию значений
-    }
-
-    /**
-     * Returns list of actual channels for communicate to clients
-     * @return LinkedList
-     */
-
-    public List<DataOutputStream> getClientDataOutputStreams() {
-        LinkedList <DataOutputStream> list = new LinkedList<>(clientDataOutputStreams.values());
-        return Collections.unmodifiableList(list);
-    }
-
-    protected void removeNotificationOutputStream(Integer key) {
-        clientNotificationOutputStreams.remove(key);
-        //todo vlla просто удалить стрим из мапы - не достаточно. Стримы всегда надо закрывать. DONE
-        // закрыты в фасаде
-    }
-
-    protected void addNotificationOutputStream(Integer key, DataOutputStream dataOutputStream) {
-        clientNotificationOutputStreams.put(key, dataOutputStream);
-    }
-
-    protected void addClientDataOutputStreams(Integer key, DataOutputStream dataOutputStream) {
-        clientDataOutputStreams.put(key, dataOutputStream);
-    }
-
-    protected void removeClientDataOutputStreams(Integer key) {
-        clientDataOutputStreams.remove(key);
-        --clientCount;
-    }
-
-    public DataOutputStream getDataOutputStream(int key) {
-        return clientDataOutputStreams.get(key);
+    public void finish() {
+        try {
+            serverDataSocket.close();
+            executeIt.shutdown();
+            System.out.println("Correct finish");
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -128,6 +91,6 @@ public class ServerNetworkFacade extends Thread {
     public void finishClient(int port) {
         clients.get(port).finish();
         clients.remove(port);
+        --clientCount;
     }
-
 }

@@ -4,7 +4,7 @@ import auxiliaryclasses.MessageBox;
 import server.commandproccessor.ServerCommandSender;
 import server.exceptions.UnsuccessfulCommandActionException;
 import server.model.Task;
-import server.network.ServerNetworkFacade;
+import server.network.StreamContainer;
 
 import java.io.DataOutputStream;
 import java.util.List;
@@ -22,7 +22,7 @@ public class NotificationTimer extends TimerTask {
     @Override
     public void run() {
         boolean overdue = true;
-        clients = ServerNetworkFacade.getInstance().getClientNotificationOutputStreams();
+        clients = StreamContainer.getInstance().getClientNotificationOutputStreams();
         if(clients != null) {
             for (DataOutputStream client : clients) {
                 System.out.println("Send notification to client");
