@@ -111,7 +111,7 @@ public class JournalTableModel extends AbstractTableModel {
                         task.setName((String) aValue);
                         commandSender.sendEditCommand(task, clientFacade.getDataOutputStream());
                     } catch (UnsuccessfulCommandActionException e) {
-                        messageBox.showMessage("Could not send Edit command!");
+                        messageBox.showAskForRestartMessage();
                     }
                     break;
                 }
@@ -120,7 +120,7 @@ public class JournalTableModel extends AbstractTableModel {
                     task.setDescription((String) aValue);
                     commandSender.sendEditCommand(task, clientFacade.getDataOutputStream());
                 } catch (UnsuccessfulCommandActionException e) {
-                    messageBox.showMessage("Could not send Edit command!");
+                    messageBox.showAskForRestartMessage();
                 }
                 break;
         }

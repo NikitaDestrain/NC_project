@@ -26,6 +26,7 @@ public class LaterForm extends JFrame {
     private ClientNetworkFacade clientFacade = ClientNetworkFacade.getInstance();
     private ClientCommandSender commandSender = ClientCommandSender.getInstance();
     private Task task;
+    private MessageBox messageBox = MessageBox.getInstance();
 
     public LaterForm(Task t){
         task = t;
@@ -84,8 +85,7 @@ public class LaterForm extends JFrame {
                     try {
                         commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
                     } catch (UnsuccessfulCommandActionException e1) {
-                        JOptionPane.showMessageDialog(null, "Could not send later command!",
-                                "Error", JOptionPane.ERROR_MESSAGE);
+                        messageBox.showAskForRestartMessage();
                     }
                 }
                 dispose();
@@ -121,8 +121,7 @@ public class LaterForm extends JFrame {
                     try {
                         commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
                     } catch (UnsuccessfulCommandActionException e1) {
-                        JOptionPane.showMessageDialog(null, "Could not send later command!",
-                                "Error", JOptionPane.ERROR_MESSAGE);
+                        messageBox.showAskForRestartMessage();
                     }
                 }
                 dispose();
@@ -135,8 +134,7 @@ public class LaterForm extends JFrame {
                     try {
                         commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
                     } catch (UnsuccessfulCommandActionException e1) {
-                        JOptionPane.showMessageDialog(null, "Could not send later command!",
-                                "Error", JOptionPane.ERROR_MESSAGE);
+                        messageBox.showAskForRestartMessage();
                     }
                 }
                 dispose();
@@ -149,8 +147,7 @@ public class LaterForm extends JFrame {
                     try {
                         commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
                     } catch (UnsuccessfulCommandActionException e1) {
-                        JOptionPane.showMessageDialog(null, "Could not send later command!",
-                                "Error", JOptionPane.ERROR_MESSAGE);
+                        messageBox.showAskForRestartMessage();
                     }
                 }
                 dispose();
@@ -163,8 +160,7 @@ public class LaterForm extends JFrame {
                     try {
                         commandSender.sendLaterCommand(task, clientFacade.getNotificationOutputStream());
                     } catch (UnsuccessfulCommandActionException e1) {
-                        JOptionPane.showMessageDialog(null, "Could not send later command!",
-                                "Error", JOptionPane.ERROR_MESSAGE);
+                        messageBox.showAskForRestartMessage();
                     }
                 }
                 dispose();
