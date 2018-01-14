@@ -1,5 +1,7 @@
 package client.network;
 
+import auxiliaryclasses.ConstantsClass;
+import auxiliaryclasses.MessageBox;
 import client.commandprocessor.ClientCommandParser;
 import client.commandprocessor.Command;
 
@@ -14,6 +16,7 @@ public class ClientNotificationListener extends Thread {
 
     private DataInputStream notificationInputStream;
     private ClientCommandParser commandParser = ClientCommandParser.getInstance();
+    private MessageBox messageBox = MessageBox.getInstance();
 
     public ClientNotificationListener(DataInputStream in)
     {
@@ -24,7 +27,7 @@ public class ClientNotificationListener extends Thread {
         System.out.println("Notification listener starts");
         try {
             while (true) {
-                Thread.sleep(500);
+                Thread.sleep(ConstantsClass.SLEEP_FOR_500_SEC);
                 if(notificationInputStream.available() > 0) {
                     byte[] tmp_buffer = new byte[notificationInputStream.available()];
                     int tmp_trash = notificationInputStream.read(tmp_buffer);
@@ -34,8 +37,11 @@ public class ClientNotificationListener extends Thread {
                     commandParser.doCommandAction(command);
                 }
             }
-        } catch (IOException | InterruptedException e) {
-            e.getMessage();
+        } catch (IOException e) {
+            messageBox.showMessage(ConstantsClass.CLIENT_CRASH_MESSAGE);
+        }
+        catch (InterruptedException e) {
+            //todo later
         }
     }
 }

@@ -1,5 +1,7 @@
 package client.gui.authforms;
 
+import auxiliaryclasses.ConstantsClass;
+import auxiliaryclasses.MessageBox;
 import client.commandprocessor.ClientCommandSender;
 import client.commandprocessor.PasswordEncoder;
 import client.gui.UserContainer;
@@ -26,6 +28,7 @@ public class SignUpForm extends JFrame {
     private ClientCommandSender commandSender = ClientCommandSender.getInstance();
     private UserContainer userContainer = UserContainer.getInstance();
     private PasswordEncoder encoder = PasswordEncoder.getInstance();
+    private MessageBox messageBox = MessageBox.getInstance();
 
     public SignUpForm() {
         super("Sign up");
@@ -180,15 +183,13 @@ public class SignUpForm extends JFrame {
                     userContainer.setUsername(login);
                     commandSender.sendSignUpCommand(login, password, clientFacade.getDataOutputStream());
                 } catch (NoSuchAlgorithmException | UnsuccessfulCommandActionException e) {
-                    JOptionPane.showMessageDialog(null,
-                            "Could not send Sign Up command!", "Error", JOptionPane.ERROR_MESSAGE);
+                    messageBox.showMessage(ConstantsClass.ERROR_SIGN_UP);
                 }
             }
         }
     }
 
     public void showUnsuccessfulSignUpMessage() {
-        JOptionPane.showMessageDialog(null,
-                "User with such login already exists!", "Error", JOptionPane.ERROR_MESSAGE);
+        messageBox.showMessage(ConstantsClass.EXIST_LOGIN);
     }
 }

@@ -3,7 +3,7 @@ package client.commandprocessor.commandhandlers;
 import client.commandprocessor.Command;
 import client.gui.notificationwindow.NotificationForm;
 import client.gui.notificationwindow.Sound;
-import client.model.Task;
+import server.model.Task;
 import client.properties.ParserProperties;
 import auxiliaryclasses.ConstantsClass;
 

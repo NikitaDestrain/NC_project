@@ -2,13 +2,11 @@ package client.gui.mainform;
 
 import auxiliaryclasses.MessageBox;
 import client.commandprocessor.ClientCommandSender;
-import client.model.Task;
-import client.model.TaskStatus;
+import server.model.Task;
+import server.model.TaskStatus;
 import client.network.ClientNetworkFacade;
-import client.factories.TaskFactory;
 import server.exceptions.UnsuccessfulCommandActionException;
 
-import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.util.Calendar;
 import java.util.Date;

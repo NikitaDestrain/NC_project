@@ -1,7 +1,7 @@
 package client.commandprocessor;
 
-import client.model.Journal;
-import client.model.Task;
+import server.model.Journal;
+import server.model.Task;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

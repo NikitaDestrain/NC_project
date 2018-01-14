@@ -4,11 +4,11 @@ import client.commandprocessor.ClientCommandSender;
 import client.exceptions.UnsuccessfulCommandActionException;
 import client.gui.mainform.MainForm;
 import client.exceptions.IllegalPropertyException;
-import client.model.Task;
-import client.model.TaskStatus;
+import server.model.Task;
 import client.network.ClientNetworkFacade;
 import client.properties.ParserProperties;
 import auxiliaryclasses.ConstantsClass;
+import server.model.TaskStatus;
 
 import javax.swing.*;
 import java.awt.*;

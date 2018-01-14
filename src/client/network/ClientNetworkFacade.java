@@ -52,7 +52,8 @@ public class ClientNetworkFacade extends Thread {
                 if (successConnect)
                     break;
             } catch (InterruptedException e) {
-                //todo vlla сами знаете
+                //todo vlla сами знаете DONE
+                messageBox.showMessage(ConstantsClass.UNSUCCESSFUL_CONNECTION);
             }
         }
         commandRelay();
@@ -80,7 +81,7 @@ public class ClientNetworkFacade extends Thread {
                         break;
                 }
                 catch (InterruptedException e) {
-                    messageBox.showMessage("Something is going wrong! For correct work you should restart application!");
+                    messageBox.showMessage(ConstantsClass.CLIENT_CRASH_MESSAGE);
                 }
             }
             notificationPort = dataInputStream.readInt();
@@ -89,7 +90,7 @@ public class ClientNetworkFacade extends Thread {
             return 0;
         }
         catch (IOException e) {
-            messageBox.showMessage("Server is not available! Try later!");
+            messageBox.showMessage(ConstantsClass.SERVER_IS_NOT_AVAILABLE);
         }
         return 1;
     }
@@ -109,7 +110,7 @@ public class ClientNetworkFacade extends Thread {
             successConnect = true;
         }
         catch (IOException e) {
-            messageBox.showMessage("Something is going wrong! For correct work you should restart application!");
+            messageBox.showMessage(ConstantsClass.CLIENT_CRASH_MESSAGE);
         }
     }
 
@@ -120,16 +121,17 @@ public class ClientNetworkFacade extends Thread {
     public void finish() {
         try {
             ClientCommandSender.getInstance().sendDisconnectCommand(dataOutputStream);
-            ////todo vlla не закрывается clientDataSocket. Проверить все остальное
+            ////todo vlla не закрывается clientDataSocket. Проверить все остальное DONE
             clientNotificationListener.interrupt();
             notificationInputStream.close();
             notificationOutputStream.close();
             notificationSenderSocket.close();
+            clientDataSocket.close();
             System.out.println("Closing notification connections & channels - DONE.");
         } catch (UnsuccessfulCommandActionException e) {
-            messageBox.showMessage("Could not send Disconnect command!");
+            messageBox.showMessage(ConstantsClass.UNSAFE_FINISH);
         } catch (IOException e) {
-            messageBox.showMessage("Crush finish! Something is going wrong!");
+            messageBox.showMessage(ConstantsClass.CRASH_FINISH);
         }
     }
 
@@ -147,7 +149,7 @@ public class ClientNetworkFacade extends Thread {
                 }
             }
         } catch (IOException | InterruptedException e) {
-            messageBox.showMessage("Something is going wrong! For correct work you should restart application!");
+            messageBox.showMessage(ConstantsClass.CLIENT_CRASH_MESSAGE);
         }
     }
 

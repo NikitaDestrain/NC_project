@@ -1,5 +1,7 @@
 package client.gui.authforms;
 
+import auxiliaryclasses.ConstantsClass;
+import auxiliaryclasses.MessageBox;
 import client.commandprocessor.PasswordEncoder;
 import client.gui.UserContainer;
 import client.network.ClientNetworkFacade;
@@ -25,6 +27,7 @@ public class AuthForm extends JFrame {
     private ClientCommandSender commandSender = ClientCommandSender.getInstance();
     private UserContainer userContainer = UserContainer.getInstance();
     private PasswordEncoder encoder = PasswordEncoder.getInstance();
+    private MessageBox messageBox = MessageBox.getInstance();
 
     public AuthForm() {
         super("Authorization");
@@ -149,7 +152,7 @@ public class AuthForm extends JFrame {
                     encoder.encode(String.valueOf(passwordField.getPassword())),
                     clientFacade.getDataOutputStream());
         } catch (UnsuccessfulCommandActionException | NoSuchAlgorithmException e) {
-            JOptionPane.showMessageDialog(null, "Could not send Sign In command!", "Error", JOptionPane.ERROR_MESSAGE);
+            messageBox.showMessage(ConstantsClass.ERROR_SIGN_IN);
         }
     }
 

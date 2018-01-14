@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -55,7 +56,7 @@ public class ServerNetworkFacade extends Thread {
                 clientCount++;
             }
             catch (IOException e) {
-                messageBox.showMessage("Вставь нужное сообщение");//todo vlla поздравляю, вы выиграли приз за самую ужасную обработку исключительной ситуации в истории явы )
+                messageBox.showMessage(ConstantsClass.ERROR_CLIENT_CONNECTION);//todo vlla поздравляю, вы выиграли приз за самую ужасную обработку исключительной ситуации в истории явы ) DONE
             }
         }
         executeIt.shutdown();
@@ -71,7 +72,7 @@ public class ServerNetworkFacade extends Thread {
             serverDataSocket = new ServerSocket(port);
         }
         catch (IOException e) {
-            messageBox.showMessage("Server could not start! Restart application!");
+            messageBox.showMessage(ConstantsClass.ERROR_SERVER_START);
         }
     }
 
@@ -84,7 +85,6 @@ public class ServerNetworkFacade extends Thread {
         return new LinkedList<>(clientNotificationOutputStreams.values());
         //todo vlla чем вам коллекция то не угодила, зачем обязательно ее в List оборачивать? К тому же помним правило: отдаем коллекцию наружу - делаем ее unmodifiable
         //!!!Не делается unmodified, преобразуется в лист для более быстрой итерации, так как ключи уже не будут играть роли
-
         //todo vlla 2 unmodified сделать все таки нужно. Выигрыш, получаемый от более быстрой итерации нивелируется накладными расходами по клонированию коллекции.
         // Ключи и не нужны - clientNotificationOutputStreams.values() уже возвращает только коллекцию значений
     }
@@ -100,7 +100,8 @@ public class ServerNetworkFacade extends Thread {
 
     protected void removeNotificationOutputStream(Integer key) {
         clientNotificationOutputStreams.remove(key);
-        //todo vlla просто удалить стрим из мапы - не достаточно. Стримы всегда надо закрывать.
+        //todo vlla просто удалить стрим из мапы - не достаточно. Стримы всегда надо закрывать. DONE
+        // закрыты в фасаде
     }
 
     protected void addNotificationOutputStream(Integer key, DataOutputStream dataOutputStream) {

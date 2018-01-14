@@ -5,7 +5,7 @@ import client.gui.UserContainer;
 import client.gui.authforms.AuthForm;
 import client.gui.authforms.SignUpForm;
 import client.gui.mainform.MainForm;
-import client.model.Journal;
+import server.model.Journal;
 
 public class SuccessfulAuthCommandHandler implements CommandHandler {
     @Override

@@ -102,8 +102,12 @@ public class MonoClientThread extends Thread {
             // нужно всю логику завершения потоков сделать на интерраптах, while(true) - это только на первое время
             dataInputStream.close();
             dataOutputStream.close();
+            notificationInputStream.close();
+            notificationOutputStream.close();
             clientDataSocket.close();
-            //todo vlla а сокет нотификаций закрыть?
+            notificationSocket.close();
+            //todo vlla а сокет нотификаций закрыть? DONE
+            // вроде он закрыт, пока что поставлю, что выполнено (уточнить!)
             System.out.printf("Client with port %d disconnected.\n", number);
             serverNetworkFacade.removeNotificationOutputStream(notificationPort);//todo vlla а в методе ремува - закрывать стримы
             serverNetworkFacade.removeClientDataOutputStreams(notificationPort);
@@ -125,13 +129,13 @@ public class MonoClientThread extends Thread {
                     System.out.printf("Client with port %d send: ", number);
                     System.out.println(command);
                     if(commandParser.doCommandAction(command) == 1)
-                        commandSender.sendUnsuccessfulActionCommand("Error! Unknown command!", dataOutputStream);
+                        commandSender.sendUnsuccessfulActionCommand(ConstantsClass.UNKNOWN_COMMAND, dataOutputStream);
                     if(stopCommandRelay)
                         break;
                 }
             }
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+
         }
     }
 }

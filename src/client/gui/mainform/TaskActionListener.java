@@ -1,6 +1,6 @@
 package client.gui.mainform;
 
-import client.model.Task;
+import server.model.Task;
 
 public interface TaskActionListener {
     int ADD_TASK = 0;

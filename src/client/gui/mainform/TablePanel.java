@@ -2,8 +2,8 @@ package client.gui.mainform;
 
 import auxiliaryclasses.MessageBox;
 import client.commandprocessor.ClientCommandSender;
-import client.model.Task;
-import client.model.TaskStatus;
+import server.model.Task;
+import server.model.TaskStatus;
 import client.network.ClientNetworkFacade;
 import server.exceptions.UnsuccessfulCommandActionException;
 

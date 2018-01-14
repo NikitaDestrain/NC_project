@@ -32,4 +32,18 @@ public class ConstantsClass {
 
     public static final int SERVER_TREATMENT = 1;
     public static final int NOT_SERVER_TREATMENT = 0;
+
+    public static final String CLIENT_CRASH_MESSAGE = "Something went wrong! Restart application for correct work!";
+    public static final String SERVER_IS_NOT_AVAILABLE = "Server is not available! Try later!";
+    public static final String UNSUCCESSFUL_CONNECTION = "Unsuccessful connection! Restart application for correct work!";
+    public static final String CRASH_FINISH = "Crash finish! Something went wrong!";
+    public static final String UNSAFE_FINISH = "Unsafe finish: server is not available! Data may be lost!";
+    public static final String ERROR_SIGN_IN = "Could not send Sign In command!";
+    public static final String ERROR_SIGN_UP = "Could not send Sign Up command!";
+    public static final String INCORRECT_COMMAND = "Incorrect command!";
+    public static final String EXIST_LOGIN = "User with such login already exists!";
+    public static final String UNKNOWN_COMMAND = "Error! Unknown command!";
+    public static final String ERROR_CLIENT_CONNECTION = "Something went wrong and one of clients has not connected successfully!";
+    public static final String ERROR_SERVER_START = "Server could not start! Restart application!";
+
 }

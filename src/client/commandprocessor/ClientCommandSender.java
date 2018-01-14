@@ -1,7 +1,7 @@
 package client.commandprocessor;
 
 import client.factories.ClientCommandFactory;
-import client.model.Task;
+import server.model.Task;
 import client.network.ClientNetworkFacade;
 import auxiliaryclasses.ConstantsClass;
 import server.exceptions.UnsuccessfulCommandActionException;

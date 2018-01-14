@@ -1,6 +1,7 @@
 package server.network;
 
 import auxiliaryclasses.ConstantsClass;
+import auxiliaryclasses.MessageBox;
 import server.commandproccessor.Command;
 import server.commandproccessor.ServerCommandParser;
 
@@ -16,6 +17,7 @@ public class ServerNotificationListener extends Thread{
     private DataInputStream notificationInputStream;
     private int port;
     private ServerCommandParser commandParser = ServerCommandParser.getInstance();
+    private MessageBox messageBox = MessageBox.getInstance();
 
     public ServerNotificationListener(DataInputStream in, int port) {
         this.notificationInputStream = in;
@@ -36,10 +38,14 @@ public class ServerNotificationListener extends Thread{
                     commandParser.doCommandAction(command);
                 }
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             //todo vlla то есть что бы не случилось - мы сразу рвем соединение с клиентом? Не слишком радикально?
-            System.out.printf("Connection with client (port %d) was closed.\n", port);
+            // уточнить!
+            e.printStackTrace();
+        }
+        catch (InterruptedException e) {
             ServerNetworkFacade.getInstance().removeNotificationOutputStream(port);
+            System.out.printf("Connection with client (port %d) was closed.\n", port);
         }
     }
 }

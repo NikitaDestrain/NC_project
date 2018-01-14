@@ -1,7 +1,7 @@
 package client.gui.mainform;
 
 import client.gui.taskwindow.TaskWindow;
-import client.model.Task;
+import server.model.Task;
 
 import javax.swing.*;
 import java.awt.*;

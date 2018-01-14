@@ -2,7 +2,7 @@ package client.commandprocessor.commandhandlers;
 
 import client.commandprocessor.Command;
 import client.gui.mainform.MainForm;
-import client.model.Journal;
+import server.model.Journal;
 
 public class UpdateCommandHandler implements CommandHandler {
     @Override

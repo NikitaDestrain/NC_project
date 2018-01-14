@@ -1,7 +1,7 @@
 package client.factories;
 
-import client.model.Task;
-import client.model.TaskStatus;
+import server.model.Task;
+import server.model.TaskStatus;
 
 import java.util.Date;
 

@@ -1,5 +1,6 @@
 package client.commandprocessor;
 
+import auxiliaryclasses.MessageBox;
 import client.commandprocessor.commandhandlers.*;
 import auxiliaryclasses.ConstantsClass;
 
@@ -20,6 +21,7 @@ import java.util.Map;
 public class ClientCommandParser {
     private static ClientCommandParser instance;
     private Map<String, CommandHandler> handlers;
+    private MessageBox messageBox = MessageBox.getInstance();
 
     private ClientCommandParser() {
         handlers = new HashMap<>();
@@ -52,8 +54,7 @@ public class ClientCommandParser {
             is.close();
             return command;
         } catch (JAXBException | IOException e) {
-            JOptionPane.showMessageDialog(null, "Incorrect command!",
-                    "Parse error!", JOptionPane.ERROR_MESSAGE);
+            messageBox.showMessage(ConstantsClass.INCORRECT_COMMAND);
         }
         return null;
     }
