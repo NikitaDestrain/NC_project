@@ -26,7 +26,7 @@ public class MessageBox {
 
     public synchronized void showAskForRestartMessage() {
         showMessage(ConstantsClass.UNSUCCESSFUL_CONNECTION);
-        clientFacade.finish();
+        //clientFacade.finish();
         System.exit(0);
     }
 }
