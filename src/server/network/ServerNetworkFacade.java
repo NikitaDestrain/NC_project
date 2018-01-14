@@ -7,10 +7,7 @@ import javax.swing.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -81,11 +78,12 @@ public class ServerNetworkFacade extends Thread {
      * @return LinkedList
      */
 
-    public LinkedList<DataOutputStream> getClientNotificationOutputStreams() {
-        return new LinkedList<>(clientNotificationOutputStreams.values());
+    public List<DataOutputStream> getClientNotificationOutputStreams() {
+        LinkedList <DataOutputStream> list = new LinkedList<>(clientNotificationOutputStreams.values());
+        return Collections.unmodifiableList(list);
         //todo vlla чем вам коллекция то не угодила, зачем обязательно ее в List оборачивать? К тому же помним правило: отдаем коллекцию наружу - делаем ее unmodifiable
         //!!!Не делается unmodified, преобразуется в лист для более быстрой итерации, так как ключи уже не будут играть роли
-        //todo vlla 2 unmodified сделать все таки нужно. Выигрыш, получаемый от более быстрой итерации нивелируется накладными расходами по клонированию коллекции.
+        //todo vlla 2 unmodified сделать все таки нужно. Выигрыш, получаемый от более быстрой итерации нивелируется накладными расходами по клонированию коллекции. DONE
         // Ключи и не нужны - clientNotificationOutputStreams.values() уже возвращает только коллекцию значений
     }
 
@@ -94,8 +92,9 @@ public class ServerNetworkFacade extends Thread {
      * @return LinkedList
      */
 
-    public LinkedList<DataOutputStream> getClientDataOutputStreams() {
-        return new LinkedList<>(clientDataOutputStreams.values());
+    public List<DataOutputStream> getClientDataOutputStreams() {
+        LinkedList <DataOutputStream> list = new LinkedList<>(clientDataOutputStreams.values());
+        return Collections.unmodifiableList(list);
     }
 
     protected void removeNotificationOutputStream(Integer key) {

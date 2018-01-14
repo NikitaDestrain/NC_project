@@ -6,6 +6,7 @@ import server.exceptions.UnsuccessfulCommandActionException;
 import client.gui.mainform.MainForm;
 import server.exceptions.IllegalPropertyException;
 import server.model.Task;
+
 import client.network.ClientNetworkFacade;
 import client.properties.ParserProperties;
 import auxiliaryclasses.ConstantsClass;
