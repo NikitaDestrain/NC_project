@@ -124,6 +124,8 @@ public class ClientNetworkFacade extends Thread {
             notificationInputStream.close();
             notificationOutputStream.close();
             notificationSenderSocket.close();
+            dataInputStream.close();
+            dataOutputStream.close();
             clientDataSocket.close();
             System.out.println("Closing notification connections & channels - DONE.");
         } catch (UnsuccessfulCommandActionException e) {
