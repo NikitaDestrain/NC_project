@@ -11,7 +11,7 @@ import java.io.*;
 public class XMLSerializer implements Serializer {
     @Override
     public void writeJournal(Journal journal, String path) throws Exception {
-        try{
+        try {
             JAXBContext context = JAXBContext.newInstance(Journal.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);

@@ -22,9 +22,6 @@ public class NotificationForm extends JFrame {
     private LabelPanel labelPanel;
     private ImageIcon icon;
     private Controller controller = Controller.getInstance();
-    private MainForm mainForm = MainForm.getInstance();
-    private ServerCommandSender commandSender = ServerCommandSender.getInstance();
-    private ServerNetworkFacade facade = ServerNetworkFacade.getInstance();
     private static ServerTreatmentDetector detector = ServerTreatmentDetector.getInstance();
 
     public NotificationForm() {
@@ -85,7 +82,7 @@ public class NotificationForm extends JFrame {
             });
 
             finish.addActionListener((ActionEvent e) -> {
-                if(controller.getJournal().getTask(task.getId()) != null) {
+                if (controller.getJournal().getTask(task.getId()) != null) {
                     try {
                         detector.serverTreatment();
                         controller.finishNotification(task.getId());
@@ -93,8 +90,7 @@ public class NotificationForm extends JFrame {
                         JOptionPane.showMessageDialog(null, "Could not finish this task!",
                                 "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                }
-                else
+                } else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be finished!",
                             "Error", JOptionPane.ERROR_MESSAGE);
                 dispose();

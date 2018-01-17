@@ -11,6 +11,7 @@ import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+
 /**
  * A class that allows you to control the  sound when a user is notified
  */
@@ -34,7 +35,6 @@ public class Sound {
     private boolean playing = false;
 
     /**
-     *
      * @param f path to file with sound
      */
     public Sound(File f) {
@@ -52,7 +52,8 @@ public class Sound {
     }
 
     /**
-     *  Show audio download status
+     * Show audio download status
+     *
      * @return <b> true </b> if the download is successful. <b> false </b> if loading failed
      */
 
@@ -61,9 +62,9 @@ public class Sound {
     }
 
 
-
     /**
      * Indicates whether the sound is playing at the moment
+     *
      * @return <b> true </b> if playing. <b> false </b> if not playing
      */
 
@@ -74,6 +75,7 @@ public class Sound {
 
     /**
      * The method that starts the sound reproduction
+     *
      * @param breakOld if <b> true </b> the sound will be interrupted and restarted. if <b> false </b> nothing will happen
      */
     public void play(boolean breakOld) {
@@ -111,29 +113,29 @@ public class Sound {
 
     /**
      * Volume setting
-     * @param x  must be between 0 and 1 (from the quietest to the loudest)
+     *
+     * @param x must be between 0 and 1 (from the quietest to the loudest)
      */
     public void setVolume(float x) {
-        if (x<0) x = 0;
-        if (x>1) x = 1;
+        if (x < 0) x = 0;
+        if (x > 1) x = 1;
         float min = volumeC.getMinimum();
         float max = volumeC.getMaximum();
-        volumeC.setValue((max-min)*x+min);
+        volumeC.setValue((max - min) * x + min);
     }
-
 
 
     /**
      * Returns the current volume
+     *
      * @return value from 0 to 1
      */
     public float getVolume() {
         float v = volumeC.getValue();
         float min = volumeC.getMinimum();
         float max = volumeC.getMaximum();
-        return (v-min)/(max-min);
+        return (v - min) / (max - min);
     }
-
 
 
     /**
@@ -141,17 +143,18 @@ public class Sound {
      */
     public void join() {
         if (!released) return;
-        synchronized(clip) {
+        synchronized (clip) {
             try {
                 while (playing) clip.wait();
-            } catch (InterruptedException exc) {}
+            } catch (InterruptedException exc) {
+            }
         }
     }
 
 
-
     /**
      * Method for playing sound from the specified path to the file
+     *
      * @param s path to sound file
      * @return object Sound
      */
@@ -166,7 +169,7 @@ public class Sound {
         public void update(LineEvent ev) {
             if (ev.getType() == LineEvent.Type.STOP) {
                 playing = false;
-                synchronized(clip) {
+                synchronized (clip) {
                     clip.notify();
                 }
             }

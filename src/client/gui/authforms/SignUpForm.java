@@ -36,7 +36,6 @@ public class SignUpForm extends JFrame {
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
         clientFacade = ClientNetworkFacade.getInstance();
-        if (!clientFacade.isAlive()) clientFacade.start();
 
         okButton = new JButton("OK");
         clearButton = new JButton("Clear");
@@ -182,6 +181,7 @@ public class SignUpForm extends JFrame {
                     password = encoder.encode(String.valueOf(this.passwordField.getPassword()));
                     userContainer.setUsername(login);
                     commandSender.sendSignUpCommand(login, password, clientFacade.getDataOutputStream());
+                    clientFacade.callCommandAuthorizationRelay();
                 } catch (NoSuchAlgorithmException | UnsuccessfulCommandActionException e) {
                     messageBox.showMessage(ConstantsClass.ERROR_SIGN_UP);
                 }

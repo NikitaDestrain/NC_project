@@ -8,8 +8,9 @@ public class ObjectSerializer implements Serializer {
 
     /**
      * Writes the received journal to the file with specified path
+     *
      * @param journal received
-     * @param path where the journal will be written
+     * @param path    where the journal will be written
      * @throws IOException
      */
     @Override
@@ -25,6 +26,7 @@ public class ObjectSerializer implements Serializer {
 
     /**
      * Reads the journal from the file with specified path
+     *
      * @param path where the journal should be read
      * @return {@code Journal} object if reading was correct and null otherwise
      * @throws IOException

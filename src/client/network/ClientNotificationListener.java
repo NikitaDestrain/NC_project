@@ -18,17 +18,16 @@ public class ClientNotificationListener extends Thread {
     private ClientCommandParser commandParser = ClientCommandParser.getInstance();
     private MessageBox messageBox = MessageBox.getInstance();
 
-    public ClientNotificationListener(DataInputStream in)
-    {
+    public ClientNotificationListener(DataInputStream in) {
         this.notificationInputStream = in;
     }
 
     public void run() {
         System.out.println("Notification listener starts");
         try {
-            while (true) {
+            while (!isInterrupted()) {
                 Thread.sleep(ConstantsClass.SLEEP_FOR_500_SEC);
-                if(notificationInputStream.available() > 0) {
+                if (notificationInputStream.available() > 0) {
                     byte[] tmp_buffer = new byte[notificationInputStream.available()];
                     int tmp_trash = notificationInputStream.read(tmp_buffer);
                     Command command = commandParser.parseToCommand(tmp_buffer);
@@ -37,11 +36,19 @@ public class ClientNotificationListener extends Thread {
                     commandParser.doCommandAction(command);
                 }
             }
+            closeInputStream();
         } catch (IOException e) {
             messageBox.showMessage(ConstantsClass.CLIENT_CRASH_MESSAGE);
+        } catch (InterruptedException e) {
+            closeInputStream();
         }
-        catch (InterruptedException e) {
-            //todo later
+    }
+
+    private void closeInputStream() {
+        try {
+            notificationInputStream.close();
+        } catch (IOException e) {
+            messageBox.showMessage(ConstantsClass.CLIENT_CRASH_MESSAGE);
         }
     }
 }

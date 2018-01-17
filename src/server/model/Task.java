@@ -4,30 +4,45 @@ import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.Date;
 
-/** The class serves to store the object "task" with server.exceptions.properties
+/**
+ * The class serves to store the object "task" with server.exceptions.properties
  * <b>name</b>, <b>status</b>, <b>description</b>, <b>notificationDate</b>,  <b>plannedDate</b>, <b>id</b>.
  */
 @XmlType(propOrder = {"id", "name", "description", "status", "notificationDate", "plannedDate"}, name = "task")
 @XmlRootElement(name = "task")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Task implements Comparable<Task>, Serializable {
-    /** Task name */
+    /**
+     * Task name
+     */
     private String name;
-    /** Task status @see TaskStatus */
+    /**
+     * Task status @see TaskStatus
+     */
     private TaskStatus status;
-    /** Task description */
+    /**
+     * Task description
+     */
     private String description;
-    /** Notification date*/
+    /**
+     * Notification date
+     */
     private Date notificationDate;
-    /** Planned date*/
+    /**
+     * Planned date
+     */
     private Date plannedDate;
-    /** unique identificator */
+    /**
+     * unique identificator
+     */
     private int id;
 
-    public Task() {}
+    public Task() {
+    }
 
     /**
      * Creates a new object with given values
+     *
      * @param name
      * @param status
      * @param description
@@ -53,6 +68,7 @@ public class Task implements Comparable<Task>, Serializable {
      * <br><b>description</b>,
      * <br><b>notificationDate</b>,
      * <br><b>plannedDate</b>.
+     *
      * @param task new task
      */
     public void setTask(Task task) {
@@ -65,6 +81,7 @@ public class Task implements Comparable<Task>, Serializable {
 
     /**
      * Return field value   <b>name<b/>
+     *
      * @return task name
      */
     public String getName() {
@@ -73,6 +90,7 @@ public class Task implements Comparable<Task>, Serializable {
 
     /**
      * Changes the task field value <b>name<b/>
+     *
      * @param name new name
      */
     public void setName(String name) {
@@ -81,8 +99,9 @@ public class Task implements Comparable<Task>, Serializable {
 
     /**
      * Returns the current  value of the task field <b>status<b/>
-     * @see TaskStatus
+     *
      * @return {@linkplain TaskStatus } status
+     * @see TaskStatus
      */
     public TaskStatus getStatus() {
         return status;
@@ -90,6 +109,7 @@ public class Task implements Comparable<Task>, Serializable {
 
     /**
      * Changes the current <b>status</b>,  of the task
+     *
      * @param status new status from the class {@linkplain TaskStatus}
      */
     public void setStatus(TaskStatus status) {
@@ -98,6 +118,7 @@ public class Task implements Comparable<Task>, Serializable {
 
     /**
      * Returns the field value <b>description<b/>
+     *
      * @return task description
      */
     public String getDescription() {
@@ -106,7 +127,8 @@ public class Task implements Comparable<Task>, Serializable {
 
     /**
      * Modifies the current task field value  <b>description<b/>
-     * @param description  new description
+     *
+     * @param description new description
      */
     public void setDescription(String description) {
         this.description = description;
@@ -114,6 +136,7 @@ public class Task implements Comparable<Task>, Serializable {
 
     /**
      * Returns the field value <b>notificationDate<b/>
+     *
      * @return task notification date
      */
     public Date getNotificationDate() {
@@ -122,6 +145,7 @@ public class Task implements Comparable<Task>, Serializable {
 
     /**
      * Set the value of the field <b>notificationDate<b/>
+     *
      * @param notificationDate the new task notification time
      */
     public void setNotificationDate(Date notificationDate) {
@@ -130,6 +154,7 @@ public class Task implements Comparable<Task>, Serializable {
 
     /**
      * Returns the field value <b>plannedDate<b/>
+     *
      * @return planned task time
      */
     public Date getPlannedDate() {
@@ -138,6 +163,7 @@ public class Task implements Comparable<Task>, Serializable {
 
     /**
      * Set the value of the field <b>plannedDate<b/>
+     *
      * @param plannedDate new planned task time
      */
     public void setPlannedDate(Date plannedDate) {
@@ -146,6 +172,7 @@ public class Task implements Comparable<Task>, Serializable {
 
     /**
      * Returns the field value <b>id</b>
+     *
      * @return unique identificator
      */
     public int getId() {
@@ -156,21 +183,23 @@ public class Task implements Comparable<Task>, Serializable {
 
     /**
      * Method allows you to compare two tasks by the time of notification
+     *
      * @param task object of the task with which the object that called the method is compared
      * @return <b>-1</b> if notification the transferred task object > than notificaton time of this task notification time.
      * Else <b>1</b>
      */
     @Override
     public int compareTo(Task task) {
-        if(notificationDate.compareTo(task.getNotificationDate()) < 0)
+        if (notificationDate.compareTo(task.getNotificationDate()) < 0)
             return -1;
-        if(notificationDate.compareTo(task.getNotificationDate()) > 0)
+        if (notificationDate.compareTo(task.getNotificationDate()) > 0)
             return 1;
         return 0;
     }
 
     /**
      * Method that allows you to get information about all fields of an object Task
+     *
      * @return string information
      */
     @Override

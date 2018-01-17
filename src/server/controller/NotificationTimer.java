@@ -23,7 +23,7 @@ public class NotificationTimer extends TimerTask {
     public void run() {
         boolean overdue = true;
         clients = StreamContainer.getInstance().getClientNotificationOutputStreams();
-        if(clients != null) {
+        if (clients != null) {
             for (DataOutputStream client : clients) {
                 System.out.println("Send notification to client");
                 try {
@@ -35,7 +35,7 @@ public class NotificationTimer extends TimerTask {
                 overdue = false;
             }
         }
-        if(overdue) {
+        if (overdue) {
             Controller.getInstance().setOverdue(task.getId());
         }
     }

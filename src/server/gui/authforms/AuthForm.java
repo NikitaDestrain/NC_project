@@ -1,13 +1,13 @@
 package server.gui.authforms;
 
 import client.commandprocessor.PasswordEncoder;
+import server.network.ServerProcessor;
 import server.commandproccessor.User;
 import server.controller.Controller;
 import server.controller.IDGenerator;
 import server.controller.UserAuthorizer;
 import server.gui.mainform.MainForm;
 import server.model.Journal;
-import server.network.ServerNetworkFacade;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -24,20 +24,20 @@ public class AuthForm extends JFrame {
     private JButton registrationButton;
     private Controller controller = Controller.getInstance();
     private UserAuthorizer authorizer = UserAuthorizer.getInstance();
-    private ServerNetworkFacade serverFacade;
+    private ServerProcessor serverProcessor;
     private static AuthForm instance;
     private PasswordEncoder encoder = PasswordEncoder.getInstance();
 
     public AuthForm() {
         super("Authorization");
-        serverFacade = ServerNetworkFacade.getInstance();
+        serverProcessor = ServerProcessor.getInstance();
         instance = this;
         okButton = new JButton("Sign in");
         registrationButton = new JButton("Sign up");
         loginField = new JTextField(10);
         passwordField = new JPasswordField(10);
         passwordField.setEchoChar('*'); // что отображается при вводе пароля
-        if(!serverFacade.isAlive()) serverFacade.start();
+        serverProcessor.startServer();
 
         layoutComponents();
 

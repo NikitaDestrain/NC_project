@@ -22,12 +22,10 @@ public class LaterForm extends JFrame {
     private ButtonLaterPanel buttonLaterPanel;
     private WriteLaterPanel writeLaterPanel;
     private ImageIcon icon;
-    private ServerCommandSender commandSender = ServerCommandSender.getInstance();
-    private ServerNetworkFacade facade = ServerNetworkFacade.getInstance();
     private static ServerTreatmentDetector detector = ServerTreatmentDetector.getInstance();
 
-    public LaterForm(Task task){
-        setLayout(new GridLayout(3,1));
+    public LaterForm(Task task) {
+        setLayout(new GridLayout(3, 1));
         try {
             icon = new ImageIcon(ParserProperties.getInstance().getProperty(ConstantsClass.MAIN_FORM_ICON));
         } catch (IllegalPropertyException e) {
@@ -56,7 +54,7 @@ public class LaterForm extends JFrame {
         setVisible(true);
     }
 
-    private class WriteLaterPanel extends JPanel{
+    private class WriteLaterPanel extends JPanel {
         private JLabel hoursLabel;
         private JLabel minutesLabel;
         private JSpinner hoursSpinner;
@@ -64,17 +62,17 @@ public class LaterForm extends JFrame {
         private JButton okButton;
         private Controller controller = Controller.getInstance();
 
-        public WriteLaterPanel(Task task){
+        public WriteLaterPanel(Task task) {
             hoursLabel = new JLabel("hours:");
             minutesLabel = new JLabel("minutes:");
             hoursSpinner = new JSpinner();
             minutesSpinner = new JSpinner();
-            hoursSpinner.setModel(new SpinnerNumberModel(0,0,23,1));
-            minutesSpinner.setModel(new SpinnerNumberModel(1,1,59,1));
+            hoursSpinner.setModel(new SpinnerNumberModel(0, 0, 23, 1));
+            minutesSpinner.setModel(new SpinnerNumberModel(1, 1, 59, 1));
 
             okButton = new JButton("OK");
             okButton.addActionListener((ActionEvent e) -> {
-                if(controller.getJournal().getTask(task.getId()) != null) {
+                if (controller.getJournal().getTask(task.getId()) != null) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + (int) this.hoursSpinner.getValue() * 60 * 60000
                             + (int) this.minutesSpinner.getValue() * 60000));
@@ -85,8 +83,7 @@ public class LaterForm extends JFrame {
                         JOptionPane.showMessageDialog(null, "Could not reschedule this task!",
                                 "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                }
-                else
+                } else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
                             "Error", JOptionPane.ERROR_MESSAGE);
                 dispose();
@@ -115,7 +112,7 @@ public class LaterForm extends JFrame {
             later60 = new JButton("1 hour");
 
             later5.addActionListener((ActionEvent e) -> {
-                if(controller.getJournal().getTask(task.getId()) != null) {
+                if (controller.getJournal().getTask(task.getId()) != null) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 5 * 60000));
                     try {
@@ -125,15 +122,14 @@ public class LaterForm extends JFrame {
                         JOptionPane.showMessageDialog(null, "Could not reschedule this task!",
                                 "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                }
-                else
+                } else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
                             "Error", JOptionPane.ERROR_MESSAGE);
                 dispose();
             });
 
             later15.addActionListener((ActionEvent e) -> {
-                if(controller.getJournal().getTask(task.getId()) != null) {
+                if (controller.getJournal().getTask(task.getId()) != null) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 15 * 60000));
                     try {
@@ -143,15 +139,14 @@ public class LaterForm extends JFrame {
                         JOptionPane.showMessageDialog(null, "Could not reschedule this task!",
                                 "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                }
-                else
+                } else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
                             "Error", JOptionPane.ERROR_MESSAGE);
                 dispose();
             });
 
             later30.addActionListener((ActionEvent e) -> {
-                if(controller.getJournal().getTask(task.getId()) != null) {
+                if (controller.getJournal().getTask(task.getId()) != null) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 30 * 60000));
                     try {
@@ -161,15 +156,14 @@ public class LaterForm extends JFrame {
                         JOptionPane.showMessageDialog(null, "Could not reschedule this task!",
                                 "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                }
-                else
+                } else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
                             "Error", JOptionPane.ERROR_MESSAGE);
                 dispose();
             });
 
             later60.addActionListener((ActionEvent e) -> {
-                if(controller.getJournal().getTask(task.getId()) != null) {
+                if (controller.getJournal().getTask(task.getId()) != null) {
                     task.setNotificationDate(new Date(System.currentTimeMillis() - Calendar.getInstance().get(Calendar.MILLISECOND)
                             - Calendar.getInstance().get(Calendar.SECOND) * 1000 + 60 * 60000));
                     try {
@@ -179,8 +173,7 @@ public class LaterForm extends JFrame {
                         JOptionPane.showMessageDialog(null, "Could not reschedule this task!",
                                 "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                }
-                else
+                } else
                     JOptionPane.showMessageDialog(null, "This task has been deleted! It is not able to be rescheduled!",
                             "Error", JOptionPane.ERROR_MESSAGE);
                 dispose();

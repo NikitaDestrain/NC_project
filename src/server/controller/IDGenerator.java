@@ -1,6 +1,6 @@
 package server.controller;
 
-public class IDGenerator{
+public class IDGenerator {
     private int nextId;
     private static IDGenerator instance;
 
@@ -30,6 +30,7 @@ public class IDGenerator{
 
     /**
      * Increments the <code>nextId</code> field
+     *
      * @return
      */
 

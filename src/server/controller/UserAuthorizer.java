@@ -25,8 +25,7 @@ public class UserAuthorizer {
                             "If you choose NO, the program execution will be stopped!",
                     "Error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 userData = new HashMap<>();
-            }
-            else System.exit(1);
+            } else System.exit(1);
         }
     }
 

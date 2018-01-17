@@ -7,7 +7,8 @@ public class PasswordEncoder {
 
     private static PasswordEncoder instance;
 
-    private PasswordEncoder() {}
+    private PasswordEncoder() {
+    }
 
     public static PasswordEncoder getInstance() {
         if (instance == null) instance = new PasswordEncoder();
@@ -16,6 +17,7 @@ public class PasswordEncoder {
 
     /**
      * Encodes user's password using MD5 algorithm
+     *
      * @param password user's password
      * @return byte array with encoded input string
      * @throws NoSuchAlgorithmException

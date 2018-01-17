@@ -8,27 +8,29 @@ import java.util.*;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({Task.class, TaskStatus.class})
 public class Journal implements Serializable {
-    @XmlElement (name = "task")
+    @XmlElement(name = "task")
     private Map<Integer, Task> tasks;
 
     /**
      * Creates new Journal object and instantiates new {@code HashMap} of tasks
      */
-    public Journal(){
+    public Journal() {
         tasks = new HashMap<>();
     }
 
     /**
      * Puts the task by its id to the map
+     *
      * @param task
      */
 
     public void addTask(Task task) {
-        tasks.put(task.getId(),task);
+        tasks.put(task.getId(), task);
     }
 
     /**
      * Removes the task from map by its id
+     *
      * @param id
      */
 
@@ -46,6 +48,7 @@ public class Journal implements Serializable {
 
     /**
      * Gets the list of tasks from this journal
+     *
      * @return {@code LinkedList} object that contains all task from the map
      */
 
@@ -59,10 +62,10 @@ public class Journal implements Serializable {
      * Gets the max value of key from the map
      */
 
-    public int getMaxId(){
+    public int getMaxId() {
         int res = 0;
-        for (Integer key: tasks.keySet())
-            if(res < key)
+        for (Integer key : tasks.keySet())
+            if (res < key)
                 res = key;
         return res;
     }

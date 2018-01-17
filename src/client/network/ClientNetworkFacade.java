@@ -15,16 +15,16 @@ import java.net.Socket;
  * Facade for connection with server
  */
 
-public class ClientNetworkFacade extends Thread {
+public class ClientNetworkFacade {
     private int notificationPort;
     private int serverPort;
     private boolean successConnect;
+    private boolean successAuthorization;
     private Socket clientDataSocket;
     private Socket notificationSenderSocket;
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
     private ServerSocket notificationSocket;
-    private DataOutputStream notificationOutputStream;
     private DataInputStream notificationInputStream;
     private static ClientNetworkFacade instance;
     private ClientCommandParser commandParser = ClientCommandParser.getInstance();
@@ -35,36 +35,20 @@ public class ClientNetworkFacade extends Thread {
         successConnect = false;
     }
 
-    public static ClientNetworkFacade getInstance() { //todo-vlla снова треды-синглетоны.
+    public static ClientNetworkFacade getInstance() { //todo-vlla снова треды-синглетоны. DONE
         if (instance == null) instance = new ClientNetworkFacade();
         return instance;
     }
 
-    @Override
-    public void run() {
-        System.out.println("Client logs:");
-        System.out.println();
-        while(true) {
-            try {
-                Thread.sleep(ConstantsClass.SLEEP_FOR_250_SEC);
-                if (successConnect)
-                    break;
-            } catch (InterruptedException e) {
-                //todo vlla сами знаете DONE
-                messageBox.showMessage(ConstantsClass.UNSUCCESSFUL_CONNECTION);
-            }
-        }
-        commandRelay();
-    }
-
     /**
      * Connects to server, creates data channels and call method for create notification channels with listener
+     *
      * @return 0 or 1 (success or not success connection)
      */
 
     public int connect() {
         try {
-            if(successConnect)
+            if (successConnect)
                 return 0;
             serverPort = ConstantsClass.DEFAULT_SERVER_PORT;
             clientDataSocket = new Socket("localhost", serverPort);
@@ -72,13 +56,10 @@ public class ClientNetworkFacade extends Thread {
             System.out.println("DataOutputStream created");
             dataInputStream = new DataInputStream(clientDataSocket.getInputStream());
             System.out.println("DataInputStream created");
-            while(true) {
+            while (dataInputStream.available() < 0) {
                 try {
                     Thread.sleep(ConstantsClass.SLEEP_FOR_500_SEC);
-                    if (dataInputStream.available() > 0)
-                        break;
-                }
-                catch (InterruptedException e) {
+                } catch (InterruptedException e) {
                     messageBox.showMessage(ConstantsClass.CLIENT_CRASH_MESSAGE);
                 }
             }
@@ -86,8 +67,7 @@ public class ClientNetworkFacade extends Thread {
             System.out.println("Port: " + notificationPort);
             createNotificationChanel(notificationPort);
             return 0;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             messageBox.showMessage(ConstantsClass.SERVER_IS_NOT_AVAILABLE);
         }
         return 1;
@@ -99,15 +79,12 @@ public class ClientNetworkFacade extends Thread {
             notificationSocket = new ServerSocket(port);
             notificationSenderSocket = notificationSocket.accept();
             System.out.println("Connection accepted.");
-            notificationOutputStream = new DataOutputStream(notificationSenderSocket.getOutputStream());
-            System.out.println("Notification OutputStream  created");
             notificationInputStream = new DataInputStream(notificationSenderSocket.getInputStream());
             System.out.println("Notification InputStream created");
             clientNotificationListener = new ClientNotificationListener(notificationInputStream);
             clientNotificationListener.start();
             successConnect = true;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             messageBox.showMessage(ConstantsClass.CLIENT_CRASH_MESSAGE);
         }
     }
@@ -121,8 +98,6 @@ public class ClientNetworkFacade extends Thread {
             ClientCommandSender.getInstance().sendDisconnectCommand(dataOutputStream);
             //todo vlla не закрывается clientDataSocket. Проверить все остальное DONE
             clientNotificationListener.interrupt();
-            notificationInputStream.close();
-            notificationOutputStream.close();
             notificationSenderSocket.close();
             clientDataSocket.close();
             System.out.println("Closing notification connections & channels - DONE.");
@@ -133,11 +108,15 @@ public class ClientNetworkFacade extends Thread {
         }
     }
 
-    private void commandRelay() {
+    /**
+     * Waits success authorization command from server
+     */
+
+    public void callCommandAuthorizationRelay() {
         try {
-            while (true) {
+            while (!successAuthorization) {
                 Thread.sleep(ConstantsClass.SLEEP_FOR_500_SEC);
-                if(dataInputStream.available() > 0) {
+                if (dataInputStream.available() > 0) {
                     byte[] tmp_buffer = new byte[dataInputStream.available()];
                     int tmp_trash = dataInputStream.read(tmp_buffer);
                     Command command = commandParser.parseToCommand(tmp_buffer);
@@ -151,15 +130,15 @@ public class ClientNetworkFacade extends Thread {
         }
     }
 
-    public DataOutputStream getDataOutputStream()
-    {
+    public DataOutputStream getDataOutputStream() {
         return dataOutputStream;
     }
 
-    public DataOutputStream getNotificationOutputStream()
-    {
-        return notificationOutputStream;
+    public int getNotificationPort() {
+        return notificationPort;
     }
 
-    public int getNotificationPort() { return notificationPort; }
+    public void setSuccessAuthorization() {
+        successAuthorization = true;
+    }
 }

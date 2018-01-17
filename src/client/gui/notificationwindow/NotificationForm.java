@@ -88,7 +88,7 @@ public class NotificationForm extends JFrame {
             finish.addActionListener((ActionEvent e) -> {
                 if (checkAction())
                     try {
-                        commandSender.sendFinishCommand(task, clientFacade.getNotificationOutputStream());
+                        commandSender.sendFinishCommand(task, clientFacade.getDataOutputStream());
                     } catch (UnsuccessfulCommandActionException e1) {
                         messageBox.showAskForRestartMessage();
                     }
@@ -98,7 +98,7 @@ public class NotificationForm extends JFrame {
             cancel.addActionListener((ActionEvent e) -> {
                 if (checkAction())
                     try {
-                        commandSender.sendCancelCommand(task, clientFacade.getNotificationOutputStream());
+                        commandSender.sendCancelCommand(task, clientFacade.getDataOutputStream());
                     } catch (UnsuccessfulCommandActionException e1) {
                         messageBox.showAskForRestartMessage();
                     }

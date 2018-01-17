@@ -26,20 +26,15 @@ public class MonoClientThread extends Thread {
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
     private DataOutputStream notificationOutputStream;
-    private DataInputStream notificationInputStream;
     private ServerCommandParser commandParser = ServerCommandParser.getInstance();
     private ServerCommandSender commandSender = ServerCommandSender.getInstance();
-    private ServerNetworkFacade serverNetworkFacade = ServerNetworkFacade.getInstance();
     private StreamContainer streamContainer = StreamContainer.getInstance();
-    private ServerNotificationListener serverNotificationListener;
-    private boolean stopCommandRelay;
 
     public MonoClientThread(Socket socket, int notificationPort) {
         this.clientDataSocket = socket;
         this.notificationPort = notificationPort;
         this.number = notificationPort;
         this.successNotificationConnect = true;
-        this.stopCommandRelay = false;
     }
 
     @Override
@@ -48,7 +43,7 @@ public class MonoClientThread extends Thread {
         System.out.printf("Client with port %d connected\n", number);
         init();
         connectToNotificationChanel();
-        if(successNotificationConnect)
+        if (successNotificationConnect)
             commandRelay();
         else
             finish();
@@ -61,8 +56,7 @@ public class MonoClientThread extends Thread {
             dataInputStream = new DataInputStream(clientDataSocket.getInputStream());
             System.out.println("DataInputStream created");
             streamContainer.addClientDataOutputStreams(notificationPort, dataOutputStream);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.printf("Error! Client with port %d can not be connected!\n", notificationPort);
         }
     }
@@ -75,13 +69,8 @@ public class MonoClientThread extends Thread {
             notificationSocket = new Socket("localhost", notificationPort);
             notificationOutputStream = new DataOutputStream(notificationSocket.getOutputStream());
             System.out.println("Notification OutputStream created");
-            notificationInputStream = new DataInputStream(notificationSocket.getInputStream());
-            System.out.println("Notification InputStream created");
             streamContainer.addNotificationOutputStream(notificationPort, notificationOutputStream);
-            serverNotificationListener = new ServerNotificationListener(notificationInputStream, notificationPort);
-            serverNotificationListener.start();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             commandSender.sendUnsuccessfulActionCommand("Error! Server can not connect to notification channels! Application has been finished!", dataOutputStream);
             successNotificationConnect = false;
         }
@@ -91,25 +80,20 @@ public class MonoClientThread extends Thread {
      * Finishes client's thread and close all channels
      */
 
-    protected void finish() {
+    public void finish() {
         try {
             //todo vlla вот, этот метод выглядит как корретное освобождение всех ресурсов. Такие же надо сделать везде.
-            stopCommandRelay = true;
-            serverNotificationListener.interrupt();//todo vlla интеррапт - это хорошо и правильно. Только вот в самом потоме этот интеррапт никак не обрабатывается.
+            //todo vlla интеррапт - это хорошо и правильно. Только вот в самом потоме этот интеррапт никак не обрабатывается.
             // нужно всю логику завершения потоков сделать на интерраптах, while(true) - это только на первое время
             dataInputStream.close();
             dataOutputStream.close();
-            notificationInputStream.close();
             notificationOutputStream.close();
             clientDataSocket.close();
             notificationSocket.close();
             //todo vlla а сокет нотификаций закрыть? DONE
-            // вроде он закрыт, пока что поставлю, что выполнено (уточнить!)
-            System.out.printf("Client with port %d disconnected.\n", number);
             streamContainer.removeNotificationOutputStream(notificationPort);//todo vlla а в методе ремува - закрывать стримы
             streamContainer.removeClientDataOutputStreams(notificationPort);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             streamContainer.removeNotificationOutputStream(notificationPort);
             streamContainer.removeClientDataOutputStreams(notificationPort);
         }
@@ -117,22 +101,20 @@ public class MonoClientThread extends Thread {
 
     private void commandRelay() {
         try {
-            while (true) {
+            while (!isInterrupted()) {
                 Thread.sleep(ConstantsClass.SLEEP_FOR_500_SEC);//todo vlla magic numbers -> constants DONE
-                if(dataInputStream.available() > 0) {
+                if (dataInputStream.available() > 0) {
                     byte[] tmp_buffer = new byte[dataInputStream.available()];
                     int tmp_trash = dataInputStream.read(tmp_buffer);
                     Command command = commandParser.parseToCommand(tmp_buffer);
                     System.out.printf("Client with port %d send: ", number);
                     System.out.println(command);
-                    if(commandParser.doCommandAction(command) == 1)
+                    if (commandParser.doCommandAction(command) == 1)
                         commandSender.sendUnsuccessfulActionCommand(ConstantsClass.UNKNOWN_COMMAND, dataOutputStream);
-                    if(stopCommandRelay)
-                        break;
                 }
             }
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            finish();
         }
     }
 }

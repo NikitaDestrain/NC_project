@@ -6,7 +6,6 @@ import javax.swing.*;
 
 public class MessageBox {
     private static MessageBox instance;
-    private static ClientNetworkFacade clientFacade;
 
     private MessageBox() {
     }
@@ -14,7 +13,6 @@ public class MessageBox {
     public static synchronized MessageBox getInstance() {
         if (instance == null) {
             instance = new MessageBox();
-            clientFacade = ClientNetworkFacade.getInstance();
         }
         return instance;
     }
@@ -26,7 +24,7 @@ public class MessageBox {
 
     public synchronized void showAskForRestartMessage() {
         showMessage(ConstantsClass.UNSUCCESSFUL_CONNECTION);
-        //clientFacade.finish();
+        ClientNetworkFacade.getInstance().finish();
         System.exit(0);
     }
 }

@@ -60,17 +60,15 @@ public class ButtonPanel extends JPanel implements ActionListener {
         JButton clicked = (JButton) e.getSource();
         if (clicked == addTask) {
             new TaskWindow(owner);
-        }
-        else if (clicked == editTask) {
+        } else if (clicked == editTask) {
             task = taskSender.getTask();
             taskSender.clearTask();
             if (task != null)
                 listenerAction(TaskActionListener.EDIT_TASK, task);
-        }
-        else if (clicked == deleteTask) {
+        } else if (clicked == deleteTask) {
             ArrayList<Integer> list = new ArrayList<>();
             for (int i = 0; i < jtable.getRowCount(); i++) {
-                Boolean b = (Boolean)jtable.getValueAt(i, 0);
+                Boolean b = (Boolean) jtable.getValueAt(i, 0);
                 if (b) {
                     list.add(i);
                 }

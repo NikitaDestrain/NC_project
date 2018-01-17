@@ -39,6 +39,7 @@ public class ClientCommandParser {
 
     /**
      * Parses an incoming command from byte array of XML context using Unmarshaller
+     *
      * @param dataArr incoming data array
      * @return Command object
      */
@@ -60,6 +61,7 @@ public class ClientCommandParser {
 
     /**
      * Performs an execution of an incoming command using its name
+     *
      * @param command to be executed
      */
 

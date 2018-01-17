@@ -22,8 +22,7 @@ public class SignInCommandHandler implements CommandHandler {
             } catch (UnsuccessfulCommandActionException e) {
                 MessageBox.getInstance().showMessage("Could not send successful auth command!");
             }
-        }
-        else
+        } else
             try {
                 commandSender.sendUnsuccessfulAuthCommand(StreamContainer.getInstance().
                         getDataOutputStream(((User) command.getObject()).getPort()));

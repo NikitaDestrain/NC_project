@@ -18,7 +18,8 @@ public class User implements Serializable {
     @XmlElement(name = "port")
     private Integer port;
 
-    public User() {}
+    public User() {
+    }
 
     public User(String login, String password, Integer port) {
         this.login = login;

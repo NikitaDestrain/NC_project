@@ -1,13 +1,13 @@
 package server.gui.authforms;
 
 import client.commandprocessor.PasswordEncoder;
+import server.network.ServerProcessor;
 import server.commandproccessor.User;
 import server.controller.Controller;
 import server.controller.IDGenerator;
 import server.controller.UserAuthorizer;
 import server.gui.mainform.MainForm;
 import server.model.Journal;
-import server.network.ServerNetworkFacade;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -26,7 +26,7 @@ public class SignUpForm extends JFrame {
     private static SignUpForm instance;
     private Controller controller = Controller.getInstance();
     private UserAuthorizer authorizer = UserAuthorizer.getInstance();
-    private ServerNetworkFacade serverFacade;
+    private ServerProcessor serverProcessor;
     private PasswordEncoder encoder = PasswordEncoder.getInstance();
 
     public SignUpForm() {
@@ -40,8 +40,8 @@ public class SignUpForm extends JFrame {
         passwordField.setEchoChar('*'); // что отображается при вводе пароля
         confirmPasswordField = new JPasswordField(10);
         confirmPasswordField.setEchoChar('*');
-        serverFacade = ServerNetworkFacade.getInstance();
-        if(!serverFacade.isAlive()) serverFacade.start();
+        serverProcessor = ServerProcessor.getInstance();
+        serverProcessor.startServer();
 
         layoutComponents();
 

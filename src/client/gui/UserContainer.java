@@ -8,7 +8,8 @@ public class UserContainer {
         return ourInstance;
     }
 
-    private UserContainer() {}
+    private UserContainer() {
+    }
 
     public String getUsername() {
         return username;

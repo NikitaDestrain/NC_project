@@ -5,11 +5,13 @@ import client.gui.UserContainer;
 import client.gui.authforms.AuthForm;
 import client.gui.authforms.SignUpForm;
 import client.gui.mainform.MainForm;
+import client.network.ClientNetworkFacade;
 import server.model.Journal;
 
 public class SuccessfulAuthCommandHandler implements CommandHandler {
     @Override
     public synchronized void handle(Command command) {
+        ClientNetworkFacade.getInstance().setSuccessAuthorization();
         MainForm mainForm = MainForm.getInstance();
         if (mainForm == null)
             mainForm = new MainForm();

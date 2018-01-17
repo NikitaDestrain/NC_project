@@ -1,6 +1,6 @@
 package server.gui.mainform;
 
-import server.network.ServerNetworkFacade;
+import server.network.ServerProcessor;
 import server.properties.ParserProperties;
 import auxiliaryclasses.ConstantsClass;
 import server.controller.*;
@@ -34,7 +34,7 @@ public class MainForm extends JFrame {
         fileChooser = new JFileChooser();
         journalBackup = new XMLSerializer();
         Journal backup = Controller.getInstance().getJournal();
-        this.journal = backup == null ? new Journal() : backup ;
+        this.journal = backup == null ? new Journal() : backup;
         try {
             icon = new ImageIcon(ParserProperties.getInstance().getProperty(ConstantsClass.MAIN_FORM_ICON));
         } catch (IllegalPropertyException e) {
@@ -52,6 +52,7 @@ public class MainForm extends JFrame {
 
         buttonPanel.setTableListener(new TableListener() {
             private StringBuilder builder = new StringBuilder("");
+
             @Override
             public void rowDeleted(Integer... rows) {
                 buttonPanel.setListener(new TaskActionListener() {
@@ -104,6 +105,7 @@ public class MainForm extends JFrame {
 
         tablePanel.setTableListener(new TableListener() {
             private StringBuilder builder = new StringBuilder("");
+
             @Override
             public void rowDeleted(Integer... rows) {
                 buttonPanel.setListener(new TaskActionListener() {
@@ -204,7 +206,7 @@ public class MainForm extends JFrame {
 
                 if (action == JOptionPane.OK_OPTION) {
                     try {
-                        ServerNetworkFacade.getInstance().finish();
+                        ServerProcessor.getInstance().finishServer();
                         String path = ParserProperties.getInstance().getProperty(ConstantsClass.XML_FILE);
                         if (path == null)
                             JOptionPane.showMessageDialog(MainForm.this,

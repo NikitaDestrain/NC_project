@@ -131,7 +131,7 @@ public class TaskWindow extends JFrame {
 
             public void actionPerformed(ActionEvent e) {
                 try {
-                    commandSender.sendFinishCommand(task, clientFacade.getNotificationOutputStream());
+                    commandSender.sendFinishCommand(task, clientFacade.getDataOutputStream());
                 } catch (UnsuccessfulCommandActionException e1) {
                     messageBox.showAskForRestartMessage();
                 }
@@ -599,8 +599,7 @@ public class TaskWindow extends JFrame {
                 taskSet.setStatus(TaskStatus.Rescheduled);
                 try {
                     commandSender.sendEditCommand(taskSet, clientFacade.getDataOutputStream());
-                }
-                catch (UnsuccessfulCommandActionException e) {
+                } catch (UnsuccessfulCommandActionException e) {
                     messageBox.showAskForRestartMessage();
                 }
             } else

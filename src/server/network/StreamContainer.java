@@ -25,6 +25,7 @@ public class StreamContainer {
 
     /**
      * Returns list of actual channels for notification to clients
+     *
      * @return UnmodifiableList
      */
 
@@ -39,11 +40,12 @@ public class StreamContainer {
 
     /**
      * Returns list of actual channels for communicate to clients
+     *
      * @return UnmodifiableList
      */
 
     public List<DataOutputStream> getClientDataOutputStreams() {
-        LinkedList <DataOutputStream> list = new LinkedList<>(clientDataOutputStreams.values());
+        LinkedList<DataOutputStream> list = new LinkedList<>(clientDataOutputStreams.values());
         return Collections.unmodifiableList(list);
     }
 

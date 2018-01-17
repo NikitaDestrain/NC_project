@@ -41,6 +41,7 @@ public class ServerCommandParser {
 
     /**
      * Parses an incoming command from byte array of XML context using Unmarshaller
+     *
      * @param dataArr incoming data array
      * @return Command object
      */
@@ -62,6 +63,7 @@ public class ServerCommandParser {
 
     /**
      * Performs an execution of an incoming command using its name
+     *
      * @param command to be executed
      * @return 0 if the command is not null and the command's name is existing in the handlers map. 1 otherwise
      */

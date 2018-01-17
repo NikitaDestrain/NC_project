@@ -10,6 +10,7 @@ public interface CommandHandler {
 
     /**
      * Handles execution of an incoming command
+     *
      * @param command that needs to be handled
      */
 

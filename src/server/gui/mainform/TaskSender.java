@@ -5,7 +5,9 @@ import server.model.Task;
 public class TaskSender {
     private Task task;
     private static TaskSender instance;
-    private TaskSender() {}
+
+    private TaskSender() {
+    }
 
     public static TaskSender getInstance() {
         if (instance == null)

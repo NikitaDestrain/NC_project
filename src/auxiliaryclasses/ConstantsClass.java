@@ -45,5 +45,5 @@ public class ConstantsClass {
     public static final String UNKNOWN_COMMAND = "Error! Unknown command!";
     public static final String ERROR_CLIENT_CONNECTION = "Something went wrong and one of clients has not connected successfully!";
     public static final String ERROR_SERVER_START = "Server could not start! Restart application!";
-
+    public static final String ERROR_PROPERTY = "The configuration file is corrupt or missing!. The application will be closed!";
 }

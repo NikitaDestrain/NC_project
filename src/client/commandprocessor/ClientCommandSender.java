@@ -40,8 +40,9 @@ public class ClientCommandSender {
 
     /**
      * Sends a command of adding a task
+     *
      * @param task to be added
-     * @param out data stream on which command will be transferred
+     * @param out  data stream on which command will be transferred
      */
 
     public void sendAddCommand(Task task, OutputStream out) {
@@ -54,8 +55,9 @@ public class ClientCommandSender {
 
     /**
      * Sends a command of editing a task
+     *
      * @param task to be edited
-     * @param out data stream on which command will be transferred
+     * @param out  data stream on which command will be transferred
      */
 
     public void sendEditCommand(Task task, OutputStream out) {
@@ -68,8 +70,9 @@ public class ClientCommandSender {
 
     /**
      * Sends a command of deleting a couple tasks
+     *
      * @param tasksNumbers task numbers in a string splitted by ','
-     * @param out data stream on which command will be transferred
+     * @param out          data stream on which command will be transferred
      */
 
     public void sendDeleteCommand(String tasksNumbers, OutputStream out) {
@@ -82,8 +85,9 @@ public class ClientCommandSender {
 
     /**
      * Sends a command of deferring a task
+     *
      * @param task to be deferred
-     * @param out data stream on which command will be transferred
+     * @param out  data stream on which command will be transferred
      */
 
     public void sendLaterCommand(Task task, OutputStream out) {
@@ -96,8 +100,9 @@ public class ClientCommandSender {
 
     /**
      * Sends a command of finishing a task
+     *
      * @param task to be finished
-     * @param out data stream on which command will be transferred
+     * @param out  data stream on which command will be transferred
      */
 
     public void sendFinishCommand(Task task, OutputStream out) {
@@ -110,8 +115,9 @@ public class ClientCommandSender {
 
     /**
      * Sends a command of cancelling a task
+     *
      * @param task to be cancelled
-     * @param out data stream on which command will be transferred
+     * @param out  data stream on which command will be transferred
      */
 
     public void sendCancelCommand(Task task, OutputStream out) {
@@ -124,9 +130,10 @@ public class ClientCommandSender {
 
     /**
      * Sends a command of signing in
-     * @param login of a user
+     *
+     * @param login    of a user
      * @param password of a user
-     * @param out data stream on which command will be transferred
+     * @param out      data stream on which command will be transferred
      */
 
     public void sendSignInCommand(String login, String password, OutputStream out) {
@@ -140,9 +147,10 @@ public class ClientCommandSender {
 
     /**
      * Sends a command of signing up
-     * @param login of a user
+     *
+     * @param login    of a user
      * @param password of a user
-     * @param out data stream on which command will be transferred
+     * @param out      data stream on which command will be transferred
      */
 
     public void sendSignUpCommand(String login, String password, OutputStream out) {
@@ -156,6 +164,7 @@ public class ClientCommandSender {
 
     /**
      * Sends a command of a disconnecting
+     *
      * @param out data stream on which command will be transferred
      */
 

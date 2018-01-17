@@ -39,7 +39,6 @@ public class AuthForm extends JFrame {
         passwordField = new JPasswordField(10);
         passwordField.setEchoChar('*'); // что отображается при вводе пароля
         clientFacade = ClientNetworkFacade.getInstance();
-        if (!clientFacade.isAlive()) clientFacade.start();
 
         layoutComponents();
 
@@ -49,8 +48,10 @@ public class AuthForm extends JFrame {
                 JOptionPane.showMessageDialog(null,
                         "Incorrect login or password!", "Error", JOptionPane.ERROR_MESSAGE);
             else
-                if (clientFacade.connect() == 0)
+                if (clientFacade.connect() == 0) {
                     sendData();
+                    clientFacade.callCommandAuthorizationRelay();
+                }
         });
 
         registrationButton.addActionListener((ActionEvent e) -> {

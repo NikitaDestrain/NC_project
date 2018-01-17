@@ -52,6 +52,7 @@ public class MainForm extends JFrame {
 
         buttonPanel.setTableListener(new TableListener() {
             private StringBuilder builder = new StringBuilder("");
+
             @Override
             public void rowDeleted(Integer... rows) {
                 buttonPanel.setListener(new TaskActionListener() {
@@ -108,6 +109,7 @@ public class MainForm extends JFrame {
 
         tablePanel.setTableListener(new TableListener() {
             private StringBuilder builder = new StringBuilder("");
+
             @Override
             public void rowDeleted(Integer... rows) {
                 buttonPanel.setListener(new TaskActionListener() {

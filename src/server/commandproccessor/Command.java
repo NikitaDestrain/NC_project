@@ -25,17 +25,18 @@ public class Command implements Serializable {
      * Name of the command. The scenario of a processing of a command depends on it
      */
 
-    @XmlElement (name = "name")
+    @XmlElement(name = "name")
     private String name;
 
     /**
      * Object that is transferred with the Command object and that is used for processing of a command
      */
 
-    @XmlElement (name = "object")
+    @XmlElement(name = "object")
     private Object object;
 
-    public Command() {}
+    public Command() {
+    }
 
     public Command(String name, Object object) {
         this.name = name;
