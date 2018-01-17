@@ -99,6 +99,8 @@ public class ClientNetworkFacade {
             //todo vlla не закрывается clientDataSocket. Проверить все остальное DONE
             clientNotificationListener.interrupt();
             notificationSenderSocket.close();
+            dataInputStream.close();
+            dataOutputStream.close();
             clientDataSocket.close();
             System.out.println("Closing notification connections & channels - DONE.");
         } catch (UnsuccessfulCommandActionException e) {
