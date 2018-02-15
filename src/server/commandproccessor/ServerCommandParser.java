@@ -34,7 +34,7 @@ public class ServerCommandParser {
         handlers.put(ConstantsClass.DISCONNECT, new DisconnectCommandHandler());
     }
 
-    public static synchronized ServerCommandParser getInstance() { //todo vlla synchronized DONE
+    public static synchronized ServerCommandParser getInstance() {
         if (instance == null) instance = new ServerCommandParser();
         return instance;
     }
@@ -74,10 +74,5 @@ public class ServerCommandParser {
                 handlers.get(command.getName()).handle(command);
             else return 1;
         return 0;
-        //todo vlla если команда выполнена без проблем или команда = null - возвращаем 0 DONE
-        //если команды нет среди зарегистрированных - возвращаем 1
-        //очень странная логика
-        //и если эта логика соответсвует вашей задумке - ок, но тогда хоть опишите ее в джавадоке
-        //потому что, например, для меня - она совершенно не очевидна
     }
 }

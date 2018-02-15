@@ -12,7 +12,7 @@ public class PortGenerator {
         this.nextPort = nextPort;
     }
 
-    public synchronized static PortGenerator getInstance() { //todo vlla synchronized DONE
+    public synchronized static PortGenerator getInstance() {
         if (instance == null)
             instance = new PortGenerator(1000);
         return instance;

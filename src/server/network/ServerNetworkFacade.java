@@ -37,7 +37,7 @@ public class ServerNetworkFacade extends Thread {
                 executeIt.execute(monoClientThread);
                 serverProcessor.addClient(clientNotificationPort, monoClientThread);
             } catch (IOException e) {
-                messageBox.showMessage(ConstantsClass.ERROR_CLIENT_CONNECTION);//todo vlla поздравляю, вы выиграли приз за самую ужасную обработку исключительной ситуации в истории явы ) DONE
+                messageBox.showMessage(ConstantsClass.ERROR_CLIENT_CONNECTION);
             }
         }
     }

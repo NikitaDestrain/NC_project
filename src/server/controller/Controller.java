@@ -43,12 +43,9 @@ public class Controller {
 
             if (action == JOptionPane.YES_OPTION) {
                 setJournal(new Journal());
-                //todo vlla очень плохо читается блок кода. Стоит завести переменную, сохранить в нее рузультат диалогового окна и в if просто сравнить ее с константой DONE
             } else {
-                System.exit(1); //todo vlla использование System.exit - это дурной тон. В реальном приложении вы никогда не будуте его использовать.
+                System.exit(1);
             }
-            //Приложение нужно завершать корректно: стримы, файлы и сокеты - закрывать, потоки - интерраптить и завершать.
-            //Нужно будет произвести глобальный рефакторинг - обеспечить корретное завершение с освобождение всех ресурсов.
         }
     }
 
@@ -59,7 +56,7 @@ public class Controller {
      * otherwise returns current instance
      */
 
-    public static synchronized Controller getInstance() { //todo vlla потенциальные проблемы с синхронизацией DONE
+    public static synchronized Controller getInstance() {
         if (instance == null)
             instance = new Controller();
         return instance;
@@ -176,11 +173,6 @@ public class Controller {
         if (manager.isStatusConversionValid(task.getStatus(), TaskStatus.Cancelled)) {
             notifier.cancelNotification(id);
             journal.getTask(id).setStatus(TaskStatus.Cancelled);
-            //todo vlla а где собственно происходит проверка, что смена стратуса - валидна? На сколько я помню, мы договорились, что статус таски должен меняться усключительно согласно графу переходов DONE
-            // а у вас в куче мест кода просто вызывается setStatus, без какие либо проверок. Подключаем сюда несколько пользователей и гарантированно ловим ситуацию, когда статусы будут менять в обход графа переходов.
-            // часть со статусами надо серьезно доделать: выделить сущность, когда будет ответственной только за контроль смены статусов тасок (это может быть контроллер, но я советую завести какой нибудь LifecycleManager)
-            // в этом классе реализуем корректный перевод таски из одного статуса в друой: если переход разрешен согласно графу переходов - меняем статус, если запрещем - выдаем специальный эксепшен и корректно обрабатываем его выше.
-            // причем вы можете непосредственный вызов этого LifecycleManager сделать в самом методе setStatus, чтобы существенно не менять всю ту часть когда, который setStatus использует.
             updateMainForm();
             sendUpdateCommand();
         } else {

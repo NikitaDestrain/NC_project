@@ -35,7 +35,7 @@ public class ClientNetworkFacade {
         successConnect = false;
     }
 
-    public static ClientNetworkFacade getInstance() { //todo-vlla снова треды-синглетоны. DONE
+    public static ClientNetworkFacade getInstance() {
         if (instance == null) instance = new ClientNetworkFacade();
         return instance;
     }
@@ -96,7 +96,6 @@ public class ClientNetworkFacade {
     public void finish() {
         try {
             ClientCommandSender.getInstance().sendDisconnectCommand(dataOutputStream);
-            //todo vlla не закрывается clientDataSocket. Проверить все остальное DONE
             clientNotificationListener.interrupt();
             notificationSenderSocket.close();
             dataInputStream.close();

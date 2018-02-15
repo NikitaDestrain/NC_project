@@ -32,10 +32,6 @@ public class StreamContainer {
     public List<DataOutputStream> getClientNotificationOutputStreams() {
         LinkedList<DataOutputStream> list = new LinkedList<>(clientNotificationOutputStreams.values());
         return Collections.unmodifiableList(list);
-        //todo vlla чем вам коллекция то не угодила, зачем обязательно ее в List оборачивать? К тому же помним правило: отдаем коллекцию наружу - делаем ее unmodifiable
-        //!!!Не делается unmodified, преобразуется в лист для более быстрой итерации, так как ключи уже не будут играть роли
-        //todo vlla 2 unmodified сделать все таки нужно. Выигрыш, получаемый от более быстрой итерации нивелируется накладными расходами по клонированию коллекции. DONE
-        // Ключи и не нужны - clientNotificationOutputStreams.values() уже возвращает только коллекцию значений
     }
 
     /**
@@ -51,8 +47,6 @@ public class StreamContainer {
 
     protected void removeNotificationOutputStream(Integer key) {
         clientNotificationOutputStreams.remove(key);
-        //todo vlla просто удалить стрим из мапы - не достаточно. Стримы всегда надо закрывать. DONE
-        // закрыты в фасаде
     }
 
     protected void addNotificationOutputStream(Integer key, DataOutputStream dataOutputStream) {

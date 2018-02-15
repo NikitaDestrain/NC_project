@@ -17,7 +17,7 @@ import java.io.OutputStream;
  */
 
 public class ClientCommandSender {
-    //todo vlla все те же замечания, что и для ServerCommandSender DONE
+
     private static ClientCommandSender instance;
     private ClientNetworkFacade clientNetworkFacade;
 

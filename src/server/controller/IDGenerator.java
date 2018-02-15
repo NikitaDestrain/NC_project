@@ -12,7 +12,7 @@ public class IDGenerator {
      * Gets or creates the instance of current <code>IDGenerator</code> with specified nextId
      */
 
-    public synchronized static IDGenerator getInstance(int nextId) { //todo vlla synchronized DONE
+    public synchronized static IDGenerator getInstance(int nextId) {
         if (instance == null)
             instance = new IDGenerator(nextId);
         return instance;
@@ -22,7 +22,7 @@ public class IDGenerator {
      * Gets or creates the instance of current <code>IDGenerator</code> with nextId = 0
      */
 
-    public synchronized static IDGenerator getInstance() { //todo vlla synchronized DONE
+    public synchronized static IDGenerator getInstance() {
         if (instance == null)
             instance = new IDGenerator(0);
         return instance;
