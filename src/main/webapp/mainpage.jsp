@@ -65,6 +65,18 @@
     div {
         align: center;
     }
+
+    .center {
+        text-align: center;
+    }
+
+    .namelabel {
+        text-align: right;
+    }
+
+    .left {
+        text-align: left;
+    }
 </style>
 <body>
 <%
@@ -73,14 +85,20 @@
     LinkedList<User> users = bean.getUsers();
     int count = 0;
 %>
+<div class="center"><strong>TASK SCHEDULER</strong></div>
+<div class="namelabel"><strong>You logged as: <%=request.getAttribute("username")==null?"":request.getAttribute("username") %></strong></div>
 <form action="/testoracle" method="get">
     <table>
         <caption>Result of "select" request</caption>
         <tr>
-            <th class="count">User №</th>
-            <th>ID</th>
-            <th>E-mail</th>
-            <th>Password</th>
+            <th class="count">№</th>
+            <th>Status</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Planned date</th>
+            <th>Planned time</th>
+            <th>Notification date</th>
+            <th>Notification time</th>
         </tr>
         <%
             int id;
@@ -109,12 +127,20 @@
             }
         %>
     </table>
-    <div>
+    <div class="left">
+        <label class="label">
+            Journal #
+            <select name="journalnum" id="journalnum">
+                <option value="1">1</option>
+            </select>
+        </label>
+    </div>
+    <div class="left">
         <p class="label"><%=request.getAttribute("message") != null ? request.getAttribute("message") : ""%>
         </p> <br/>
         <label class="label">
             Choose action to perform <br/>
-            <select name="useraction" id="useraction" class="select">
+            <select name="useraction" id="useraction">
                 <option value="Add">
                     Add user
                 </option>

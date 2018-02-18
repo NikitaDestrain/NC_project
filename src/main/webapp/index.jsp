@@ -11,9 +11,8 @@
     <title>Start page</title>
 </head>
 <body>
-<p><a href="/login">Click here to log in</a></p>
-<p><a href="/createuser">Create a new user</a></p>
-<p><a href="/testoracle?action=createtable">Create table "users"</a> </p>
+<p><a href="/signin">Click here to log in</a></p>
+<p><a href="/signup">Create a new user</a></p>
 <p><a href="/testoracle?action=select">Select all users</a> </p>
 </body>
 </html>

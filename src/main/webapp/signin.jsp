@@ -43,7 +43,7 @@
 
     <div id="login">
 
-        <h3>Log In</h3>
+        <h3>Sign In</h3>
 
         <form method="get" action="<%= response.encodeURL(request.getContextPath() + "/testoracle?action=dologin") %>">
 
@@ -51,9 +51,9 @@
 
             <table>
 
-                <tr><td class="align-right">Email address: </td><td><input type="text" name="email" value="<%= request.getAttribute("email")!=null?request.getAttribute("email"):"" %>"/></td></tr>
+                <tr><td class="align-right">Username: </td><td><input type="text" name="email" value="<%= request.getAttribute("email")!=null?request.getAttribute("email"):"" %>"/></td></tr>
                 <tr><td class="align-right">Password: </td><td><input type="password" name="password" value="<%= request.getAttribute("password")!=null?request.getAttribute("password"):"" %>"/></td></tr>
-                <tr><td class="align-right" colspan="2"><input type="submit" value="Log in"/></td></tr>
+                <tr><td class="align-right" colspan="2"><input type="submit" value="Sign in"/></td></tr>
 
             </table>
 

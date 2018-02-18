@@ -67,29 +67,17 @@ public class TestServlet extends HttpServlet {
             req.setAttribute("email", email);
             req.setAttribute("password", password);
 
-            if (account.login(email, password)) {
-                req.setAttribute("email", email);
-                req.getRequestDispatcher("/loginsuccess").forward(req, resp);
-            } else {
+//            if (account.login(email, password)) {
+//                req.setAttribute("email", email);
+//                req.getRequestDispatcher("/loginsuccess").forward(req, resp);
+//            } else {
                 req.setAttribute("message", "email or password are not recognized");
-                req.getRequestDispatcher("/login").forward(req, resp);
-            }
-        } else if (action.equals("createtable")) {
-            try {
-                PreparedStatement statement = connection.prepareStatement(CREATE);
-                statement.execute();
-                //statement = connection.prepareStatement(AUTO_INCREMENT);
-                statement.execute();
-                resp.getWriter().print("table created");
-                req.getRequestDispatcher("/index").forward(req, resp);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                resp.getWriter().print("problem");
-            }
+                req.getRequestDispatcher("/signin").forward(req, resp);
+//            }
         } else if (action.equals("select")) {
             users = fillList();
             req.setAttribute("bean", new SelectResultBean(users));
-            req.getRequestDispatcher("/select").forward(req, resp);
+            req.getRequestDispatcher("/mainpage").forward(req, resp);
         } else if (action.equals("createaccount")) {
             String email = req.getParameter("email");
             String password = req.getParameter("password");
@@ -103,26 +91,26 @@ public class TestServlet extends HttpServlet {
             if (!password.equals(repeatPassword)) {
                 // Passwords don't match.
                 req.setAttribute("message", "Passwords do not match.");
-                req.getRequestDispatcher("/createuser").forward(req, resp);
+                req.getRequestDispatcher("/signup").forward(req, resp);
             } else {
                 User user = new User(email, password);
 
                 if (!user.isValidated()) {
                     // Password or email address has wrong format.
                     req.setAttribute("message", user.getMessage());
-                    req.getRequestDispatcher("/createuser").forward(req, resp);
+                    req.getRequestDispatcher("/signup").forward(req, resp);
                 } else {
                     if (account.isSuchUserExists(email)) {
                         // This email address already exists in the user database.
                         req.setAttribute("message", "An account with this email address already exists");
-                        req.getRequestDispatcher("/createuser").forward(req, resp);
+                        req.getRequestDispatcher("/signup").forward(req, resp);
                     } else {
                         // We create create the account.
                         account.createUser(email, password);
                         users = fillList();
                         req.setAttribute("bean", new SelectResultBean(users));
                         //req.setAttribute("message", "user created successfully. log in now");
-                        req.getRequestDispatcher("/select").forward(req, resp);
+                        req.getRequestDispatcher("/mainpage").forward(req, resp);
                     }
                 }
             }
@@ -130,7 +118,7 @@ public class TestServlet extends HttpServlet {
             String useraction = req.getParameter("useraction");
             String usernumber = req.getParameter("usernumber");
             if (useraction.equals("Add")) {
-                req.getRequestDispatcher("/createuser").forward(req, resp);
+                req.getRequestDispatcher("/updatepage").forward(req, resp);
             } else {
                 if (usernumber != null) {
                     User user = users.get(Integer.parseInt(usernumber));
@@ -152,7 +140,7 @@ public class TestServlet extends HttpServlet {
                 } else {
                     req.setAttribute("bean", new SelectResultBean(users));
                     req.setAttribute("message", "Choose user to perform an action");
-                    req.getRequestDispatcher("/select").forward(req, resp);
+                    req.getRequestDispatcher("/mainpage").forward(req, resp);
                 }
             }
         } else if (action.equals("doupdate")) {

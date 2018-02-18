@@ -9,35 +9,38 @@
 <html>
 <head>
     <title>Update user</title>
+    <style type="text/css">
+        table {
+            width: auto;
+            height: auto;
+            /*text-align: center;*/
+            /*vertical-align: center;*/
+            padding: 10px;
+            border: 1px solid gray;
+            border-collapse: collapse;
+            background-color: khaki;
+        }
+
+        caption {
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-family: "Yu Gothic Light";
+        }
+
+        td {
+            text-align: center;
+        }
+    </style>
 </head>
-<style type="text/css">
-    table {
-        width: 100%;
-        height: auto;
-        padding: 10px;
-        border: 1px solid gray;
-        border-collapse: collapse;
-        background-color: khaki;
-    }
-
-    caption {
-        margin-bottom: 10px;
-        font-weight: bold;
-        font-family: "Yu Gothic Light";
-    }
-
-    td {
-        text-align: center;
-    }
-</style>
 <body>
 <%
-    User user = (User)request.getAttribute("user");
-    String email = user.getEmail().replaceAll(" ", "");
-    String password = user.getPassword().replaceAll(" ", "");
-    String id = (user.getId() + "").replaceAll(" ", "");
-    String message = user.getMessage();
+//    User user = (User)request.getAttribute("user");
+    String email =  null;//user.getEmail().replaceAll(" ", "");
+    String password =  null;//user.getPassword().replaceAll(" ", "");
+    String id =  null;//(user.getId() + "").replaceAll(" ", "");
+    String message = null;//user.getMessage();
 %>
+<div align="center">
 <form>
     <table>
         <caption>
@@ -69,5 +72,6 @@
         </tr>
     </table>
 </form>
+</div>
 </body>
 </html>
