@@ -171,6 +171,9 @@ public class Servlet extends HttpServlet {
                 String usernumber = req.getParameter(ConstantsClass.USERNUMBER);
                 if (useraction.equals(ConstantsClass.ADD)) {
                     req.getRequestDispatcher(ConstantsClass.ADD_TASK_ADDRESS).forward(req, resp);
+                } else if (useraction.equals(ConstantsClass.CHANGE_JOURNAL)){
+                    resp.getWriter().print("Change Journal ");
+                    resp.getWriter().print(req.getParameter(ConstantsClass.JOURNAL_NAME));
                 } else {
                     if (usernumber != null) {
                         User user = users.get(Integer.parseInt(usernumber));

@@ -69,6 +69,7 @@ public class ConstantsClass {
     public static final String JOURNAL_NAME = "journalname";
     public static final String ACTION = "action";
     public static final String RESCHEDULE_TASK = "rescheduletask";
+    public static final String CHANGE_JOURNAL = "changejournal";
 
     public static final String SAVE = "Save";
     public static final String OK = "OK";

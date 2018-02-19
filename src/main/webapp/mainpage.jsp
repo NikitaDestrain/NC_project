@@ -6,7 +6,12 @@
 <%@ page import="com.sun.xml.internal.ws.server.ServerRtException" %>
 <%@ page import="testservlet.beans.SelectResultBean" %>
 <%@ page import="testservlet.beans.User" %>
-<%@ page import="auxiliaryclasses.ConstantsClass" %><%--
+<%@ page import="auxiliaryclasses.ConstantsClass" %>
+<%@ page import="server.model.Task" %>
+<%@ page import="server.factories.TaskFactory" %>
+<%@ page import="server.model.TaskStatus" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.util.Calendar" %><%--
   Created by IntelliJ IDEA.
   User: ывв
   Date: 10.02.2018
@@ -16,99 +21,147 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Select results</title>
+    <title>Task scheduler</title>
+    <style type="text/css">
+        .main-table {
+            width: 100%;
+            height: auto;
+            padding: 10px;
+            border-collapse: collapse;
+            background-color: khaki;
+        }
+
+        .main-th {
+            padding: 5px;
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        .main-td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: left;
+            padding-right: 20px;
+        }
+
+        .button-table {
+            width: auto;
+            height: auto;
+            padding: 10px;
+            border-collapse: collapse;
+            background-color: khaki;
+        }
+
+        .button-table-td {
+            padding: 5px;
+            text-align: center;
+            padding-right: 20px;
+        }
+
+        caption {
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-family: "Yu Gothic Light";
+        }
+
+        .count {
+            background-color: darkkhaki;
+            font-weight: bold;
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        input[type="submit"] {
+            display: block;
+            align-self: center;
+        }
+
+        .label {
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-family: "Yu Gothic Light"
+        }
+
+        div {
+            align: center;
+        }
+
+        .center {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .namelabel {
+            text-align: right;
+        }
+
+        .button-div {
+            background-color: khaki;
+            width: auto;
+            height: auto;
+        }
+    </style>
+    <script type="text/javascript">
+        function buttonClick(x) {
+            switch (x.id) {
+                case "add":
+                    document.getElementById("hid").value = "Add";
+                    break;
+                case "edit":
+                    document.getElementById("hid").value = "Update";
+                    break;
+                case "delete":
+                    document.getElementById("hid").value = "Delete";
+                    break;
+                case "change":
+                    document.getElementById("hid").value = "changejournal"
+            }
+            document.forms[0].submit();
+        }
+    </script>
 </head>
-<style type="text/css">
-    table {
-        width: 100%;
-        height: auto;
-        padding: 10px;
-        border-collapse: collapse;
-        background-color: khaki;
-    }
-
-    caption {
-        margin-bottom: 10px;
-        font-weight: bold;
-        font-family: "Yu Gothic Light";
-    }
-
-    th {
-        padding: 5px;
-        border: 1px solid black;
-        text-align: center;
-    }
-
-    td {
-        border: 1px solid black;
-        padding: 5px;
-        text-align: left;
-        padding-right: 20px;
-    }
-
-    .count {
-        background-color: darkkhaki;
-        font-weight: bold;
-        text-align: center;
-    }
-
-    input[type="submit"] {
-        display: block;
-        align-self: center;
-    }
-
-    .label {
-        margin-bottom: 10px;
-        font-weight: bold;
-        font-family: "Yu Gothic Light"
-    }
-
-    div {
-        align: center;
-    }
-
-    .center {
-        text-align: center;
-    }
-
-    .namelabel {
-        text-align: right;
-    }
-
-    .left {
-        text-align: left;
-    }
-</style>
 <body>
 <%
     String message = null;
     SelectResultBean bean = (SelectResultBean) request.getAttribute("bean");
-    LinkedList<User> users = bean.getUsers();
+    Calendar calendar = Calendar.getInstance();
+    Task task1 = TaskFactory.createTask("name1", TaskStatus.Planned, "description1", calendar.getTime(), calendar.getTime());
+    Task task2 = TaskFactory.createTask("name2", TaskStatus.Overdue, "description2", calendar.getTime(), calendar.getTime());
+    LinkedList<Task> tasks = new LinkedList<>();
+    tasks.add(task1);
+    tasks.add(task2);
     int count = 0;
 %>
-<div class="center"><strong>TASK SCHEDULER</strong></div>
+<div class="center">TASK SCHEDULER</div>
 <div class="namelabel"><strong>You logged as: <%=request.getAttribute("username")==null?"":request.getAttribute("username") %></strong></div>
 <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
-    <table>
+    <table class="main-table">
         <caption>Result of "select" request</caption>
         <tr>
             <th class="count">№</th>
-            <th>Status</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Planned date</th>
-            <th>Planned time</th>
-            <th>Notification date</th>
-            <th>Notification time</th>
+            <th class="main-th">Status</th>
+            <th class="main-th">Name</th>
+            <th class="main-th">Description</th>
+            <th class="main-th">Planned date</th>
+            <th class="main-th">Planned time</th>
+            <th class="main-th">Notification date</th>
+            <th class="main-th">Notification time</th>
         </tr>
         <%
             int id;
             String email;
             String password;
-            for (User u : users) {
-                id = u.getId();
-                email = u.getEmail();
-                password = u.getPassword();
+            Calendar planned = Calendar.getInstance();
+            Calendar notif = Calendar.getInstance();
+            String minutesPlanned;
+            String minutesNotif;
+            for (Task u : tasks) {
+                planned.setTime(u.getPlannedDate());
+                notif.setTime(u.getNotificationDate());
+                minutesPlanned = planned.get(Calendar.MINUTE) + "";
+                minutesPlanned = minutesPlanned.length() == 1 ? "0" + minutesPlanned : minutesPlanned;
+                minutesNotif = notif.get(Calendar.MINUTE) + "";
+                minutesNotif = minutesNotif.length() == 1 ? "0" + minutesNotif : minutesNotif;
         %>
         <tr>
             <td class="count">
@@ -117,45 +170,53 @@
                     <input type="radio" name="usernumber" value="<%=count++%>"/>
                 </label>
             </td>
-            <td><%=id%>
+            <td class="main-td"><%=u.getStatus()%>
             </td>
-            <td><%=email%>
+            <td class="main-td"><%=u.getName()%>
             </td>
-            <td><%=password%>
+            <td class="main-td"><%=u.getDescription()%>
             </td>
+            <td class="main-td"><%=planned.get(Calendar.DAY_OF_MONTH) + "." + (planned.get(Calendar.MONTH) + 1) +
+                    "." + planned.get(Calendar.YEAR)%>
+            </td>
+            <td class="main-td"><%=planned.get(Calendar.HOUR_OF_DAY) + ":" + minutesPlanned%></td>
+            <td class="main-td"><%=planned.get(Calendar.DAY_OF_MONTH) + "." + (planned.get(Calendar.MONTH) + 1) +
+                    "." + planned.get(Calendar.YEAR)%>
+            </td>
+            <td class="main-td"><%=notif.get(Calendar.HOUR_OF_DAY) + ":" + minutesNotif%></td>
         </tr>
         <%
             }
         %>
     </table>
-    <div class="left">
-        <label class="label">
-            Journal #
-            <select name="journalnum" id="journalnum">
-                <option value="1">1</option>
-            </select>
-        </label>
+    <div align="center" class="button-div">
+        <table class="button-table">
+            <tr>
+                <label class="label">
+                    <td class="button-table-td">Journal #</td>
+                    <td class="button-table-td"><select name="<%=ConstantsClass.JOURNAL_NAME%>">
+                        <option value="Journal 1">Journal 1</option>
+                        <option value="Journal 2">Journal 2</option>
+                    </select></td>
+                </label>
+                <td>
+                    <input type="button" id="change" value="Change journal" onclick="buttonClick(this)">
+                </td>
+            </tr>
+            <tr>
+                <td class="button-table-td"><input type="button" id="add" value="Add task" onclick="buttonClick(this)"></td>
+                <td class="button-table-td"><input type="button" id="edit" value="Edit task" onclick="buttonClick(this)"></td>
+                <td class="button-table-td"><input type="button" id="delete" value="Delete task" onclick="buttonClick(this)"></td>
+            </tr>
+        </table>
+        <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
     </div>
-    <div class="left">
-        <p class="label"><%=request.getAttribute("message") != null ? request.getAttribute("message") : ""%>
-        </p> <br/>
-        <label class="label">
-            Choose action to perform <br/>
-            <select name=<%=ConstantsClass.USERACTION%>>
-                <option value=<%=ConstantsClass.ADD%>>
-                    Add user
-                </option>
-                <option value=<%=ConstantsClass.UPDATE%>>
-                    Update
-                </option>
-                <option value=<%=ConstantsClass.DELETE%>>
-                    Delete
-                </option>
-            </select>
-        </label>
+    <div class="center">
+            <%=
+                request.getParameter("message")// == null ? "" : request.getParameter("message")
+            %>
     </div>
-    <input type="submit" value="Do">
-    <input type="hidden" name="action" value="crudactionmain">
+    <input type="hidden" name="action" value=<%=ConstantsClass.DO_CRUD_FROM_MAIN%>>
 </form>
 </body>
 </html>
