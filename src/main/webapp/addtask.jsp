@@ -1,4 +1,4 @@
-<%--
+<%@ page import="auxiliaryclasses.ConstantsClass" %><%--
   Created by IntelliJ IDEA.
   User: ывв
   Date: 18.02.2018
@@ -45,10 +45,24 @@
             text-align: right;
         }
     </style>
+    <script type="text/javascript">
+        function buttonClick(x) {
+            switch (x.id) {
+                case "add":
+                    document.getElementById("hid").value = "Add";
+                    break;
+                case "cancel":
+                    document.getElementById("hid").value = "Cancel";
+                    break;
+            }
+            document.forms[0].submit();
+        }
+    </script>
 </head>
 <body>
 <div align="center">
-    <form>
+    <form action=<%=ConstantsClass.SERVLET_ADDRESS%> method="post">
+        <input type="hidden" name="action" value="addtask">
         <table>
             <caption>Add user</caption>
             <tr>
@@ -61,11 +75,11 @@
             </tr>
             <tr>
                 <td class="align-right">Planned date & time</td>
-                <td class="align-right"><input type="text" name="description" class="datepickerTimeField" value=""></td>
+                <td class="align-right"><input type="text" name="planned" class="datepickerTimeField" value=""></td>
             </tr>
             <tr>
                 <td class="align-right">Notification date & time</td>
-                <td class="align-right"><input type="text" name="description" class="datepickerTimeField" value=""></td>
+                <td class="align-right"><input type="text" name="notification" class="datepickerTimeField" value=""></td>
             </tr>
             <tr>
                 <td class="align-right">Journal name</td>
@@ -76,10 +90,11 @@
                 </td>
             </tr>
             <tr>
-                <td><input type="submit" value="Add" name="Add"></td>
-                <td><input type="submit" value="Cancel" name="Cancel"></td>
+                <td><input type="button" id="add" value="Add" onclick="buttonClick(this)"></td>
+                <td><input type="button" id="cancel" value="Cancel" onclick="buttonClick(this)"></td>\
             </tr>
         </table>
+        <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
     </form>
 </div>
 </body>

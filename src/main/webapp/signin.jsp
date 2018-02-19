@@ -1,4 +1,4 @@
-<%--
+<%@ page import="auxiliaryclasses.ConstantsClass" %><%--
   Created by IntelliJ IDEA.
   User: ывв
   Date: 07.02.2018
@@ -32,7 +32,7 @@
     .login-error {
         font-size: 16px;
         font-weight: bold;
-        font-color: red;
+        color: red;
     }
 </style>
 
@@ -45,9 +45,9 @@
 
         <h3>Sign In</h3>
 
-        <form method="get" action="<%= response.encodeURL(request.getContextPath() + "/testoracle?action=dologin") %>">
+        <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
 
-            <input type="hidden" name="action" value="dologin" />
+            <input type="hidden" name="action" value="signin" />
 
             <table>
 

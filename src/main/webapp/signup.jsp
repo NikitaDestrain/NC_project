@@ -1,4 +1,4 @@
-<%--
+<%@ page import="auxiliaryclasses.ConstantsClass" %><%--
   Created by IntelliJ IDEA.
   User: ывв
   Date: 07.02.2018
@@ -46,9 +46,9 @@
 
         <h3>New Account</h3>
 
-        <form method="get" action="<%= response.encodeURL(request.getContextPath() + "/testoracle?action=createaccount") %>">
+        <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
 
-            <input type="hidden" name="action" value="createaccount" />
+            <input type="hidden" name="action" value="signup" />
 
             <table>
 

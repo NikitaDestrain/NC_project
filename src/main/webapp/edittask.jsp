@@ -1,4 +1,4 @@
-<%--
+<%@ page import="auxiliaryclasses.ConstantsClass" %><%--
   Created by IntelliJ IDEA.
   User: ывв
   Date: 18.02.2018
@@ -46,17 +46,32 @@
             text-align: right;
         }
 
-        .align-center {
+        .align-left {
             text-align: center;
+            color: #FF0000;
         }
 
     </style>
+    <script type="text/javascript">
+        function buttonClick(x) {
+            switch (x.id) {
+                case "save":
+                    document.getElementById("hid").value = "Save";
+                    break;
+                case "cancel":
+                    document.getElementById("hid").value = "Cancel";
+                    break;
+            }
+            document.forms[0].submit();
+        }
+    </script>
 </head>
 <body>
 <div align="center">
-    <form>
+    <form action=<%=ConstantsClass.SERVLET_ADDRESS%> method="post">
+        <input type="hidden" name="action" value="edittask">
         <table>
-            <caption>Add user</caption>
+            <caption>Edit user</caption>
             <tr>
                 <td class="align-right">Name</td>
                 <td class="align-right"><input type="text" name="name" value=""></td>
@@ -67,16 +82,16 @@
             </tr>
             <tr>
                 <td class="align-right">Planned date & time</td>
-                <td class="align-right"><input type="text" name="description" class="datepickerTimeField" value=""></td>
+                <td class="align-right"><input type="text" name="planned" class="datepickerTimeField" value=""></td>
             </tr>
             <tr>
                 <td class="align-right">Notification date & time</td>
-                <td class="align-right"><input type="text" name="description" class="datepickerTimeField" value=""></td>
+                <td class="align-right"><input type="text" name="notification" class="datepickerTimeField" value=""></td>
             </tr>
             <tr>
                 <td class="align-right">Journal name</td>
                 <td class="align-right">
-                    <select name="journalname" id="journalname">
+                    <select name=<%=ConstantsClass.JOURNAL_NAME%>>
                         <option value="Journal1">Journal 1</option>
                     </select>
                 </td>
@@ -91,16 +106,17 @@
                 </td>
             </tr>
             <tr>
-                <td class="align-center">
+                <td class="align-left">
                     Task status: <%=request.getAttribute("taskstatus") == null ? "" : request.getAttribute("taskstatus")%>
                 </td>
             </tr>
             <tr>
-                <td><input type="submit" value="Save" name="Add"></td>
-                <td><input type="submit" value="Cancel" name="Cancel"></td>
+                <td><input type="button" id="save" value="Save" onclick="buttonClick(this)"></td>
+                <td><input type="button" id="cancel" value="Cancel" onclick="buttonClick(this)"></td>
             </tr>
         </table>
     </form>
+    <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
 </div>
 </body>
 </html>

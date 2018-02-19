@@ -46,4 +46,26 @@ public class ConstantsClass {
     public static final String ERROR_CLIENT_CONNECTION = "Something went wrong and one of clients has not connected successfully!";
     public static final String ERROR_SERVER_START = "Server could not start! Restart application!";
     public static final String ERROR_PROPERTY = "The configuration file is corrupt or missing!. The application will be closed!";
+
+    // web constants
+
+    public static final String SERVLET_ADDRESS = "/taskscheduler";
+    public static final String MAIN_PAGE_ADDRESS = "/mainpage";
+    public static final String SIGN_IN_ADDRESS = "/signin";
+    public static final String SIGN_UP_ADDRESS = "/signup";
+    public static final String ADD_TASK_ADDRESS = "/addtask";
+    public static final String EDIT_TASK_ADDRESS = "/edittask";
+
+    public static final String DO_SIGN_IN = "signin";
+    public static final String DO_SIGN_UP = "signup";
+    public static final String DO_SELECT = "select";
+    public static final String DO_ADD_TASK = "addtask";
+    public static final String DO_EDIT_TASK = "edittask";
+    public static final String DO_CRUD_FROM_MAIN = "crudactionmain";
+
+    public static final String USERACTION = "useraction";
+    public static final String USERNUMBER = "usernumber";
+    public static final String JOURNAL_NAME = "journalname";
+
+    public static final String SAVE = "Save";
 }

@@ -13,6 +13,6 @@
 <body>
 <p><a href="/signin">Click here to log in</a></p>
 <p><a href="/signup">Create a new user</a></p>
-<p><a href="/testoracle?action=select">Select all users</a> </p>
+<p><a href="/servlet?action=select">Select all users</a> </p>
 </body>
 </html>

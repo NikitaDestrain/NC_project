@@ -5,7 +5,8 @@
 <%@ page import="java.util.LinkedList" %>
 <%@ page import="com.sun.xml.internal.ws.server.ServerRtException" %>
 <%@ page import="testservlet.beans.SelectResultBean" %>
-<%@ page import="testservlet.beans.User" %><%--
+<%@ page import="testservlet.beans.User" %>
+<%@ page import="auxiliaryclasses.ConstantsClass" %><%--
   Created by IntelliJ IDEA.
   User: ывв
   Date: 10.02.2018
@@ -87,7 +88,7 @@
 %>
 <div class="center"><strong>TASK SCHEDULER</strong></div>
 <div class="namelabel"><strong>You logged as: <%=request.getAttribute("username")==null?"":request.getAttribute("username") %></strong></div>
-<form action="/testoracle" method="get">
+<form action=<%=ConstantsClass.SERVLET_ADDRESS%> method="post">
     <table>
         <caption>Result of "select" request</caption>
         <tr>
@@ -140,21 +141,21 @@
         </p> <br/>
         <label class="label">
             Choose action to perform <br/>
-            <select name="useraction" id="useraction">
-                <option value="Add">
+            <select name=<%=ConstantsClass.USERACTION%>>
+                <option value=<%=ConstantsClass.ADD%>>
                     Add user
                 </option>
-                <option value="Update">
+                <option value=<%=ConstantsClass.UPDATE%>>
                     Update
                 </option>
-                <option value="Delete">
+                <option value=<%=ConstantsClass.DELETE%>>
                     Delete
                 </option>
             </select>
         </label>
     </div>
     <input type="submit" value="Do">
-    <input type="hidden" name="action" value="toupdatepage">
+    <input type="hidden" name="action" value="crudactionmain">
 </form>
 </body>
 </html>

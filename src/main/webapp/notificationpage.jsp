@@ -20,6 +20,8 @@
         }
 
         div {
+            width: auto;
+            height: auto;
             background-color: khaki;
         }
     </style>
