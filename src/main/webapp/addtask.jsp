@@ -61,7 +61,7 @@
 </head>
 <body>
 <div align="center">
-    <form action=<%=ConstantsClass.SERVLET_ADDRESS%> method="post">
+    <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
         <input type="hidden" name="action" value="addtask">
         <table>
             <caption>Add user</caption>

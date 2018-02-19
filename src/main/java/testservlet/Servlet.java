@@ -54,7 +54,7 @@ public class Servlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String action = req.getParameter("action");
+        String action = req.getParameter(ConstantsClass.ACTION);
         Account account = Account.getInstance(connection);
         if (action == null) {
             req.setAttribute("message", "email or password not recognized");
@@ -90,7 +90,7 @@ public class Servlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action = req.getParameter("action");
+        String action = req.getParameter(ConstantsClass.ACTION);
         String useraction;
         switch (action) {
             case ConstantsClass.DO_SIGN_IN:
@@ -193,12 +193,28 @@ public class Servlet extends HttpServlet {
                         req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
                     }
                 }
-
+            break;
+            case ConstantsClass.DO_NOTIFICATION_ACTION :
+                useraction = req.getParameter(ConstantsClass.USERACTION);
+                switch (useraction) {
+                    case ConstantsClass.CANCEL:
+                        resp.getWriter().print("Cancel");
+                        break;
+                    case ConstantsClass.FINISH:
+                        resp.getWriter().print("Finish");
+                        break;
+                    case ConstantsClass.OK:
+                        resp.getWriter().println("OK");
+                        String time = req.getParameter(ConstantsClass.RESCHEDULE_TASK);
+                        resp.getWriter().print(time);
+                        break;
+                }
+                break;
         }
     }
 
     private void doUpdateMainPage(HttpServletRequest req, HttpServletResponse resp) {
-        LinkedList<User> users = new LinkedList<User>();
+        LinkedList<User> users = new LinkedList<>();
         try {
             PreparedStatement statement = connection.prepareStatement(SELECT);
             ResultSet set = statement.executeQuery();

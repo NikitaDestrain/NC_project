@@ -47,7 +47,7 @@
 
         <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
 
-            <input type="hidden" name="action" value="signin" />
+            <input type="hidden" name="action" value=<%=ConstantsClass.DO_SIGN_IN%> />
 
             <table>
 

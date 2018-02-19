@@ -62,10 +62,14 @@ public class ConstantsClass {
     public static final String DO_ADD_TASK = "addtask";
     public static final String DO_EDIT_TASK = "edittask";
     public static final String DO_CRUD_FROM_MAIN = "crudactionmain";
+    public static final String DO_NOTIFICATION_ACTION = "notificationaction";
 
     public static final String USERACTION = "useraction";
     public static final String USERNUMBER = "usernumber";
     public static final String JOURNAL_NAME = "journalname";
+    public static final String ACTION = "action";
+    public static final String RESCHEDULE_TASK = "rescheduletask";
 
     public static final String SAVE = "Save";
+    public static final String OK = "OK";
 }

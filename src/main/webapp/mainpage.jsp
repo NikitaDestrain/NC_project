@@ -88,7 +88,7 @@
 %>
 <div class="center"><strong>TASK SCHEDULER</strong></div>
 <div class="namelabel"><strong>You logged as: <%=request.getAttribute("username")==null?"":request.getAttribute("username") %></strong></div>
-<form action=<%=ConstantsClass.SERVLET_ADDRESS%> method="post">
+<form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
     <table>
         <caption>Result of "select" request</caption>
         <tr>
