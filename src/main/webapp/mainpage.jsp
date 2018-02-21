@@ -193,7 +193,7 @@
         <table class="button-table">
             <tr>
                 <label class="label">
-                    <td class="button-table-td">Journal #</td>
+                    <td class="button-table-td">Journal name</td>
                     <td class="button-table-td"><select name="<%=ConstantsClass.JOURNAL_NAME%>">
                         <option value="Journal 1">Journal 1</option>
                         <option value="Journal 2">Journal 2</option>
