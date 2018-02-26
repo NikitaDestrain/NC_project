@@ -14,6 +14,7 @@
             font-weight: bold;
             font-family: "Yu Gothic Light"
         }
+
         table {
             width: auto;
             height: auto;
@@ -51,6 +52,9 @@
                 case "cancel":
                     document.getElementById("hid").value = "Cancel";
                     break;
+                case "back":
+                    document.getElementById("hid").value = "backtomain";
+                    break;
             }
             document.forms[0].submit();
         }
@@ -72,10 +76,13 @@
             </tr>
             <tr>
                 <td><input type="button" id="add" value="Add" onclick="buttonClick(this)"></td>
-                <td><input type="button" id="cancel" value="Cancel" onclick="buttonClick(this)"></td>\
+                <td><input type="button" id="cancel" value="Cancel" onclick="buttonClick(this)"></td>
             </tr>
         </table>
         <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
+        <div class="center">
+            <input type="button" id="back" value="Back to main page" onclick="buttonClick(this)">
+        </div>
     </form>
 </div>
 </body>

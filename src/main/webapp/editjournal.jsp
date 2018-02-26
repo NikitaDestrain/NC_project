@@ -58,6 +58,9 @@
                 case "cancel":
                     document.getElementById("hid").value = "Cancel";
                     break;
+                case "back":
+                    document.getElementById("hid").value = "backtomain";
+                    break;
             }
             document.forms[0].submit();
         }
@@ -83,6 +86,9 @@
             </tr>
         </table>
         <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
+        <div class="center">
+            <input type="button" id="back" value="Back to main page" onclick="buttonClick(this)">
+        </div>
     </form>
 </div>
 </body>

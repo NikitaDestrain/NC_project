@@ -61,6 +61,9 @@
                 case "cancel":
                     document.getElementById("hid").value = "Cancel";
                     break;
+                case "back":
+                    document.getElementById("hid").value = "backtomain";
+                    break;
             }
             document.forms[0].submit();
         }
@@ -86,7 +89,8 @@
             </tr>
             <tr>
                 <td class="align-right">Notification date & time</td>
-                <td class="align-right"><input type="text" name="notification" class="datepickerTimeField" value=""></td>
+                <td class="align-right"><input type="text" name="notification" class="datepickerTimeField" value="">
+                </td>
             </tr>
             <tr>
                 <td class="align-right">Journal name</td>
@@ -107,7 +111,8 @@
             </tr>
             <tr>
                 <td class="align-left">
-                    Task status: <%=request.getAttribute("taskstatus") == null ? "" : request.getAttribute("taskstatus")%>
+                    Task
+                    status: <%=request.getAttribute("taskstatus") == null ? "" : request.getAttribute("taskstatus")%>
                 </td>
             </tr>
             <tr>
@@ -115,8 +120,11 @@
                 <td><input type="button" id="cancel" value="Cancel" onclick="buttonClick(this)"></td>
             </tr>
         </table>
+        <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
+        <div class="center">
+            <input type="button" id="back" value="Back to main page" onclick="buttonClick(this)">
+        </div>
     </form>
-    <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
 </div>
 </body>
 </html>

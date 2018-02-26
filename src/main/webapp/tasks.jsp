@@ -102,7 +102,11 @@
                     document.getElementById("hid").value = "Delete";
                     break;
                 case "change":
-                    document.getElementById("hid").value = "changejournal"
+                    document.getElementById("hid").value = "changejournal";
+                    break;
+                case "back":
+                    document.getElementById("hid").value = "backtomain";
+                    break;
             }
             document.forms[0].submit();
         }
@@ -121,6 +125,7 @@
     int count = 0;
 %>
 <div class="center">TASK SCHEDULER</div>
+<div align="center">
 <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
     <table class="main-table">
         <caption>Tasks</caption>
@@ -203,7 +208,11 @@
         request.getParameter("message") == null ? "" : request.getParameter("message")
         %>
     </div>
+    <div class="center">
+        <input type="button" id="back" value="Back to main page" onclick="buttonClick(this)">
+    </div>
     <input type="hidden" name="action" value=<%=ConstantsClass.DO_CRUD_FROM_TASKS%>>
 </form>
+</div>
 </body>
 </html>

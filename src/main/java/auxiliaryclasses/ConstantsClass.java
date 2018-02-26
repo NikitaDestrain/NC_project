@@ -69,6 +69,7 @@ public class ConstantsClass {
     public static final String DO_CRUD_FROM_TASKS = "crudactiontasks";
     public static final String DO_ADD_JOURNAL = "addjournal";
     public static final String DO_EDIT_JOURNAL = "editjournal";
+    public static final String DO_BACK_TO_MAIN = "backtomain";
 
     public static final String USERACTION = "useraction";
     public static final String USERNUMBER = "usernumber";

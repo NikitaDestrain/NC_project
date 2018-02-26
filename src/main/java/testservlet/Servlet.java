@@ -164,6 +164,9 @@ public class Servlet extends HttpServlet {
                     case ConstantsClass.CANCEL:
                         doUpdateTasksPage(req, resp);
                         break;
+                    case ConstantsClass.DO_BACK_TO_MAIN:
+                        req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                        break;
                 }
                 break;
             case ConstantsClass.DO_EDIT_TASK:
@@ -175,6 +178,9 @@ public class Servlet extends HttpServlet {
                     case ConstantsClass.CANCEL:
                         doUpdateTasksPage(req, resp);
                         break;
+                    case ConstantsClass.DO_BACK_TO_MAIN:
+                        req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                        break;
                 }
                 break;
             case ConstantsClass.DO_CRUD_FROM_TASKS:
@@ -185,6 +191,8 @@ public class Servlet extends HttpServlet {
                 } else if (useraction.equals(ConstantsClass.CHANGE_JOURNAL)) {
                     resp.getWriter().print("Change Journal ");
                     resp.getWriter().print(req.getParameter(ConstantsClass.JOURNAL_NAME));
+                } else if (useraction.equals(ConstantsClass.DO_BACK_TO_MAIN)) {
+                    req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
                 } else {
                     if (usernumber != null) {
                         User user = users.get(Integer.parseInt(usernumber));
@@ -213,6 +221,8 @@ public class Servlet extends HttpServlet {
                 usernumber = req.getParameter(ConstantsClass.USERNUMBER);
                 if (useraction.equals(ConstantsClass.ADD)) {
                     req.getRequestDispatcher(ConstantsClass.ADD_JOURNAL_ADDRESS).forward(req, resp);
+                } else if (useraction.equals(ConstantsClass.DO_BACK_TO_MAIN)) {
+                    req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
                 } else {
                     if (usernumber != null) {
                         //User user = users.get(Integer.parseInt(usernumber));
@@ -252,6 +262,9 @@ public class Servlet extends HttpServlet {
                     case ConstantsClass.CANCEL:
                         resp.getWriter().print("Cancel");
                         break;
+                    case ConstantsClass.DO_BACK_TO_MAIN:
+                        req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                        break;
                 }
                 break;
             case ConstantsClass.DO_EDIT_JOURNAL:
@@ -263,6 +276,9 @@ public class Servlet extends HttpServlet {
                     case ConstantsClass.CANCEL:
                         //doUpdateTasksPage(req, resp);
                         resp.getWriter().print("Cancel");
+                        break;
+                    case ConstantsClass.DO_BACK_TO_MAIN:
+                        req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
                         break;
                 }
                 break;
