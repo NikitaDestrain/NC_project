@@ -51,18 +51,24 @@ public class ConstantsClass {
 
     public static final String SERVLET_ADDRESS = "/taskscheduler";
     public static final String MAIN_PAGE_ADDRESS = "/mainpage";
+    public static final String TASKS_PAGE_ADDRESS = "/tasks";
     public static final String SIGN_IN_ADDRESS = "/signin";
     public static final String SIGN_UP_ADDRESS = "/signup";
     public static final String ADD_TASK_ADDRESS = "/addtask";
     public static final String EDIT_TASK_ADDRESS = "/edittask";
+    public static final String ADD_JOURNAL_ADDRESS = "/addjournal";
+    public static final String EDIT_JOURNAL_ADDRESS = "/editjournal";
 
     public static final String DO_SIGN_IN = "signin";
+    public static final String SIGN_IN_ACTION = "signinaction";
     public static final String DO_SIGN_UP = "signup";
     public static final String DO_SELECT = "select";
     public static final String DO_ADD_TASK = "addtask";
     public static final String DO_EDIT_TASK = "edittask";
     public static final String DO_CRUD_FROM_MAIN = "crudactionmain";
-    public static final String DO_NOTIFICATION_ACTION = "notificationaction";
+    public static final String DO_CRUD_FROM_TASKS = "crudactiontasks";
+    public static final String DO_ADD_JOURNAL = "addjournal";
+    public static final String DO_EDIT_JOURNAL = "editjournal";
 
     public static final String USERACTION = "useraction";
     public static final String USERNUMBER = "usernumber";
@@ -70,6 +76,8 @@ public class ConstantsClass {
     public static final String ACTION = "action";
     public static final String RESCHEDULE_TASK = "rescheduletask";
     public static final String CHANGE_JOURNAL = "changejournal";
+    public static final String MESSAGE = "message";
+    public static final String CHOOSE = "Choose";
 
     public static final String SAVE = "Save";
     public static final String OK = "OK";

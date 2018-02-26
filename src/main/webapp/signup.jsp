@@ -55,7 +55,9 @@
                 <tr><td class="align-right">Username: </td><td><input type="text" name="email" value="<%= request.getAttribute("email")!=null?request.getAttribute("email"):"" %>"/></td></tr>
                 <tr><td class="align-right">Password: </td><td><input type="password" name="password" value=""/></td></tr>
                 <tr><td class="align-right">Repeat password: </td><td><input type="password" name="repeatpassword" value=""/></td></tr>
-                <tr><td class="align-right" colspan="2"><input type="submit" value="Sign up"/></td></tr>
+                <tr>
+                    <td class="align-right" colspan="2"><input type="submit" value="Sign up"/></td>
+                </tr>
 
             </table>
 

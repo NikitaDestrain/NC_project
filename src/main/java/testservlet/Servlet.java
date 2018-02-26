@@ -35,7 +35,7 @@ public class Servlet extends HttpServlet {
             ");";
     private static String INSERT = "insert into users(id, email, password) values(?,?,?)";
     private static String SELECT = "SELECT * FROM users";
-    private static String UPDATE = "update users set email=?, password=? where id=?";
+    private static String UPDATE = "UPDATE users SET email=?, password=? WHERE id=?";
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -75,7 +75,7 @@ public class Servlet extends HttpServlet {
                     statement.setInt(3, user.getId());
                     statement.executeUpdate();
 
-                  //  users = fillList();
+                    //  users = fillList();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -92,23 +92,34 @@ public class Servlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter(ConstantsClass.ACTION);
         String useraction;
+        String usernumber;
         switch (action) {
-            case ConstantsClass.DO_SIGN_IN:
-                String email = req.getParameter("email");
-                String password = req.getParameter("password");
+            case ConstantsClass.SIGN_IN_ACTION:
+                useraction = req.getParameter(ConstantsClass.USERACTION);
+                switch (useraction) {
+                    case ConstantsClass.DO_SIGN_IN:
+                        String email = req.getParameter("email");
+                        String password = req.getParameter("password");
 
 //                req.setAttribute("email", email);
 //                req.setAttribute("password", password);
 
-                // обращение к userAuthorizer для проверки данных
+                        // обращение к userAuthorizer для проверки данных
 
-                if (email.equals("1") && password.equals("1"))
-                    doUpdateMainPage(req, resp);
+                        if (email.equals("1") && password.equals("1")) {
+                            //req.setAttribute("bean", new SelectResultBean(users));
+                            req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                        }
+                        break;
+                    case ConstantsClass.DO_SIGN_UP:
+                        req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
+                        break;
+                }
                 break;
-            case ConstantsClass.DO_SELECT :
-                doUpdateMainPage(req, resp);
+            case ConstantsClass.DO_SELECT:
+                doUpdateTasksPage(req, resp);
                 break;
-            case ConstantsClass.DO_SIGN_UP :
+            case ConstantsClass.DO_SIGN_UP:
                 String email1 = req.getParameter("email");
                 String password1 = req.getParameter("password");
                 String repeatPassword1 = req.getParameter("repeatpassword");
@@ -147,31 +158,31 @@ public class Servlet extends HttpServlet {
             case ConstantsClass.DO_ADD_TASK:
                 useraction = req.getParameter(ConstantsClass.USERACTION);
                 switch (useraction) {
-                    case ConstantsClass.ADD :
-                        resp.getWriter().print("Save");
+                    case ConstantsClass.ADD:
+                        resp.getWriter().print("Add");
                         break;
                     case ConstantsClass.CANCEL:
-                        doUpdateMainPage(req, resp);
+                        doUpdateTasksPage(req, resp);
                         break;
                 }
                 break;
             case ConstantsClass.DO_EDIT_TASK:
                 useraction = req.getParameter(ConstantsClass.USERACTION);
                 switch (useraction) {
-                    case ConstantsClass.SAVE :
-                        resp.getWriter().print("Add");
+                    case ConstantsClass.SAVE:
+                        resp.getWriter().print("Save");
                         break;
                     case ConstantsClass.CANCEL:
-                        doUpdateMainPage(req, resp);
+                        doUpdateTasksPage(req, resp);
                         break;
                 }
                 break;
-            case ConstantsClass.DO_CRUD_FROM_MAIN:
+            case ConstantsClass.DO_CRUD_FROM_TASKS:
                 useraction = req.getParameter(ConstantsClass.USERACTION);
-                String usernumber = req.getParameter(ConstantsClass.USERNUMBER);
+                usernumber = req.getParameter(ConstantsClass.USERNUMBER);
                 if (useraction.equals(ConstantsClass.ADD)) {
                     req.getRequestDispatcher(ConstantsClass.ADD_TASK_ADDRESS).forward(req, resp);
-                } else if (useraction.equals(ConstantsClass.CHANGE_JOURNAL)){
+                } else if (useraction.equals(ConstantsClass.CHANGE_JOURNAL)) {
                     resp.getWriter().print("Change Journal ");
                     resp.getWriter().print(req.getParameter(ConstantsClass.JOURNAL_NAME));
                 } else {
@@ -185,38 +196,80 @@ public class Servlet extends HttpServlet {
                             try {
                                 PreparedStatement statement = connection.prepareStatement("DELETE from cracker.public.users WHERE id = " + id);
                                 statement.executeUpdate();
-                                doUpdateMainPage(req, resp);
+                                doUpdateTasksPage(req, resp);
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
                         }
                     } else {
                         req.setAttribute("bean", new SelectResultBean(users));
-                        req.setAttribute("message", "Choose user to perform an action");
+                        req.setAttribute("message", "Choose task to perform an update/delete action");
+                        req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                    }
+                }
+                break;
+            case ConstantsClass.DO_CRUD_FROM_MAIN:
+                useraction = req.getParameter(ConstantsClass.USERACTION);
+                usernumber = req.getParameter(ConstantsClass.USERNUMBER);
+                if (useraction.equals(ConstantsClass.ADD)) {
+                    req.getRequestDispatcher(ConstantsClass.ADD_JOURNAL_ADDRESS).forward(req, resp);
+                } else {
+                    if (usernumber != null) {
+                        //User user = users.get(Integer.parseInt(usernumber));
+                        switch (useraction) {
+                            case ConstantsClass.UPDATE:
+                                //req.setAttribute("user", user);
+                                req.getRequestDispatcher(ConstantsClass.EDIT_JOURNAL_ADDRESS).forward(req, resp);
+                                break;
+                            case ConstantsClass.DELETE:
+//                                int id = user.getId();
+//                            try {
+//                                PreparedStatement statement = connection.prepareStatement("DELETE from cracker.public.users WHERE id = " + id);
+//                                statement.executeUpdate();
+//                                doUpdateTasksPage(req, resp);
+//                            } catch (SQLException e) {
+//                                e.printStackTrace();
+//                            }
+                                resp.getWriter().print("delete");
+                                break;
+                            case ConstantsClass.CHOOSE:
+                                doUpdateTasksPage(req, resp);
+                                break;
+                        }
+                    } else {
+                        req.setAttribute("bean", new SelectResultBean(users));
+                        req.setAttribute("message", "Choose journal to perform an update/delete action");
                         req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
                     }
                 }
-            break;
-            case ConstantsClass.DO_NOTIFICATION_ACTION :
+                break;
+            case ConstantsClass.DO_ADD_JOURNAL:
                 useraction = req.getParameter(ConstantsClass.USERACTION);
                 switch (useraction) {
+                    case ConstantsClass.ADD:
+                        resp.getWriter().print("Add");
+                        break;
                     case ConstantsClass.CANCEL:
                         resp.getWriter().print("Cancel");
                         break;
-                    case ConstantsClass.FINISH:
-                        resp.getWriter().print("Finish");
+                }
+                break;
+            case ConstantsClass.DO_EDIT_JOURNAL:
+                useraction = req.getParameter(ConstantsClass.USERACTION);
+                switch (useraction) {
+                    case ConstantsClass.SAVE:
+                        resp.getWriter().print("Save");
                         break;
-                    case ConstantsClass.OK:
-                        resp.getWriter().println("OK");
-                        String time = req.getParameter(ConstantsClass.RESCHEDULE_TASK);
-                        resp.getWriter().print(time);
+                    case ConstantsClass.CANCEL:
+                        //doUpdateTasksPage(req, resp);
+                        resp.getWriter().print("Cancel");
                         break;
                 }
                 break;
         }
     }
 
-    private void doUpdateMainPage(HttpServletRequest req, HttpServletResponse resp) {
+    private void doUpdateTasksPage(HttpServletRequest req, HttpServletResponse resp) {
         LinkedList<User> users = new LinkedList<>();
         try {
             PreparedStatement statement = connection.prepareStatement(SELECT);
@@ -227,7 +280,7 @@ public class Servlet extends HttpServlet {
             }
             this.users = users;
             req.setAttribute("bean", new SelectResultBean(users));
-            req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+            req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
         } catch (SQLException | IOException | ServletException e) {
             e.printStackTrace();
         }

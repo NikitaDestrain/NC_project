@@ -10,12 +10,37 @@ import java.util.*;
 public class Journal implements Serializable {
     @XmlElement(name = "task")
     private Map<Integer, Task> tasks;
+    @XmlElement(name = "name")
+    private String name;
+    @XmlElement(name = "description")
+    private String description;
 
     /**
      * Creates new Journal object and instantiates new {@code HashMap} of tasks
      */
     public Journal() {
         tasks = new HashMap<>();
+    }
+
+    public Journal(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**

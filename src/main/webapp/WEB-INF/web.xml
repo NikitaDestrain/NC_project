@@ -47,6 +47,16 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>tasks</servlet-name>
+        <jsp-file>/tasks.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>tasks</servlet-name>
+        <url-pattern>/tasks</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>updatepage</servlet-name>
         <jsp-file>/updatepage.jsp</jsp-file>
     </servlet>
@@ -76,16 +86,6 @@
         <url-pattern>/edittask</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>notificationpage</servlet-name>
-        <jsp-file>/notificationpage.jsp</jsp-file>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>notificationpage</servlet-name>
-        <url-pattern>/notificationpage</url-pattern>
-    </servlet-mapping>
-
     <resource-ref>
         <description>DB Connection</description>
         <res-ref-name>jdbc/cracker</res-ref-name>
@@ -93,4 +93,23 @@
         <res-auth>Container</res-auth>
     </resource-ref>
 
+    <servlet>
+        <servlet-name>addjournal</servlet-name>
+        <jsp-file>/addjournal.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>addjournal</servlet-name>
+        <url-pattern>/addjournal</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>editjournal</servlet-name>
+        <jsp-file>/editjournal.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>editjournal</servlet-name>
+        <url-pattern>/editjournal</url-pattern>
+    </servlet-mapping>
 </web-app>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
-
     <Resource name="jdbc/cracker"
               auth="Container"
               type="javax.sql.DataSource"
@@ -11,14 +10,5 @@
               password="root"
               maxActive="20" maxIdle="10"
               maxWait="-1"/>
-    <!--<resource auth="Container"
-              factory="oracle.jdbc.pool.OracleDataSourceFactory"
-              type="oracle.jdbc.pool.OracleDataSource"
-              name="jdbc/cracker"
-              user="system"
-              password="root"
-              connectionCachingEnabled="true"
-              url="jdbc:oracle:thin:@localhost:1521:XE"
-    />-->
 </Context>
 

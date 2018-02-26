@@ -1,17 +1,14 @@
 <%@ page import="auxiliaryclasses.ConstantsClass" %><%--
   Created by IntelliJ IDEA.
   User: ывв
-  Date: 18.02.2018
-  Time: 17:30
+  Date: 26.02.2018
+  Time: 12:37
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Edit task</title>
-    <script language="Javascript" type="text/javascript" src="calendar&time/jquery.1.4.2.js"></script>
-    <link type="text/css" href="calendar&time/latest.css" rel="Stylesheet"/>
-    <script type="text/javascript" src="calendar&time/latest.js"></script>
+    <title>Edit journal</title>
     <style type="text/css" media="screen">
         body {
             font-weight: bold;
@@ -69,9 +66,9 @@
 <body>
 <div align="center">
     <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
-        <input type="hidden" name="action" value="<%=ConstantsClass.DO_EDIT_TASK%>">
+        <input type="hidden" name="action" value="<%=ConstantsClass.DO_EDIT_JOURNAL%>">
         <table>
-            <caption>Edit user</caption>
+            <caption>Edit journal</caption>
             <tr>
                 <td class="align-right">Name</td>
                 <td class="align-right"><input type="text" name="name" value=""></td>
@@ -81,42 +78,12 @@
                 <td class="align-right"><input type="text" name="description" value=""></td>
             </tr>
             <tr>
-                <td class="align-right">Planned date & time</td>
-                <td class="align-right"><input type="text" name="planned" class="datepickerTimeField" value=""></td>
-            </tr>
-            <tr>
-                <td class="align-right">Notification date & time</td>
-                <td class="align-right"><input type="text" name="notification" class="datepickerTimeField" value=""></td>
-            </tr>
-            <tr>
-                <td class="align-right">Journal name</td>
-                <td class="align-right">
-                    <select name=<%=ConstantsClass.JOURNAL_NAME%>>
-                        <option value="Journal1">Journal 1</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td class="align-right">Change task status</td>
-                <td class="align-right">
-                    <select name="statuschanged">
-                        <option value="Cancel">Cancel</option>
-                        <option value="Finish">Finish</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td class="align-left">
-                    Task status: <%=request.getAttribute("taskstatus") == null ? "" : request.getAttribute("taskstatus")%>
-                </td>
-            </tr>
-            <tr>
                 <td><input type="button" id="save" value="Save" onclick="buttonClick(this)"></td>
                 <td><input type="button" id="cancel" value="Cancel" onclick="buttonClick(this)"></td>
             </tr>
         </table>
+        <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
     </form>
-    <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
 </div>
 </body>
 </html>
