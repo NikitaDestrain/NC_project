@@ -8,11 +8,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Login</title>
+    <title>Sign in</title>
 </head>
-<style  type="text/css">
+<style type="text/css">
 
-    #content { position: relative;}
+    #content {
+        position: relative;
+    }
 
     #login {
         position: relative;
@@ -68,16 +70,33 @@
 
             <table>
 
-                <tr><td class="align-right">Username: </td><td><input type="text" name="email" value="<%= request.getAttribute("email")!=null?request.getAttribute("email"):"" %>"/></td></tr>
-                <tr><td class="align-right">Password: </td><td><input type="password" name="password" value="<%= request.getAttribute("password")!=null?request.getAttribute("password"):"" %>"/></td></tr>
                 <tr>
-                    <td class="align-left"><input type="button" value="Sign in" id="signin" onclick="buttonClick(this)"/></td>
-                    <td class="align-right" colspan="2"><input type="button" value="Sign up" id="signup" onclick="buttonClick(this)"/></td>
+                    <label>
+                        <td class="align-right">Username:</td>
+                        <td><input type="text" name="email"
+                                   value="<%= request.getAttribute("email")!=null?request.getAttribute("email"):"" %>"/>
+                        </td>
+                    </label>
+                </tr>
+                <tr>
+                    <label>
+                        <td class="align-right">Password:</td>
+                        <td><input type="password" name="password"
+                                   value="<%= request.getAttribute("password")!=null?request.getAttribute("password"):"" %>"/>
+                        </td>
+                    </label>
+                </tr>
+                <tr>
+                    <td class="align-left"><input type="button" value="Sign in" id="signin"
+                                                  onclick="buttonClick(this)"/></td>
+                    <td class="align-right" colspan="2"><input type="button" value="Sign up" id="signup"
+                                                               onclick="buttonClick(this)"/></td>
                 </tr>
 
             </table>
 
-            <p class="login-error"><%= request.getAttribute("message")!=null?request.getAttribute("message"):"" %></p>
+            <p class="login-error"><%= request.getAttribute("message") != null ? request.getAttribute("message") : "" %>
+            </p>
 
         </form>
 

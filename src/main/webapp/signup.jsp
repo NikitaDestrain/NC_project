@@ -8,10 +8,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Create user</title>
-    <style  type="text/css">
+    <title>Sign up</title>
+    <style type="text/css">
 
-        #content { position: relative;}
+        #content {
+            position: relative;
+        }
 
         #login {
             position: relative;
@@ -48,20 +50,37 @@
 
         <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
 
-            <input type="hidden" name="action" value=<%=ConstantsClass.DO_SIGN_UP%> />
+            <input type="hidden" name="action" value=<%=ConstantsClass.DO_SIGN_UP%>/>
 
             <table>
-
-                <tr><td class="align-right">Username: </td><td><input type="text" name="email" value="<%= request.getAttribute("email")!=null?request.getAttribute("email"):"" %>"/></td></tr>
-                <tr><td class="align-right">Password: </td><td><input type="password" name="password" value=""/></td></tr>
-                <tr><td class="align-right">Repeat password: </td><td><input type="password" name="repeatpassword" value=""/></td></tr>
+                <tr>
+                    <label>
+                        <td class="align-right">Username:</td>
+                        <td><input type="text" name="email"
+                                   value="<%= request.getAttribute("email")!=null?request.getAttribute("email"):"" %>"/>
+                        </td>
+                    </label>
+                </tr>
+                <tr>
+                    <label>
+                        <td class="align-right">Password:</td>
+                        <td><input type="password" name="password" value=""/></td>
+                    </label>
+                </tr>
+                <tr>
+                    <label>
+                        <td class="align-right">Repeat password:</td>
+                        <td><input type="password" name="repeatpassword" value=""/></td>
+                    </label>
+                </tr>
                 <tr>
                     <td class="align-right" colspan="2"><input type="submit" value="Sign up"/></td>
                 </tr>
 
             </table>
 
-            <p class="message"><%= request.getAttribute("message")!= null? request.getAttribute("message"):"" %></p>
+            <p class="message"><%= request.getAttribute("message") != null ? request.getAttribute("message") : "" %>
+            </p>
 
         </form>
 

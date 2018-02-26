@@ -7,23 +7,13 @@
     <display-name>HelloWorldServlet</display-name>
 
     <servlet>
-        <servlet-name>index</servlet-name>
-        <jsp-file>/index.jsp</jsp-file>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>index</servlet-name>
-        <url-pattern>/index</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>signin</servlet-name>
         <jsp-file>/signin.jsp</jsp-file>
     </servlet>
 
     <servlet-mapping>
         <servlet-name>signin</servlet-name>
-        <url-pattern>/signin</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -86,13 +76,6 @@
         <url-pattern>/edittask</url-pattern>
     </servlet-mapping>
 
-    <resource-ref>
-        <description>DB Connection</description>
-        <res-ref-name>jdbc/cracker</res-ref-name>
-        <res-type>javax.sql.DataSource</res-type>
-        <res-auth>Container</res-auth>
-    </resource-ref>
-
     <servlet>
         <servlet-name>addjournal</servlet-name>
         <jsp-file>/addjournal.jsp</jsp-file>
@@ -112,4 +95,11 @@
         <servlet-name>editjournal</servlet-name>
         <url-pattern>/editjournal</url-pattern>
     </servlet-mapping>
+
+    <resource-ref>
+        <description>DB Connection</description>
+        <res-ref-name>jdbc/cracker</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
 </web-app>
