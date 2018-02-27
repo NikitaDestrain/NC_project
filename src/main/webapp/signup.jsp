@@ -15,11 +15,6 @@
             position: relative;
         }
 
-        #login {
-            position: relative;
-            top: 80px;
-        }
-
         .align-right {
             text-align: right;
         }
@@ -35,58 +30,61 @@
             font-weight: bold;
             font-color: red;
         }
-
-
     </style>
-
+    <script type="text/javascript">
+        function buttonClick() {
+            var login = document.getElementById("login").value;
+            var password = document.getElementById("password").value;
+            var repeat = document.getElementById("repeat").value;
+            if (login.length != 0 && password.length != 0 && repeat.length != 0) {
+                if (password.localeCompare(repeat) == 0)
+                    document.forms[0].submit();
+                else
+                    alert("Passwords have to be equal!")
+            }
+            else
+                alert("Fill in all the fields!");
+        }
+    </script>
 </head>
 <body>
+<div align="center">
 
-<center>
+    <h3>New Account</h3>
 
-    <div id="login">
+    <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
 
-        <h3>New Account</h3>
+        <input type="hidden" name="action" value=<%=ConstantsClass.DO_SIGN_UP%>/>
 
-        <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
+        <table>
+            <tr>
+                <td class="align-right">Username:</td>
+                <td><input type="text" name="<%=ConstantsClass.LOGIN_PARAMETER%>" id="login"
+                           value="<%= request.getAttribute(ConstantsClass.LOGIN_PARAMETER)!=null?
+                           request.getAttribute(ConstantsClass.LOGIN_PARAMETER):"" %>"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="align-right">Password:</td>
+                <td><input type="password" name="<%=ConstantsClass.PASSWORD_PARAMETER%>" value="" id="password"/></td>
+            </tr>
+            <tr>
 
-            <input type="hidden" name="action" value=<%=ConstantsClass.DO_SIGN_UP%>/>
+                <td class="align-right">Repeat password:</td>
+                <td><input type="password" name="<%=ConstantsClass.REPEAT_PASSWORD_PARAMETER%>" value="" id="repeat"/></td>
+            </tr>
+            <tr>
+                <td class="align-right" colspan="2"><input type="button" value="Sign up" onclick="buttonClick()"/></td>
+            </tr>
 
-            <table>
-                <tr>
-                    <label>
-                        <td class="align-right">Username:</td>
-                        <td><input type="text" name="email"
-                                   value="<%= request.getAttribute("email")!=null?request.getAttribute("email"):"" %>"/>
-                        </td>
-                    </label>
-                </tr>
-                <tr>
-                    <label>
-                        <td class="align-right">Password:</td>
-                        <td><input type="password" name="password" value=""/></td>
-                    </label>
-                </tr>
-                <tr>
-                    <label>
-                        <td class="align-right">Repeat password:</td>
-                        <td><input type="password" name="repeatpassword" value=""/></td>
-                    </label>
-                </tr>
-                <tr>
-                    <td class="align-right" colspan="2"><input type="submit" value="Sign up"/></td>
-                </tr>
+        </table>
 
-            </table>
+        <p class="message"><%= request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) != null ?
+                request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) : "" %>
+        </p>
 
-            <p class="message"><%= request.getAttribute("message") != null ? request.getAttribute("message") : "" %>
-            </p>
+    </form>
 
-        </form>
-
-    </div>
-
-
-</center>
+</div>
 </body>
 </html>

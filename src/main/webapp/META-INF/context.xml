@@ -5,10 +5,9 @@
               type="javax.sql.DataSource"
               factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
               driverClassName="org.postgresql.Driver"
-              url="jdbc:postgresql://localhost:5432/cracker"
+              url="jdbc:postgresql://localhost:5432/postgres"
               username="postgres"
               password="root"
               maxActive="20" maxIdle="10"
               maxWait="-1"/>
 </Context>
-
