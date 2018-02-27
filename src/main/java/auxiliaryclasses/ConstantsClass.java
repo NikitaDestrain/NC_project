@@ -77,8 +77,12 @@ public class ConstantsClass {
     public static final String ACTION = "action";
     public static final String RESCHEDULE_TASK = "rescheduletask";
     public static final String CHANGE_JOURNAL = "changejournal";
-    public static final String MESSAGE = "message";
     public static final String CHOOSE = "Choose";
+
+    public static final String LOGIN_PARAMETER = "login";
+    public static final String PASSWORD_PARAMETER = "password";
+    public static final String REPEAT_PASSWORD_PARAMETER = "repeatpassword";
+    public static final String MESSAGE_ATTRIBUTE = "message";
 
     public static final String SAVE = "Save";
     public static final String OK = "OK";

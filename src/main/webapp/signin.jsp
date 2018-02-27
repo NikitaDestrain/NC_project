@@ -16,11 +16,6 @@
         position: relative;
     }
 
-    #login {
-        position: relative;
-        top: 80px;
-    }
-
     .align-right {
         text-align: right;
     }
@@ -45,66 +40,58 @@
     function buttonClick(x) {
         switch (x.id) {
             case "signin":
-                document.getElementById("hid").value = "signin";
+                if (document.getElementById("login").value.length != 0 && document.getElementById("password").value.length != 0) {
+                    document.getElementById("hid").value = "signin";
+                    document.forms[0].submit();
+                }
+                else
+                    alert("Enter login and password!");
                 break;
             case "signup":
                 document.getElementById("hid").value = "signup";
+                document.forms[0].submit();
                 break;
         }
-        document.forms[0].submit();
     }
 </script>
 </head>
 <body>
+<div align="center">
 
-<center>
+    <h3>Sign In</h3>
 
-    <div id="login">
+    <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
 
-        <h3>Sign In</h3>
+        <input type="hidden" name="<%=ConstantsClass.USERACTION%>" id="hid"/>
+        <input type="hidden" name="action" value="<%=ConstantsClass.SIGN_IN_ACTION%>">
 
-        <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
+        <table>
+            <tr>
+                <td class="align-right">Username:</td>
+                <td><input type="text" name="login" id="login"
+                           value="<%= request.getAttribute(ConstantsClass.LOGIN_PARAMETER)!=null?
+                           request.getAttribute(ConstantsClass.LOGIN_PARAMETER):"" %>"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="align-right">Password:</td>
+                <td><input type="password" name="password" id="password"
+                           value="<%= request.getAttribute(ConstantsClass.PASSWORD_PARAMETER)!=null?
+                           request.getAttribute(ConstantsClass.PASSWORD_PARAMETER):"" %>"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="align-left"><input type="button" value="Sign in" id="signin"
+                                              onclick="buttonClick(this)"/></td>
+                <td class="align-right" colspan="2"><input type="button" value="Sign up" id="signup"
+                                                           onclick="buttonClick(this)"/></td>
+            </tr>
+        </table>
 
-            <input type="hidden" name="<%=ConstantsClass.USERACTION%>" id="hid"/>
-            <input type="hidden" name="action" value="<%=ConstantsClass.SIGN_IN_ACTION%>">
-
-            <table>
-
-                <tr>
-                    <label>
-                        <td class="align-right">Username:</td>
-                        <td><input type="text" name="email"
-                                   value="<%= request.getAttribute("email")!=null?request.getAttribute("email"):"" %>"/>
-                        </td>
-                    </label>
-                </tr>
-                <tr>
-                    <label>
-                        <td class="align-right">Password:</td>
-                        <td><input type="password" name="password"
-                                   value="<%= request.getAttribute("password")!=null?request.getAttribute("password"):"" %>"/>
-                        </td>
-                    </label>
-                </tr>
-                <tr>
-                    <td class="align-left"><input type="button" value="Sign in" id="signin"
-                                                  onclick="buttonClick(this)"/></td>
-                    <td class="align-right" colspan="2"><input type="button" value="Sign up" id="signup"
-                                                               onclick="buttonClick(this)"/></td>
-                </tr>
-
-            </table>
-
-            <p class="login-error"><%= request.getAttribute("message") != null ? request.getAttribute("message") : "" %>
-            </p>
-
-        </form>
-
-    </div>
-
-
-</center>
-
-
+        <p class="login-error"><%= request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) != null ?
+                request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) : "" %>
+        </p>
+    </form>
+</div>
 </body>
 </html>

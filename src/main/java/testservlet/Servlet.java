@@ -2,6 +2,8 @@ package testservlet;
 
 
 import auxiliaryclasses.ConstantsClass;
+import client.commandprocessor.PasswordEncoder;
+import server.controller.UserAuthorizer;
 import testservlet.beans.SelectResultBean;
 import testservlet.beans.User;
 
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.LinkedList;
 
@@ -24,6 +27,8 @@ public class Servlet extends HttpServlet {
     private Connection connection;
     private DataSource dataSource;
     private LinkedList<User> users = new LinkedList<>();
+    //private UserAuthorizer authorizer = UserAuthorizer.getInstance();
+    //private PasswordEncoder encoder = PasswordEncoder.getInstance();
 
     private static String URL = "jdbc:oracle:thin:@localhost:1521:XE";
     private static String LOGIN = "postgres";
@@ -93,22 +98,35 @@ public class Servlet extends HttpServlet {
         String action = req.getParameter(ConstantsClass.ACTION);
         String useraction;
         String usernumber;
+        String login;
+        String password;
+        String encryptedPassword = null;
         switch (action) {
             case ConstantsClass.SIGN_IN_ACTION:
                 useraction = req.getParameter(ConstantsClass.USERACTION);
                 switch (useraction) {
                     case ConstantsClass.DO_SIGN_IN:
-                        String email = req.getParameter("email");
-                        String password = req.getParameter("password");
+                        login = req.getParameter(ConstantsClass.LOGIN_PARAMETER);
+                        password = req.getParameter(ConstantsClass.PASSWORD_PARAMETER);
+//                        try {
+//                            encryptedPassword = encoder.encode(password);
+//                        } catch (NoSuchAlgorithmException e) {
+//                            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
+//                            req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
+//                        }
+//
+//                        if (authorizer.isUserDataCorrect(new server.commandproccessor.User(login, encryptedPassword, -1))) {
+//                            req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+//                        } else {
+//                            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_IN);
+//                            req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
+//                        }
 
-//                req.setAttribute("email", email);
-//                req.setAttribute("password", password);
-
-                        // обращение к userAuthorizer для проверки данных
-
-                        if (email.equals("1") && password.equals("1")) {
-                            //req.setAttribute("bean", new SelectResultBean(users));
+                        if (login.equals("1") && password.equals("1")) {
                             req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                        } else {
+                            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_IN);
+                            req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
                         }
                         break;
                     case ConstantsClass.DO_SIGN_UP:
@@ -120,40 +138,22 @@ public class Servlet extends HttpServlet {
                 doUpdateTasksPage(req, resp);
                 break;
             case ConstantsClass.DO_SIGN_UP:
-                String email1 = req.getParameter("email");
-                String password1 = req.getParameter("password");
-                String repeatPassword1 = req.getParameter("repeatpassword");
-
-                // обращение к контроллеру
-//                req.setAttribute("email", email);
-//                req.setAttribute("password", "");
-//                req.setAttribute("repeatpassword", "");
-//                req.setAttribute("message", "");
-
-//                if (!password1.equals(repeatPassword1)) {
-//                    // Passwords don't match.
-//                    req.setAttribute("message", "Passwords do not match.");
-//                    req.getRequestDispatcher("").forward(req, resp);
-//                } else {
-//                    User user = new User(email, password);
+//                login = req.getParameter(ConstantsClass.LOGIN_PARAMETER);
+//                password = req.getParameter(ConstantsClass.PASSWORD_PARAMETER);
 //
-////                    if (!user.isValidated()) {
-////                        // Password or email address has wrong format.
-////                        req.setAttribute("message", user.getMessage());
-////                        req.getRequestDispatcher("/signup").forward(req, resp);
-////                    } else {
-////                        if (account.isSuchUserExists(email)) {
-////                            // This email address already exists in the user database.
-////                            req.setAttribute("message", "An account with this email address already exists");
-////                            req.getRequestDispatcher("/signup").forward(req, resp);
-////                        } else {
-////                            // We create create the account.
-////                            account.createUser(email, password);
-////                            users = fillList();
-////                            req.setAttribute("bean", new SelectResultBean(users));
-////                            //req.setAttribute("message", "user created successfully. log in now");
-////                            req.getRequestDispatcher("/mainpage").forward(req, resp);
-////                        }
+//                if (authorizer.isSuchLoginExists(login)) {
+//                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.EXIST_LOGIN);
+//                    req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
+//                } else {
+//                    try {
+//                        encryptedPassword = encoder.encode(password);
+//                    } catch (NoSuchAlgorithmException e) {
+//                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_UP);
+//                        req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
+//                    }
+//                    authorizer.addUser(new server.commandproccessor.User(login, password, -1));
+//                    req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+//                }
                 break;
             case ConstantsClass.DO_ADD_TASK:
                 useraction = req.getParameter(ConstantsClass.USERACTION);

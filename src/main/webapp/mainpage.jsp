@@ -90,7 +90,9 @@
                     document.getElementById("hid").value = "Update";
                     break;
                 case "delete":
-                    document.getElementById("hid").value = "Delete";
+                    if (confirm("Are you sure want to delete this task?")) {
+                        document.getElementById("hid").value = "Delete";
+                    }
                     break;
                 case "choose" :
                     document.getElementById("hid").value = "Choose";
@@ -152,7 +154,7 @@
     </div>
     <div class="center">
         <%=
-        request.getParameter(ConstantsClass.MESSAGE) == null ? "" : request.getParameter("message")
+        request.getParameter(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" : request.getParameter("message")
         %>
     </div>
     <input type="hidden" name="action" value=<%=ConstantsClass.DO_CRUD_FROM_MAIN%>>
