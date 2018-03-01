@@ -17,6 +17,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
@@ -123,7 +126,17 @@ public class Servlet extends HttpServlet {
 //                        }
 
                         if (login.equals("1") && password.equals("1")) {
-                            req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+//                            BufferedReader br = new BufferedReader(new FileReader("C:\\Apps\\weblab\\weblab\\xsd\\journal.xml"));
+//                            String line;
+//                            StringBuilder sb = new StringBuilder();
+//
+//                            while((line=br.readLine())!= null){
+//                                sb.append(line.trim());
+//                            }
+
+                            req.getSession().setAttribute("tasks", new File("C:\\Apps\\weblab\\weblab\\xsd\\journal.xml"));
+
+                            req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
                         } else {
                             req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_IN);
                             req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);

@@ -1,3 +1,6 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
+
 <%@ page import="auxiliaryclasses.ConstantsClass" %>
 <%@ page import="server.model.Journal" %>
 <%@ page import="java.util.LinkedList" %><%--
@@ -125,6 +128,8 @@
             String password;
             for (Journal j : list) {
         %>
+        <%--<x:parse xml="$[sessionScope.journals]" var="journals"/>--%>
+        <%--<x:forEach select="$journals/"--%>
         <tr>
             <td class="count">
                 <label>

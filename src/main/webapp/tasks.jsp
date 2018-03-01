@@ -11,7 +11,14 @@
 <%@ page import="server.factories.TaskFactory" %>
 <%@ page import="server.model.TaskStatus" %>
 <%@ page import="java.util.Date" %>
-<%@ page import="java.util.Calendar" %><%--
+<%@ page import="java.util.Calendar" %>
+<%@ page import="javax.xml.bind.JAXBContext" %>
+<%@ page import="server.model.Journal" %>
+<%@ page import="javax.xml.bind.JAXBException" %>
+<%@ page import="javax.xml.bind.Unmarshaller" %>
+<%@ page import="java.io.File" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %><%--
   Created by IntelliJ IDEA.
   User: ывв
   Date: 10.02.2018
@@ -121,6 +128,9 @@
                 case "back":
                     document.getElementById("hid").value = "backtomain";
                     break;
+                case "sort":
+                    document.forms[1].submit();
+                    break;
             }
             document.forms[0].submit();
         }
@@ -131,8 +141,8 @@
     String message = null;
     SelectResultBean bean = (SelectResultBean) request.getAttribute("bean");
     Calendar calendar = Calendar.getInstance();
-    Task task1 = TaskFactory.createTask("name1", TaskStatus.Planned, "description1", calendar.getTime(), calendar.getTime());
-    Task task2 = TaskFactory.createTask("name2", TaskStatus.Overdue, "description2", calendar.getTime(), calendar.getTime());
+    Task task1 = TaskFactory.createTask("name1", TaskStatus.Planned, "description1", calendar.getTime(), calendar.getTime(), calendar.getTime(), calendar.getTime(), 0);
+    Task task2 = TaskFactory.createTask("name2", TaskStatus.Overdue, "description2", calendar.getTime(), calendar.getTime(),calendar.getTime(), calendar.getTime(), 0);
     LinkedList<Task> tasks = new LinkedList<>();
     tasks.add(task1);
     tasks.add(task2);
@@ -140,7 +150,7 @@
 %>
 <div class="center">TASK SCHEDULER</div>
 <div align="center">
-    <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
+    <form method="post" id="mainform" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
         <table class="main-table">
             <caption>Tasks</caption>
             <tr>
@@ -149,19 +159,25 @@
                 <th class="main-th">Name</th>
                 <th class="main-th">Description</th>
                 <th class="main-th">Planned date</th>
-                <th class="main-th">Planned time</th>
                 <th class="main-th">Notification date</th>
-                <th class="main-th">Notification time</th>
             </tr>
             <%
-                int id;
-                String email;
-                String password;
+                java.io.File f = (File) session.getAttribute("tasks");
+                Journal journal = null;
+                try {
+                    JAXBContext context = JAXBContext.newInstance(Journal.class);
+                    Unmarshaller unmarshaller = context.createUnmarshaller();
+                    journal = (Journal) unmarshaller.unmarshal(f);
+                } catch (JAXBException e) {
+                    e.printStackTrace();
+                }
+            %>
+            <%
                 Calendar planned = Calendar.getInstance();
                 Calendar notif = Calendar.getInstance();
                 String minutesPlanned;
                 String minutesNotif;
-                for (Task u : tasks) {
+                for (Task u : journal.getTasks()) {
                     planned.setTime(u.getPlannedDate());
                     notif.setTime(u.getNotificationDate());
                     minutesPlanned = planned.get(Calendar.MINUTE) + "";
@@ -176,21 +192,27 @@
                         <input type="radio" name="usernumber" value="<%=count++%>"/>
                     </label>
                 </td>
-                <td class="main-td"><%=u.getStatus()%>
+                <td class="main-td">
+                    <%=u.getStatus()%>
+                    <%--<x:out select="$task/status"/>--%>
                 </td>
-                <td class="main-td"><%=u.getName()%>
+                <td class="main-td">
+                    <%=u.getName()%>
+                        <%--<x:out select="$task/name"/>--%>
                 </td>
-                <td class="main-td"><%=u.getDescription()%>
+                <td class="main-td">
+                    <%=u.getDescription()%>
+                    <%--<x:out select="$task/description"/>--%>
                 </td>
-                <td class="main-td"><%=planned.get(Calendar.DAY_OF_MONTH) + "." + (planned.get(Calendar.MONTH) + 1) +
-                        "." + planned.get(Calendar.YEAR)%>
+                <td class="main-td">
+                    <%=planned.get(Calendar.DAY_OF_MONTH) + "." + (planned.get(Calendar.MONTH) + 1) +
+                        "." + planned.get(Calendar.YEAR) + " " + planned.get(Calendar.HOUR_OF_DAY) + ":" + minutesPlanned%>
+                        <%--<x:out select="$task/plannedDate"/>--%>
                 </td>
-                <td class="main-td"><%=planned.get(Calendar.HOUR_OF_DAY) + ":" + minutesPlanned%>
-                </td>
-                <td class="main-td"><%=planned.get(Calendar.DAY_OF_MONTH) + "." + (planned.get(Calendar.MONTH) + 1) +
-                        "." + planned.get(Calendar.YEAR)%>
-                </td>
-                <td class="main-td"><%=notif.get(Calendar.HOUR_OF_DAY) + ":" + minutesNotif%>
+                <td class="main-td">
+                    <%=notif.get(Calendar.DAY_OF_MONTH) + "." + (notif.get(Calendar.MONTH) + 1) +
+                        "." + notif.get(Calendar.YEAR) + " " + notif.get(Calendar.HOUR_OF_DAY) + ":" + minutesNotif%>
+                        <%--<x:out select="$task/notificationDate"/>--%>
                 </td>
             </tr>
             <%
@@ -226,6 +248,55 @@
             <%=
             request.getParameter("message") == null ? "" : request.getParameter("message")
             %>
+        </div>
+        <div align="center">
+            <form method="get" action="<%=ConstantsClass.SERVLET_ADDRESS%>" id="sortform">
+                <input type="hidden" name="action" value="sortaction">
+                <table class="button-table">
+                    <tr>
+                        <td>Sort by: </td>
+                        <td>
+                            <select name="sortcolumn">
+                                <option value="status">
+                                    Status
+                                </option>
+                                <option value="name">
+                                    Name
+                                </option>
+                                <option value="description">
+                                    Description
+                                </option>
+                                <option name="planneddate">
+                                    Planned date
+                                </option>
+                                <option value="notifdate">
+                                    Notification date
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Criteria:
+                        </td>
+                        <td>
+                            <select name="criteria">
+                                <option value="asc">
+                                    Ascending
+                                </option>
+                                <option value="desc">
+                                    Descending
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="button-table-td" colspan="2">
+                            <input type="submit" id="sort" value="Sort">
+                        </td>
+                    </tr>
+                </table>
+            </form>
         </div>
         <div class="center">
             <input type="button" id="back" value="Back to main page" onclick="buttonClick(this)">
