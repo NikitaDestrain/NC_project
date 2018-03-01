@@ -17,7 +17,7 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 SET search_path = public, pg_catalog;
 
 
-CREATE SEQUENCE auto_increment_journal
+CREATE SEQUENCE IF NOT EXISTS auto_increment_journal
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -32,7 +32,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 
-CREATE TABLE "Journal" (
+CREATE TABLE IF NOT EXISTS "Journal" (
     "Journal_id" bigint DEFAULT nextval('auto_increment_journal'::regclass) NOT NULL,
     "Name" character varying(18) NOT NULL,
     "Description" character varying(80),
@@ -43,7 +43,7 @@ CREATE TABLE "Journal" (
 ALTER TABLE "Journal" OWNER TO postgres;
 
 
-CREATE SEQUENCE auto_increment_tasks
+CREATE SEQUENCE IF NOT EXISTS auto_increment_tasks
     START WITH 0
     INCREMENT BY 1
     MINVALUE 0
@@ -54,7 +54,7 @@ CREATE SEQUENCE auto_increment_tasks
 ALTER TABLE auto_increment_tasks OWNER TO postgres;
 
 
-CREATE TABLE "Tasks" (
+CREATE TABLE IF NOT EXISTS "Tasks" (
     "Task_id" bigint DEFAULT nextval('auto_increment_tasks'::regclass) NOT NULL,
     "Name" character varying(18) NOT NULL,
     "Description" character varying(80),
@@ -69,7 +69,7 @@ CREATE TABLE "Tasks" (
 ALTER TABLE "Tasks" OWNER TO postgres;
 
 
-CREATE SEQUENCE auto_increment_users
+CREATE SEQUENCE IF NOT EXISTS auto_increment_users
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -80,7 +80,7 @@ CREATE SEQUENCE auto_increment_users
 ALTER TABLE auto_increment_users OWNER TO postgres;
 
 
-CREATE TABLE "Users" (
+CREATE TABLE IF NOT EXISTS "Users" (
     "User_id" bigint DEFAULT nextval('auto_increment_users'::regclass) NOT NULL,
     "Login" character varying(18) NOT NULL,
     "Password" character varying(18) NOT NULL,
@@ -104,10 +104,10 @@ ALTER TABLE ONLY "Users"
     ADD CONSTRAINT "Users_pkey" PRIMARY KEY ("User_id");
 
 
-CREATE INDEX fki_journal_id_fk ON "Tasks" USING btree ("Journal_id");
+CREATE INDEX IF NOT EXISTS fki_journal_id_fk ON "Tasks" USING btree ("Journal_id");
 
 
-CREATE INDEX fki_user_id_fk ON "Journal" USING btree ("User_id");
+CREATE INDEX IF NOT EXISTS fki_user_id_fk ON "Journal" USING btree ("User_id");
 
 
 ALTER TABLE ONLY "Tasks"

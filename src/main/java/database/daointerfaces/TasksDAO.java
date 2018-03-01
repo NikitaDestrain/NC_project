@@ -8,13 +8,13 @@ import java.util.Date;
 import java.util.List;
 
 public interface TasksDAO {
-    public Task create(String name, TaskStatus status, String description, Date notificationDate, Date plannedDate);
+    public Task create(String name, TaskStatus status, String description, Date notificationDate, Date plannedDate, Integer journalId) throws SQLException;
 
-    public Task read(int id);
+    public Task read(int id) throws SQLException;
 
-    public void update(Task task);
+    public void update(Task task) throws SQLException;
 
-    public void delete(int id);
+    public void delete(int id) throws SQLException;
 
     public List<Task> getAll() throws SQLException;
 }

@@ -16,6 +16,8 @@ public class Journal implements Serializable {
     private String name;
     @XmlElement(name = "description")
     private String description;
+    @XmlElement(name = "description")
+    private int userId;
 
     /**
      * Creates new Journal object and instantiates new {@code HashMap} of tasks
@@ -27,6 +29,15 @@ public class Journal implements Serializable {
     public Journal(String name, String description) {
         this.name = name;
         this.description = description;
+        tasks = new HashMap<>();
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public int getId() {
@@ -108,7 +119,8 @@ public class Journal implements Serializable {
     @Override
     public String toString() {
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(this.getClass().getSimpleName() + " (" + this.tasks + ")");
+        stringBuffer.append(this.getClass().getSimpleName() + " " + this.name + " " + this.description +
+                " " + this.userId + " (" + this.tasks + ")");
         return stringBuffer.toString();
     }
 }

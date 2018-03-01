@@ -6,13 +6,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface JournalDAO {
-    public Journal create(String name, String description);
+    public Journal create(String name, String description, Integer userId) throws SQLException;
 
-    public Journal read(int id);
+    public Journal read(int id) throws SQLException;
 
-    public void update(Journal journal);
+    public void update(Journal journal) throws SQLException;
 
-    public void delete(int id);
+    public void delete(int id) throws SQLException;
 
     public List<Journal> getAll() throws SQLException;
 }

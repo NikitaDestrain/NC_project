@@ -9,7 +9,7 @@ import java.util.Date;
  * <b>name</b>, <b>status</b>, <b>description</b>, <b>notificationDate</b>,  <b>plannedDate</b>, <b>id</b>.
  */
 @XmlType(propOrder = {"id", "name", "description", "status", "notificationDate", "plannedDate",
-        "addingDate", "updatingDate", "journalId"},
+        "uploadDate", "changeDate", "journalId"},
         name = "task")
 @XmlRootElement(name = "task")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -39,8 +39,10 @@ public class Task implements Comparable<Task>, Serializable {
      */
     private int id;
 
-    private Date addingDate;
-    private Date updatingDate;
+    private Date uploadDate;
+
+    private Date changeDate;
+
     private int journalId;
 
     public Task() {
@@ -58,15 +60,15 @@ public class Task implements Comparable<Task>, Serializable {
      */
 
     public Task(String name, TaskStatus status, String description, Date notificationDate,
-                Date plannedDate, Date addingDate, Date updatingDate, int journalId, int id) {
+                Date plannedDate, Date uploadDate, Date changeDate, int journalId, int id) {
         this.name = name;
         this.status = status;
         this.description = description;
         this.notificationDate = notificationDate;
         this.plannedDate = plannedDate;
         this.id = id;
-        this.addingDate = addingDate;
-        this.updatingDate = updatingDate;
+        this.uploadDate = uploadDate;
+        this.changeDate = changeDate;
         this.journalId = journalId;
     }
 
@@ -189,20 +191,40 @@ public class Task implements Comparable<Task>, Serializable {
         return id;
     }
 
-    public Date getAddingDate() {
-        return addingDate;
+    public Date getuploadDate() {
+        return uploadDate;
     }
 
-    public void setAddingDate(Date addingDate) {
-        this.addingDate = addingDate;
+    public void setuploadDate(Date uploadDate) {
+        this.uploadDate = uploadDate;
     }
 
-    public Date getUpdatingDate() {
-        return updatingDate;
+    public Date getchangeDate() {
+        return changeDate;
     }
 
-    public void setUpdatingDate(Date updatingDate) {
-        this.updatingDate = updatingDate;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Date getUploadDate() {
+        return uploadDate;
+    }
+
+    public void setUploadDate(Date uploadDate) {
+        this.uploadDate = uploadDate;
+    }
+
+    public Date getChangeDate() {
+        return changeDate;
+    }
+
+    public void setChangeDate(Date changeDate) {
+        this.changeDate = changeDate;
+    }
+
+    public void setchangeDate(Date changeDate) {
+        this.changeDate = changeDate;
     }
 
     public int getJournalId() {
