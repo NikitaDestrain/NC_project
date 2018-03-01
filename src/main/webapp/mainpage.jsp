@@ -154,7 +154,7 @@
     </div>
     <div class="center">
         <%=
-        request.getParameter(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" : request.getParameter("message")
+        request.getParameter(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" : request.getParameter(ConstantsClass.MESSAGE_ATTRIBUTE)
         %>
     </div>
     <input type="hidden" name="action" value=<%=ConstantsClass.DO_CRUD_FROM_MAIN%>>

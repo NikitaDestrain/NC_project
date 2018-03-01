@@ -18,6 +18,7 @@ public class TaskFactory {
      * @return new object <b> Task </b> with generated id
      */
     public static Task createTask(String name, TaskStatus status, String description, Date notificationDate, Date plannedDate) {
-        return new Task(name, status, description, notificationDate, plannedDate, -1);
+        //return new Task(name, status, description, notificationDate, plannedDate, -1);
+        return null;
     }
 }

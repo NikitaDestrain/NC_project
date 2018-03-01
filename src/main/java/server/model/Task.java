@@ -8,7 +8,9 @@ import java.util.Date;
  * The class serves to store the object "task" with server.exceptions.properties
  * <b>name</b>, <b>status</b>, <b>description</b>, <b>notificationDate</b>,  <b>plannedDate</b>, <b>id</b>.
  */
-@XmlType(propOrder = {"id", "name", "description", "status", "notificationDate", "plannedDate"}, name = "task")
+@XmlType(propOrder = {"id", "name", "description", "status", "notificationDate", "plannedDate",
+        "addingDate", "updatingDate", "journalId"},
+        name = "task")
 @XmlRootElement(name = "task")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Task implements Comparable<Task>, Serializable {
@@ -37,6 +39,10 @@ public class Task implements Comparable<Task>, Serializable {
      */
     private int id;
 
+    private Date addingDate;
+    private Date updatingDate;
+    private int journalId;
+
     public Task() {
     }
 
@@ -51,13 +57,17 @@ public class Task implements Comparable<Task>, Serializable {
      * @param id
      */
 
-    public Task(String name, TaskStatus status, String description, Date notificationDate, Date plannedDate, int id) {
+    public Task(String name, TaskStatus status, String description, Date notificationDate,
+                Date plannedDate, Date addingDate, Date updatingDate, int journalId, int id) {
         this.name = name;
         this.status = status;
         this.description = description;
         this.notificationDate = notificationDate;
         this.plannedDate = plannedDate;
         this.id = id;
+        this.addingDate = addingDate;
+        this.updatingDate = updatingDate;
+        this.journalId = journalId;
     }
 
     /**
@@ -177,6 +187,30 @@ public class Task implements Comparable<Task>, Serializable {
      */
     public int getId() {
         return id;
+    }
+
+    public Date getAddingDate() {
+        return addingDate;
+    }
+
+    public void setAddingDate(Date addingDate) {
+        this.addingDate = addingDate;
+    }
+
+    public Date getUpdatingDate() {
+        return updatingDate;
+    }
+
+    public void setUpdatingDate(Date updatingDate) {
+        this.updatingDate = updatingDate;
+    }
+
+    public int getJournalId() {
+        return journalId;
+    }
+
+    public void setJournalId(int journalId) {
+        this.journalId = journalId;
     }
 
     //вернет -1 если у задачи переданной в кач-ве аргумента дата идет позже

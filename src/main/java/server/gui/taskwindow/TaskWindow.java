@@ -471,7 +471,7 @@ public class TaskWindow extends JFrame {
                 JOptionPane.showMessageDialog(this, "Task you intended to add has incorrect notification time!", "Error", JOptionPane.ERROR_MESSAGE);
                 return null;
             }
-            return TaskFactory.createTask(this.jTextField_name.getText().toString(), TaskStatus.Planned, this.jTextArea_descriprion.getText(), this.notificationDate, this.plannedDate);
+            //return TaskFactory.createTask(this.jTextField_name.getText().toString(), TaskStatus.Planned, this.jTextArea_descriprion.getText(), this.notificationDate, this.plannedDate);
         }
         return null;
     }
