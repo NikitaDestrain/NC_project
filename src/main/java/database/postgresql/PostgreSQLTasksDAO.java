@@ -1,4 +1,4 @@
-package database;
+package database.postgresql;
 
 import database.daointerfaces.TasksDAO;
 import server.model.Task;

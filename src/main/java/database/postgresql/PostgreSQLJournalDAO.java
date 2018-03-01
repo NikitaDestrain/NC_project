@@ -1,4 +1,4 @@
-package database;
+package database.postgresql;
 
 import database.daointerfaces.JournalDAO;
 import server.model.Journal;
