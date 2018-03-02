@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class TaskWindow extends JFrame {
-
+/*
     private MainForm owner;
     private Task loadTask;
     private JLabel jLabel_remind_for;
@@ -607,5 +607,5 @@ public class TaskWindow extends JFrame {
                         "You can not reschedule cancelled or completed task!",
                         "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
+    }*/
 }

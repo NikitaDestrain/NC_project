@@ -17,7 +17,7 @@ import java.util.Date;
 
 public class Test {
     public static void main(String[] args) throws JAXBException, IOException {
-        Task task1 = new Task("1", TaskStatus.Overdue, "desc1", new Date(), new Date(),
+        /*Task task1 = new Task("1", TaskStatus.Overdue, "desc1", new Date(), new Date(),
                 new Date(), new Date(), 0, 0);
         Task task2 = new Task("2", TaskStatus.Overdue, "desc2", new Date(), new Date(),
                 new Date(), new Date(), 1, 1);
@@ -44,6 +44,6 @@ public class Test {
         Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-        marshaller.marshal(container, new File("xsd/journals.xml"));
+        marshaller.marshal(container, new File("xsd/journals.xml"));*/
     }
 }

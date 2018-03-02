@@ -10,6 +10,10 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class ButtonPanel extends JPanel implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+    }
+    /*
     private JButton addTask;
     private JButton editTask;
     private JButton deleteTask;
@@ -93,6 +97,6 @@ public class ButtonPanel extends JPanel implements ActionListener {
         if (listener != null) {
             listener.setAction(action);
         }
-    }
+    }*/
 
 }

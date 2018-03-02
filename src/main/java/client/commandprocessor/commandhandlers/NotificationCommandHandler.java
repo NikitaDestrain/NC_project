@@ -20,8 +20,8 @@ public class NotificationCommandHandler implements CommandHandler {
             JOptionPane.showMessageDialog(null, "The configuration file is corrupted or missing!",
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-        NotificationForm notificationForm = new NotificationForm();
+        /*NotificationForm notificationForm = new NotificationForm();
         notificationForm.setTask((Task) command.getObject());
-        notificationForm.setVisible(true);
+        notificationForm.setVisible(true);*/
     }
 }

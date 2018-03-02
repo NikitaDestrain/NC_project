@@ -18,6 +18,7 @@ import java.awt.event.WindowEvent;
 import java.security.NoSuchAlgorithmException;
 
 public class AuthForm extends JFrame {
+    /*
     private JButton okButton;
     private JTextField loginField;
     private JPasswordField passwordField;
@@ -166,5 +167,5 @@ public class AuthForm extends JFrame {
             mainForm.setVisible(true);
             this.dispose();
         }
-    }
+    }*/
 }

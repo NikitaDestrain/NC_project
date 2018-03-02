@@ -12,7 +12,7 @@ public class SuccessfulAuthCommandHandler implements CommandHandler {
     @Override
     public synchronized void handle(Command command) {
         ClientNetworkFacade.getInstance().setSuccessAuthorization();
-        MainForm mainForm = MainForm.getInstance();
+        /*MainForm mainForm = MainForm.getInstance();
         if (mainForm == null)
             mainForm = new MainForm();
         mainForm.setUsername(UserContainer.getInstance().getUsername());
@@ -25,6 +25,6 @@ public class SuccessfulAuthCommandHandler implements CommandHandler {
         Journal journal = (Journal) command.getObject();
         if (journal != null)
             mainForm.setJournal(journal);
-        mainForm.setVisible(true);
+        mainForm.setVisible(true);*/
     }
 }

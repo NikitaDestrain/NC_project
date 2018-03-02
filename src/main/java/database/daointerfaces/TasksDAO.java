@@ -4,7 +4,7 @@ import server.model.Task;
 import server.model.TaskStatus;
 
 import java.sql.SQLException;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 public interface TasksDAO {

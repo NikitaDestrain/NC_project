@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class TaskWindow extends JFrame {
-
+/*
     private MainForm owner;
     private Controller controller;
     private Task loadTask;
@@ -578,5 +578,5 @@ public class TaskWindow extends JFrame {
             taskSet.setStatus(TaskStatus.Rescheduled);
             controller.editTask(taskSet);
         }
-    }
+    }*/
 }

@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class LaterForm extends JFrame {
+    /*
     private JLabel message;
     private ButtonLaterPanel buttonLaterPanel;
     private WriteLaterPanel writeLaterPanel;
@@ -189,5 +190,5 @@ public class LaterForm extends JFrame {
             dimension.height = 37;
             setPreferredSize(dimension);
         }
-    }
+    }*/
 }

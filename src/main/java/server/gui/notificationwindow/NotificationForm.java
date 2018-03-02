@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 public class NotificationForm extends JFrame {
+    /*
     private Task task;
     private ButtonPanel buttonPanel;
     private LabelPanel labelPanel;
@@ -107,5 +108,5 @@ public class NotificationForm extends JFrame {
                 dispose();
             });
         }
-    }
+    }*/
 }

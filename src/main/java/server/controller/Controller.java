@@ -17,11 +17,13 @@ import javax.swing.*;
 import java.io.DataOutputStream;
 import java.util.*;
 
+
+//todo разобраться со статусом при переносе, чтобы ставился нужный статус
 public class Controller {
     private Journal journal;
     private Notifier notifier;
     private static Controller instance;
-    private MainForm mainForm = MainForm.getInstance();
+    //private MainForm mainForm = MainForm.getInstance();
     private XMLSerializer serializer;
     private ServerCommandSender commandSender = ServerCommandSender.getInstance();
     private StreamContainer streamContainer = StreamContainer.getInstance();
@@ -119,9 +121,9 @@ public class Controller {
     }
 
     public void updateMainForm() {
-        mainForm = MainForm.getInstance();
+        /*mainForm = MainForm.getInstance();
         if (mainForm != null)
-            mainForm.updateJournal();
+            mainForm.updateJournal();*/
     }
 
     /**

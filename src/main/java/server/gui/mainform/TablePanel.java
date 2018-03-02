@@ -16,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 public class TablePanel extends JPanel {
+    /*
     private JTable table;
     private JournalTableModel tableModel;
     private JPopupMenu popupMenu;
@@ -112,7 +113,7 @@ public class TablePanel extends JPanel {
      *
      * @param taskList list with tasks
      */
-    public void setData(List<Task> taskList) {
+    /*public void setData(List<Task> taskList) {
         tableModel.setData(taskList);
         this.taskList = taskList;
     }
@@ -123,7 +124,7 @@ public class TablePanel extends JPanel {
      * @param listener
      */
 
-    public void setTableListener(TableListener listener) {
+    /*public void setTableListener(TableListener listener) {
         this.listener = listener;
     }
 
@@ -133,7 +134,7 @@ public class TablePanel extends JPanel {
      * @return
      */
 
-    public JTable getTable() {
+    /*public JTable getTable() {
         return table;
     }
 
@@ -141,7 +142,7 @@ public class TablePanel extends JPanel {
      * Refresh values of the table
      */
 
-    public void refresh() {
+    /*public void refresh() {
         tableModel.fireTableDataChanged();
-    }
+    }*/
 }

@@ -2,7 +2,7 @@ package server.model;
 
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * The class serves to store the object "task" with server.exceptions.properties
@@ -59,8 +59,8 @@ public class Task implements Comparable<Task>, Serializable {
      * @param id
      */
 
-    public Task(String name, TaskStatus status, String description, Date notificationDate,
-                Date plannedDate, Date uploadDate, Date changeDate, int journalId, int id) {
+    public Task(int id, String name, TaskStatus status, String description, Date notificationDate,
+                Date plannedDate, Date uploadDate, Date changeDate, int journalId) {
         this.name = name;
         this.status = status;
         this.description = description;
@@ -89,6 +89,8 @@ public class Task implements Comparable<Task>, Serializable {
         this.description = task.getDescription();
         this.notificationDate = task.getNotificationDate();
         this.plannedDate = task.getPlannedDate();
+        this.changeDate = task.getChangeDate();
+        this.uploadDate = task.getUploadDate();
     }
 
     /**

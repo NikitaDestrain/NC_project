@@ -18,6 +18,7 @@ import java.awt.event.WindowEvent;
 import java.security.NoSuchAlgorithmException;
 
 public class SignUpForm extends JFrame {
+    /*
     private JButton okButton;
     private JButton clearButton;
     private JTextField loginField;
@@ -186,5 +187,5 @@ public class SignUpForm extends JFrame {
             mainForm.setVisible(true);
             this.dispose();
         }
-    }
+    }*/
 }

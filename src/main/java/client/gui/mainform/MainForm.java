@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 public class MainForm extends JFrame {
+    /*
     private Journal journal;
     private TablePanel tablePanel;
     private ButtonPanel buttonPanel;
@@ -250,7 +251,7 @@ public class MainForm extends JFrame {
      *
      * @param journal object with tasks for representation
      */
-    public void setJournal(Journal journal) {
+    /*public void setJournal(Journal journal) {
         if (journal != null) { // который пришел с команды
             this.journal = journal;
             tablePanel.setData(this.journal.getTasks());
@@ -268,5 +269,5 @@ public class MainForm extends JFrame {
 
     public static MainForm getInstance() {
         return instance;
-    }
+    }*/
 }

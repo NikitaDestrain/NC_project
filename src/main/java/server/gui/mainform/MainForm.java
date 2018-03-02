@@ -15,6 +15,7 @@ import java.awt.event.*;
 import java.io.IOException;
 
 public class MainForm extends JFrame {
+    /*
     private JFileChooser fileChooser;
     private XMLSerializer journalBackup;
     private Journal journal;
@@ -262,7 +263,7 @@ public class MainForm extends JFrame {
      *
      * @param journal object with tasks for representation
      */
-    public void setJournal(Journal journal) {
+    /*public void setJournal(Journal journal) {
         if (journal != null) {
             Controller controller = Controller.getInstance();
             this.journal = controller.getJournal();
@@ -280,5 +281,5 @@ public class MainForm extends JFrame {
         tablePanel.setData(this.journal.getTasks());
         buttonPanel.setJtable((tablePanel.getTable()));
         tablePanel.refresh();
-    }
+    }*/
 }

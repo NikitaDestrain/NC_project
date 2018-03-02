@@ -1,6 +1,7 @@
 package database.postgresql;
 
 import database.daointerfaces.TasksDAO;
+import server.factories.TaskFactory;
 import server.model.Task;
 import server.model.TaskStatus;
 
@@ -9,7 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.Date;
+import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,33 +21,32 @@ public class PostgreSQLTasksDAO implements TasksDAO {
         this.connection = connection;
     }
 
-    //todo протестировать с датой, так как разные типы (возможно поменять все типы на один) + исправить скрипт добавить в таблицу статус задачи
     @Override
     public Task create(String name, TaskStatus status, String description, Date notificationDate, Date plannedDate, Integer journalId) throws SQLException {
-        String sql = "INSERT INTO \"Tasks\" (\"Name\", \"Description\", " +
+        String sql = "INSERT INTO \"Tasks\" (\"Name\", \"Status\", \"Description\", " +
                 "\"Planned_date\", \"Notification_date\", \"Upload_date\"," +
-                " \"Change_date\", \"Journal_id\") VALUES (? , ?, ?, ?, sysdate, sysdate, ?);";
+                " \"Change_date\", \"Journal_id\") VALUES (? , ?, ?, ?, ?, ?, ?, ?);";
         String sqlSelect = "SELECT * FROM \"Tasks\" WHERE \"Name\" = ?";
         Task task = new Task();
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             stm.setString(1, name);
-            stm.setString(2, description);
-            stm.setDate(3, (java.sql.Date) plannedDate);
-            stm.setDate(4, (java.sql.Date) notificationDate);
-            stm.setInt(5, journalId);
+            stm.setString(2, status.toString());
+            stm.setString(3, description);
+            stm.setDate(4, plannedDate);
+            stm.setDate(5, notificationDate);
+            stm.setDate(6, new Date(System.currentTimeMillis()));
+            stm.setDate(7, new Date(System.currentTimeMillis()));
+            stm.setInt(8, journalId);
             stm.executeUpdate();
             try (PreparedStatement stm2 = connection.prepareStatement(sqlSelect)) {
                 stm2.setString(1, name);
                 ResultSet rs2 = stm2.executeQuery();
                 rs2.next();
-                task.setId(rs2.getInt("Task_id"));
-                task.setName(rs2.getString("Name"));
-                task.setDescription(rs2.getString("Description"));
-                task.setPlannedDate(rs2.getDate("Planned_date"));
-                task.setNotificationDate(rs2.getDate("Notification_date"));
-                task.setUploadDate(rs2.getDate("Upload_date"));
-                task.setChangeDate(rs2.getDate("Change_date"));
-                task.setJournalId(rs2.getInt("Journal_id"));
+                task = TaskFactory.createTask(rs2.getInt("Task_id"), rs2.getString("Name"),
+                        rs2.getString("Status"), rs2.getString("Description"),
+                        rs2.getDate("Notification_date"), rs2.getDate("Planned_date"),
+                        rs2.getDate("Upload_date"), rs2.getDate("Change_date"),
+                        rs2.getInt("Journal_id"));
             }
         }
         return task;
@@ -55,37 +55,35 @@ public class PostgreSQLTasksDAO implements TasksDAO {
     @Override
     public Task read(int id) throws SQLException {
         String sql = "SELECT * FROM \"Tasks\" WHERE id = ?;";
-        Task task = new Task();
+        Task task = null;
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             stm.setInt(1, id);
             ResultSet rs = stm.executeQuery();
             rs.next();
-            task.setId(rs.getInt("Task_id"));
-            task.setName(rs.getString("Name"));
-            task.setDescription(rs.getString("Description"));
-            task.setPlannedDate(rs.getDate("Planned_date"));
-            task.setNotificationDate(rs.getDate("Notification_date"));
-            task.setUploadDate(rs.getDate("Upload_date"));
-            task.setChangeDate(rs.getDate("Change_date"));
-            task.setJournalId(rs.getInt("Journal_id"));
+            task = TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),
+                    rs.getString("Status"), rs.getString("Description"),
+                    rs.getDate("Notification_date"), rs.getDate("Planned_date"),
+                    rs.getDate("Upload_date"), rs.getDate("Change_date"),
+                    rs.getInt("Journal_id"));
         }
         return task;
     }
 
     @Override
     public void update(Task task) throws SQLException {
-        String sql = "UPDATE \"Tasks\" SET \"Name\" = ?, \"Description\" = ?, " +
+        String sql = "UPDATE \"Tasks\" SET \"Name\" = ?, \"Status\" = ?, \"Description\" = ?, " +
                 "\"Planned_date\" = ?, \"Notification_date\" = ?, \"Upload_date\" = ?, " +
                 "\"Change_date\" = ?, \"Journal_id\" = ? WHERE \"Task_id\" = ?";
         try (PreparedStatement stm = connection.prepareStatement(sql);) {
             stm.setString(1, task.getName());
-            stm.setString(2, task.getDescription());
-            stm.setDate(3, (java.sql.Date) task.getPlannedDate());
-            stm.setDate(4, (java.sql.Date) task.getNotificationDate());
-            stm.setDate(5, (java.sql.Date) task.getUploadDate());
-            stm.setDate(6, (java.sql.Date) task.getChangeDate());
-            stm.setInt(7, task.getJournalId());
-            stm.setInt(8, task.getId());
+            stm.setString(2, task.getStatus().toString());
+            stm.setString(3, task.getDescription());
+            stm.setDate(4, task.getPlannedDate());
+            stm.setDate(5, task.getNotificationDate());
+            stm.setDate(6, task.getUploadDate());
+            stm.setDate(7, new Date(System.currentTimeMillis()));
+            stm.setInt(8, task.getJournalId());
+            stm.setInt(9, task.getId());
             stm.executeUpdate();
         }
     }
@@ -102,19 +100,15 @@ public class PostgreSQLTasksDAO implements TasksDAO {
     @Override
     public List<Task> getAll() throws SQLException {
         List<Task> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Journal\"";
+        String sql = "SELECT * FROM \"Tasks\"";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                Task task = new Task();
-                task.setId(rs.getInt("Task_id"));
-                task.setName(rs.getString("Name"));
-                task.setDescription(rs.getString("Description"));
-                task.setPlannedDate(rs.getDate("Planned_date"));
-                task.setNotificationDate(rs.getDate("Notification_date"));
-                task.setUploadDate(rs.getDate("Upload_date"));
-                task.setChangeDate(rs.getDate("Change_date"));
-                task.setJournalId(rs.getInt("Journal_id"));
+                Task task = TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),
+                        rs.getString("Status"), rs.getString("Description"),
+                        rs.getDate("Notification_date"), rs.getDate("Planned_date"),
+                        rs.getDate("Upload_date"), rs.getDate("Change_date"),
+                        rs.getInt("Journal_id"));
                 list.add(task);
             }
         }

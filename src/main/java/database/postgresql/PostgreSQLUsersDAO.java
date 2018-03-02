@@ -3,10 +3,7 @@ package database.postgresql;
 import database.daointerfaces.UsersDAO;
 import server.model.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,13 +18,14 @@ public class PostgreSQLUsersDAO implements UsersDAO {
     @Override
     public User create(String login, String password, String role) throws SQLException {
         String sql = "INSERT INTO \"Users\" (\"Login\", \"Password\", \"Role\", " +
-                "\"Registration_date\") VALUES (? , ?, ?, sysdate);";
+                "\"Registration_date\") VALUES (? , ?, ?, ?);";
         String sqlSelect = "SELECT * FROM \"Users\" WHERE \"Login\" = ?";
         User user = new User();
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             stm.setString(1, login);
             stm.setString(2, password);
             stm.setString(3, role);
+            stm.setDate(4, new Date(System.currentTimeMillis()));
             stm.executeUpdate();
             try (PreparedStatement stm2 = connection.prepareStatement(sqlSelect)) {
                 stm2.setString(1, login);
@@ -84,7 +82,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
     @Override
     public List<User> getAll() throws SQLException {
         List<User> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Journal\"";
+        String sql = "SELECT * FROM \"Users\"";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {

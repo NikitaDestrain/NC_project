@@ -25,8 +25,7 @@ public class PostgreSQLDAOFactory implements DAOFactory {
 
     private PostgreSQLDAOFactory() {
         setConnection();
-        //todo доделать скрипт (для ALTER добавить проверку на существование)
-        //executeSqlStartScript();
+        executeSqlStartScript();
     }
 
     public static PostgreSQLDAOFactory getInstance() {
