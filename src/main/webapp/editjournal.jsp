@@ -55,9 +55,6 @@
                 case "save":
                     document.getElementById("hid").value = "Save";
                     break;
-                case "cancel":
-                    document.getElementById("hid").value = "Cancel";
-                    break;
                 case "back":
                     document.getElementById("hid").value = "backtomain";
                     break;
@@ -74,15 +71,18 @@
             <caption>Edit journal</caption>
             <tr>
                 <td class="align-right">Name</td>
-                <td class="align-right"><input type="text" name="name" value=""></td>
+                <td class="align-right">
+                    <input type="text" name="name" value="<%=request.getAttribute(ConstantsClass.NAME)==null?"":request.getAttribute(ConstantsClass.NAME)%>">
+                </td>
             </tr>
             <tr>
                 <td class="align-right">Description</td>
-                <td class="align-right"><input type="text" name="description" value=""></td>
+                <td class="align-right">
+                    <input type="text" name="description" value="<%=request.getAttribute(ConstantsClass.DESCRIPTION)==null?"":request.getAttribute(ConstantsClass.DESCRIPTION)%>">
+                </td>
             </tr>
             <tr>
-                <td><input type="button" id="save" value="Save" onclick="buttonClick(this)"></td>
-                <td><input type="button" id="cancel" value="Cancel" onclick="buttonClick(this)"></td>
+                <td colspan="2"><input type="button" id="save" value="Save" onclick="buttonClick(this)"></td>
             </tr>
         </table>
         <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>

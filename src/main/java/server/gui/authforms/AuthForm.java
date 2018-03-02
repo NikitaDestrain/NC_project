@@ -148,8 +148,8 @@ public class AuthForm extends JFrame {
                 || passwordField.getPassword().length == 0) {
             JOptionPane.showMessageDialog(null,
                     "Incorrect login or password!", "Error", JOptionPane.ERROR_MESSAGE);
-        } else if (!authorizer.isUserDataCorrect(new User(loginField.getText(),
-                password, -1))) {
+        } else if (!authorizer.isUserDataCorrect(loginField.getText(),
+                password)) {
             if (JOptionPane.showConfirmDialog(null,
                     "User with such login and password does not exists! Do you want to sign up now?",
                     "Error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {

@@ -191,18 +191,6 @@ public class Task implements Comparable<Task>, Serializable {
         return id;
     }
 
-    public Date getuploadDate() {
-        return uploadDate;
-    }
-
-    public void setuploadDate(Date uploadDate) {
-        this.uploadDate = uploadDate;
-    }
-
-    public Date getchangeDate() {
-        return changeDate;
-    }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -223,9 +211,6 @@ public class Task implements Comparable<Task>, Serializable {
         this.changeDate = changeDate;
     }
 
-    public void setchangeDate(Date changeDate) {
-        this.changeDate = changeDate;
-    }
 
     public int getJournalId() {
         return journalId;

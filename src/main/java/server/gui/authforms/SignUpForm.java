@@ -176,7 +176,7 @@ public class SignUpForm extends JFrame {
                         "Could not perform this action!",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-            authorizer.addUser(new User(login, password, -1));
+            authorizer.addUser(login, password);
             MainForm mainForm = MainForm.getInstance();
             if (mainForm == null) mainForm = new MainForm();
             mainForm.setUsername(login);

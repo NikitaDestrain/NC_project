@@ -122,14 +122,11 @@
                         document.getElementById("hid").value = "Delete";
                     }
                     break;
-                case "change":
-                    document.getElementById("hid").value = "changejournal";
-                    break;
                 case "back":
                     document.getElementById("hid").value = "backtomain";
                     break;
                 case "sort":
-                    document.forms[1].submit();
+                    document.getElementById("hid").value = "Sort";
                     break;
             }
             document.forms[0].submit();
@@ -137,20 +134,13 @@
     </script>
 </head>
 <body>
-<%
-    String message = null;
-    SelectResultBean bean = (SelectResultBean) request.getAttribute("bean");
-    Calendar calendar = Calendar.getInstance();
-    Task task1 = TaskFactory.createTask("name1", TaskStatus.Planned, "description1", calendar.getTime(), calendar.getTime(), calendar.getTime(), calendar.getTime(), 0);
-    Task task2 = TaskFactory.createTask("name2", TaskStatus.Overdue, "description2", calendar.getTime(), calendar.getTime(),calendar.getTime(), calendar.getTime(), 0);
-    LinkedList<Task> tasks = new LinkedList<>();
-    tasks.add(task1);
-    tasks.add(task2);
-    int count = 0;
-%>
 <div class="center">TASK SCHEDULER</div>
 <div align="center">
     <form method="post" id="mainform" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
+
+        <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
+        <input type="hidden" name="<%=ConstantsClass.ACTION%>" value=<%=ConstantsClass.DO_CRUD_FROM_TASKS%>>
+
         <table class="main-table">
             <caption>Tasks</caption>
             <tr>
@@ -160,79 +150,81 @@
                 <th class="main-th">Description</th>
                 <th class="main-th">Planned date</th>
                 <th class="main-th">Notification date</th>
+                <th class="main-th">Upload date</th>
+                <th class="main-th">Change date</th>
             </tr>
             <%
-                java.io.File f = (File) session.getAttribute("tasks");
-                Journal journal = null;
-                try {
-                    JAXBContext context = JAXBContext.newInstance(Journal.class);
-                    Unmarshaller unmarshaller = context.createUnmarshaller();
-                    journal = (Journal) unmarshaller.unmarshal(f);
-                } catch (JAXBException e) {
-                    e.printStackTrace();
-                }
-            %>
-            <%
+                Journal journal = (Journal) session.getAttribute(ConstantsClass.JOURNAL_PARAMETER);
+                int count = 0;
                 Calendar planned = Calendar.getInstance();
                 Calendar notif = Calendar.getInstance();
+                Calendar upload = Calendar.getInstance();
+                Calendar change = Calendar.getInstance();
                 String minutesPlanned;
                 String minutesNotif;
-                for (Task u : journal.getTasks()) {
-                    planned.setTime(u.getPlannedDate());
-                    notif.setTime(u.getNotificationDate());
-                    minutesPlanned = planned.get(Calendar.MINUTE) + "";
-                    minutesPlanned = minutesPlanned.length() == 1 ? "0" + minutesPlanned : minutesPlanned;
-                    minutesNotif = notif.get(Calendar.MINUTE) + "";
-                    minutesNotif = minutesNotif.length() == 1 ? "0" + minutesNotif : minutesNotif;
+                String minutesUpload;
+                String minutesChange;
+                if (journal != null && journal.getTasks() != null) {
+                    for (Task u : journal.getTasks()) {
+                        planned.setTime(u.getPlannedDate());
+                        notif.setTime(u.getNotificationDate());
+                        upload.setTime(u.getUploadDate());
+                        change.setTime(u.getChangeDate());
+                        minutesPlanned = planned.get(Calendar.MINUTE) + "";
+                        minutesPlanned = minutesPlanned.length() == 1 ? "0" + minutesPlanned : minutesPlanned;
+                        minutesNotif = notif.get(Calendar.MINUTE) + "";
+                        minutesNotif = minutesNotif.length() == 1 ? "0" + minutesNotif : minutesNotif;
+                        minutesUpload = planned.get(Calendar.MINUTE) + "";
+                        minutesUpload = minutesUpload.length() == 1 ? "0" + minutesUpload : minutesUpload;
+                        minutesChange = planned.get(Calendar.MINUTE) + "";
+                        minutesChange = minutesChange.length() == 1 ? "0" + minutesChange : minutesChange;
             %>
             <tr>
                 <td class="count">
                     <label>
                         <%=count%>
-                        <input type="radio" name="usernumber" value="<%=count++%>"/>
+                        <input type="radio" name="<%=ConstantsClass.USERNUMBER%>" value="<%=count++%>"/>
                     </label>
                 </td>
                 <td class="main-td">
                     <%=u.getStatus()%>
-                    <%--<x:out select="$task/status"/>--%>
                 </td>
                 <td class="main-td">
                     <%=u.getName()%>
-                        <%--<x:out select="$task/name"/>--%>
                 </td>
                 <td class="main-td">
-                    <%=u.getDescription()%>
-                    <%--<x:out select="$task/description"/>--%>
+                    <%=u.getDescription() == null ? "" : u.getDescription()%>
                 </td>
                 <td class="main-td">
                     <%=planned.get(Calendar.DAY_OF_MONTH) + "." + (planned.get(Calendar.MONTH) + 1) +
-                        "." + planned.get(Calendar.YEAR) + " " + planned.get(Calendar.HOUR_OF_DAY) + ":" + minutesPlanned%>
-                        <%--<x:out select="$task/plannedDate"/>--%>
+                            "." + planned.get(Calendar.YEAR) + " " + planned.get(Calendar.HOUR_OF_DAY) + ":" + minutesPlanned%>
                 </td>
                 <td class="main-td">
                     <%=notif.get(Calendar.DAY_OF_MONTH) + "." + (notif.get(Calendar.MONTH) + 1) +
-                        "." + notif.get(Calendar.YEAR) + " " + notif.get(Calendar.HOUR_OF_DAY) + ":" + minutesNotif%>
-                        <%--<x:out select="$task/notificationDate"/>--%>
+                            "." + notif.get(Calendar.YEAR) + " " + notif.get(Calendar.HOUR_OF_DAY) + ":" + minutesNotif%>
+                </td>
+                <td class="main-td">
+                    <%=upload.get(Calendar.DAY_OF_MONTH) + "." + (upload.get(Calendar.MONTH) + 1) +
+                            "." + upload.get(Calendar.YEAR) + " " + upload.get(Calendar.HOUR_OF_DAY) + ":" + minutesUpload%>
+                </td>
+                <td class="main-td">
+                    <%=change.get(Calendar.DAY_OF_MONTH) + "." + (change.get(Calendar.MONTH) + 1) +
+                            "." + change.get(Calendar.YEAR) + " " + change.get(Calendar.HOUR_OF_DAY) + ":" + minutesChange%>
                 </td>
             </tr>
+            <%
+                }
+            } else {
+            %>
+            <div align="center">
+                <strong>Incorrect journal!</strong>
+            </div>
             <%
                 }
             %>
         </table>
         <div align="center" class="button-div">
             <table class="button-table">
-                <tr>
-                    <label class="label">
-                        <td class="button-table-td">Journal #</td>
-                        <td class="button-table-td"><select name="<%=ConstantsClass.JOURNAL_NAME%>">
-                            <option value="Journal 1">Journal 1</option>
-                            <option value="Journal 2">Journal 2</option>
-                        </select></td>
-                    </label>
-                    <td>
-                        <input type="button" id="change" value="Change journal" onclick="buttonClick(this)">
-                    </td>
-                </tr>
                 <tr>
                     <td class="button-table-td"><input type="button" id="add" value="Add task"
                                                        onclick="buttonClick(this)"></td>
@@ -242,66 +234,67 @@
                                                        onclick="buttonClick(this)"></td>
                 </tr>
             </table>
-            <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
-        </div>
-        <div class="center">
-            <%=
-            request.getParameter("message") == null ? "" : request.getParameter("message")
-            %>
         </div>
         <div align="center">
-            <form method="get" action="<%=ConstantsClass.SERVLET_ADDRESS%>" id="sortform">
-                <input type="hidden" name="action" value="sortaction">
-                <table class="button-table">
-                    <tr>
-                        <td>Sort by: </td>
-                        <td>
-                            <select name="sortcolumn">
-                                <option value="status">
-                                    Status
-                                </option>
-                                <option value="name">
-                                    Name
-                                </option>
-                                <option value="description">
-                                    Description
-                                </option>
-                                <option name="planneddate">
-                                    Planned date
-                                </option>
-                                <option value="notifdate">
-                                    Notification date
-                                </option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Criteria:
-                        </td>
-                        <td>
-                            <select name="criteria">
-                                <option value="asc">
-                                    Ascending
-                                </option>
-                                <option value="desc">
-                                    Descending
-                                </option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="button-table-td" colspan="2">
-                            <input type="submit" id="sort" value="Sort">
-                        </td>
-                    </tr>
-                </table>
-            </form>
+            <table class="button-table">
+                <tr>
+                    <td>Sort by:</td>
+                    <td>
+                        <select name="<%=ConstantsClass.SORT_COLUMN%>">
+                            <option value="<%=ConstantsClass.STATUS%>">
+                                Status
+                            </option>
+                            <option value="<%=ConstantsClass.NAME%>">
+                                Name
+                            </option>
+                            <option value="<%=ConstantsClass.DESCRIPTION%>">
+                                Description
+                            </option>
+                            <option name="<%=ConstantsClass.PLANNED_DATE%>">
+                                Planned date
+                            </option>
+                            <option value="<%=ConstantsClass.NOTIFICATION_DATE%>">
+                                Notification date
+                            </option>
+                            <option value="<%=ConstantsClass.UPLOAD_DATE%>">
+                                Upload date
+                            </option>
+                            <option value="<%=ConstantsClass.CHANGE_DATE%>">
+                                Change date
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Criteria:
+                    </td>
+                    <td>
+                        <select name="<%=ConstantsClass.SORT_CRITERIA%>">
+                            <option value="<%=ConstantsClass.SORT_ASC%>">
+                                Ascending
+                            </option>
+                            <option value="<%=ConstantsClass.SORT_DESC%>">
+                                Descending
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="button-table-td" colspan="3">
+                        <input type="button" id="sort" value="Sort" onclick="buttonClick(this)">
+                    </td>
+                </tr>
+            </table>
         </div>
         <div class="center">
             <input type="button" id="back" value="Back to main page" onclick="buttonClick(this)">
         </div>
-        <input type="hidden" name="action" value=<%=ConstantsClass.DO_CRUD_FROM_TASKS%>>
+        <div class="center">
+            <%=
+            request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" : request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)
+            %>
+        </div>
     </form>
 </div>
 </body>

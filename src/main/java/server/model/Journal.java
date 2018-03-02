@@ -4,11 +4,12 @@ import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.*;
 
+@XmlType(propOrder = {"id", "name", "description", "userId", "tasks"}, name = "journal")
 @XmlRootElement(name = "journal")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({Task.class, TaskStatus.class})
 public class Journal implements Serializable {
-    @XmlElement(name = "task")
+    @XmlElement(name = "tasks")
     private Map<Integer, Task> tasks;
     @XmlElement(name = "id")
     private int id;
@@ -16,7 +17,7 @@ public class Journal implements Serializable {
     private String name;
     @XmlElement(name = "description")
     private String description;
-    @XmlElement(name = "description")
+    @XmlElement(name = "userId")
     private int userId;
 
     /**

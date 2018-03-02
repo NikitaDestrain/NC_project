@@ -46,6 +46,10 @@ public class ConstantsClass {
     public static final String ERROR_CLIENT_CONNECTION = "Something went wrong and one of clients has not connected successfully!";
     public static final String ERROR_SERVER_START = "Server could not start! Restart application!";
     public static final String ERROR_PROPERTY = "The configuration file is corrupt or missing!. The application will be closed!";
+    public static final String ERROR_XML_READING = "Could not read xml file properly!";
+
+    public static final String ERROR_CHOOSE_JOURNAL = "Choose a journal to perform an action!";
+    public static final String ERROR_CHOOSE_TASK = "Choose a task to perform an action!";
 
     // web constants
 
@@ -69,7 +73,7 @@ public class ConstantsClass {
     public static final String DO_CRUD_FROM_TASKS = "crudactiontasks";
     public static final String DO_ADD_JOURNAL = "addjournal";
     public static final String DO_EDIT_JOURNAL = "editjournal";
-    public static final String DO_BACK_TO_MAIN = "backtomain";
+    public static final String BACK_TO_MAIN = "backtomain";
 
     public static final String USERACTION = "useraction";
     public static final String USERNUMBER = "usernumber";
@@ -78,11 +82,28 @@ public class ConstantsClass {
     public static final String RESCHEDULE_TASK = "rescheduletask";
     public static final String CHANGE_JOURNAL = "changejournal";
     public static final String CHOOSE = "Choose";
+    public static final String SORT = "Sort";
+
+    public static final String SORT_COLUMN = "sortcolumn";
+    public static final String SORT_CRITERIA = "sortcriteria";
+    public static final String SORT_ASC = "asc";
+    public static final String SORT_DESC = "desc";
+    public static final String STATUS = "status";
+    public static final String PLANNED_DATE = "planneddate";
+    public static final String NOTIFICATION_DATE = "notificationdate";
+    public static final String UPLOAD_DATE = "uploaddate";
+    public static final String CHANGE_DATE = "changedate";
+    public static final String JOURNAL_NAMES = "journalnames";
 
     public static final String LOGIN_PARAMETER = "login";
     public static final String PASSWORD_PARAMETER = "password";
     public static final String REPEAT_PASSWORD_PARAMETER = "repeatpassword";
     public static final String MESSAGE_ATTRIBUTE = "message";
+    public static final String JOURNAL_CONTAINER_PARAMETER = "journalContainer";
+    public static final String JOURNAL_PARAMETER = "journal";
+
+    public static final String NAME = "name";
+    public static final String DESCRIPTION = "description";
 
     public static final String SAVE = "Save";
     public static final String OK = "OK";

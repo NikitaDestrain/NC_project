@@ -3,7 +3,8 @@ package testservlet;
 
 import auxiliaryclasses.ConstantsClass;
 import client.commandprocessor.PasswordEncoder;
-import server.controller.UserAuthorizer;
+import server.model.Journal;
+import server.model.JournalContainer;
 import testservlet.beans.SelectResultBean;
 import testservlet.beans.User;
 
@@ -17,13 +18,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-import java.io.BufferedReader;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.LinkedList;
+import java.util.List;
 
 @WebServlet(ConstantsClass.SERVLET_ADDRESS)
 public class Servlet extends HttpServlet {
@@ -31,7 +33,8 @@ public class Servlet extends HttpServlet {
     private DataSource dataSource;
     private LinkedList<User> users = new LinkedList<>();
     //private UserAuthorizer authorizer = UserAuthorizer.getInstance();
-    //private PasswordEncoder encoder = PasswordEncoder.getInstance();
+    private PasswordEncoder encoder = PasswordEncoder.getInstance();
+    private List<Journal> journals = new LinkedList<>();
 
     private static String URL = "jdbc:oracle:thin:@localhost:1521:XE";
     private static String LOGIN = "postgres";
@@ -61,257 +64,277 @@ public class Servlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        String action = req.getParameter(ConstantsClass.ACTION);
-        Account account = Account.getInstance(connection);
-        if (action == null) {
-            req.setAttribute("message", "email or password not recognized");
-            req.getRequestDispatcher("/login").forward(req, resp);
-        } else if (action.equals("toupdatepage")) {
-
-        } else if (action.equals("doupdate")) {
-            String email = req.getParameter("email");
-            String password = req.getParameter("password");
-            String id = req.getParameter("id");
-            int userId = Integer.parseInt(id);
-            User user = new User(userId, email, password);
-            if (user.isValidated()) {
-                try {
-                    PreparedStatement statement = connection.prepareStatement(UPDATE);
-                    statement.setString(1, user.getEmail());
-                    statement.setString(2, user.getPassword());
-                    statement.setInt(3, user.getId());
-                    statement.executeUpdate();
-
-                    //  users = fillList();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                req.setAttribute("bean", new SelectResultBean(users));
-                req.getRequestDispatcher("/select").forward(req, resp);
-            } else {
-                req.setAttribute("user", user);
-                req.getRequestDispatcher("/updatepage").forward(req, resp);
-            }
-        }
+        resp.getWriter().print("doGet");
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter(ConstantsClass.ACTION);
-        String useraction;
+        switch (action) {
+            case ConstantsClass.DO_SIGN_IN:
+                doSignIn(req, resp);
+                break;
+            case ConstantsClass.DO_SIGN_UP:
+                doSignUp(req, resp);
+                break;
+            case ConstantsClass.DO_ADD_TASK:
+                doAddTask(req, resp);
+                break;
+            case ConstantsClass.DO_EDIT_TASK:
+                doEditTask(req, resp);
+                break;
+            case ConstantsClass.DO_CRUD_FROM_TASKS:
+                doActionFromTasks(req, resp);
+                break;
+            case ConstantsClass.DO_CRUD_FROM_MAIN:
+                doActionFromMain(req, resp);
+                break;
+            case ConstantsClass.DO_ADD_JOURNAL:
+                doAddJournal(req, resp);
+                break;
+            case ConstantsClass.DO_EDIT_JOURNAL:
+                doEditJournal(req, resp);
+                break;
+        }
+    }
+
+    private JournalContainer parseJournalsXML() {
+        JournalContainer container;
+        try {
+            JAXBContext context = JAXBContext.newInstance(JournalContainer.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            container = (JournalContainer) unmarshaller.unmarshal(new File("C:\\Apps\\weblab\\weblab\\xsd\\journals.xml"));
+            journals = container.getJournals();
+        } catch (JAXBException e) {
+            return null;
+        }
+
+        return container;
+    }
+
+    private LinkedList<String> getJournalNames() {
+        LinkedList<String> names = new LinkedList<>();
+        for (Journal j : journals) {
+            names.add(j.getName());
+        }
+        return names;
+    }
+
+    /**
+     * (yyyy-[m]m-[d]d) hh:mm:ss
+     */
+
+    private void doActionFromTasks(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String useraction = req.getParameter(ConstantsClass.USERACTION);
         String usernumber;
+        switch (useraction) {
+            case ConstantsClass.ADD:
+                req.getRequestDispatcher(ConstantsClass.ADD_TASK_ADDRESS).forward(req, resp);
+                break;
+            case ConstantsClass.BACK_TO_MAIN:
+                req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                break;
+            case ConstantsClass.UPDATE:
+                usernumber = req.getParameter(ConstantsClass.USERNUMBER);
+                if (usernumber != null && !usernumber.equals("")) {
+                    int num = Integer.parseInt(usernumber);
+                    Journal journal = (Journal) req.getSession().getAttribute(ConstantsClass.JOURNAL_PARAMETER);
+
+                    req.setAttribute(ConstantsClass.NAME, journal.getTask(num).getName());
+                    req.setAttribute(ConstantsClass.DESCRIPTION, journal.getTask(num).getDescription());
+                    req.setAttribute(ConstantsClass.PLANNED_DATE, journal.getTask(num).getPlannedDate());
+                    req.setAttribute(ConstantsClass.NOTIFICATION_DATE, journal.getTask(num).getNotificationDate());
+                    req.setAttribute(ConstantsClass.UPLOAD_DATE, journal.getTask(num).getUploadDate());
+                    req.setAttribute(ConstantsClass.CHANGE_DATE, journal.getTask(num).getChangeDate());
+                    req.setAttribute(ConstantsClass.STATUS, journal.getTask(num).getStatus());
+
+                    req.setAttribute(ConstantsClass.JOURNAL_NAMES, getJournalNames());
+
+                    req.getRequestDispatcher(ConstantsClass.EDIT_TASK_ADDRESS).forward(req, resp);
+                } else {
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_JOURNAL);
+                    req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                }
+                break;
+            case ConstantsClass.DELETE:
+                usernumber = req.getParameter(ConstantsClass.USERNUMBER);
+                if (usernumber != null && !usernumber.equals("")) {
+                    int num = Integer.parseInt(usernumber);
+                    // todo вызов метода удаления
+                } else {
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_JOURNAL);
+                    req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                }
+        }
+    }
+
+    private void doAddTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String useraction = req.getParameter(ConstantsClass.USERACTION);
+        switch (useraction) {
+            case ConstantsClass.ADD:
+                resp.getWriter().print("Add");
+                break;
+            case ConstantsClass.CANCEL:
+                doActionFromTasks(req, resp);
+                break;
+            case ConstantsClass.BACK_TO_MAIN:
+                req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                break;
+        }
+    }
+
+    private void doEditTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String useraction = req.getParameter(ConstantsClass.USERACTION);
+        switch (useraction) {
+            case ConstantsClass.SAVE:
+                resp.getWriter().print("Save");
+                break;
+            case ConstantsClass.CANCEL:
+                doActionFromTasks(req, resp);
+                break;
+            case ConstantsClass.BACK_TO_MAIN:
+                req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                break;
+        }
+    }
+
+    private void doSignIn(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String useraction = req.getParameter(ConstantsClass.USERACTION);
         String login;
         String password;
-        String encryptedPassword = null;
-        switch (action) {
-            case ConstantsClass.SIGN_IN_ACTION:
-                useraction = req.getParameter(ConstantsClass.USERACTION);
-                switch (useraction) {
-                    case ConstantsClass.DO_SIGN_IN:
-                        login = req.getParameter(ConstantsClass.LOGIN_PARAMETER);
-                        password = req.getParameter(ConstantsClass.PASSWORD_PARAMETER);
+        String encryptedPassword;
+        switch (useraction) {
+            case ConstantsClass.DO_SIGN_IN:
+                login = req.getParameter(ConstantsClass.LOGIN_PARAMETER);
+                password = req.getParameter(ConstantsClass.PASSWORD_PARAMETER);
 //                        try {
 //                            encryptedPassword = encoder.encode(password);
 //                        } catch (NoSuchAlgorithmException e) {
 //                            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
 //                            req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
+//                            break;
 //                        }
 //
-//                        if (authorizer.isUserDataCorrect(new server.commandproccessor.User(login, encryptedPassword, -1))) {
+//                        if (authorizer.isUserDataCorrect(login, encryptedPassword)) {
 //                            req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
 //                        } else {
 //                            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_IN);
 //                            req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
 //                        }
 
-                        if (login.equals("1") && password.equals("1")) {
-//                            BufferedReader br = new BufferedReader(new FileReader("C:\\Apps\\weblab\\weblab\\xsd\\journal.xml"));
-//                            String line;
-//                            StringBuilder sb = new StringBuilder();
-//
-//                            while((line=br.readLine())!= null){
-//                                sb.append(line.trim());
-//                            }
+                if (login.equals("1") && password.equals("1")) {
+                    JournalContainer container = parseJournalsXML();
+                    if (container != null)
+                        req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, container);
+                    else
+                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_XML_READING);
 
-                            req.getSession().setAttribute("tasks", new File("C:\\Apps\\weblab\\weblab\\xsd\\journal.xml"));
-
-                            req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
-                        } else {
-                            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_IN);
-                            req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
-                        }
-                        break;
-                    case ConstantsClass.DO_SIGN_UP:
-                        req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
-                        break;
+                    req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                } else {
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_IN);
+                    req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
                 }
-                break;
-            case ConstantsClass.DO_SELECT:
-                doUpdateTasksPage(req, resp);
                 break;
             case ConstantsClass.DO_SIGN_UP:
-//                login = req.getParameter(ConstantsClass.LOGIN_PARAMETER);
-//                password = req.getParameter(ConstantsClass.PASSWORD_PARAMETER);
-//
-//                if (authorizer.isSuchLoginExists(login)) {
-//                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.EXIST_LOGIN);
-//                    req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
-//                } else {
-//                    try {
-//                        encryptedPassword = encoder.encode(password);
-//                    } catch (NoSuchAlgorithmException e) {
-//                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_UP);
-//                        req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
-//                    }
-//                    authorizer.addUser(new server.commandproccessor.User(login, password, -1));
-//                    req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
-//                }
-                break;
-            case ConstantsClass.DO_ADD_TASK:
-                useraction = req.getParameter(ConstantsClass.USERACTION);
-                switch (useraction) {
-                    case ConstantsClass.ADD:
-                        resp.getWriter().print("Add");
-                        break;
-                    case ConstantsClass.CANCEL:
-                        doUpdateTasksPage(req, resp);
-                        break;
-                    case ConstantsClass.DO_BACK_TO_MAIN:
-                        req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
-                        break;
-                }
-                break;
-            case ConstantsClass.DO_EDIT_TASK:
-                useraction = req.getParameter(ConstantsClass.USERACTION);
-                switch (useraction) {
-                    case ConstantsClass.SAVE:
-                        resp.getWriter().print("Save");
-                        break;
-                    case ConstantsClass.CANCEL:
-                        doUpdateTasksPage(req, resp);
-                        break;
-                    case ConstantsClass.DO_BACK_TO_MAIN:
-                        req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
-                        break;
-                }
-                break;
-            case ConstantsClass.DO_CRUD_FROM_TASKS:
-                useraction = req.getParameter(ConstantsClass.USERACTION);
-                usernumber = req.getParameter(ConstantsClass.USERNUMBER);
-                if (useraction.equals(ConstantsClass.ADD)) {
-                    req.getRequestDispatcher(ConstantsClass.ADD_TASK_ADDRESS).forward(req, resp);
-                } else if (useraction.equals(ConstantsClass.CHANGE_JOURNAL)) {
-                    resp.getWriter().print("Change Journal ");
-                    resp.getWriter().print(req.getParameter(ConstantsClass.JOURNAL_NAME));
-                } else if (useraction.equals(ConstantsClass.DO_BACK_TO_MAIN)) {
-                    req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
-                } else {
-                    if (usernumber != null) {
-                        User user = users.get(Integer.parseInt(usernumber));
-                        if (useraction.equals(ConstantsClass.UPDATE)) {
-                            req.setAttribute("user", user);
-                            req.getRequestDispatcher(ConstantsClass.EDIT_TASK_ADDRESS).forward(req, resp);
-                        } else if (useraction.equals(ConstantsClass.DELETE)) {
-                            int id = user.getId();
-                            try {
-                                PreparedStatement statement = connection.prepareStatement("DELETE from cracker.public.users WHERE id = " + id);
-                                statement.executeUpdate();
-                                doUpdateTasksPage(req, resp);
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    } else {
-                        req.setAttribute("bean", new SelectResultBean(users));
-                        req.setAttribute("message", "Choose task to perform an update/delete action");
-                        req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
-                    }
-                }
-                break;
-            case ConstantsClass.DO_CRUD_FROM_MAIN:
-                useraction = req.getParameter(ConstantsClass.USERACTION);
-                usernumber = req.getParameter(ConstantsClass.USERNUMBER);
-                if (useraction.equals(ConstantsClass.ADD)) {
-                    req.getRequestDispatcher(ConstantsClass.ADD_JOURNAL_ADDRESS).forward(req, resp);
-                } else if (useraction.equals(ConstantsClass.DO_BACK_TO_MAIN)) {
-                    req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
-                } else {
-                    if (usernumber != null) {
-                        //User user = users.get(Integer.parseInt(usernumber));
-                        switch (useraction) {
-                            case ConstantsClass.UPDATE:
-                                //req.setAttribute("user", user);
-                                req.getRequestDispatcher(ConstantsClass.EDIT_JOURNAL_ADDRESS).forward(req, resp);
-                                break;
-                            case ConstantsClass.DELETE:
-//                                int id = user.getId();
-//                            try {
-//                                PreparedStatement statement = connection.prepareStatement("DELETE from cracker.public.users WHERE id = " + id);
-//                                statement.executeUpdate();
-//                                doUpdateTasksPage(req, resp);
-//                            } catch (SQLException e) {
-//                                e.printStackTrace();
-//                            }
-                                resp.getWriter().print("delete");
-                                break;
-                            case ConstantsClass.CHOOSE:
-                                doUpdateTasksPage(req, resp);
-                                break;
-                        }
-                    } else {
-                        req.setAttribute("bean", new SelectResultBean(users));
-                        req.setAttribute("message", "Choose journal to perform an update/delete action");
-                        req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
-                    }
-                }
-                break;
-            case ConstantsClass.DO_ADD_JOURNAL:
-                useraction = req.getParameter(ConstantsClass.USERACTION);
-                switch (useraction) {
-                    case ConstantsClass.ADD:
-                        resp.getWriter().print("Add");
-                        break;
-                    case ConstantsClass.CANCEL:
-                        resp.getWriter().print("Cancel");
-                        break;
-                    case ConstantsClass.DO_BACK_TO_MAIN:
-                        req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
-                        break;
-                }
-                break;
-            case ConstantsClass.DO_EDIT_JOURNAL:
-                useraction = req.getParameter(ConstantsClass.USERACTION);
-                switch (useraction) {
-                    case ConstantsClass.SAVE:
-                        resp.getWriter().print("Save");
-                        break;
-                    case ConstantsClass.CANCEL:
-                        //doUpdateTasksPage(req, resp);
-                        resp.getWriter().print("Cancel");
-                        break;
-                    case ConstantsClass.DO_BACK_TO_MAIN:
-                        req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
-                        break;
-                }
+                req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
                 break;
         }
     }
 
-    private void doUpdateTasksPage(HttpServletRequest req, HttpServletResponse resp) {
-        LinkedList<User> users = new LinkedList<>();
-        try {
-            PreparedStatement statement = connection.prepareStatement(SELECT);
-            ResultSet set = statement.executeQuery();
-            while (set.next()) {
-                users.add(new User(set.getInt("id"), set.getString("email"),
-                        set.getString("password")));
-            }
-            this.users = users;
-            req.setAttribute("bean", new SelectResultBean(users));
-            req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
-        } catch (SQLException | IOException | ServletException e) {
-            e.printStackTrace();
+    private void doSignUp(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        String login = req.getParameter(ConstantsClass.LOGIN_PARAMETER);
+//        String password = req.getParameter(ConstantsClass.PASSWORD_PARAMETER);
+//        String encryptedPassword;
+//
+//        if (authorizer.isSuchLoginExists(login)) {
+//            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.EXIST_LOGIN);
+//            req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
+//        } else {
+//            try {
+//                encryptedPassword = encoder.encode(password);
+//            } catch (NoSuchAlgorithmException e) {
+//                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
+//                req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
+//            }
+//            authorizer.addUser(login, password);
+//
+//            JournalContainer container = parseJournalsXML();
+//            if (container != null)
+//                req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, container);
+//            else
+//                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_XML_READING);
+//
+//            req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+//        }
+    }
+
+    private void doAddJournal (HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+        String useraction = req.getParameter(ConstantsClass.USERACTION);
+        switch (useraction) {
+            case ConstantsClass.ADD:
+                resp.getWriter().print("Add");
+                // todo каст параметров и вызов метода добавления
+                break;
+            case ConstantsClass.BACK_TO_MAIN:
+                req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                break;
+        }
+    }
+
+    private void doEditJournal (HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String useraction = req.getParameter(ConstantsClass.USERACTION);
+        switch (useraction) {
+            case ConstantsClass.SAVE:
+                resp.getWriter().print("Save");
+                // todo каст параметров и вызов метода изменения
+                break;
+            case ConstantsClass.BACK_TO_MAIN:
+                req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                break;
+        }
+    }
+
+    private void doActionFromMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String useraction = req.getParameter(ConstantsClass.USERACTION);
+        String usernumber;
+        switch (useraction) {
+            case ConstantsClass.ADD:
+                req.getRequestDispatcher(ConstantsClass.ADD_JOURNAL_ADDRESS).forward(req, resp);
+                break;
+            case ConstantsClass.UPDATE:
+                usernumber = req.getParameter(ConstantsClass.USERNUMBER);
+                if (usernumber != null && !usernumber.equals("")) {
+                    int num = Integer.parseInt(usernumber);
+                    req.setAttribute(ConstantsClass.NAME, journals.get(num).getName());
+                    req.setAttribute(ConstantsClass.DESCRIPTION, journals.get(num).getDescription());
+                    req.getRequestDispatcher(ConstantsClass.EDIT_JOURNAL_ADDRESS).forward(req, resp);
+                } else {
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_JOURNAL);
+                    req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                }
+                break;
+            case ConstantsClass.DELETE:
+                usernumber = req.getParameter(ConstantsClass.USERNUMBER);
+                if (usernumber != null && !usernumber.equals("")) {
+                    int num = Integer.parseInt(usernumber);
+                    // todo вызов метода удаления журнала
+                } else {
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_JOURNAL);
+                    req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                }
+                break;
+            case ConstantsClass.CHOOSE:
+                usernumber = req.getParameter(ConstantsClass.USERNUMBER);
+                Journal journal = journals.get(Integer.parseInt(usernumber));
+                req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, journal);
+                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                break;
+            case ConstantsClass.SORT:
+                String sortColumn = req.getParameter(ConstantsClass.SORT_COLUMN);
+                String sortCriteria = req.getParameter(ConstantsClass.SORT_CRITERIA);
+                resp.getWriter().print("sort");
+                // todo вызов метода для сортировки, распарс нового журнала, отправка на страницу
+                break;
         }
     }
 }

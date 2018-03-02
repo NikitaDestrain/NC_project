@@ -3,7 +3,8 @@
 
 <%@ page import="auxiliaryclasses.ConstantsClass" %>
 <%@ page import="server.model.Journal" %>
-<%@ page import="java.util.LinkedList" %><%--
+<%@ page import="java.util.LinkedList" %>
+<%@ page import="server.model.JournalContainer" %><%--
   Created by IntelliJ IDEA.
   User: ывв
   Date: 26.02.2018
@@ -100,6 +101,9 @@
                 case "choose" :
                     document.getElementById("hid").value = "Choose";
                     break;
+                case "sort":
+                    document.getElementById("hid").value = "Sort";
+                    break;
             }
             document.forms[0].submit();
         }
@@ -114,7 +118,14 @@
     list.add(j2);
     int count = 0;
 %>
+<%
+    JournalContainer container = (JournalContainer) session.getAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER);
+%>
 <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
+
+    <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
+    <input type="hidden" name="<%=ConstantsClass.ACTION%>" value=<%=ConstantsClass.DO_CRUD_FROM_MAIN%>>
+
     <table class="main-table">
         <caption>Journals</caption>
         <tr>
@@ -123,13 +134,11 @@
             <th class="main-th">Description</th>
         </tr>
         <%
-            int id;
-            String email;
-            String password;
-            for (Journal j : list) {
+            if (container != null) {
         %>
-        <%--<x:parse xml="$[sessionScope.journals]" var="journals"/>--%>
-        <%--<x:forEach select="$journals/"--%>
+        <%
+            for (Journal j : container.getJournals()) {
+        %>
         <tr>
             <td class="count">
                 <label>
@@ -137,9 +146,9 @@
                     <input type="radio" name="<%=ConstantsClass.USERNUMBER%>" value="<%=count++%>"/>
                 </label>
             </td>
-            <td class="main-td"><%=j.getName()%>
+            <td class="main-td"><%=j.getName()==null?"":j.getName()%>
             </td>
-            <td class="main-td"><%=j.getDescription()%>
+            <td class="main-td"><%=j.getDescription()==null?"":j.getDescription()%>
             </td>
         </tr>
         <%
@@ -155,14 +164,61 @@
                 <td class="button-table-td"><input type="button" id="choose" value="Choose journal" onclick="buttonClick(this)"></td>
             </tr>
         </table>
-        <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
+    </div>
+    <div align="center">
+        <table class="button-table">
+            <tr>
+                <td>Sort by:</td>
+                <td>
+                    <select name="<%=ConstantsClass.SORT_COLUMN%>">
+                        <option value="name">
+                            Name
+                        </option>
+                        <option value="description">
+                            Description
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Criteria:
+                </td>
+                <td>
+                    <select name="<%=ConstantsClass.SORT_CRITERIA%>">
+                        <option value="<%=ConstantsClass.SORT_ASC%>">
+                            Ascending
+                        </option>
+                        <option value="<%=ConstantsClass.SORT_DESC%>">
+                            Descending
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="button-table-td" colspan="3">
+                    <input type="button" id="sort" value="Sort" onclick="buttonClick(this)">
+                </td>
+            </tr>
+        </table>
     </div>
     <div class="center">
         <%=
-        request.getParameter(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" : request.getParameter(ConstantsClass.MESSAGE_ATTRIBUTE)
+        request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" : request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)
         %>
     </div>
-    <input type="hidden" name="action" value=<%=ConstantsClass.DO_CRUD_FROM_MAIN%>>
 </form>
+<%
+    } else {
+%>
+<div class="center">
+    <%=
+    request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" :
+            request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)
+    %>
+</div>
+<%
+    }
+%>
 </body>
 </html>

@@ -24,7 +24,7 @@ public class SignUpCommandHandler implements CommandHandler {
                 MessageBox.getInstance().showMessage("Could not send unsuccessful sign up command!");
             }
         else {
-            authorizer.addUser(user);
+            authorizer.addUser(user.getLogin(), user.getPassword());
             try {
                 commandSender.sendSuccessfulAuthCommand(controller.getJournal(),
                         StreamContainer.getInstance().getDataOutputStream(((User) command.getObject()).getPort()));

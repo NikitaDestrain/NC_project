@@ -38,20 +38,20 @@ public class UserAuthorizer {
      * Checks if user with current login exists in user's map and its password equals password from parameter
      */
 
-    public boolean isUserDataCorrect(User user) {
-        if (user == null) return false;
-        return userData.containsKey(user.getLogin()) &&
-                userData.get(user.getLogin()).equals(user.getPassword());
+    public boolean isUserDataCorrect(String login, String password) {
+        if (login == null || password == null) return false;
+        return userData.containsKey(login) &&
+                userData.get(login).equals(password);
     }
 
     public boolean isSuchLoginExists(String login) {
         return userData.containsKey(login);
     }
 
-    public void addUser(User user) {
-        if (user != null) {
-            userData.put(user.getLogin(), user.getPassword());
-        }
+    public void addUser(String login, String password) {
+        if (login != null && password != null) {
+            userData.put(login, password);
+        } // todo вместо этого - вызов метода добавления нового юзера в бд и обновление мапы пользователей этого класса
     }
 
     public void writeUserData(String path) {

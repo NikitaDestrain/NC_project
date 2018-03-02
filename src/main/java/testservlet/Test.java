@@ -28,11 +28,13 @@ public class Test {
         journal1.addTask(task2);
         journal1.addTask(task3);
         journal1.setName("j1");
+        journal1.setId(0);
 
         Journal journal2 = new Journal();
         journal2.addTask(task2);
         journal2.addTask(task1);
         journal2.setDescription("j1Desc");
+        journal2.setId(1);
 
         JournalContainer container = new JournalContainer();
         container.addJournal(journal1);

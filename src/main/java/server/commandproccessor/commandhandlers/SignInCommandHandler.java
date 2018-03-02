@@ -15,7 +15,7 @@ public class SignInCommandHandler implements CommandHandler {
         ServerCommandSender commandSender = ServerCommandSender.getInstance();
         UserAuthorizer authorizer = UserAuthorizer.getInstance();
         Controller controller = Controller.getInstance();
-        if (authorizer.isUserDataCorrect(((User) command.getObject()))) {
+        if (authorizer.isUserDataCorrect(((User) command.getObject()).getLogin(), ((User) command.getObject()).getPassword())) {
             try {
                 commandSender.sendSuccessfulAuthCommand(controller.getJournal(),
                         StreamContainer.getInstance().getDataOutputStream(((User) command.getObject()).getPort()));

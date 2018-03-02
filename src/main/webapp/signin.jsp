@@ -40,7 +40,8 @@
     function buttonClick(x) {
         switch (x.id) {
             case "signin":
-                if (document.getElementById("login").value.length != 0 && document.getElementById("password").value.length != 0) {
+                if (document.getElementById("login").value.length != 0 &&
+                    document.getElementById("password").value.length != 0) {
                     document.getElementById("hid").value = "signin";
                     document.forms[0].submit();
                 }
@@ -63,7 +64,7 @@
     <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
 
         <input type="hidden" name="<%=ConstantsClass.USERACTION%>" id="hid"/>
-        <input type="hidden" name="action" value="<%=ConstantsClass.SIGN_IN_ACTION%>">
+        <input type="hidden" name="<%=ConstantsClass.ACTION%>" value="<%=ConstantsClass.DO_SIGN_IN%>">
 
         <table>
             <tr>
