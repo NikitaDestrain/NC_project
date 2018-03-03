@@ -122,7 +122,7 @@
                 case "delete":
                     var radios = document.getElementsByName("usernumber");
                     var checked = false;
-                    for (var i = 0; i< radios.length; i++) {
+                    for (var i = 0; i < radios.length; i++) {
                         if (radios[i].checked) {
                             checked = true;
                             break;
@@ -171,12 +171,12 @@
                 <th class="main-th">Change date</th>
             </tr>
             <%
-                Journal journal = (Journal) session.getAttribute(ConstantsClass.JOURNAL_PARAMETER);
                 int count = 0;
                 Calendar planned = Calendar.getInstance();
                 Calendar notif = Calendar.getInstance();
                 Calendar upload = Calendar.getInstance();
                 Calendar change = Calendar.getInstance();
+
                 String minutesPlanned;
                 String daysPlanned;
                 String monthsPlanned;
@@ -191,37 +191,39 @@
                 String daysChange;
                 String monthsChange;
 
-                if (journal != null && journal.getTasks() != null) {
-                    for (Task u : journal.getTasks()) {
-                        planned.setTime(u.getPlannedDate());
-                        notif.setTime(u.getNotificationDate());
-                        upload.setTime(u.getUploadDate());
-                        change.setTime(u.getChangeDate());
-
-                        minutesPlanned = planned.get(Calendar.MINUTE) + "";
-                        minutesPlanned = minutesPlanned.length() == 1 ? "0" + minutesPlanned : minutesPlanned;
-                        daysPlanned = planned.get(Calendar.DAY_OF_MONTH) + "";
-                        daysPlanned = daysPlanned.length() == 1 ? "0" + daysPlanned : daysPlanned;
-                        monthsPlanned = (planned.get(Calendar.MONTH)+1) + "";
-                        monthsPlanned = monthsPlanned.length() == 1 ? "0" + monthsPlanned : monthsPlanned;
-
-                        minutesNotif = notif.get(Calendar.MINUTE) + "";
-                        minutesNotif = minutesNotif.length() == 1 ? "0" + minutesNotif : minutesNotif;
-                        daysNotif = planned.get(Calendar.DAY_OF_MONTH) + "";
-                        daysNotif = daysNotif.length() == 1 ? "0" + daysNotif : daysNotif;
-                        monthsNotif = (planned.get(Calendar.MONTH)+1) + "";
-                        monthsNotif = monthsNotif.length() == 1 ? "0" + monthsNotif : monthsNotif;
-
-                        daysUpload = planned.get(Calendar.DAY_OF_MONTH) + "";
-                        daysUpload = daysUpload.length() == 1 ? "0" + daysUpload : daysUpload;
-                        monthsUpload = (planned.get(Calendar.MONTH)+1) + "";
-                        monthsUpload = monthsUpload.length() == 1 ? "0" + monthsUpload : monthsUpload;
-
-                        daysChange = planned.get(Calendar.DAY_OF_MONTH) + "";
-                        daysChange = daysChange.length() == 1 ? "0" + daysChange : daysChange;
-                        monthsChange = (planned.get(Calendar.MONTH)+1) + "";
-                        monthsChange = monthsChange.length() == 1 ? "0" + monthsChange : monthsChange;
             %>
+            <x:parse xml="${sessionScope.journal}" var="container"/>
+            <x:forEach select="$container/journal/tasks/entry" var="task">
+            <%--<%--%>
+                <%--planned.setTime(u.getPlannedDate());--%>
+                <%--notif.setTime(u.getNotificationDate());--%>
+                <%--upload.setTime(u.getUploadDate());--%>
+                <%--change.setTime(u.getChangeDate());--%>
+
+                <%--minutesPlanned = planned.get(Calendar.MINUTE) + "";--%>
+                <%--minutesPlanned = minutesPlanned.length() == 1 ? "0" + minutesPlanned : minutesPlanned;--%>
+                <%--daysPlanned = planned.get(Calendar.DAY_OF_MONTH) + "";--%>
+                <%--daysPlanned = daysPlanned.length() == 1 ? "0" + daysPlanned : daysPlanned;--%>
+                <%--monthsPlanned = (planned.get(Calendar.MONTH) + 1) + "";--%>
+                <%--monthsPlanned = monthsPlanned.length() == 1 ? "0" + monthsPlanned : monthsPlanned;--%>
+
+                <%--minutesNotif = notif.get(Calendar.MINUTE) + "";--%>
+                <%--minutesNotif = minutesNotif.length() == 1 ? "0" + minutesNotif : minutesNotif;--%>
+                <%--daysNotif = planned.get(Calendar.DAY_OF_MONTH) + "";--%>
+                <%--daysNotif = daysNotif.length() == 1 ? "0" + daysNotif : daysNotif;--%>
+                <%--monthsNotif = (planned.get(Calendar.MONTH) + 1) + "";--%>
+                <%--monthsNotif = monthsNotif.length() == 1 ? "0" + monthsNotif : monthsNotif;--%>
+
+                <%--daysUpload = planned.get(Calendar.DAY_OF_MONTH) + "";--%>
+                <%--daysUpload = daysUpload.length() == 1 ? "0" + daysUpload : daysUpload;--%>
+                <%--monthsUpload = (planned.get(Calendar.MONTH) + 1) + "";--%>
+                <%--monthsUpload = monthsUpload.length() == 1 ? "0" + monthsUpload : monthsUpload;--%>
+
+                <%--daysChange = planned.get(Calendar.DAY_OF_MONTH) + "";--%>
+                <%--daysChange = daysChange.length() == 1 ? "0" + daysChange : daysChange;--%>
+                <%--monthsChange = (planned.get(Calendar.MONTH) + 1) + "";--%>
+                <%--monthsChange = monthsChange.length() == 1 ? "0" + monthsChange : monthsChange;--%>
+            <%--%>--%>
             <tr>
                 <td class="count">
                     <label>
@@ -230,41 +232,36 @@
                     </label>
                 </td>
                 <td class="main-td">
-                    <%=u.getStatus()%>
+                    <x:out select="$task/value/status"/>
                 </td>
                 <td class="main-td">
-                    <%=u.getName()%>
+                    <x:out select="$task/value/name"/>
                 </td>
                 <td class="main-td">
-                    <%=u.getDescription() == null ? "" : u.getDescription()%>
+                    <x:out select="$task/value/description"/>
                 </td>
                 <td class="main-td">
-                    <%=daysPlanned + ":" + monthsPlanned +
-                            ":" + planned.get(Calendar.YEAR) + " " + planned.get(Calendar.HOUR_OF_DAY) + ":" + minutesPlanned%>
+                    <%--<%=daysPlanned + ":" + monthsPlanned +--%>
+                            <%--":" + planned.get(Calendar.YEAR) + " " + planned.get(Calendar.HOUR_OF_DAY) + ":" + minutesPlanned%>--%>
+                        <x:out select="$task/value/plannedDate"/>
                 </td>
                 <td class="main-td">
-                    <%=daysNotif + ":" + monthsNotif +
-                            ":" + notif.get(Calendar.YEAR) + " " + notif.get(Calendar.HOUR_OF_DAY) + ":" + minutesNotif%>
+                    <%--<%=daysNotif + ":" + monthsNotif +--%>
+                            <%--":" + notif.get(Calendar.YEAR) + " " + notif.get(Calendar.HOUR_OF_DAY) + ":" + minutesNotif%>--%>
+                        <x:out select="$task/value/notificationDate"/>
                 </td>
                 <td class="main-td">
-                    <%=daysUpload + ":" + monthsUpload +
-                            ":" + upload.get(Calendar.YEAR)%>
+                    <%--<%=daysUpload + ":" + monthsUpload +--%>
+                            <%--":" + upload.get(Calendar.YEAR)%>--%>
+                        <x:out select="$task/value/uploadDate"/>
                 </td>
                 <td class="main-td">
-                    <%=daysChange + ":" + monthsChange +
-                            ":" + change.get(Calendar.YEAR)%>
+                    <%--<%=daysChange + ":" + monthsChange +--%>
+                            <%--":" + change.get(Calendar.YEAR)%>--%>
+                        <x:out select="$task/value/changeDate"/>
                 </td>
             </tr>
-            <%
-                }
-            } else {
-            %>
-            <div align="center">
-                <strong>Incorrect journal!</strong>
-            </div>
-            <%
-                }
-            %>
+            </x:forEach>
         </table>
         <div align="center" class="button-div">
             <table class="button-table">
@@ -335,7 +332,27 @@
         </div>
         <div class="center">
             <%=
-            request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" : request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)
+                request
+                .
+                getAttribute
+                (
+                ConstantsClass
+                .
+                MESSAGE_ATTRIBUTE
+                )
+                ==
+                null
+                ?
+                ""
+                :
+                request
+                .
+                getAttribute
+                (
+                ConstantsClass
+                .
+                MESSAGE_ATTRIBUTE
+                )
             %>
         </div>
     </form>

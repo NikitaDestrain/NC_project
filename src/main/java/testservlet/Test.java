@@ -1,28 +1,24 @@
 package testservlet;
 
-import server.factories.TaskFactory;
-import server.model.Journal;
-import server.model.JournalContainer;
-import server.model.Task;
-import server.model.TaskStatus;
+import auxiliaryclasses.ConstantsClass;
+import client.properties.ParserProperties;
+import server.controllerforweb.XmlUtils;
+import server.model.*;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.Date;
+import java.sql.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Test {
     public static void main(String[] args) throws JAXBException, IOException {
-        /*Task task1 = new Task("1", TaskStatus.Overdue, "desc1", new Date(), new Date(),
-                new Date(), new Date(), 0, 0);
-        Task task2 = new Task("2", TaskStatus.Overdue, "desc2", new Date(), new Date(),
-                new Date(), new Date(), 1, 1);
-        Task task3 = new Task("3", TaskStatus.Overdue, "desc3", new Date(), new Date(),
-                new Date(), new Date(), 1, 1);
+        Task task1 = new Task(0, "1", TaskStatus.Overdue, "desc1", new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
+                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()), 0);
+        Task task2 = new Task(1, "2", TaskStatus.Overdue, "desc2", new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
+                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()), 1);
+        Task task3 = new Task(2, "3", TaskStatus.Overdue, "desc3", new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
+                new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()), 1);
         Journal journal1 = new Journal();
         journal1.addTask(task1);
         journal1.addTask(task2);
@@ -33,6 +29,7 @@ public class Test {
         Journal journal2 = new Journal();
         journal2.addTask(task2);
         journal2.addTask(task1);
+        journal2.setName("j2");
         journal2.setDescription("j1Desc");
         journal2.setId(1);
 
@@ -40,10 +37,28 @@ public class Test {
         container.addJournal(journal1);
         container.addJournal(journal2);
 
-        JAXBContext context = JAXBContext.newInstance(JournalContainer.class);
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        List<String> names = new LinkedList<>();
 
-        marshaller.marshal(container, new File("xsd/journals.xml"));*/
+        for (Journal j : container.getJournals()) {
+            names.add(j.getName());
+        }
+        JournalNamesContainer namesContainer = new JournalNamesContainer(names);
+
+        System.out.println();
+
+        try {
+            XmlUtils.getInstance().writeNames(namesContainer, "data/names.xml");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("done");
+
+        System.out.println(XmlUtils.getInstance().compareWithXsd(
+                "data/names.xml",
+                "data/names.xsd"
+        ));
+
+        System.out.println(XmlUtils.getInstance().parseXmlToString("data/names.xml"));
     }
 }

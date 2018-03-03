@@ -3,8 +3,10 @@ package testservlet;
 
 import auxiliaryclasses.ConstantsClass;
 import client.commandprocessor.PasswordEncoder;
+import server.controllerforweb.XmlUtils;
 import server.model.Journal;
 import server.model.JournalContainer;
+import server.model.JournalNamesContainer;
 import testservlet.beans.SelectResultBean;
 import testservlet.beans.User;
 
@@ -12,16 +14,13 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.LinkedList;
@@ -31,11 +30,12 @@ import java.util.List;
 public class Servlet extends HttpServlet {
     private Connection connection;
     private DataSource dataSource;
-    private LinkedList<User> users = new LinkedList<>();
-    //private UserAuthorizer authorizer = UserAuthorizer.getInstance();
     private PasswordEncoder encoder = PasswordEncoder.getInstance();
-    private JournalContainer container = parseJournalsXML();
-    private List<Journal> journals = container.getJournals();
+    private XmlUtils xmlUtils = XmlUtils.getInstance();
+
+    private JournalContainer container;
+
+    private List<Journal> journals;
 
     private static String URL = "jdbc:oracle:thin:@localhost:1521:XE";
     private static String LOGIN = "postgres";
@@ -51,6 +51,7 @@ public class Servlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {
+        ServletContext servletContext = config.getServletContext();
         try {
             Context context = new InitialContext();
             Context env = (Context) context.lookup("java:comp/env");
@@ -60,6 +61,14 @@ public class Servlet extends HttpServlet {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+
+        try {
+            String path = servletContext.getRealPath(ConstantsClass.JOURNALS_XML_FILE);
+            container = xmlUtils.readJournalContainer(path);
+            journals = container.getJournals();
+        } catch (Exception e) {
+
         }
     }
 
@@ -99,20 +108,6 @@ public class Servlet extends HttpServlet {
         }
     }
 
-    private JournalContainer parseJournalsXML() {
-        JournalContainer container;
-        try {
-            JAXBContext context = JAXBContext.newInstance(JournalContainer.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            container = (JournalContainer) unmarshaller.unmarshal(new File("C:\\Apps\\weblab\\weblab\\xsd\\journals.xml"));
-            journals = container.getJournals();
-        } catch (JAXBException e) {
-            return null;
-        }
-
-        return container;
-    }
-
     private LinkedList<String> getJournalNames() {
         LinkedList<String> names = new LinkedList<>();
         for (Journal j : journals) {
@@ -131,8 +126,22 @@ public class Servlet extends HttpServlet {
         String usernumber;
         switch (useraction) {
             case ConstantsClass.ADD:
-                req.setAttribute(ConstantsClass.JOURNAL_NAMES, getJournalNames());
-                req.getRequestDispatcher(ConstantsClass.ADD_TASK_ADDRESS).forward(req, resp);
+                try {
+                    xmlUtils.writeNames(new JournalNamesContainer(getJournalNames()),
+                            req.getServletContext().getRealPath(ConstantsClass.NAMES_XML_FILE));
+                } catch (Exception e) {
+                    resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
+                    break;
+                }
+                if (xmlUtils.compareWithXsd(
+                        req.getServletContext().getRealPath(ConstantsClass.NAMES_XML_FILE),
+                        req.getServletContext().getRealPath(ConstantsClass.NAMES_XSD_FILE))) {
+                    String s = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.NAMES_XML_FILE));
+                    req.setAttribute(ConstantsClass.JOURNAL_NAMES, s);
+                    req.getRequestDispatcher(ConstantsClass.ADD_TASK_ADDRESS).forward(req, resp);
+                } else {
+                    resp.getWriter().print(ConstantsClass.ERROR_XSD_COMPARING);
+                }
                 break;
             case ConstantsClass.BACK_TO_MAIN:
                 req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
@@ -226,7 +235,8 @@ public class Servlet extends HttpServlet {
 //                        }
 
                 if (login.equals("1") && password.equals("1")) {
-                    File xmlFile = new File("C:\\Apps\\weblab\\weblab\\xsd\\journals.xml");
+                    String xmlFile = xmlUtils.parseXmlToString(req.getServletContext().
+                            getRealPath(ConstantsClass.JOURNALS_XML_FILE));
                     if (xmlFile != null)
                         req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, xmlFile);
                     else
@@ -271,7 +281,7 @@ public class Servlet extends HttpServlet {
 //        }
     }
 
-    private void doAddJournal (HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+    private void doAddJournal(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String useraction = req.getParameter(ConstantsClass.USERACTION);
         switch (useraction) {
             case ConstantsClass.ADD:
@@ -297,7 +307,7 @@ public class Servlet extends HttpServlet {
         }
     }
 
-    private void doEditJournal (HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void doEditJournal(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String useraction = req.getParameter(ConstantsClass.USERACTION);
         switch (useraction) {
             case ConstantsClass.SAVE:
@@ -356,8 +366,20 @@ public class Servlet extends HttpServlet {
             case ConstantsClass.CHOOSE:
                 usernumber = req.getParameter(ConstantsClass.USERNUMBER);
                 Journal journal = journals.get(Integer.parseInt(usernumber));
-                req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, journal);
-                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                try {
+                    xmlUtils.writeJournal(journal, req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
+                } catch (Exception e) {
+                    resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
+                }
+                if (xmlUtils.compareWithXsd(
+                        req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE),
+                        req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XSD_FILE))) {
+                    String s = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
+                    req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, s);
+                    req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                } else {
+                    resp.getWriter().print(ConstantsClass.ERROR_XSD_COMPARING);
+                }
                 break;
             case ConstantsClass.SORT:
                 String sortColumn = req.getParameter(ConstantsClass.SORT_COLUMN);

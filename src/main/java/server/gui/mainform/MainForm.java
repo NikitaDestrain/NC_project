@@ -208,7 +208,7 @@ public class MainForm extends JFrame {
                 if (action == JOptionPane.OK_OPTION) {
                     try {
                         ServerProcessor.getInstance().finishServer();
-                        String path = ParserProperties.getInstance().getProperty(ConstantsClass.XML_FILE);
+                        String path = ParserProperties.getInstance().getProperty(ConstantsClass.JOURNAL_XML_FILE);
                         if (path == null)
                             JOptionPane.showMessageDialog(MainForm.this,
                                     "Incorrect file path",

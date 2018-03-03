@@ -24,10 +24,16 @@ public class ConstantsClass {
     public static final int DEFAULT_MAX_COUNT_CLIENTS = 20;
     public static final int DEFAULT_CURRENT_COUNT_CLIENTS = 0;
 
+    public static String PATH_TO_CONFIG = "data/config.properties";
     public static final String PATH_TO_JOURNAL = "PATH_TO_JOURNAL";
     public static final String MAIN_FORM_ICON = "MAIN_FORM_ICON";
     public static final String NOTIF_SOUND = "NOTIF_SOUND";
-    public static final String XML_FILE = "XML_FILE";
+    public static final String JOURNAL_XML_FILE = "/journal.xml";
+    public static final String NAMES_XML_FILE = "/names.xml";
+    public static final String NAMES_XSD_FILE = "/names.xsd";
+    public static final String JOURNALS_XML_FILE = "/journals.xml";
+    public static final String JOURNAL_XSD_FILE = "/journal.xsd";
+    public static final String JOURNALS_XSD_FILE = "/journals.xsd";
     public static final String USER_DATA = "USER_DATA";
 
     public static final int SERVER_TREATMENT = 1;
@@ -47,6 +53,8 @@ public class ConstantsClass {
     public static final String ERROR_SERVER_START = "Server could not start! Restart application!";
     public static final String ERROR_PROPERTY = "The configuration file is corrupt or missing!. The application will be closed!";
     public static final String ERROR_XML_READING = "Could not read xml file properly!";
+    public static final String ERROR_XML_WRITING = "Could not write xml file properly!";
+    public static final String ERROR_XSD_COMPARING = "Comparing xml with xsd was not successful!";
 
     public static final String ERROR_CHOOSE_JOURNAL = "Choose a journal to perform an action!";
     public static final String ERROR_CHOOSE_TASK = "Choose a task to perform an action!";
@@ -97,7 +105,7 @@ public class ConstantsClass {
     public static final String NOTIFICATION_DATE = "notificationdate";
     public static final String UPLOAD_DATE = "uploaddate";
     public static final String CHANGE_DATE = "changedate";
-    public static final String JOURNAL_NAMES = "journalnames";
+    public static final String JOURNAL_NAMES = "journalNames";
 
     public static final String LOGIN_PARAMETER = "login";
     public static final String PASSWORD_PARAMETER = "password";

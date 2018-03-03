@@ -134,21 +134,6 @@
 <%
     int count = 0;
 %>
-<%
-    java.io.File file = (File) session.getAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER);
-    JournalContainer container = null;
-    try {
-        JAXBContext context = JAXBContext.newInstance(JournalContainer.class);
-        Unmarshaller unmarshaller = context.createUnmarshaller();
-        container = (JournalContainer) unmarshaller.unmarshal(file);
-    } catch (JAXBException e) {
-%>
-<div class="center">
-    <strong>Could not parse xml file!</strong>
-</div>
-<%
-    }
-%>
 <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
 
     <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
@@ -161,12 +146,8 @@
             <th class="main-th">Name</th>
             <th class="main-th">Description</th>
         </tr>
-        <%
-            if (container != null) {
-        %>
-        <%
-            for (Journal j : container.getJournals()) {
-        %>
+        <x:parse xml="${sessionScope.journalContainer}" var="container"/>
+        <x:forEach select="$container/journalContainer/journals/entry" var="journal">
         <tr>
             <td class="count">
                 <label>
@@ -174,14 +155,14 @@
                     <input type="radio" name="<%=ConstantsClass.USERNUMBER%>" value="<%=count++%>"/>
                 </label>
             </td>
-            <td class="main-td"><%=j.getName() == null ? "" : j.getName()%>
+            <td class="main-td">
+                <x:out select="$journal/value/name"/>
             </td>
-            <td class="main-td"><%=j.getDescription() == null ? "" : j.getDescription()%>
+            <td class="main-td">
+                <x:out select="$journal/value/description"/>
             </td>
         </tr>
-        <%
-            }
-        %>
+        </x:forEach>
     </table>
     <div align="center" class="button-div">
         <table class="button-table">
@@ -240,12 +221,12 @@
         %>
     </div>
 </form>
-<%
-} else {
-%>
+<%--<%--%>
+<%--} else {--%>
+<%--%>--%>
 
-<%
-    }
-%>
+<%--<%--%>
+    <%--}--%>
+<%--%>--%>
 </body>
 </html>

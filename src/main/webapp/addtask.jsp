@@ -1,3 +1,4 @@
+<%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 <%@ page import="auxiliaryclasses.ConstantsClass" %>
 <%@ page import="java.util.LinkedList" %>
 <%@ page import="java.util.Calendar" %>
@@ -187,14 +188,10 @@
                 <td class="align-right">Journal name</td>
                 <td class="align-right">
                     <select name=<%=ConstantsClass.JOURNAL_NAME%>>
-                        <%
-                            LinkedList<String> names = (LinkedList<String>) request.getAttribute(ConstantsClass.JOURNAL_NAMES);
-                            for (String s : names) {
-                        %>
-                        <option value="<%=s%>"><%=s%></option>
-                        <%
-                            }
-                        %>
+                        <x:parse xml="${requestScope.journalNames}" var="names"/>
+                        <x:forEach select="$names/journalNames/name" var="name">
+                        <option value="<x:out select="$name"/>"><x:out select="$name"/></option>
+                        </x:forEach>
                     </select>
                 </td>
             </tr>

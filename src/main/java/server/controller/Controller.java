@@ -33,7 +33,7 @@ public class Controller {
         this.notifier = new Notifier();
         this.serializer = new XMLSerializer();
         try {
-            setJournal(serializer.readJournal(ParserProperties.getInstance().getProperty(ConstantsClass.XML_FILE)));
+            setJournal(serializer.readJournal(ParserProperties.getInstance().getProperty(ConstantsClass.JOURNAL_XML_FILE)));
         } catch (Exception e) {
             int action = JOptionPane.showConfirmDialog(null,
                     "Could not load journal from file!\nDo you want to create a new one?\n" +
