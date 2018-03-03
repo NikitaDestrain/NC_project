@@ -4,7 +4,11 @@
 <%@ page import="auxiliaryclasses.ConstantsClass" %>
 <%@ page import="server.model.Journal" %>
 <%@ page import="java.util.LinkedList" %>
-<%@ page import="server.model.JournalContainer" %><%--
+<%@ page import="server.model.JournalContainer" %>
+<%@ page import="java.io.File" %>
+<%@ page import="javax.xml.bind.JAXBContext" %>
+<%@ page import="javax.xml.bind.Unmarshaller" %>
+<%@ page import="javax.xml.bind.JAXBException" %><%--
   Created by IntelliJ IDEA.
   User: ывв
   Date: 26.02.2018
@@ -89,37 +93,61 @@
             switch (x.id) {
                 case "add":
                     document.getElementById("hid").value = "Add";
+                    document.forms[0].submit();
                     break;
                 case "edit":
                     document.getElementById("hid").value = "Update";
+                    document.forms[0].submit();
                     break;
                 case "delete":
-                    if (confirm("Are you sure want to delete this task?")) {
-                        document.getElementById("hid").value = "Delete";
+                    var radios = document.getElementsByName("usernumber");
+                    var checked = false;
+                    for (var i = 0; i< radios.length; i++) {
+                        if (radios[i].checked) {
+                            checked = true;
+                            break;
+                        }
+                    }
+                    if (checked) {
+                        if (confirm("Are you sure want to delete this task?")) {
+                            document.getElementById("hid").value = "Delete";
+                            document.forms[0].submit();
+                        }
+                    }
+                    else {
+                        alert("Select a journal to perform an action!")
                     }
                     break;
                 case "choose" :
                     document.getElementById("hid").value = "Choose";
+                    document.forms[0].submit();
                     break;
                 case "sort":
                     document.getElementById("hid").value = "Sort";
+                    document.forms[0].submit();
                     break;
             }
-            document.forms[0].submit();
         }
     </script>
 </head>
 <body>
 <%
-    Journal j1 = new Journal("journal1", "j1");
-    Journal j2 = new Journal("journal2", "j2");
-    LinkedList<Journal> list = new LinkedList<>();
-    list.add(j1);
-    list.add(j2);
     int count = 0;
 %>
 <%
-    JournalContainer container = (JournalContainer) session.getAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER);
+    java.io.File file = (File) session.getAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER);
+    JournalContainer container = null;
+    try {
+        JAXBContext context = JAXBContext.newInstance(JournalContainer.class);
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+        container = (JournalContainer) unmarshaller.unmarshal(file);
+    } catch (JAXBException e) {
+%>
+<div class="center">
+    <strong>Could not parse xml file!</strong>
+</div>
+<%
+    }
 %>
 <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
 
@@ -146,9 +174,9 @@
                     <input type="radio" name="<%=ConstantsClass.USERNUMBER%>" value="<%=count++%>"/>
                 </label>
             </td>
-            <td class="main-td"><%=j.getName()==null?"":j.getName()%>
+            <td class="main-td"><%=j.getName() == null ? "" : j.getName()%>
             </td>
-            <td class="main-td"><%=j.getDescription()==null?"":j.getDescription()%>
+            <td class="main-td"><%=j.getDescription() == null ? "" : j.getDescription()%>
             </td>
         </tr>
         <%
@@ -158,10 +186,14 @@
     <div align="center" class="button-div">
         <table class="button-table">
             <tr>
-                <td class="button-table-td"><input type="button" id="add" value="Add journal" onclick="buttonClick(this)"></td>
-                <td class="button-table-td"><input type="button" id="edit" value="Edit journal" onclick="buttonClick(this)"></td>
-                <td class="button-table-td"><input type="button" id="delete" value="Delete journal" onclick="buttonClick(this)"></td>
-                <td class="button-table-td"><input type="button" id="choose" value="Choose journal" onclick="buttonClick(this)"></td>
+                <td class="button-table-td"><input type="button" id="add" value="Add journal"
+                                                   onclick="buttonClick(this)"></td>
+                <td class="button-table-td"><input type="button" id="edit" value="Edit journal"
+                                                   onclick="buttonClick(this)"></td>
+                <td class="button-table-td"><input type="button" id="delete" value="Delete journal"
+                                                   onclick="buttonClick(this)"></td>
+                <td class="button-table-td"><input type="button" id="choose" value="Choose journal"
+                                                   onclick="buttonClick(this)"></td>
             </tr>
         </table>
     </div>
@@ -209,14 +241,9 @@
     </div>
 </form>
 <%
-    } else {
+} else {
 %>
-<div class="center">
-    <%=
-    request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" :
-            request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)
-    %>
-</div>
+
 <%
     }
 %>

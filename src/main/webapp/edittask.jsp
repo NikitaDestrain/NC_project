@@ -62,8 +62,11 @@
                 case "save":
                     document.getElementById("hid").value = "Save";
                     break;
-                case "back":
+                case "backtomain":
                     document.getElementById("hid").value = "backtomain";
+                    break;
+                case "backtotasks":
+                    document.getElementById("hid").value = "backtotasks";
                     break;
             }
             document.forms[0].submit();
@@ -217,7 +220,10 @@
             </tr>
         </table>
         <div class="center">
-            <input type="button" id="back" value="Back to main page" onclick="buttonClick(this)">
+            <input type="button" id="backtotasks" value="Back to tasks page" onclick="buttonClick(this)">
+        </div>
+        <div class="center">
+            <input type="button" id="backtomain" value="Back to main page" onclick="buttonClick(this)">
         </div>
     </form>
 </div>

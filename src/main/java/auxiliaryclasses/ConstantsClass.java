@@ -51,6 +51,9 @@ public class ConstantsClass {
     public static final String ERROR_CHOOSE_JOURNAL = "Choose a journal to perform an action!";
     public static final String ERROR_CHOOSE_TASK = "Choose a task to perform an action!";
 
+    public static final String ERROR_JOURNAL_NAME_LENGTH = "The length of the \"name\" field \n should be less than 18 characters";
+    public static final String ERROR_JOURNAL_DESCRIPTION_LENGTH = "The length of the \"description\" field \n should be less than 80 characters";
+
     // web constants
 
     public static final String SERVLET_ADDRESS = "/taskscheduler";
@@ -74,6 +77,7 @@ public class ConstantsClass {
     public static final String DO_ADD_JOURNAL = "addjournal";
     public static final String DO_EDIT_JOURNAL = "editjournal";
     public static final String BACK_TO_MAIN = "backtomain";
+    public static final String BACK_TO_TASKS = "backtotasks";
 
     public static final String USERACTION = "useraction";
     public static final String USERNUMBER = "usernumber";

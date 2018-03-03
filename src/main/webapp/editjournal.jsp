@@ -72,13 +72,15 @@
             <tr>
                 <td class="align-right">Name</td>
                 <td class="align-right">
-                    <input type="text" name="name" value="<%=request.getAttribute(ConstantsClass.NAME)==null?"":request.getAttribute(ConstantsClass.NAME)%>">
+                    <input type="text" name="name"
+                           value="<%=request.getAttribute(ConstantsClass.NAME)==null?"":request.getAttribute(ConstantsClass.NAME)%>">
                 </td>
             </tr>
             <tr>
                 <td class="align-right">Description</td>
                 <td class="align-right">
-                    <input type="text" name="description" value="<%=request.getAttribute(ConstantsClass.DESCRIPTION)==null?"":request.getAttribute(ConstantsClass.DESCRIPTION)%>">
+                    <input type="text" name="description"
+                           value="<%=request.getAttribute(ConstantsClass.DESCRIPTION)==null?"":request.getAttribute(ConstantsClass.DESCRIPTION)%>">
                 </td>
             </tr>
             <tr>

@@ -34,7 +34,8 @@ public class Servlet extends HttpServlet {
     private LinkedList<User> users = new LinkedList<>();
     //private UserAuthorizer authorizer = UserAuthorizer.getInstance();
     private PasswordEncoder encoder = PasswordEncoder.getInstance();
-    private List<Journal> journals = new LinkedList<>();
+    private JournalContainer container = parseJournalsXML();
+    private List<Journal> journals = container.getJournals();
 
     private static String URL = "jdbc:oracle:thin:@localhost:1521:XE";
     private static String LOGIN = "postgres";
@@ -124,11 +125,13 @@ public class Servlet extends HttpServlet {
      * (yyyy-[m]m-[d]d) hh:mm:ss
      */
 
-    private void doActionFromTasks(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void doActionFromTasks(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         String useraction = req.getParameter(ConstantsClass.USERACTION);
         String usernumber;
         switch (useraction) {
             case ConstantsClass.ADD:
+                req.setAttribute(ConstantsClass.JOURNAL_NAMES, getJournalNames());
                 req.getRequestDispatcher(ConstantsClass.ADD_TASK_ADDRESS).forward(req, resp);
                 break;
             case ConstantsClass.BACK_TO_MAIN:
@@ -174,11 +177,11 @@ public class Servlet extends HttpServlet {
             case ConstantsClass.ADD:
                 resp.getWriter().print("Add");
                 break;
-            case ConstantsClass.CANCEL:
-                doActionFromTasks(req, resp);
-                break;
             case ConstantsClass.BACK_TO_MAIN:
                 req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                break;
+            case ConstantsClass.BACK_TO_TASKS:
+                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
                 break;
         }
     }
@@ -189,11 +192,11 @@ public class Servlet extends HttpServlet {
             case ConstantsClass.SAVE:
                 resp.getWriter().print("Save");
                 break;
-            case ConstantsClass.CANCEL:
-                doActionFromTasks(req, resp);
-                break;
             case ConstantsClass.BACK_TO_MAIN:
                 req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                break;
+            case ConstantsClass.BACK_TO_TASKS:
+                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
                 break;
         }
     }
@@ -223,9 +226,9 @@ public class Servlet extends HttpServlet {
 //                        }
 
                 if (login.equals("1") && password.equals("1")) {
-                    JournalContainer container = parseJournalsXML();
-                    if (container != null)
-                        req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, container);
+                    File xmlFile = new File("C:\\Apps\\weblab\\weblab\\xsd\\journals.xml");
+                    if (xmlFile != null)
+                        req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, xmlFile);
                     else
                         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_XML_READING);
 
@@ -272,8 +275,21 @@ public class Servlet extends HttpServlet {
         String useraction = req.getParameter(ConstantsClass.USERACTION);
         switch (useraction) {
             case ConstantsClass.ADD:
-                resp.getWriter().print("Add");
-                // todo каст параметров и вызов метода добавления
+                String name = req.getParameter(ConstantsClass.NAME);
+                String description = req.getParameter(ConstantsClass.DESCRIPTION);
+
+                if (name.length() > 18) {
+                    req.setAttribute(ConstantsClass.NAME, name);
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_JOURNAL_NAME_LENGTH);
+                    req.getRequestDispatcher(ConstantsClass.ADD_JOURNAL_ADDRESS).forward(req, resp);
+                } else if (description.length() > 80) {
+                    req.setAttribute(ConstantsClass.DESCRIPTION, description);
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_JOURNAL_DESCRIPTION_LENGTH);
+                    req.getRequestDispatcher(ConstantsClass.ADD_JOURNAL_ADDRESS).forward(req, resp);
+                } else {
+                    resp.getWriter().print("Add");
+                    // todo вызов метода добавления
+                }
                 break;
             case ConstantsClass.BACK_TO_MAIN:
                 req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
@@ -285,8 +301,21 @@ public class Servlet extends HttpServlet {
         String useraction = req.getParameter(ConstantsClass.USERACTION);
         switch (useraction) {
             case ConstantsClass.SAVE:
-                resp.getWriter().print("Save");
-                // todo каст параметров и вызов метода изменения
+                String name = req.getParameter(ConstantsClass.NAME);
+                String description = req.getParameter(ConstantsClass.DESCRIPTION);
+
+                if (name.length() > 18) {
+                    req.setAttribute(ConstantsClass.NAME, name);
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_JOURNAL_NAME_LENGTH);
+                    req.getRequestDispatcher(ConstantsClass.EDIT_JOURNAL_ADDRESS).forward(req, resp);
+                } else if (description.length() > 80) {
+                    req.setAttribute(ConstantsClass.DESCRIPTION, description);
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_JOURNAL_DESCRIPTION_LENGTH);
+                    req.getRequestDispatcher(ConstantsClass.EDIT_JOURNAL_ADDRESS).forward(req, resp);
+                } else {
+                    resp.getWriter().print("Save");
+                    // todo вызов метода изменения
+                }
                 break;
             case ConstantsClass.BACK_TO_MAIN:
                 req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
@@ -294,7 +323,8 @@ public class Servlet extends HttpServlet {
         }
     }
 
-    private void doActionFromMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void doActionFromMain(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         String useraction = req.getParameter(ConstantsClass.USERACTION);
         String usernumber;
         switch (useraction) {

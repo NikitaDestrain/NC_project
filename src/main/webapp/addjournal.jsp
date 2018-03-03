@@ -66,15 +66,16 @@
             <tr>
                 <td class="align-right">Name</td>
                 <td class="align-right">
-                    <input type="text" name="name"
+                    <input type="text" name="<%=ConstantsClass.NAME%>"
                            value="<%=request.getAttribute(ConstantsClass.NAME)==null?"":request.getAttribute(ConstantsClass.NAME)%>">
                 </td>
             </tr>
             <tr>
                 <td class="align-right">Description</td>
                 <td class="align-right">
-                    <input type="text" name="description"
-                           value="<%=request.getAttribute(ConstantsClass.DESCRIPTION)==null?"":request.getAttribute(ConstantsClass.DESCRIPTION)%>">
+                    <input type="text" name="<%=ConstantsClass.DESCRIPTION%>"
+                           value="<%=request.getAttribute(ConstantsClass.DESCRIPTION)==null?"":
+                           request.getAttribute(ConstantsClass.DESCRIPTION)%>">
                 </td>
             </tr>
             <tr>
@@ -84,6 +85,11 @@
         <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
         <div class="center">
             <input type="button" id="back" value="Back to main page" onclick="buttonClick(this)">
+        </div>
+        <div align="center">
+            <%=
+            request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)==null?"":request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)
+            %>
         </div>
     </form>
 </div>

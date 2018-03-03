@@ -1,6 +1,7 @@
 package server.model;
 
 import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.sql.Date;
 
@@ -29,18 +30,22 @@ public class Task implements Comparable<Task>, Serializable {
     /**
      * Notification date
      */
+    @XmlJavaTypeAdapter(SQLDataAdapter.class)
     private Date notificationDate;
     /**
      * Planned date
      */
+    @XmlJavaTypeAdapter(SQLDataAdapter.class)
     private Date plannedDate;
     /**
      * unique identificator
      */
     private int id;
 
+    @XmlJavaTypeAdapter(SQLDataAdapter.class)
     private Date uploadDate;
 
+    @XmlJavaTypeAdapter(SQLDataAdapter.class)
     private Date changeDate;
 
     private int journalId;

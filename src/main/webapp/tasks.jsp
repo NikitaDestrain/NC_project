@@ -113,23 +113,40 @@
             switch (x.id) {
                 case "add":
                     document.getElementById("hid").value = "Add";
+                    document.forms[0].submit();
                     break;
                 case "edit":
                     document.getElementById("hid").value = "Update";
+                    document.forms[0].submit();
                     break;
                 case "delete":
-                    if (confirm("Are you sure want to delete this task?")) {
-                        document.getElementById("hid").value = "Delete";
+                    var radios = document.getElementsByName("usernumber");
+                    var checked = false;
+                    for (var i = 0; i< radios.length; i++) {
+                        if (radios[i].checked) {
+                            checked = true;
+                            break;
+                        }
+                    }
+                    if (checked) {
+                        if (confirm("Are you sure want to delete this task?")) {
+                            document.getElementById("hid").value = "Delete";
+                            document.forms[0].submit();
+                        }
+                    }
+                    else {
+                        alert("Select a journal to perform an action!")
                     }
                     break;
                 case "back":
                     document.getElementById("hid").value = "backtomain";
+                    document.forms[0].submit();
                     break;
                 case "sort":
                     document.getElementById("hid").value = "Sort";
+                    document.forms[0].submit();
                     break;
             }
-            document.forms[0].submit();
         }
     </script>
 </head>
@@ -161,23 +178,49 @@
                 Calendar upload = Calendar.getInstance();
                 Calendar change = Calendar.getInstance();
                 String minutesPlanned;
+                String daysPlanned;
+                String monthsPlanned;
+
                 String minutesNotif;
-                String minutesUpload;
-                String minutesChange;
+                String daysNotif;
+                String monthsNotif;
+
+                String daysUpload;
+                String monthsUpload;
+
+                String daysChange;
+                String monthsChange;
+
                 if (journal != null && journal.getTasks() != null) {
                     for (Task u : journal.getTasks()) {
                         planned.setTime(u.getPlannedDate());
                         notif.setTime(u.getNotificationDate());
                         upload.setTime(u.getUploadDate());
                         change.setTime(u.getChangeDate());
+
                         minutesPlanned = planned.get(Calendar.MINUTE) + "";
                         minutesPlanned = minutesPlanned.length() == 1 ? "0" + minutesPlanned : minutesPlanned;
+                        daysPlanned = planned.get(Calendar.DAY_OF_MONTH) + "";
+                        daysPlanned = daysPlanned.length() == 1 ? "0" + daysPlanned : daysPlanned;
+                        monthsPlanned = (planned.get(Calendar.MONTH)+1) + "";
+                        monthsPlanned = monthsPlanned.length() == 1 ? "0" + monthsPlanned : monthsPlanned;
+
                         minutesNotif = notif.get(Calendar.MINUTE) + "";
                         minutesNotif = minutesNotif.length() == 1 ? "0" + minutesNotif : minutesNotif;
-                        minutesUpload = planned.get(Calendar.MINUTE) + "";
-                        minutesUpload = minutesUpload.length() == 1 ? "0" + minutesUpload : minutesUpload;
-                        minutesChange = planned.get(Calendar.MINUTE) + "";
-                        minutesChange = minutesChange.length() == 1 ? "0" + minutesChange : minutesChange;
+                        daysNotif = planned.get(Calendar.DAY_OF_MONTH) + "";
+                        daysNotif = daysNotif.length() == 1 ? "0" + daysNotif : daysNotif;
+                        monthsNotif = (planned.get(Calendar.MONTH)+1) + "";
+                        monthsNotif = monthsNotif.length() == 1 ? "0" + monthsNotif : monthsNotif;
+
+                        daysUpload = planned.get(Calendar.DAY_OF_MONTH) + "";
+                        daysUpload = daysUpload.length() == 1 ? "0" + daysUpload : daysUpload;
+                        monthsUpload = (planned.get(Calendar.MONTH)+1) + "";
+                        monthsUpload = monthsUpload.length() == 1 ? "0" + monthsUpload : monthsUpload;
+
+                        daysChange = planned.get(Calendar.DAY_OF_MONTH) + "";
+                        daysChange = daysChange.length() == 1 ? "0" + daysChange : daysChange;
+                        monthsChange = (planned.get(Calendar.MONTH)+1) + "";
+                        monthsChange = monthsChange.length() == 1 ? "0" + monthsChange : monthsChange;
             %>
             <tr>
                 <td class="count">
@@ -196,20 +239,20 @@
                     <%=u.getDescription() == null ? "" : u.getDescription()%>
                 </td>
                 <td class="main-td">
-                    <%=planned.get(Calendar.DAY_OF_MONTH) + "." + (planned.get(Calendar.MONTH) + 1) +
-                            "." + planned.get(Calendar.YEAR) + " " + planned.get(Calendar.HOUR_OF_DAY) + ":" + minutesPlanned%>
+                    <%=daysPlanned + ":" + monthsPlanned +
+                            ":" + planned.get(Calendar.YEAR) + " " + planned.get(Calendar.HOUR_OF_DAY) + ":" + minutesPlanned%>
                 </td>
                 <td class="main-td">
-                    <%=notif.get(Calendar.DAY_OF_MONTH) + "." + (notif.get(Calendar.MONTH) + 1) +
-                            "." + notif.get(Calendar.YEAR) + " " + notif.get(Calendar.HOUR_OF_DAY) + ":" + minutesNotif%>
+                    <%=daysNotif + ":" + monthsNotif +
+                            ":" + notif.get(Calendar.YEAR) + " " + notif.get(Calendar.HOUR_OF_DAY) + ":" + minutesNotif%>
                 </td>
                 <td class="main-td">
-                    <%=upload.get(Calendar.DAY_OF_MONTH) + "." + (upload.get(Calendar.MONTH) + 1) +
-                            "." + upload.get(Calendar.YEAR) + " " + upload.get(Calendar.HOUR_OF_DAY) + ":" + minutesUpload%>
+                    <%=daysUpload + ":" + monthsUpload +
+                            ":" + upload.get(Calendar.YEAR)%>
                 </td>
                 <td class="main-td">
-                    <%=change.get(Calendar.DAY_OF_MONTH) + "." + (change.get(Calendar.MONTH) + 1) +
-                            "." + change.get(Calendar.YEAR) + " " + change.get(Calendar.HOUR_OF_DAY) + ":" + minutesChange%>
+                    <%=daysChange + ":" + monthsChange +
+                            ":" + change.get(Calendar.YEAR)%>
                 </td>
             </tr>
             <%
