@@ -1,21 +1,6 @@
 package server.gui.authforms;
 
-import client.commandprocessor.PasswordEncoder;
-import server.network.ServerProcessor;
-import server.commandproccessor.User;
-import server.controller.Controller;
-import server.controller.IDGenerator;
-import server.controller.UserAuthorizer;
-import server.gui.mainform.MainForm;
-import server.model.Journal;
-
 import javax.swing.*;
-import javax.swing.border.Border;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.security.NoSuchAlgorithmException;
 
 public class SignUpForm extends JFrame {
     /*

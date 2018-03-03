@@ -17,4 +17,8 @@ public interface TasksDAO {
     public void delete(int id) throws SQLException;
 
     public List<Task> getAll() throws SQLException;
+
+    public List<Task> getSortedByAscending(String column) throws SQLException;
+
+    public List<Task> getSortedByDescending(String column) throws SQLException;
 }

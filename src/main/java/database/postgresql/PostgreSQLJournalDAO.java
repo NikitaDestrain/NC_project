@@ -1,6 +1,7 @@
 package database.postgresql;
 
 import database.daointerfaces.JournalDAO;
+import server.factories.JournalFactory;
 import server.model.Journal;
 
 import java.sql.Connection;
@@ -22,7 +23,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     public Journal create(String name, String description, Integer userId) throws SQLException {
         String sql = "INSERT INTO \"Journal\" (\"Name\", \"Description\", \"User_id\") VALUES (? , ?, ?);";
         String sqlSelect = "SELECT * FROM \"Journal\" WHERE \"Name\" = ?";
-        Journal journal = new Journal();
+        Journal journal;
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             stm.setString(1, name);
             stm.setString(2, description);
@@ -32,10 +33,8 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                 stm2.setString(1, name);
                 ResultSet rs2 = stm2.executeQuery();
                 rs2.next();
-                journal.setId(rs2.getInt("Journal_id"));
-                journal.setName(rs2.getString("Name"));
-                journal.setDescription(rs2.getString("Description"));
-                journal.setUserId(rs2.getInt("User_id"));
+                journal = JournalFactory.createJournal(rs2.getInt("Journal_id"), rs2.getString("Name"),
+                        rs2.getString("Description"), rs2.getInt("User_id"));
             }
         }
         return journal;
@@ -44,15 +43,13 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     @Override
     public Journal read(int id) throws SQLException {
         String sql = "SELECT * FROM \"Journal\" WHERE id = ?;";
-        Journal journal = new Journal();
+        Journal journal;
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             stm.setInt(1, id);
             ResultSet rs = stm.executeQuery();
             rs.next();
-            journal.setId(rs.getInt("Journal_id"));
-            journal.setName(rs.getString("Name"));
-            journal.setDescription(rs.getString("Description"));
-            journal.setUserId(rs.getInt("User_id"));
+            journal = JournalFactory.createJournal(rs.getInt("Journal_id"), rs.getString("Name"),
+                    rs.getString("Description"), rs.getInt("User_id"));
         }
         return journal;
     }
@@ -86,12 +83,38 @@ public class PostgreSQLJournalDAO implements JournalDAO {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                Journal journal = new Journal();
-                journal.setId(rs.getInt("Journal_id"));
-                journal.setName(rs.getString("Name"));
-                journal.setDescription(rs.getString("Description"));
-                journal.setUserId(rs.getInt("User_id"));
-                list.add(journal);
+                list.add(JournalFactory.createJournal(rs.getInt("Journal_id"), rs.getString("Name"),
+                        rs.getString("Description"), rs.getInt("User_id")));
+            }
+        }
+        return Collections.unmodifiableList(list);
+    }
+
+    @Override
+    public List<Journal> getSortedByAscending(String column) throws SQLException {
+        List<Journal> list = new LinkedList<>();
+        String sql = "SELECT * FROM \"Tasks\" ORDER BY ? ASC";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, column);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                list.add(JournalFactory.createJournal(rs.getInt("Journal_id"), rs.getString("Name"),
+                        rs.getString("Description"), rs.getInt("User_id")));
+            }
+        }
+        return Collections.unmodifiableList(list);
+    }
+
+    @Override
+    public List<Journal> getSortedByDescending(String column) throws SQLException {
+        List<Journal> list = new LinkedList<>();
+        String sql = "SELECT * FROM \"Tasks\" ORDER BY ? DESC";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, column);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                list.add(JournalFactory.createJournal(rs.getInt("Journal_id"), rs.getString("Name"),
+                        rs.getString("Description"), rs.getInt("User_id")));
             }
         }
         return Collections.unmodifiableList(list);

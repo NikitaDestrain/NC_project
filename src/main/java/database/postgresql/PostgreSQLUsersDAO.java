@@ -1,6 +1,7 @@
 package database.postgresql;
 
 import database.daointerfaces.UsersDAO;
+import server.factories.UserFactory;
 import server.model.User;
 
 import java.sql.*;
@@ -20,7 +21,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
         String sql = "INSERT INTO \"Users\" (\"Login\", \"Password\", \"Role\", " +
                 "\"Registration_date\") VALUES (? , ?, ?, ?);";
         String sqlSelect = "SELECT * FROM \"Users\" WHERE \"Login\" = ?";
-        User user = new User();
+        User user;
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             stm.setString(1, login);
             stm.setString(2, password);
@@ -31,11 +32,8 @@ public class PostgreSQLUsersDAO implements UsersDAO {
                 stm2.setString(1, login);
                 ResultSet rs2 = stm2.executeQuery();
                 rs2.next();
-                user.setId(rs2.getInt("User_id"));
-                user.setLogin(rs2.getString("Login"));
-                user.setPassword(rs2.getString("Password"));
-                user.setRole(rs2.getString("Role"));
-                user.setRegistrationDate(rs2.getDate("Registration_date"));
+                user = UserFactory.createUser(rs2.getInt("User_id"), rs2.getString("Login"),
+                        rs2.getString("Password"), rs2.getString("Role"), rs2.getDate("Registration_date"));
             }
         }
         return user;
@@ -44,16 +42,13 @@ public class PostgreSQLUsersDAO implements UsersDAO {
     @Override
     public User read(int id) throws SQLException {
         String sql = "SELECT * FROM \"Users\" WHERE id = ?;";
-        User user = new User();
+        User user;
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             stm.setInt(1, id);
             ResultSet rs = stm.executeQuery();
             rs.next();
-            user.setId(rs.getInt("User_id"));
-            user.setLogin(rs.getString("Login"));
-            user.setPassword(rs.getString("Password"));
-            user.setRole(rs.getString("Role"));
-            user.setRegistrationDate(rs.getDate("Registration_date"));
+            user = UserFactory.createUser(rs.getInt("User_id"), rs.getString("Login"),
+                    rs.getString("Password"), rs.getString("Role"), rs.getDate("Registration_date"));
         }
         return user;
     }
@@ -86,13 +81,38 @@ public class PostgreSQLUsersDAO implements UsersDAO {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                User user = new User();
-                user.setId(rs.getInt("User_id"));
-                user.setLogin(rs.getString("Login"));
-                user.setPassword(rs.getString("Password"));
-                user.setRole(rs.getString("Role"));
-                user.setRegistrationDate(rs.getDate("Registration_date"));
-                list.add(user);
+                list.add(UserFactory.createUser(rs.getInt("User_id"), rs.getString("Login"),
+                        rs.getString("Password"), rs.getString("Role"), rs.getDate("Registration_date")));
+            }
+        }
+        return Collections.unmodifiableList(list);
+    }
+
+    @Override
+    public List<User> getSortedByAscending(String column) throws SQLException {
+        List<User> list = new LinkedList<>();
+        String sql = "SELECT * FROM \"Users\" ORDER BY ? ASC";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, column);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                list.add(UserFactory.createUser(rs.getInt("User_id"), rs.getString("Login"),
+                        rs.getString("Password"), rs.getString("Role"), rs.getDate("Registration_date")));
+            }
+        }
+        return Collections.unmodifiableList(list);
+    }
+
+    @Override
+    public List<User> getSortedByDescending(String column) throws SQLException {
+        List<User> list = new LinkedList<>();
+        String sql = "SELECT * FROM \"Users\" ORDER BY ? DESC";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, column);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                list.add(UserFactory.createUser(rs.getInt("User_id"), rs.getString("Login"),
+                        rs.getString("Password"), rs.getString("Role"), rs.getDate("Registration_date")));
             }
         }
         return Collections.unmodifiableList(list);

@@ -15,4 +15,8 @@ public interface JournalDAO {
     public void delete(int id) throws SQLException;
 
     public List<Journal> getAll() throws SQLException;
+
+    public List<Journal> getSortedByAscending(String column) throws SQLException;
+
+    public List<Journal> getSortedByDescending(String column) throws SQLException;
 }

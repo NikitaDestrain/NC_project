@@ -34,5 +34,4 @@ public class JournalContainer {
         LinkedList<Journal> list = new LinkedList<>(journals.values());
         return Collections.unmodifiableList(list);
     }
-
 }

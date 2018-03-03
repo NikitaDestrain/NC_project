@@ -6,7 +6,6 @@ import server.commandproccessor.ServerCommandSender;
 import server.exceptions.IncorrectTaskStatusConversionException;
 import server.exceptions.UnsuccessfulCommandActionException;
 import server.gui.ServerTreatmentDetector;
-import server.gui.mainform.MainForm;
 import server.model.Journal;
 import server.model.Task;
 import server.model.TaskStatus;
@@ -17,8 +16,6 @@ import javax.swing.*;
 import java.io.DataOutputStream;
 import java.util.*;
 
-
-//todo разобраться со статусом при переносе, чтобы ставился нужный статус
 public class Controller {
     private Journal journal;
     private Notifier notifier;

@@ -1,20 +1,6 @@
 package server.gui.notificationwindow;
 
-import auxiliaryclasses.ConstantsClass;
-import server.commandproccessor.ServerCommandSender;
-import server.exceptions.IllegalPropertyException;
-import server.controller.Controller;
-import server.exceptions.IncorrectTaskStatusConversionException;
-import server.gui.ServerTreatmentDetector;
-import server.gui.mainform.MainForm;
-import server.model.Task;
-import server.network.ServerNetworkFacade;
-import server.properties.ParserProperties;
-
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.io.IOException;
 
 public class NotificationForm extends JFrame {
     /*

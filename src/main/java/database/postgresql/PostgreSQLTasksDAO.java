@@ -27,7 +27,7 @@ public class PostgreSQLTasksDAO implements TasksDAO {
                 "\"Planned_date\", \"Notification_date\", \"Upload_date\"," +
                 " \"Change_date\", \"Journal_id\") VALUES (? , ?, ?, ?, ?, ?, ?, ?);";
         String sqlSelect = "SELECT * FROM \"Tasks\" WHERE \"Name\" = ?";
-        Task task = new Task();
+        Task task;
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             stm.setString(1, name);
             stm.setString(2, status.toString());
@@ -55,7 +55,7 @@ public class PostgreSQLTasksDAO implements TasksDAO {
     @Override
     public Task read(int id) throws SQLException {
         String sql = "SELECT * FROM \"Tasks\" WHERE id = ?;";
-        Task task = null;
+        Task task;
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             stm.setInt(1, id);
             ResultSet rs = stm.executeQuery();
@@ -104,12 +104,47 @@ public class PostgreSQLTasksDAO implements TasksDAO {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                Task task = TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),
+                list.add(TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),
                         rs.getString("Status"), rs.getString("Description"),
                         rs.getDate("Notification_date"), rs.getDate("Planned_date"),
                         rs.getDate("Upload_date"), rs.getDate("Change_date"),
-                        rs.getInt("Journal_id"));
-                list.add(task);
+                        rs.getInt("Journal_id")));
+            }
+        }
+        return Collections.unmodifiableList(list);
+    }
+
+    @Override
+    public List<Task> getSortedByAscending(String column) throws SQLException {
+        List<Task> list = new LinkedList<>();
+        String sql = "SELECT * FROM \"Tasks\" ORDER BY ? ASC";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, column);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                list.add(TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),
+                        rs.getString("Status"), rs.getString("Description"),
+                        rs.getDate("Notification_date"), rs.getDate("Planned_date"),
+                        rs.getDate("Upload_date"), rs.getDate("Change_date"),
+                        rs.getInt("Journal_id")));
+            }
+        }
+        return Collections.unmodifiableList(list);
+    }
+
+    @Override
+    public List<Task> getSortedByDescending(String column) throws SQLException {
+        List<Task> list = new LinkedList<>();
+        String sql = "SELECT * FROM \"Tasks\" ORDER BY ? DESC";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, column);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                list.add(TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),
+                        rs.getString("Status"), rs.getString("Description"),
+                        rs.getDate("Notification_date"), rs.getDate("Planned_date"),
+                        rs.getDate("Upload_date"), rs.getDate("Change_date"),
+                        rs.getInt("Journal_id")));
             }
         }
         return Collections.unmodifiableList(list);

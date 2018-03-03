@@ -15,4 +15,8 @@ public interface UsersDAO {
     public void delete(int id) throws SQLException;
 
     public List<User> getAll() throws SQLException;
+
+    public List<User> getSortedByAscending(String column) throws SQLException;
+
+    public List<User> getSortedByDescending(String column) throws SQLException;
 }

@@ -2,7 +2,7 @@ package server.model;
 
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Object with information user
@@ -26,10 +26,12 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String login, String password, String role) {
+    public User(int id, String login, String password, String role, Date registrationDate) {
+        this.id = id;
         this.login = login;
         this.password = password;
         this.role = role;
+        this.registrationDate = registrationDate;
         this.registrationDate = new Date(System.currentTimeMillis());
     }
 

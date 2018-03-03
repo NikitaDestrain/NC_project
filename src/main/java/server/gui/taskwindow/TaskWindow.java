@@ -1,21 +1,6 @@
 package server.gui.taskwindow;
 
-import auxiliaryclasses.MessageBox;
-import server.controller.Controller;
-import server.exceptions.IncorrectTaskStatusConversionException;
-import server.factories.TaskFactory;
-import server.gui.ServerTreatmentDetector;
-import server.gui.mainform.MainForm;
-import server.model.Task;
-import server.model.TaskStatus;
-
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 public class TaskWindow extends JFrame {
 /*

@@ -1,13 +1,9 @@
 package server.commandproccessor.commandhandlers;
 
 import server.commandproccessor.Command;
-import server.commandproccessor.ServerCommandSender;
 import server.controller.Controller;
 import server.factories.TaskFactory;
 import server.model.Task;
-import server.network.ServerNetworkFacade;
-
-import java.io.DataOutputStream;
 
 public class AddCommandHandler implements CommandHandler {
     @Override

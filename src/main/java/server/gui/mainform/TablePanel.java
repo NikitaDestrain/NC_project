@@ -1,19 +1,6 @@
 package server.gui.mainform;
 
-import auxiliaryclasses.MessageBox;
-import server.controller.Controller;
-import server.exceptions.IncorrectTaskStatusConversionException;
-import server.gui.ServerTreatmentDetector;
-import server.model.Task;
-import server.model.TaskStatus;
-
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.List;
 
 public class TablePanel extends JPanel {
     /*
