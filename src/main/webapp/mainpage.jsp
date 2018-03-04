@@ -167,13 +167,13 @@
     <div align="center" class="button-div">
         <table class="button-table">
             <tr>
+                <td class="button-table-td"><input type="button" id="choose" value="Choose journal"
+                                                   onclick="buttonClick(this)"></td>
                 <td class="button-table-td"><input type="button" id="add" value="Add journal"
                                                    onclick="buttonClick(this)"></td>
                 <td class="button-table-td"><input type="button" id="edit" value="Edit journal"
                                                    onclick="buttonClick(this)"></td>
                 <td class="button-table-td"><input type="button" id="delete" value="Delete journal"
-                                                   onclick="buttonClick(this)"></td>
-                <td class="button-table-td"><input type="button" id="choose" value="Choose journal"
                                                    onclick="buttonClick(this)"></td>
             </tr>
         </table>
@@ -184,10 +184,10 @@
                 <td>Sort by:</td>
                 <td>
                     <select name="<%=ConstantsClass.SORT_COLUMN%>">
-                        <option value="name">
+                        <option value="<%=ConstantsClass.NAME%>">
                             Name
                         </option>
-                        <option value="description">
+                        <option value="<%=ConstantsClass.DESCRIPTION%>">
                             Description
                         </option>
                     </select>

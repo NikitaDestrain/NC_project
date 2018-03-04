@@ -27,9 +27,7 @@
                                                                             <xs:element name="value">
                                                                                 <xs:complexType>
                                                                                     <xs:sequence>
-                                                                                        <xs:element name="id" type="xs:nonNegativeInteger"/>
                                                                                         <xs:element name="name" type="xs:string"/>
-                                                                                        <xs:element name="description" type="xs:string"/>
                                                                                         <xs:element name="status">
                                                                                             <xs:simpleType>
                                                                                                 <xs:restriction base="xs:string">
@@ -41,10 +39,16 @@
                                                                                                 </xs:restriction>
                                                                                             </xs:simpleType>
                                                                                         </xs:element>
-                                                                                        <xs:element name="notificationDate" type="xs:dateTime"/>
-                                                                                        <xs:element name="plannedDate" type="xs:dateTime"/>
-                                                                                        <xs:element name="uploadDate" type="xs:dateTime"/>
-                                                                                        <xs:element name="changeDate" type="xs:dateTime"/>
+                                                                                        <xs:element name="description" type="xs:string" minOccurs="0"/>
+                                                                                        <xs:element name="notificationDate" type="xs:dateTime" minOccurs="0"/>
+                                                                                        <xs:element name="notification" type="xs:string"/>
+                                                                                        <xs:element name="plannedDate" type="xs:dateTime" minOccurs="0"/>
+                                                                                        <xs:element name="planned" type="xs:string"/>
+                                                                                        <xs:element name="id" type="xs:nonNegativeInteger"/>
+                                                                                        <xs:element name="uploadDate" type="xs:dateTime" minOccurs="0"/>
+                                                                                        <xs:element name="upload" type="xs:string"/>
+                                                                                        <xs:element name="changeDate" type="xs:dateTime" minOccurs="0"/>
+                                                                                        <xs:element name="change" type="xs:string"/>
                                                                                         <xs:element name="journalId" type="xs:nonNegativeInteger"/>
                                                                                     </xs:sequence>
                                                                                 </xs:complexType>

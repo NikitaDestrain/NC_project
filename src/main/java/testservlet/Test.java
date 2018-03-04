@@ -37,28 +37,37 @@ public class Test {
         container.addJournal(journal1);
         container.addJournal(journal2);
 
-        List<String> names = new LinkedList<>();
+//        List<String> names = new LinkedList<>();
+//
+//        for (Journal j : container.getJournals()) {
+//            names.add(j.getName());
+//        }
+//        JournalNamesContainer namesContainer = new JournalNamesContainer(names);
+//
+//        System.out.println();
+//
+//        try {
+//            XmlUtils.getInstance().writeNames(namesContainer, "data/names.xml");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        System.out.println("done");
+//
+//        System.out.println(XmlUtils.getInstance().compareWithXsd(
+//                "data/names.xml",
+//                "data/names.xsd"
+//        ));
+//
+//        System.out.println(XmlUtils.getInstance().parseXmlToString("data/names.xml"));
 
-        for (Journal j : container.getJournals()) {
-            names.add(j.getName());
-        }
-        JournalNamesContainer namesContainer = new JournalNamesContainer(names);
-
-        System.out.println();
-
-        try {
-            XmlUtils.getInstance().writeNames(namesContainer, "data/names.xml");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("done");
-
-        System.out.println(XmlUtils.getInstance().compareWithXsd(
-                "data/names.xml",
-                "data/names.xsd"
-        ));
-
-        System.out.println(XmlUtils.getInstance().parseXmlToString("data/names.xml"));
+//        try {
+//            XmlUtils.getInstance().writeJournal(journal1, "data/journal.xml");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        System.out.println(XmlUtils.getInstance().compareWithXsd("data/journal.xml", "data/journal.xsd"));
     }
+
 }

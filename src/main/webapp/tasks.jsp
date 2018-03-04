@@ -135,7 +135,7 @@
                         }
                     }
                     else {
-                        alert("Select a journal to perform an action!")
+                        alert("Select a task to perform an action!")
                     }
                     break;
                 case "back":
@@ -172,95 +172,38 @@
             </tr>
             <%
                 int count = 0;
-                Calendar planned = Calendar.getInstance();
-                Calendar notif = Calendar.getInstance();
-                Calendar upload = Calendar.getInstance();
-                Calendar change = Calendar.getInstance();
-
-                String minutesPlanned;
-                String daysPlanned;
-                String monthsPlanned;
-
-                String minutesNotif;
-                String daysNotif;
-                String monthsNotif;
-
-                String daysUpload;
-                String monthsUpload;
-
-                String daysChange;
-                String monthsChange;
-
             %>
             <x:parse xml="${sessionScope.journal}" var="container"/>
             <x:forEach select="$container/journal/tasks/entry" var="task">
-            <%--<%--%>
-                <%--planned.setTime(u.getPlannedDate());--%>
-                <%--notif.setTime(u.getNotificationDate());--%>
-                <%--upload.setTime(u.getUploadDate());--%>
-                <%--change.setTime(u.getChangeDate());--%>
-
-                <%--minutesPlanned = planned.get(Calendar.MINUTE) + "";--%>
-                <%--minutesPlanned = minutesPlanned.length() == 1 ? "0" + minutesPlanned : minutesPlanned;--%>
-                <%--daysPlanned = planned.get(Calendar.DAY_OF_MONTH) + "";--%>
-                <%--daysPlanned = daysPlanned.length() == 1 ? "0" + daysPlanned : daysPlanned;--%>
-                <%--monthsPlanned = (planned.get(Calendar.MONTH) + 1) + "";--%>
-                <%--monthsPlanned = monthsPlanned.length() == 1 ? "0" + monthsPlanned : monthsPlanned;--%>
-
-                <%--minutesNotif = notif.get(Calendar.MINUTE) + "";--%>
-                <%--minutesNotif = minutesNotif.length() == 1 ? "0" + minutesNotif : minutesNotif;--%>
-                <%--daysNotif = planned.get(Calendar.DAY_OF_MONTH) + "";--%>
-                <%--daysNotif = daysNotif.length() == 1 ? "0" + daysNotif : daysNotif;--%>
-                <%--monthsNotif = (planned.get(Calendar.MONTH) + 1) + "";--%>
-                <%--monthsNotif = monthsNotif.length() == 1 ? "0" + monthsNotif : monthsNotif;--%>
-
-                <%--daysUpload = planned.get(Calendar.DAY_OF_MONTH) + "";--%>
-                <%--daysUpload = daysUpload.length() == 1 ? "0" + daysUpload : daysUpload;--%>
-                <%--monthsUpload = (planned.get(Calendar.MONTH) + 1) + "";--%>
-                <%--monthsUpload = monthsUpload.length() == 1 ? "0" + monthsUpload : monthsUpload;--%>
-
-                <%--daysChange = planned.get(Calendar.DAY_OF_MONTH) + "";--%>
-                <%--daysChange = daysChange.length() == 1 ? "0" + daysChange : daysChange;--%>
-                <%--monthsChange = (planned.get(Calendar.MONTH) + 1) + "";--%>
-                <%--monthsChange = monthsChange.length() == 1 ? "0" + monthsChange : monthsChange;--%>
-            <%--%>--%>
-            <tr>
-                <td class="count">
-                    <label>
-                        <%=count%>
-                        <input type="radio" name="<%=ConstantsClass.USERNUMBER%>" value="<%=count++%>"/>
-                    </label>
-                </td>
-                <td class="main-td">
-                    <x:out select="$task/value/status"/>
-                </td>
-                <td class="main-td">
-                    <x:out select="$task/value/name"/>
-                </td>
-                <td class="main-td">
-                    <x:out select="$task/value/description"/>
-                </td>
-                <td class="main-td">
-                    <%--<%=daysPlanned + ":" + monthsPlanned +--%>
-                            <%--":" + planned.get(Calendar.YEAR) + " " + planned.get(Calendar.HOUR_OF_DAY) + ":" + minutesPlanned%>--%>
-                        <x:out select="$task/value/plannedDate"/>
-                </td>
-                <td class="main-td">
-                    <%--<%=daysNotif + ":" + monthsNotif +--%>
-                            <%--":" + notif.get(Calendar.YEAR) + " " + notif.get(Calendar.HOUR_OF_DAY) + ":" + minutesNotif%>--%>
-                        <x:out select="$task/value/notificationDate"/>
-                </td>
-                <td class="main-td">
-                    <%--<%=daysUpload + ":" + monthsUpload +--%>
-                            <%--":" + upload.get(Calendar.YEAR)%>--%>
-                        <x:out select="$task/value/uploadDate"/>
-                </td>
-                <td class="main-td">
-                    <%--<%=daysChange + ":" + monthsChange +--%>
-                            <%--":" + change.get(Calendar.YEAR)%>--%>
-                        <x:out select="$task/value/changeDate"/>
-                </td>
-            </tr>
+                <tr>
+                    <td class="count">
+                        <label>
+                            <%=count%>
+                            <input type="radio" name="<%=ConstantsClass.USERNUMBER%>" value="<%=count++%>"/>
+                        </label>
+                    </td>
+                    <td class="main-td">
+                        <x:out select="$task/value/status"/>
+                    </td>
+                    <td class="main-td">
+                        <x:out select="$task/value/name"/>
+                    </td>
+                    <td class="main-td">
+                        <x:out select="$task/value/description"/>
+                    </td>
+                    <td class="main-td">
+                        <x:out select="$task/value/planned"/>
+                    </td>
+                    <td class="main-td">
+                        <x:out select="$task/value/notification"/>
+                    </td>
+                    <td class="main-td">
+                        <x:out select="$task/value/upload"/>
+                    </td>
+                    <td class="main-td">
+                        <x:out select="$task/value/change"/>
+                    </td>
+                </tr>
             </x:forEach>
         </table>
         <div align="center" class="button-div">
@@ -331,29 +274,7 @@
             <input type="button" id="back" value="Back to main page" onclick="buttonClick(this)">
         </div>
         <div class="center">
-            <%=
-                request
-                .
-                getAttribute
-                (
-                ConstantsClass
-                .
-                MESSAGE_ATTRIBUTE
-                )
-                ==
-                null
-                ?
-                ""
-                :
-                request
-                .
-                getAttribute
-                (
-                ConstantsClass
-                .
-                MESSAGE_ATTRIBUTE
-                )
-            %>
+            <%=request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)==null?"":request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)%>
         </div>
     </form>
 </div>

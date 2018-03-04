@@ -3,6 +3,7 @@ package server.controllerforweb;
 import server.model.Journal;
 import server.model.JournalContainer;
 import server.model.JournalNamesContainer;
+import server.model.Task;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
@@ -40,9 +41,6 @@ public class XmlUtils {
 
     public boolean compareWithXsd(String nameFileXML, String nameFileXSD) {
         try {
-            File xml = new File(nameFileXML);
-            File xsd = new File(nameFileXSD);
-
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             Schema schema = factory.newSchema(new StreamSource(nameFileXSD));
             Validator valid = schema.newValidator();
@@ -128,5 +126,30 @@ public class XmlUtils {
         } catch (Exception e) {
             throw new Exception();
         }
+    }
+
+    public void writeTask(Task task, String path) throws Exception {
+        try {
+            JAXBContext context = JAXBContext.newInstance(Task.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            OutputStream out = new FileOutputStream(path);
+            marshaller.marshal(task, out);
+        } catch (Exception e) {
+            throw new Exception();
+        }
+    }
+
+    public Task readTask(String path) throws Exception {
+        Task task;
+        try {
+            JAXBContext context = JAXBContext.newInstance(Task.class);
+            InputStream in = new FileInputStream(path);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            task = (Task) unmarshaller.unmarshal(in);
+        } catch (Exception e) {
+            throw new Exception();
+        }
+        return task;
     }
 }

@@ -24,6 +24,9 @@ public class ConstantsClass {
     public static final int DEFAULT_MAX_COUNT_CLIENTS = 20;
     public static final int DEFAULT_CURRENT_COUNT_CLIENTS = 0;
 
+    public static final String CANCELLED_STATUS = "Cancelled";
+    public static final String COMPLETED_STATUS = "Completed";
+
     public static String PATH_TO_CONFIG = "data/config.properties";
     public static final String PATH_TO_JOURNAL = "PATH_TO_JOURNAL";
     public static final String MAIN_FORM_ICON = "MAIN_FORM_ICON";
@@ -34,6 +37,8 @@ public class ConstantsClass {
     public static final String JOURNALS_XML_FILE = "/journals.xml";
     public static final String JOURNAL_XSD_FILE = "/journal.xsd";
     public static final String JOURNALS_XSD_FILE = "/journals.xsd";
+    public static final String TASK_XML_FILE = "/task.xml";
+    public static final String TASK_XSD_FILE = "/task.xsd";
     public static final String USER_DATA = "USER_DATA";
 
     public static final int SERVER_TREATMENT = 1;
@@ -59,8 +64,9 @@ public class ConstantsClass {
     public static final String ERROR_CHOOSE_JOURNAL = "Choose a journal to perform an action!";
     public static final String ERROR_CHOOSE_TASK = "Choose a task to perform an action!";
 
-    public static final String ERROR_JOURNAL_NAME_LENGTH = "The length of the \"name\" field \n should be less than 18 characters";
-    public static final String ERROR_JOURNAL_DESCRIPTION_LENGTH = "The length of the \"description\" field \n should be less than 80 characters";
+    public static final String ERROR_NAME_LENGTH = "The length of the \"name\" field \n should be between 0 and 18 characters";
+    public static final String ERROR_DESCRIPTION_LENGTH = "The length of the \"description\" field \n should be less than 80 characters";
+    public static final String ERROR_DATE_PARSE = "Enter date in format [d]d-[m]m-yyyy!";
 
     // web constants
 
@@ -106,6 +112,8 @@ public class ConstantsClass {
     public static final String UPLOAD_DATE = "uploaddate";
     public static final String CHANGE_DATE = "changedate";
     public static final String JOURNAL_NAMES = "journalNames";
+    public static final String CURRENT_TASK = "task";
+    public static final String CURRENT_JOURNAL_NAME = "curname";
 
     public static final String LOGIN_PARAMETER = "login";
     public static final String PASSWORD_PARAMETER = "password";
@@ -113,10 +121,15 @@ public class ConstantsClass {
     public static final String MESSAGE_ATTRIBUTE = "message";
     public static final String JOURNAL_CONTAINER_PARAMETER = "journalContainer";
     public static final String JOURNAL_PARAMETER = "journal";
+    public static final String CURRENT_JOURNAL_ID = "curId";
 
     public static final String NAME = "name";
     public static final String DESCRIPTION = "description";
 
     public static final String SAVE = "Save";
     public static final String OK = "OK";
+
+    public static final int NAME_FIELD_LENGTH = 18;
+    public static final int DESCRIPTION_FIELD_LENGTH = 80;
+    public static final String CURRENT_STATUS = "curstatus";
 }

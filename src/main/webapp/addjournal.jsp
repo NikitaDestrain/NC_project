@@ -60,7 +60,10 @@
 <body>
 <div align="center">
     <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
-        <input type="hidden" name="action" value="<%=ConstantsClass.DO_ADD_JOURNAL%>">
+
+        <input type="hidden" name="<%=ConstantsClass.ACTION%>" value="<%=ConstantsClass.DO_ADD_JOURNAL%>">
+        <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
+
         <table>
             <caption>Add journal</caption>
             <tr>
@@ -82,7 +85,6 @@
                 <td colspan="2"><input type="button" id="add" value="Add" onclick="buttonClick(this)"></td>
             </tr>
         </table>
-        <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
         <div class="center">
             <input type="button" id="back" value="Back to main page" onclick="buttonClick(this)">
         </div>

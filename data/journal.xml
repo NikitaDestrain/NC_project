@@ -1,35 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <journal>
-    <id>1</id>
-    <name>j2</name>
-    <description>j1Desc</description>
+    <id>0</id>
+    <name>j1</name>
     <userId>0</userId>
     <tasks>
         <entry>
             <key>0</key>
             <value>
-                <id>0</id>
                 <name>1</name>
-                <description>desc1</description>
                 <status>Overdue</status>
-                <notificationDate>2018-03-03T16:45:39.073+04:00</notificationDate>
-                <plannedDate>2018-03-03T16:45:39.073+04:00</plannedDate>
-                <uploadDate>2018-03-03T16:45:39.073+04:00</uploadDate>
-                <changeDate>2018-03-03T16:45:39.073+04:00</changeDate>
+                <description>desc1</description>
+                <notificationDate>2018-03-04T13:35:38.917+04:00</notificationDate>
+                <notification>04-03-2018</notification>
+                <plannedDate>2018-03-04T13:35:38.917+04:00</plannedDate>
+                <planned>04-03-2018</planned>
+                <id>0</id>
+                <uploadDate>2018-03-04T13:35:38.917+04:00</uploadDate>
+                <upload>04-03-2018</upload>
+                <changeDate>2018-03-04T13:35:38.917+04:00</changeDate>
+                <change>04-03-2018</change>
                 <journalId>0</journalId>
             </value>
         </entry>
         <entry>
             <key>1</key>
             <value>
-                <id>1</id>
                 <name>2</name>
-                <description>desc2</description>
                 <status>Overdue</status>
-                <notificationDate>2018-03-03T16:45:39.073+04:00</notificationDate>
-                <plannedDate>2018-03-03T16:45:39.073+04:00</plannedDate>
-                <uploadDate>2018-03-03T16:45:39.073+04:00</uploadDate>
-                <changeDate>2018-03-03T16:45:39.073+04:00</changeDate>
+                <description>desc2</description>
+                <notificationDate>2018-03-04T13:35:38.957+04:00</notificationDate>
+                <notification>04-03-2018</notification>
+                <plannedDate>2018-03-04T13:35:38.957+04:00</plannedDate>
+                <planned>04-03-2018</planned>
+                <id>1</id>
+                <uploadDate>2018-03-04T13:35:38.957+04:00</uploadDate>
+                <upload>04-03-2018</upload>
+                <changeDate>2018-03-04T13:35:38.957+04:00</changeDate>
+                <change>04-03-2018</change>
+                <journalId>1</journalId>
+            </value>
+        </entry>
+        <entry>
+            <key>2</key>
+            <value>
+                <name>3</name>
+                <status>Overdue</status>
+                <description>desc3</description>
+                <notificationDate>2018-03-04T13:35:38.957+04:00</notificationDate>
+                <notification>04-03-2018</notification>
+                <plannedDate>2018-03-04T13:35:38.957+04:00</plannedDate>
+                <planned>04-03-2018</planned>
+                <id>2</id>
+                <uploadDate>2018-03-04T13:35:38.957+04:00</uploadDate>
+                <upload>04-03-2018</upload>
+                <changeDate>2018-03-04T13:35:38.957+04:00</changeDate>
+                <change>04-03-2018</change>
                 <journalId>1</journalId>
             </value>
         </entry>

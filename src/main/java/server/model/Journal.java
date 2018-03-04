@@ -13,7 +13,7 @@ public class Journal implements Serializable {
     private Map<Integer, Task> tasks;
     @XmlElement(name = "id")
     private int id;
-    @XmlElement(name = "name", nillable = false)
+    @XmlElement(name = "name")
     private String name;
     @XmlElement(name = "description")
     private String description;

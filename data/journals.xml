@@ -11,42 +11,54 @@
                     <entry>
                         <key>0</key>
                         <value>
-                            <id>0</id>
                             <name>1</name>
-                            <description>desc1</description>
                             <status>Overdue</status>
-                            <notificationDate>2018-03-03T16:25:01.167+04:00</notificationDate>
-                            <plannedDate>2018-03-03T16:25:01.167+04:00</plannedDate>
-                            <uploadDate>2018-03-03T16:25:01.167+04:00</uploadDate>
-                            <changeDate>2018-03-03T16:25:01.167+04:00</changeDate>
+                            <description>desc1</description>
+                            <notificationDate/>
+                            <notification>04-03-2018</notification>
+                            <plannedDate/>
+                            <planned>04-03-2018</planned>
+                            <id>0</id>
+                            <uploadDate/>
+                            <upload>04-03-2018</upload>
+                            <changeDate/>
+                            <change>04-03-2018</change>
                             <journalId>0</journalId>
                         </value>
                     </entry>
                     <entry>
                         <key>1</key>
                         <value>
-                            <id>1</id>
                             <name>2</name>
-                            <description>desc2</description>
                             <status>Overdue</status>
-                            <notificationDate>2018-03-03T16:25:01.167+04:00</notificationDate>
-                            <plannedDate>2018-03-03T16:25:01.167+04:00</plannedDate>
-                            <uploadDate>2018-03-03T16:25:01.167+04:00</uploadDate>
-                            <changeDate>2018-03-03T16:25:01.167+04:00</changeDate>
+                            <description>desc2</description>
+                            <notificationDate/>
+                            <notification>04-03-2018</notification>
+                            <plannedDate/>
+                            <planned>04-03-2018</planned>
+                            <id>1</id>
+                            <uploadDate/>
+                            <upload>04-03-2018</upload>
+                            <changeDate/>
+                            <change>04-03-2018</change>
                             <journalId>1</journalId>
                         </value>
                     </entry>
                     <entry>
                         <key>2</key>
                         <value>
-                            <id>2</id>
                             <name>3</name>
-                            <description>desc3</description>
                             <status>Overdue</status>
-                            <notificationDate>2018-03-03T16:25:01.167+04:00</notificationDate>
-                            <plannedDate>2018-03-03T16:25:01.167+04:00</plannedDate>
-                            <uploadDate>2018-03-03T16:25:01.167+04:00</uploadDate>
-                            <changeDate>2018-03-03T16:25:01.167+04:00</changeDate>
+                            <description>desc3</description>
+                            <notificationDate/>
+                            <notification>04-03-2018</notification>
+                            <plannedDate/>
+                            <planned>04-03-2018</planned>
+                            <id>2</id>
+                            <uploadDate/>
+                            <upload>04-03-2018</upload>
+                            <changeDate/>
+                            <change>04-03-2018</change>
                             <journalId>1</journalId>
                         </value>
                     </entry>
@@ -64,28 +76,36 @@
                     <entry>
                         <key>0</key>
                         <value>
-                            <id>0</id>
                             <name>1</name>
-                            <description>desc1</description>
                             <status>Overdue</status>
-                            <notificationDate>2018-03-03T16:25:01.167+04:00</notificationDate>
-                            <plannedDate>2018-03-03T16:25:01.167+04:00</plannedDate>
-                            <uploadDate>2018-03-03T16:25:01.167+04:00</uploadDate>
-                            <changeDate>2018-03-03T16:25:01.167+04:00</changeDate>
+                            <description>desc1</description>
+                            <notificationDate/>
+                            <notification>04-03-2018</notification>
+                            <plannedDate/>
+                            <planned>04-03-2018</planned>
+                            <id>0</id>
+                            <uploadDate/>
+                            <upload>04-03-2018</upload>
+                            <changeDate/>
+                            <change>04-03-2018</change>
                             <journalId>0</journalId>
                         </value>
                     </entry>
                     <entry>
                         <key>1</key>
                         <value>
-                            <id>1</id>
                             <name>2</name>
-                            <description>desc2</description>
                             <status>Overdue</status>
-                            <notificationDate>2018-03-03T16:25:01.167+04:00</notificationDate>
-                            <plannedDate>2018-03-03T16:25:01.167+04:00</plannedDate>
-                            <uploadDate>2018-03-03T16:25:01.167+04:00</uploadDate>
-                            <changeDate>2018-03-03T16:25:01.167+04:00</changeDate>
+                            <description>desc2</description>
+                            <notificationDate/>
+                            <notification>04-03-2018</notification>
+                            <plannedDate/>
+                            <planned>04-03-2018</planned>
+                            <id>1</id>
+                            <uploadDate/>
+                            <upload>04-03-2018</upload>
+                            <changeDate/>
+                            <change>04-03-2018</change>
                             <journalId>1</journalId>
                         </value>
                     </entry>

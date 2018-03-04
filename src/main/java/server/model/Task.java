@@ -4,50 +4,68 @@ import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Calendar;
 
 /**
  * The class serves to store the object "task" with server.exceptions.properties
  * <b>name</b>, <b>status</b>, <b>description</b>, <b>notificationDate</b>,  <b>plannedDate</b>, <b>id</b>.
  */
-@XmlType(propOrder = {"id", "name", "description", "status", "notificationDate", "plannedDate",
-        "uploadDate", "changeDate", "journalId"},
-        name = "task")
 @XmlRootElement(name = "task")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Task implements Comparable<Task>, Serializable {
     /**
      * Task name
      */
+    @XmlElement(name = "name")
     private String name;
     /**
      * Task status @see TaskStatus
      */
+    @XmlElement(name = "status")
     private TaskStatus status;
     /**
      * Task description
      */
+    @XmlElement(name = "description")
     private String description;
     /**
      * Notification date
      */
     @XmlJavaTypeAdapter(SQLDataAdapter.class)
+    @XmlElement(name = "notificationDate")
     private Date notificationDate;
+
+    @XmlElement(name = "notification")
+    private String notification;
     /**
      * Planned date
      */
     @XmlJavaTypeAdapter(SQLDataAdapter.class)
+    @XmlElement(name = "plannedDate")
     private Date plannedDate;
+    @XmlElement(name = "planned")
+    private String planned;
     /**
      * unique identificator
      */
+    @XmlElement(name = "id")
     private int id;
 
     @XmlJavaTypeAdapter(SQLDataAdapter.class)
+    @XmlElement(name = "uploadDate")
     private Date uploadDate;
 
+    @XmlElement(name = "upload")
+    private String upload;
+
     @XmlJavaTypeAdapter(SQLDataAdapter.class)
+    @XmlElement(name = "changeDate")
     private Date changeDate;
 
+    @XmlElement(name = "change")
+    private String change;
+
+    @XmlElement(name = "journalId")
     private int journalId;
 
     public Task() {
@@ -75,6 +93,36 @@ public class Task implements Comparable<Task>, Serializable {
         this.uploadDate = uploadDate;
         this.changeDate = changeDate;
         this.journalId = journalId;
+
+        this.notification = parseDate(notificationDate);
+        this.planned = parseDate(plannedDate);
+        this.upload = parseDate(uploadDate);
+        this.change = parseDate(changeDate);
+    }
+
+    public Task(String name, TaskStatus status, String description, String notification, String planned, int id, String upload, String change, int journalId) {
+        this.name = name;
+        this.status = status;
+        this.description = description;
+        this.notification = notification;
+        this.planned = planned;
+        this.id = id;
+        this.upload = upload;
+        this.change = change;
+        this.journalId = journalId;
+    }
+
+    private String parseDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        String days = calendar.get(Calendar.DAY_OF_MONTH) + "";
+        days = days.length() == 1 ? "0" + days : days;
+
+        String months = (calendar.get(Calendar.MONTH) + 1) + "";
+        months = months.length() == 1 ? "0" + months : months;
+
+        return days + "-" + months + "-" + calendar.get(Calendar.YEAR);
     }
 
     /**
@@ -96,6 +144,11 @@ public class Task implements Comparable<Task>, Serializable {
         this.plannedDate = task.getPlannedDate();
         this.changeDate = task.getChangeDate();
         this.uploadDate = task.getUploadDate();
+
+        this.notification = parseDate(task.getNotificationDate());
+        this.planned = parseDate(task.getPlannedDate());
+        this.upload = parseDate(task.getUploadDate());
+        this.change = parseDate(task.getChangeDate());
     }
 
     /**
@@ -169,6 +222,7 @@ public class Task implements Comparable<Task>, Serializable {
      */
     public void setNotificationDate(Date notificationDate) {
         this.notificationDate = notificationDate;
+        this.notification = parseDate(notificationDate);
     }
 
     /**
@@ -187,6 +241,7 @@ public class Task implements Comparable<Task>, Serializable {
      */
     public void setPlannedDate(Date plannedDate) {
         this.plannedDate = plannedDate;
+        this.planned = parseDate(plannedDate);
     }
 
     /**
@@ -208,6 +263,7 @@ public class Task implements Comparable<Task>, Serializable {
 
     public void setUploadDate(Date uploadDate) {
         this.uploadDate = uploadDate;
+        this.upload = parseDate(uploadDate);
     }
 
     public Date getChangeDate() {
@@ -216,6 +272,7 @@ public class Task implements Comparable<Task>, Serializable {
 
     public void setChangeDate(Date changeDate) {
         this.changeDate = changeDate;
+        this.change = parseDate(changeDate);
     }
 
 
@@ -238,10 +295,12 @@ public class Task implements Comparable<Task>, Serializable {
      */
     @Override
     public int compareTo(Task task) {
-        if (notificationDate.compareTo(task.getNotificationDate()) < 0)
-            return -1;
-        if (notificationDate.compareTo(task.getNotificationDate()) > 0)
-            return 1;
+        if (task.getNotificationDate() != null) {
+            if (notificationDate.compareTo(task.getNotificationDate()) < 0)
+                return -1;
+            if (notificationDate.compareTo(task.getNotificationDate()) > 0)
+                return 1;
+        }
         return 0;
     }
 
