@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,10 +23,22 @@ public class JournalNamesContainer {
     }
 
     public List<String> getNames() {
-        return names;
+        return Collections.unmodifiableList(names);
     }
 
     public void setNames(List<String> names) {
         this.names = names;
+    }
+
+    public void addName(String name) {
+        names.add(name);
+    }
+
+    public void deleteName(String name) {
+        names.remove(name);
+    }
+
+    public void editName(String oldName, String newName) {
+        //todo возможно следует заменить на мапу
     }
 }

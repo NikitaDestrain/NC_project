@@ -1,4 +1,4 @@
-package testservlet;
+package servlet;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

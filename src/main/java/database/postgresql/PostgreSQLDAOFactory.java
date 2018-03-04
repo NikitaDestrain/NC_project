@@ -5,6 +5,10 @@ import database.daointerfaces.JournalDAO;
 import database.daointerfaces.TasksDAO;
 import database.daointerfaces.UsersDAO;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

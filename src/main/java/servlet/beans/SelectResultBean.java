@@ -1,6 +1,5 @@
-package testservlet.beans;
+package servlet.beans;
 
-import java.sql.ResultSet;
 import java.util.LinkedList;
 
 public class SelectResultBean {

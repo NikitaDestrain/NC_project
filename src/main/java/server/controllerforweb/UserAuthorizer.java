@@ -50,6 +50,10 @@ public class UserAuthorizer {
             userData.put(login, password);
     }
 
+    public void removeUser(String login) {
+        userData.remove(login);
+    }
+
     private void createStartUserData() throws SQLException {
         List<User> users = PostgreSQLDAOFactory.getInstance().getUsersDao().getAll();
         for (User user: users)

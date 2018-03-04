@@ -1,4 +1,4 @@
-package testservlet.beans;
+package servlet.beans;
 
 public class User {
     private int id;

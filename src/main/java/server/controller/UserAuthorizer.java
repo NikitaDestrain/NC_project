@@ -51,7 +51,7 @@ public class UserAuthorizer {
     public void addUser(String login, String password) {
         if (login != null && password != null) {
             userData.put(login, password);
-        } // todo вместо этого - вызов метода добавления нового юзера в бд и обновление мапы пользователей этого класса
+        }
     }
 
     public void writeUserData(String path) {

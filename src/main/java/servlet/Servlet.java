@@ -1,8 +1,9 @@
-package testservlet;
+package servlet;
 
 
 import auxiliaryclasses.ConstantsClass;
 import client.commandprocessor.PasswordEncoder;
+import server.controllerforweb.Controller;
 import server.controllerforweb.XmlUtils;
 import server.model.*;
 
@@ -28,6 +29,7 @@ public class Servlet extends HttpServlet {
     private DataSource dataSource;
     private PasswordEncoder encoder = PasswordEncoder.getInstance();
     private XmlUtils xmlUtils = XmlUtils.getInstance();
+    private Controller controller = Controller.getInstance();
 
     private JournalContainer container;
 
@@ -156,8 +158,15 @@ public class Servlet extends HttpServlet {
                 usernumber = req.getParameter(ConstantsClass.USERNUMBER);
                 if (usernumber != null && !usernumber.equals("")) {
                     int num = Integer.parseInt(usernumber);
-                    int id = currentJournal.getTasks().get(num).getId();
-                    // todo вызов метода удаления по id
+                    Task task = currentJournal.getTasks().get(num);
+                    // todo вызов метода удаления по id (1/2 DONE)
+                    // ! метод удаления должен вызываться по таске, так как она хранит ид журнала из которого ее стоит удалить
+                    try {
+                        controller.deleteTask(task);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        //todo оповещение о неудаче
+                    }
                 } else {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_TASK);
                     req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
@@ -166,11 +175,19 @@ public class Servlet extends HttpServlet {
             case ConstantsClass.SORT:
                 String sortColumn = req.getParameter(ConstantsClass.SORT_COLUMN); // name||description
                 String sortCriteria = req.getParameter(ConstantsClass.SORT_CRITERIA); // asc||desc
-
+                String sortResult;
                 // todo формируешь новый journal container с отсортированными журанлами,
                 // пишешь его в xml, сравниваешь ее с xsd (тут наверное какой то void метод).
                 // Затем обновляешь container, journals(список журналов) и current journal этого класса(без этого все отвалится:) )
                 // дальше то, что ниже
+
+                //немного не понял логику, так что просто строка с хмл уже отсортированного контейнера
+                try {
+                    sortResult = controller.getSortedTasks(sortColumn, sortCriteria);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    //todo оповещение о неудаче
+                }
 
                 String xmlFile = xmlUtils.parseXmlToString(req.getServletContext().
                         getRealPath(ConstantsClass.JOURNAL_XML_FILE));
@@ -221,6 +238,15 @@ public class Servlet extends HttpServlet {
                         // todo вызов метода добавления + формирование нового журнала, обновление container'a,
                         // journals и currentJournal, запись новых xml, их проверка, вставка новых xml в сессию,
                         // перенаправление на главную
+
+                        // change и upload простовляютяс автоматически
+                        // проверь верно ли я получаю ид журнала к которому относится задача
+                        try {
+                            controller.addTask(name, description, notificationDate, plannedDate, currentJournal.getId());
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                            //todo оповещение о неудаче
+                        }
                     } catch (IllegalArgumentException e) {
                         try {
                             xmlUtils.writeTask(new Task(name, TaskStatus.Planned, description, req.getParameter(ConstantsClass.NOTIFICATION_DATE),
@@ -292,6 +318,19 @@ public class Servlet extends HttpServlet {
                         // todo вызов метода изменения по id  + формирование нового журнала, обновление container'a,
                         //                        // journals и currentJournal, запись новых xml, их проверка, вставка новых xml в сессию,
                         //                        // перенаправление на главную
+
+                        //логика метода в том, что он все делает по уже поменяной таски в модели, так что подставь нужный ид таски и журнала
+                        int journalId = 0;
+                        int taskId = 0;
+                        String editedTaskString = controller.getTask(journalId, taskId);
+                        //делаем из нее объект задачи, обновляем сетерами поля и отправляем
+                        Task editedTask = null;
+                        try {
+                            controller.editTask(editedTask);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                            //todo оповещение
+                        }
                     } catch (IllegalArgumentException e) {
                         try {
                             xmlUtils.writeTask(new Task(name, (TaskStatus) req.getSession().getAttribute(ConstantsClass.CURRENT_STATUS),
@@ -324,17 +363,18 @@ public class Servlet extends HttpServlet {
                 break;
         }
     }
-// 12-08-1980
+
+    // 12-08-1980
     private String reverseDate(String date) {
         if (date.length() == 0) return date;
         StringBuilder builder = new StringBuilder();
         int firstDash = date.lastIndexOf('-');
         if (firstDash == -1) return date;
-        builder.append(date.substring(firstDash+1, date.length()));
+        builder.append(date.substring(firstDash + 1, date.length()));
         builder.append('-');
         int secondDash = date.indexOf('-');
         if (secondDash == firstDash) return date;
-        builder.append(date.substring(secondDash+1, firstDash));
+        builder.append(date.substring(secondDash + 1, firstDash));
         builder.append('-');
         builder.append(date.substring(0, secondDash));
         return builder.toString();
@@ -441,6 +481,12 @@ public class Servlet extends HttpServlet {
                     req.getRequestDispatcher(ConstantsClass.ADD_JOURNAL_ADDRESS).forward(req, resp);
                 } else {
                     // todo добавляешь новый журнал по name, description
+                    int userId = 0; //какой юзер сейчас работает, кто создал задачу
+                    try {
+                        controller.addJournal(name, description, userId);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             case ConstantsClass.BACK_TO_MAIN:
@@ -470,6 +516,12 @@ public class Servlet extends HttpServlet {
                 } else {
                     int id = (int) req.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL_ID);
                     // todo вызов метода изменения журнала по id
+                    //наверное можно просто каррент джорнал отправлять, меняя у него все поля
+                    try {
+                        controller.editJournal(null);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             case ConstantsClass.BACK_TO_MAIN:
@@ -507,6 +559,11 @@ public class Servlet extends HttpServlet {
                     int num = Integer.parseInt(usernumber);
                     int id = journals.get(num).getId();
                     // todo вызов метода удаления журнала по id
+                    try {
+                        controller.deleteJournal(id);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_JOURNAL);
                     req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
@@ -546,11 +603,18 @@ public class Servlet extends HttpServlet {
             case ConstantsClass.SORT:
                 String sortColumn = req.getParameter(ConstantsClass.SORT_COLUMN); // name||description
                 String sortCriteria = req.getParameter(ConstantsClass.SORT_CRITERIA); // asc||desc
-
+                String sortedJournals;
                 // todo формируешь новый journal container с отсортированными журанлами,
                 // пишешь его в xml, сравниваешь ее с xsd (тут наверное какой то void метод).
                 // Затем обновляешь container и journals(список журналов) этого класса(без этого все отвалится:) )
                 // дальше то, что ниже
+
+                //аналог с тасками
+                try {
+                    sortedJournals = controller.getSortedJournals(sortColumn, sortCriteria);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
 
                 String xmlFile = xmlUtils.parseXmlToString(req.getServletContext().
                         getRealPath(ConstantsClass.JOURNALS_XML_FILE));
