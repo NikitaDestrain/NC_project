@@ -11,22 +11,9 @@ import java.util.Map;
 
 public class UserAuthorizer {
     private Map<String, String> userData;
-    private UserDataSerializer userDataSerializer;
     private static UserAuthorizer instance;
 
     private UserAuthorizer() {
-        this.userDataSerializer = new UserDataSerializer();
-        try {
-            this.userData = userDataSerializer.readData(ParserProperties.getInstance()
-                    .getProperty(ConstantsClass.USER_DATA));
-        } catch (IOException e) {
-            if (JOptionPane.showConfirmDialog(null,
-                    "Could not load user data from file!\nDo you want to create new file with user's data?\n" +
-                            "If you choose NO, the program execution will be stopped!",
-                    "Error", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                userData = new HashMap<>();
-            } else System.exit(1);
-        }
     }
 
     public static synchronized UserAuthorizer getInstance() {
@@ -55,11 +42,11 @@ public class UserAuthorizer {
     }
 
     public void writeUserData(String path) {
-        try {
-            userDataSerializer.writeData(this.userData, path);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Could not write user data to file!",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+//        try {
+//            userDataSerializer.writeData(this.userData, path);
+//        } catch (IOException e) {
+//            JOptionPane.showMessageDialog(null, "Could not write user data to file!",
+//                    "Error", JOptionPane.ERROR_MESSAGE);
+//        }
     }
 }

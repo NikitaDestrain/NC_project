@@ -29,25 +29,15 @@ public class Servlet extends HttpServlet {
     private DataSource dataSource;
     private PasswordEncoder encoder = PasswordEncoder.getInstance();
     private XmlUtils xmlUtils = XmlUtils.getInstance();
-    private Controller controller = Controller.getInstance();
+    //private Controller controller = Controller.getInstance();
 
     private JournalContainer container;
 
     private List<Journal> journals;
 
     private Journal currentJournal;
-
-    private static String URL = "jdbc:oracle:thin:@localhost:1521:XE";
-    private static String LOGIN = "postgres";
-    private static String PASSWORD = "root";
-    private static String CREATE = "CREATE TABLE users(\n" +
-            "  id INTEGER  PRIMARY KEY,\n" +
-            "  email CHAR(20) NOT NULL,\n" +
-            "  password CHAR(20) NOT NULL\n" +
-            ");";
-    private static String INSERT = "insert into users(id, email, password) values(?,?,?)";
-    private static String SELECT = "SELECT * FROM users";
-    private static String UPDATE = "UPDATE users SET email=?, password=? WHERE id=?";
+    private Task currentTask;
+    private User currentUser;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -131,7 +121,7 @@ public class Servlet extends HttpServlet {
                 usernumber = req.getParameter(ConstantsClass.USERNUMBER);
                 if (usernumber != null && !usernumber.equals("")) {
                     int num = Integer.parseInt(usernumber);
-                    Task currentTask = currentJournal.getTasks().get(num);
+                    currentTask = currentJournal.getTasks().get(num);
                     req.getSession().setAttribute(ConstantsClass.CURRENT_STATUS, currentTask.getStatus());
                     try {
                         xmlUtils.writeTask(currentTask, req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
@@ -159,14 +149,15 @@ public class Servlet extends HttpServlet {
                 if (usernumber != null && !usernumber.equals("")) {
                     int num = Integer.parseInt(usernumber);
                     Task task = currentJournal.getTasks().get(num);
+                    int journalId = currentJournal.getId();
                     // todo вызов метода удаления по id (1/2 DONE)
                     // ! метод удаления должен вызываться по таске, так как она хранит ид журнала из которого ее стоит удалить
-                    try {
-                        controller.deleteTask(task);
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        //todo оповещение о неудаче
-                    }
+//                    try {
+//                        controller.deleteTask(task);
+//                    } catch (SQLException e) {
+//                        e.printStackTrace();
+//                        //todo оповещение о неудаче
+//                    }
                 } else {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_TASK);
                     req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
@@ -182,12 +173,12 @@ public class Servlet extends HttpServlet {
                 // дальше то, что ниже
 
                 //немного не понял логику, так что просто строка с хмл уже отсортированного контейнера
-                try {
-                    sortResult = controller.getSortedTasks(sortColumn, sortCriteria);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    //todo оповещение о неудаче
-                }
+//                try {
+//                    sortResult = controller.getSortedTasks(sortColumn, sortCriteria);
+//                } catch (SQLException e) {
+//                    e.printStackTrace();
+//                    //todo оповещение о неудаче
+//                }
 
                 String xmlFile = xmlUtils.parseXmlToString(req.getServletContext().
                         getRealPath(ConstantsClass.JOURNAL_XML_FILE));
@@ -241,12 +232,12 @@ public class Servlet extends HttpServlet {
 
                         // change и upload простовляютяс автоматически
                         // проверь верно ли я получаю ид журнала к которому относится задача
-                        try {
-                            controller.addTask(name, description, notificationDate, plannedDate, currentJournal.getId());
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                            //todo оповещение о неудаче
-                        }
+//                        try {
+//                            controller.addTask(name, description, notificationDate, plannedDate, currentJournal.getId());
+//                        } catch (SQLException e) {
+//                            e.printStackTrace();
+//                            //todo оповещение о неудаче
+//                        }
                     } catch (IllegalArgumentException e) {
                         try {
                             xmlUtils.writeTask(new Task(name, TaskStatus.Planned, description, req.getParameter(ConstantsClass.NOTIFICATION_DATE),
@@ -286,8 +277,9 @@ public class Servlet extends HttpServlet {
                 String name = req.getParameter(ConstantsClass.NAME);
                 String description = req.getParameter(ConstantsClass.DESCRIPTION);
                 String status = req.getParameter(ConstantsClass.STATUS);
-                TaskStatus taskStatus = TaskStatus.valueOf(status);
+                TaskStatus taskStatus = TaskStatus.valueOf(status); // todo статус
                 int id = currentJournal.getId();
+                int curTaskId = currentTask.getId();
                 if (name.length() == 0 || name.length() > ConstantsClass.NAME_FIELD_LENGTH) {
                     req.setAttribute(ConstantsClass.NAME, name);
                     req.setAttribute(ConstantsClass.DESCRIPTION, description);
@@ -312,7 +304,7 @@ public class Servlet extends HttpServlet {
                         plannedDate = Date.valueOf(planned);
                         notificationDate = Date.valueOf(notification);
                         uploadDate = Date.valueOf(upload);
-                        changeDate = Date.valueOf(change);
+                        changeDate = Date.valueOf(change); // todo не изменять upload и change и убрать их из jsp
 
                         resp.getWriter().print("Successful");
                         // todo вызов метода изменения по id  + формирование нового журнала, обновление container'a,
@@ -320,17 +312,17 @@ public class Servlet extends HttpServlet {
                         //                        // перенаправление на главную
 
                         //логика метода в том, что он все делает по уже поменяной таски в модели, так что подставь нужный ид таски и журнала
-                        int journalId = 0;
+                        int journalId = 0; // todo изменять поля таски по айди из журнала, а не новую
                         int taskId = 0;
-                        String editedTaskString = controller.getTask(journalId, taskId);
-                        //делаем из нее объект задачи, обновляем сетерами поля и отправляем
-                        Task editedTask = null;
-                        try {
-                            controller.editTask(editedTask);
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                            //todo оповещение
-                        }
+//                        String editedTaskString = controller.getTask(journalId, taskId);
+//                        //делаем из нее объект задачи, обновляем сетерами поля и отправляем
+//                        Task editedTask = null;
+//                        try {
+//                            controller.editTask(editedTask);
+//                        } catch (SQLException e) {
+//                            e.printStackTrace();
+//                            //todo оповещение
+//                        }
                     } catch (IllegalArgumentException e) {
                         try {
                             xmlUtils.writeTask(new Task(name, (TaskStatus) req.getSession().getAttribute(ConstantsClass.CURRENT_STATUS),
@@ -482,11 +474,11 @@ public class Servlet extends HttpServlet {
                 } else {
                     // todo добавляешь новый журнал по name, description
                     int userId = 0; //какой юзер сейчас работает, кто создал задачу
-                    try {
-                        controller.addJournal(name, description, userId);
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        controller.addJournal(name, description, userId);
+//                    } catch (SQLException e) {
+//                        e.printStackTrace();
+//                    }
                 }
                 break;
             case ConstantsClass.BACK_TO_MAIN:
@@ -517,11 +509,11 @@ public class Servlet extends HttpServlet {
                     int id = (int) req.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL_ID);
                     // todo вызов метода изменения журнала по id
                     //наверное можно просто каррент джорнал отправлять, меняя у него все поля
-                    try {
-                        controller.editJournal(null);
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        controller.editJournal(null);
+//                    } catch (SQLException e) {
+//                        e.printStackTrace();
+//                    }
                 }
                 break;
             case ConstantsClass.BACK_TO_MAIN:
@@ -553,17 +545,17 @@ public class Servlet extends HttpServlet {
                     req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
                 }
                 break;
-            case ConstantsClass.DELETE:
+            case ConstantsClass.DELETE: // норм
                 usernumber = req.getParameter(ConstantsClass.USERNUMBER);
                 if (usernumber != null && !usernumber.equals("")) {
                     int num = Integer.parseInt(usernumber);
                     int id = journals.get(num).getId();
                     // todo вызов метода удаления журнала по id
-                    try {
-                        controller.deleteJournal(id);
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        controller.deleteJournal(id);
+//                    } catch (SQLException e) {
+//                        e.printStackTrace();
+//                    }
                 } else {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_JOURNAL);
                     req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
@@ -610,11 +602,11 @@ public class Servlet extends HttpServlet {
                 // дальше то, что ниже
 
                 //аналог с тасками
-                try {
-                    sortedJournals = controller.getSortedJournals(sortColumn, sortCriteria);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    sortedJournals = controller.getSortedJournals(sortColumn, sortCriteria);
+//                } catch (SQLException e) {
+//                    e.printStackTrace();
+//                }
 
                 String xmlFile = xmlUtils.parseXmlToString(req.getServletContext().
                         getRealPath(ConstantsClass.JOURNALS_XML_FILE));

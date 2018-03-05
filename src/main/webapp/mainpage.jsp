@@ -109,7 +109,7 @@
                         }
                     }
                     if (checked) {
-                        if (confirm("Are you sure want to delete this task?")) {
+                        if (confirm("Are you sure want to delete this journal?")) {
                             document.getElementById("hid").value = "Delete";
                             document.forms[0].submit();
                         }

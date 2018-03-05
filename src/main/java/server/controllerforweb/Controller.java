@@ -127,7 +127,7 @@ public class Controller {
         tasksDAO.update(task);
     }
 
-    public String getTask(int journalId, int id) {
+    public String getTask(int journalId, int id) { // todo сделай параметр String path, тк я смогу норм путь получить только так getServletContext().getRealPath(path)
         try {
             File file = new File("data/task.xml");
             JAXBContext context = JAXBContext.newInstance(Task.class);
