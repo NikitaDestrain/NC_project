@@ -115,11 +115,12 @@ public class PostgreSQLTasksDAO implements TasksDAO {
     }
 
     @Override
-    public List<Task> getSortedByAscending(String column) throws SQLException {
+    public List<Task> getSortedByCriteria(String column, String criteria) throws SQLException {
         List<Task> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Tasks\" ORDER BY ? ASC";
+        String sql = "SELECT * FROM \"Tasks\" ORDER BY ? ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, column);
+            statement.setString(2, criteria.toUpperCase());
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 list.add(TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),
@@ -133,11 +134,35 @@ public class PostgreSQLTasksDAO implements TasksDAO {
     }
 
     @Override
-    public List<Task> getSortedByDescending(String column) throws SQLException {
+    public List<Task> getFilteredByPattern(String column, String pattern, String criteria) throws SQLException {
         List<Task> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Tasks\" ORDER BY ? DESC";
+        String sql = "SELECT * FROM \"Tasks\" WHERE ? LIKE '%?%' ORDER BY ? ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, column);
+            statement.setString(2, pattern);
+            statement.setString(3, column);
+            statement.setString(4, criteria.toUpperCase());
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                list.add(TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),
+                        rs.getString("Status"), rs.getString("Description"),
+                        rs.getDate("Notification_date"), rs.getDate("Planned_date"),
+                        rs.getDate("Upload_date"), rs.getDate("Change_date"),
+                        rs.getInt("Journal_id")));
+            }
+        }
+        return Collections.unmodifiableList(list);
+    }
+
+    @Override
+    public List<Task> getFilteredByEquals(String column, String equal, String criteria) throws SQLException {
+        List<Task> list = new LinkedList<>();
+        String sql = "SELECT * FROM \"Tasks\" WHERE ? = '?' ORDER BY ? ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, column);
+            statement.setString(2, equal);
+            statement.setString(3, column);
+            statement.setString(4, criteria.toUpperCase());
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 list.add(TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),

@@ -39,6 +39,7 @@ public class JournalNamesContainer {
     }
 
     public void editName(String oldName, String newName) {
-        //todo возможно следует заменить на мапу
+        names.remove(oldName);
+        names.add(newName);
     }
 }

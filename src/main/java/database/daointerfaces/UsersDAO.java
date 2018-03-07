@@ -16,7 +16,5 @@ public interface UsersDAO {
 
     public List<User> getAll() throws SQLException;
 
-    public List<User> getSortedByAscending(String column) throws SQLException;
-
-    public List<User> getSortedByDescending(String column) throws SQLException;
+    public List<User> getSortedByCriteria(String column, String criteria) throws SQLException;
 }

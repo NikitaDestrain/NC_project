@@ -78,6 +78,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
     public List<User> getAll() throws SQLException {
         List<User> list = new LinkedList<>();
         String sql = "SELECT * FROM \"Users\"";
+        System.out.println(connection);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
@@ -89,26 +90,12 @@ public class PostgreSQLUsersDAO implements UsersDAO {
     }
 
     @Override
-    public List<User> getSortedByAscending(String column) throws SQLException {
+    public List<User> getSortedByCriteria(String column, String criteria) throws SQLException {
         List<User> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Users\" ORDER BY ? ASC";
+        String sql = "SELECT * FROM \"Users\" ORDER BY ? ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, column);
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                list.add(UserFactory.createUser(rs.getInt("User_id"), rs.getString("Login"),
-                        rs.getString("Password"), rs.getString("Role"), rs.getDate("Registration_date")));
-            }
-        }
-        return Collections.unmodifiableList(list);
-    }
-
-    @Override
-    public List<User> getSortedByDescending(String column) throws SQLException {
-        List<User> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Users\" ORDER BY ? DESC";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, column);
+            statement.setString(2, criteria.toUpperCase());
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 list.add(UserFactory.createUser(rs.getInt("User_id"), rs.getString("Login"),

@@ -91,11 +91,12 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     }
 
     @Override
-    public List<Journal> getSortedByAscending(String column) throws SQLException {
+    public List<Journal> getSortedByCriteria(String column, String criteria) throws SQLException {
         List<Journal> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Tasks\" ORDER BY ? ASC";
+        String sql = "SELECT * FROM \"Journal\" ORDER BY ? ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, column);
+            statement.setString(2, criteria.toUpperCase());
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 list.add(JournalFactory.createJournal(rs.getInt("Journal_id"), rs.getString("Name"),
@@ -105,12 +106,31 @@ public class PostgreSQLJournalDAO implements JournalDAO {
         return Collections.unmodifiableList(list);
     }
 
-    @Override
-    public List<Journal> getSortedByDescending(String column) throws SQLException {
+    public List<Journal> getFilteredByPattern(String column, String pattern, String criteria) throws SQLException {
         List<Journal> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Tasks\" ORDER BY ? DESC";
+        String sql = "SELECT * FROM \"Journal\" WHERE ? LIKE '%?%' ORDER BY ? ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, column);
+            statement.setString(2, pattern);
+            statement.setString(3, column);
+            statement.setString(4, criteria.toUpperCase());
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                list.add(JournalFactory.createJournal(rs.getInt("Journal_id"), rs.getString("Name"),
+                        rs.getString("Description"), rs.getInt("User_id")));
+            }
+        }
+        return Collections.unmodifiableList(list);
+    }
+
+    public List<Journal> getFilteredByEquals(String column, String equal, String criteria) throws SQLException {
+        List<Journal> list = new LinkedList<>();
+        String sql = "SELECT * FROM \"Journal\" WHERE ? = '?' ORDER BY ? ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, column);
+            statement.setString(2, equal);
+            statement.setString(3, column);
+            statement.setString(4, criteria.toUpperCase());
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 list.add(JournalFactory.createJournal(rs.getInt("Journal_id"), rs.getString("Name"),

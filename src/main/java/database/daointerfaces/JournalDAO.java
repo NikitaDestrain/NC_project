@@ -16,7 +16,5 @@ public interface JournalDAO {
 
     public List<Journal> getAll() throws SQLException;
 
-    public List<Journal> getSortedByAscending(String column) throws SQLException;
-
-    public List<Journal> getSortedByDescending(String column) throws SQLException;
+    public List<Journal> getSortedByCriteria(String column, String criteria) throws SQLException;
 }

@@ -25,11 +25,11 @@ public class PostgreSQLDAOFactory implements DAOFactory {
     private static final String DRIVER_NAME = "org.postgresql.Driver";
     private static final String START_SCRIPT_NAME = "scripts/databasescript.sql";
     private static PostgreSQLDAOFactory instance;
+    //private DataSource dataSource;
     private Connection connection;
 
     private PostgreSQLDAOFactory() {
-        setConnection();
-        executeSqlStartScript();
+        setConnection(START_SCRIPT_NAME);
     }
 
     public static PostgreSQLDAOFactory getInstance() {
@@ -38,7 +38,7 @@ public class PostgreSQLDAOFactory implements DAOFactory {
         return instance;
     }
 
-    private void setConnection() {
+    public void setConnection(String pathStartScript) {
         try {
             Class.forName(DRIVER_NAME);
             connection = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -47,19 +47,31 @@ public class PostgreSQLDAOFactory implements DAOFactory {
         } catch (ClassNotFoundException e) {
             System.out.println("Driver was not found");
         }
-    }
-
-    @Override
-    public void disconnect() {
+        //раскоментить когда будут соединены два слоя
+        /*
         try {
-            connection.close();
+            Context context = new InitialContext();
+            Context env = (Context) context.lookup("java:comp/env");
+            this.dataSource = (DataSource) env.lookup("jdbc/cracker");
+        } catch (NamingException e) {
+            e.printStackTrace();
         } catch (SQLException e) {
-            System.out.println("Error disconnect");
-        }
+            e.printStackTrace();
+        }*/
+        executeSqlStartScript(pathStartScript);
     }
 
     @Override
     public Connection getConnection() {
+        //todo также после того как свяжем исползовать
+        /*if (dataSource != null) {
+            try {
+                return dataSource.getConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;*/
         return connection;
     }
 
@@ -78,11 +90,12 @@ public class PostgreSQLDAOFactory implements DAOFactory {
         return new PostgreSQLUsersDAO(connection);
     }
 
-    public void executeSqlStartScript() {
+    public void executeSqlStartScript(String path) {
         String delimiter = ";";
         Scanner scanner;
         try {
-            scanner = new Scanner(new FileInputStream(START_SCRIPT_NAME)).useDelimiter(delimiter);
+            //todo замменить на path
+            scanner = new Scanner(new FileInputStream(path)).useDelimiter(delimiter);
             Statement currentStatement = null;
             while (scanner.hasNext()) {
                 String rawStatement = scanner.next() + delimiter;

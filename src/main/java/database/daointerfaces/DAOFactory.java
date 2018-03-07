@@ -5,8 +5,10 @@ import java.sql.SQLException;
 
 public interface DAOFactory {
     public Connection getConnection() throws SQLException;
-    public TasksDAO getTasksDao ();
-    public JournalDAO getJournalDao ();
-    public UsersDAO getUsersDao ();
-    public void disconnect();
+
+    public TasksDAO getTasksDao();
+
+    public JournalDAO getJournalDao();
+
+    public UsersDAO getUsersDao();
 }

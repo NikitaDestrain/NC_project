@@ -20,23 +20,19 @@ SET default_tablespace = '';
 
 SET default_with_oids = FALSE;
 
-CREATE SEQUENCE IF NOT EXISTS auto_increment_users
+CREATE SEQUENCE IF NOT EXISTS auto_increment
   START WITH 0
   INCREMENT BY 1
   MINVALUE 0
   MAXVALUE 9223372036854775807
   CACHE 1;
 
-
-ALTER TABLE auto_increment_users
-  OWNER TO postgres;
-
 CREATE TABLE IF NOT EXISTS "Users" (
-  "User_id"           BIGINT DEFAULT nextval('auto_increment_users' :: REGCLASS) NOT NULL,
-  "Login"             CHARACTER VARYING(18)                                      NOT NULL UNIQUE,
-  "Password"          CHARACTER VARYING(30)                                      NOT NULL,
-  "Role"              CHARACTER VARYING(18)                                      NOT NULL,
-  "Registration_date" DATE                                                       NOT NULL,
+  "User_id"           BIGINT DEFAULT nextval('auto_increment' :: REGCLASS) NOT NULL,
+  "Login"             CHARACTER VARYING(18)                                NOT NULL UNIQUE,
+  "Password"          CHARACTER VARYING(30)                                NOT NULL,
+  "Role"              CHARACTER VARYING(18)                                NOT NULL,
+  "Registration_date" DATE                                                 NOT NULL,
   PRIMARY KEY ("User_id")
 );
 
@@ -45,21 +41,9 @@ ALTER TABLE "Users"
   OWNER TO postgres;
 
 
-CREATE SEQUENCE IF NOT EXISTS auto_increment_journal
-  START WITH 0
-  INCREMENT BY 1
-  MINVALUE 0
-  MAXVALUE 9223372036854775807
-  CACHE 1;
-
-
-ALTER TABLE auto_increment_journal
-  OWNER TO postgres;
-
-
 CREATE TABLE IF NOT EXISTS "Journal" (
-  "Journal_id"  BIGINT DEFAULT nextval('auto_increment_journal' :: REGCLASS) NOT NULL,
-  "Name"        CHARACTER VARYING(18)                                        NOT NULL UNIQUE,
+  "Journal_id"  BIGINT DEFAULT nextval('auto_increment' :: REGCLASS) NOT NULL,
+  "Name"        CHARACTER VARYING(18)                                NOT NULL UNIQUE,
   "Description" CHARACTER VARYING(80),
   "User_id"     BIGINT,
   PRIMARY KEY ("Journal_id"),
@@ -71,28 +55,16 @@ ALTER TABLE "Journal"
   OWNER TO postgres;
 
 
-CREATE SEQUENCE IF NOT EXISTS auto_increment_tasks
-  START WITH 0
-  INCREMENT BY 1
-  MINVALUE 0
-  MAXVALUE 9223372036854775807
-  CACHE 1;
-
-
-ALTER TABLE auto_increment_tasks
-  OWNER TO postgres;
-
-
 CREATE TABLE IF NOT EXISTS "Tasks" (
-  "Task_id"           BIGINT DEFAULT nextval('auto_increment_tasks' :: REGCLASS) NOT NULL,
-  "Name"              CHARACTER VARYING(18)                                      NOT NULL UNIQUE,
-  "Status"            CHARACTER VARYING(18)                                      NOT NULL,
+  "Task_id"           BIGINT DEFAULT nextval('auto_increment' :: REGCLASS) NOT NULL,
+  "Name"              CHARACTER VARYING(18)                                NOT NULL UNIQUE,
+  "Status"            CHARACTER VARYING(18)                                NOT NULL,
   "Description"       CHARACTER VARYING(80),
-  "Planned_date"      DATE                                                       NOT NULL,
-  "Notification_date" DATE                                                       NOT NULL,
-  "Upload_date"       DATE                                                       NOT NULL,
-  "Change_date"       DATE                                                       NOT NULL,
-  "Journal_id"        BIGINT                                                     NOT NULL,
+  "Planned_date"      DATE                                                 NOT NULL,
+  "Notification_date" DATE                                                 NOT NULL,
+  "Upload_date"       DATE                                                 NOT NULL,
+  "Change_date"       DATE                                                 NOT NULL,
+  "Journal_id"        BIGINT                                               NOT NULL,
   PRIMARY KEY ("Task_id"),
   FOREIGN KEY ("Journal_id") REFERENCES "Journal" ("Journal_id") ON UPDATE CASCADE ON DELETE CASCADE
 );
