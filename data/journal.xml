@@ -1,62 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <journal>
     <id>0</id>
-    <name>j1</name>
+    <name>name</name>
+    <description>desc</description>
     <userId>0</userId>
-    <tasks>
-        <entry>
-            <key>0</key>
-            <value>
-                <name>1</name>
-                <status>Overdue</status>
-                <description>desc1</description>
-                <notificationDate>2018-03-04T13:35:38.917+04:00</notificationDate>
-                <notification>04-03-2018</notification>
-                <plannedDate>2018-03-04T13:35:38.917+04:00</plannedDate>
-                <planned>04-03-2018</planned>
-                <id>0</id>
-                <uploadDate>2018-03-04T13:35:38.917+04:00</uploadDate>
-                <upload>04-03-2018</upload>
-                <changeDate>2018-03-04T13:35:38.917+04:00</changeDate>
-                <change>04-03-2018</change>
-                <journalId>0</journalId>
-            </value>
-        </entry>
-        <entry>
-            <key>1</key>
-            <value>
-                <name>2</name>
-                <status>Overdue</status>
-                <description>desc2</description>
-                <notificationDate>2018-03-04T13:35:38.957+04:00</notificationDate>
-                <notification>04-03-2018</notification>
-                <plannedDate>2018-03-04T13:35:38.957+04:00</plannedDate>
-                <planned>04-03-2018</planned>
-                <id>1</id>
-                <uploadDate>2018-03-04T13:35:38.957+04:00</uploadDate>
-                <upload>04-03-2018</upload>
-                <changeDate>2018-03-04T13:35:38.957+04:00</changeDate>
-                <change>04-03-2018</change>
-                <journalId>1</journalId>
-            </value>
-        </entry>
-        <entry>
-            <key>2</key>
-            <value>
-                <name>3</name>
-                <status>Overdue</status>
-                <description>desc3</description>
-                <notificationDate>2018-03-04T13:35:38.957+04:00</notificationDate>
-                <notification>04-03-2018</notification>
-                <plannedDate>2018-03-04T13:35:38.957+04:00</plannedDate>
-                <planned>04-03-2018</planned>
-                <id>2</id>
-                <uploadDate>2018-03-04T13:35:38.957+04:00</uploadDate>
-                <upload>04-03-2018</upload>
-                <changeDate>2018-03-04T13:35:38.957+04:00</changeDate>
-                <change>04-03-2018</change>
-                <journalId>1</journalId>
-            </value>
-        </entry>
-    </tasks>
+    <tasks/>
 </journal>

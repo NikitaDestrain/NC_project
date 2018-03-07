@@ -35,6 +35,14 @@ public class Journal implements Serializable {
         tasks = new HashMap<>();
     }
 
+    public Journal(String name, String description) {
+        this.name = name;
+        this.description = description;
+        this.id = 0;
+        this.userId = 0;
+        tasks = new HashMap<>();
+    }
+
     public int getUserId() {
         return userId;
     }

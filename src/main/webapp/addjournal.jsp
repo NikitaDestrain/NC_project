@@ -1,3 +1,4 @@
+<%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 <%@ page import="auxiliaryclasses.ConstantsClass" %><%--
   Created by IntelliJ IDEA.
   User: ывв
@@ -66,21 +67,44 @@
 
         <table>
             <caption>Add journal</caption>
+            <%
+                if (request.getAttribute(ConstantsClass.JOURNAL_PARAMETER) != null) {
+            %>
+            <x:parse xml="${requestScope.journal}" var="journal"/>
             <tr>
                 <td class="align-right">Name</td>
                 <td class="align-right">
                     <input type="text" name="<%=ConstantsClass.NAME%>"
-                           value="<%=request.getAttribute(ConstantsClass.NAME)==null?"":request.getAttribute(ConstantsClass.NAME)%>">
+                           value="<x:out select="$journal/journal/name"/>">
                 </td>
             </tr>
             <tr>
                 <td class="align-right">Description</td>
                 <td class="align-right">
                     <input type="text" name="<%=ConstantsClass.DESCRIPTION%>"
-                           value="<%=request.getAttribute(ConstantsClass.DESCRIPTION)==null?"":
-                           request.getAttribute(ConstantsClass.DESCRIPTION)%>">
+                           value="<x:out select="$journal/journal/description"/>">
                 </td>
             </tr>
+            <%
+            } else {
+            %>
+            <tr>
+                <td class="align-right">Name</td>
+                <td class="align-right">
+                    <input type="text" name="<%=ConstantsClass.NAME%>"
+                           value="">
+                </td>
+            </tr>
+            <tr>
+                <td class="align-right">Description</td>
+                <td class="align-right">
+                    <input type="text" name="<%=ConstantsClass.DESCRIPTION%>"
+                           value="">
+                </td>
+            </tr>
+            <%
+                }
+            %>
             <tr>
                 <td colspan="2"><input type="button" id="add" value="Add" onclick="buttonClick(this)"></td>
             </tr>
@@ -88,12 +112,12 @@
         <div class="center">
             <input type="button" id="back" value="Back to main page" onclick="buttonClick(this)">
         </div>
-        <div align="center">
-            <%=
-            request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)==null?"":request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)
-            %>
-        </div>
     </form>
+</div>
+<div align="center">
+    <%=
+    request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" : request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)
+    %>
 </div>
 </body>
 </html>

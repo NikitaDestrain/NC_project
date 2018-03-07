@@ -3,7 +3,6 @@ package servlet;
 
 import auxiliaryclasses.ConstantsClass;
 import client.commandprocessor.PasswordEncoder;
-import server.controllerforweb.Controller;
 import server.controllerforweb.XmlUtils;
 import server.model.*;
 
@@ -22,6 +21,8 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(ConstantsClass.SERVLET_ADDRESS)
 public class Servlet extends HttpServlet {
@@ -133,8 +134,8 @@ public class Servlet extends HttpServlet {
                             req.getServletContext().getRealPath(ConstantsClass.TASK_XSD_FILE));
                     if (taskCorrect) {
                         String t = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
-                        req.getSession().setAttribute(ConstantsClass.CURRENT_TASK, t);
-                        req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
+                        req.setAttribute(ConstantsClass.CURRENT_TASK, t);
+                        req.setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
                         req.getRequestDispatcher(ConstantsClass.EDIT_TASK_ADDRESS).forward(req, resp);
                     } else {
                         resp.getWriter().print(ConstantsClass.ERROR_XSD_COMPARING);
@@ -166,13 +167,40 @@ public class Servlet extends HttpServlet {
             case ConstantsClass.SORT:
                 String sortColumn = req.getParameter(ConstantsClass.SORT_COLUMN); // name||description
                 String sortCriteria = req.getParameter(ConstantsClass.SORT_CRITERIA); // asc||desc
+                String filterLike = req.getParameter(ConstantsClass.FILTER_LIKE);
+                String filterEquals = req.getParameter(ConstantsClass.FILTER_EQUALS);
                 String sortResult;
-                // todo формируешь новый journal container с отсортированными журанлами,
-                // пишешь его в xml, сравниваешь ее с xsd (тут наверное какой то void метод).
-                // Затем обновляешь container, journals(список журналов) и current journal этого класса(без этого все отвалится:) )
-                // дальше то, что ниже
 
-                //немного не понял логику, так что просто строка с хмл уже отсортированного контейнера
+                if (filterLike!= null && !filterLike.equals("")) {
+                    if(!isLikeFilterCorrect(filterLike)) {
+                        req.setAttribute(ConstantsClass.FILTER_LIKE, filterLike);
+                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_FILTER_LIKE);
+                        req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                    } else {
+                        sortActionTasks(req, resp);
+                    }
+                } else if (filterEquals!= null && !filterEquals.equals("")) {
+                    if(!isEqualsFilterCorrect(filterEquals)) {
+                        req.setAttribute(ConstantsClass.FILTER_EQUALS, filterEquals);
+                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_FILTER_EQUALS);
+                        req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                    } else {
+                        sortActionTasks(req, resp);
+                    }
+                }
+                break;
+        }
+    }
+
+    private void sortActionTasks (HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException{
+        resp.getWriter().print("success");
+        // todo формируешь новый journal container с отсортированными журанлами,
+        // пишешь его в xml, сравниваешь ее с xsd (тут наверное какой то void метод).
+        // Затем обновляешь container, journals(список журналов) и current journal этого класса(без этого все отвалится:) )
+        // дальше то, что ниже
+
+        //немного не понял логику, так что просто строка с хмл уже отсортированного контейнера
 //                try {
 //                    sortResult = controller.getSortedTasks(sortColumn, sortCriteria);
 //                } catch (SQLException e) {
@@ -180,16 +208,14 @@ public class Servlet extends HttpServlet {
 //                    //todo оповещение о неудаче
 //                }
 
-                String xmlFile = xmlUtils.parseXmlToString(req.getServletContext().
-                        getRealPath(ConstantsClass.JOURNAL_XML_FILE));
-                if (xmlFile != null)
-                    req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, xmlFile);
-                else
-                    resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
-
-                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
-                break;
-        }
+//        String xmlFile = xmlUtils.parseXmlToString(req.getServletContext().
+//                getRealPath(ConstantsClass.JOURNAL_XML_FILE));
+//        if (xmlFile != null)
+//            req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, xmlFile);
+//        else
+//            resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
+//
+//        req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
     }
 
     private void doAddTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -198,32 +224,19 @@ public class Servlet extends HttpServlet {
             case ConstantsClass.ADD:
                 String name = req.getParameter(ConstantsClass.NAME);
                 String description = req.getParameter(ConstantsClass.DESCRIPTION);
+                String planned = req.getParameter(ConstantsClass.PLANNED_DATE);
+                String notification = req.getParameter(ConstantsClass.NOTIFICATION_DATE);
 
                 if (name.length() == 0 || name.length() > ConstantsClass.NAME_FIELD_LENGTH) {
-                    req.setAttribute(ConstantsClass.NAME, name);
-                    req.setAttribute(ConstantsClass.DESCRIPTION, description);
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NAME_LENGTH);
-                    req.getRequestDispatcher(ConstantsClass.ADD_TASK_ADDRESS).forward(req, resp);
+                    incorrectAddTask(req, resp, name, description, notification, planned, ConstantsClass.ERROR_NAME_LENGTH);
                 } else if (description.length() > ConstantsClass.DESCRIPTION_FIELD_LENGTH) {
-                    req.setAttribute(ConstantsClass.NAME, name);
-                    req.setAttribute(ConstantsClass.DESCRIPTION, description);
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_DESCRIPTION_LENGTH);
-                    req.getRequestDispatcher(ConstantsClass.ADD_TASK_ADDRESS).forward(req, resp);
+                    incorrectAddTask(req, resp, name, description, notification, planned, ConstantsClass.ERROR_DESCRIPTION_LENGTH);
                 } else {
-                    String planned = reverseDate(req.getParameter(ConstantsClass.PLANNED_DATE));
-                    String notification = reverseDate(req.getParameter(ConstantsClass.NOTIFICATION_DATE));
-                    String upload = reverseDate(req.getParameter(ConstantsClass.UPLOAD_DATE));
-                    String change = reverseDate(req.getParameter(ConstantsClass.CHANGE_DATE));
-
                     Date plannedDate;
                     Date notificationDate;
-                    Date uploadDate;
-                    Date changeDate;
                     try {
-                        plannedDate = Date.valueOf(planned);
-                        notificationDate = Date.valueOf(notification);
-                        uploadDate = Date.valueOf(upload);
-                        changeDate = Date.valueOf(change);
+                        plannedDate = Date.valueOf(reverseDate(planned));
+                        notificationDate = Date.valueOf(reverseDate(notification));
 
                         resp.getWriter().print("Successful");
                         // todo вызов метода добавления + формирование нового журнала, обновление container'a,
@@ -239,25 +252,7 @@ public class Servlet extends HttpServlet {
 //                            //todo оповещение о неудаче
 //                        }
                     } catch (IllegalArgumentException e) {
-                        try {
-                            xmlUtils.writeTask(new Task(name, TaskStatus.Planned, description, req.getParameter(ConstantsClass.NOTIFICATION_DATE),
-                                            req.getParameter(ConstantsClass.PLANNED_DATE), 0, req.getParameter(ConstantsClass.UPLOAD_DATE), req.getParameter(ConstantsClass.CHANGE_DATE), 0),
-                                    req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
-                        } catch (Exception ex) {
-                            resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
-                        }
-                        boolean taskCorrect = xmlUtils.compareWithXsd(
-                                req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE),
-                                req.getServletContext().getRealPath(ConstantsClass.TASK_XSD_FILE));
-                        if (taskCorrect) {
-                            String t = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
-                            req.getSession().setAttribute(ConstantsClass.CURRENT_TASK, t);
-                            req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
-                            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_DATE_PARSE);
-                            req.getRequestDispatcher(ConstantsClass.ADD_TASK_ADDRESS).forward(req, resp);
-                        } else {
-                            resp.getWriter().print(ConstantsClass.ERROR_XSD_COMPARING);
-                        }
+                        incorrectAddTask(req, resp, name, description, notification, planned, ConstantsClass.ERROR_DATE_PARSE);
                     }
                 }
                 break;
@@ -270,41 +265,51 @@ public class Servlet extends HttpServlet {
         }
     }
 
+    private void incorrectAddTask(HttpServletRequest req, HttpServletResponse resp, String name,
+                                  String description, String notification, String planned, String message) throws ServletException, IOException {
+        try {
+            xmlUtils.writeTask(new Task(name, TaskStatus.Planned, description, notification, planned,
+                            0, "", "", 0),
+                    req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
+        } catch (Exception ex) {
+            resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
+        }
+        boolean taskCorrect = xmlUtils.compareWithXsd(
+                req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE),
+                req.getServletContext().getRealPath(ConstantsClass.TASK_XSD_FILE));
+        if (taskCorrect) {
+            String t = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
+            req.setAttribute(ConstantsClass.CURRENT_TASK, t);
+            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
+            req.getRequestDispatcher(ConstantsClass.ADD_TASK_ADDRESS).forward(req, resp);
+        } else {
+            resp.getWriter().print(ConstantsClass.ERROR_XSD_COMPARING);
+        }
+    }
+
     private void doEditTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String useraction = req.getParameter(ConstantsClass.USERACTION);
         switch (useraction) {
             case ConstantsClass.SAVE:
                 String name = req.getParameter(ConstantsClass.NAME);
                 String description = req.getParameter(ConstantsClass.DESCRIPTION);
-                String status = req.getParameter(ConstantsClass.STATUS);
-                TaskStatus taskStatus = TaskStatus.valueOf(status); // todo статус
+                TaskStatus taskStatus = TaskStatus.valueOf(req.getParameter(ConstantsClass.STATUS)); // todo статус
+                String planned = req.getParameter(ConstantsClass.PLANNED_DATE);
+                String notification = req.getParameter(ConstantsClass.NOTIFICATION_DATE);
                 int id = currentJournal.getId();
                 int curTaskId = currentTask.getId();
                 if (name.length() == 0 || name.length() > ConstantsClass.NAME_FIELD_LENGTH) {
-                    req.setAttribute(ConstantsClass.NAME, name);
-                    req.setAttribute(ConstantsClass.DESCRIPTION, description);
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NAME_LENGTH);
-                    req.getRequestDispatcher(ConstantsClass.EDIT_TASK_ADDRESS).forward(req, resp);
+                    incorrectEditTask(req, resp, name, description, planned, notification, ConstantsClass.ERROR_NAME_LENGTH);
                 } else if (description.length() > ConstantsClass.DESCRIPTION_FIELD_LENGTH) {
-                    req.setAttribute(ConstantsClass.NAME, name);
-                    req.setAttribute(ConstantsClass.DESCRIPTION, description);
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_DESCRIPTION_LENGTH);
-                    req.getRequestDispatcher(ConstantsClass.EDIT_TASK_ADDRESS).forward(req, resp);
+                    incorrectEditTask(req, resp, name, description, planned, notification, ConstantsClass.ERROR_DESCRIPTION_LENGTH);
                 } else {
-                    String planned = reverseDate(req.getParameter(ConstantsClass.PLANNED_DATE));
-                    String notification = reverseDate(req.getParameter(ConstantsClass.NOTIFICATION_DATE));
-                    String upload = reverseDate(req.getParameter(ConstantsClass.UPLOAD_DATE));
-                    String change = reverseDate(req.getParameter(ConstantsClass.CHANGE_DATE));
 
                     Date plannedDate;
                     Date notificationDate;
-                    Date uploadDate;
-                    Date changeDate;
                     try {
-                        plannedDate = Date.valueOf(planned);
-                        notificationDate = Date.valueOf(notification);
-                        uploadDate = Date.valueOf(upload);
-                        changeDate = Date.valueOf(change); // todo не изменять upload и change и убрать их из jsp
+                        plannedDate = Date.valueOf(reverseDate(planned));
+                        notificationDate = Date.valueOf(reverseDate(notification));
+                        // todo не изменять upload и change и убрать их из jsp DONE
 
                         resp.getWriter().print("Successful");
                         // todo вызов метода изменения по id  + формирование нового журнала, обновление container'a,
@@ -313,7 +318,7 @@ public class Servlet extends HttpServlet {
 
                         //логика метода в том, что он все делает по уже поменяной таски в модели, так что подставь нужный ид таски и журнала
                         int journalId = 0; // todo изменять поля таски по айди из журнала, а не новую
-                        int taskId = 0;
+                        int taskId = currentTask.getId();
 //                        String editedTaskString = controller.getTask(journalId, taskId);
 //                        //делаем из нее объект задачи, обновляем сетерами поля и отправляем
 //                        Task editedTask = null;
@@ -321,29 +326,12 @@ public class Servlet extends HttpServlet {
 //                            controller.editTask(editedTask);
 //                        } catch (SQLException e) {
 //                            e.printStackTrace();
-//                            //todo оповещение
+                        //req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
+//                            //todo оповещение; предлагаю отправлять оповещение об exception, как в строчке выше
+
 //                        }
                     } catch (IllegalArgumentException e) {
-                        try {
-                            xmlUtils.writeTask(new Task(name, (TaskStatus) req.getSession().getAttribute(ConstantsClass.CURRENT_STATUS),
-                                            description, req.getParameter(ConstantsClass.NOTIFICATION_DATE),
-                                            req.getParameter(ConstantsClass.PLANNED_DATE), 0, req.getParameter(ConstantsClass.UPLOAD_DATE), req.getParameter(ConstantsClass.CHANGE_DATE), 0),
-                                    req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
-                        } catch (Exception ex) {
-                            resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
-                        }
-                        boolean taskCorrect = xmlUtils.compareWithXsd(
-                                req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE),
-                                req.getServletContext().getRealPath(ConstantsClass.TASK_XSD_FILE));
-                        if (taskCorrect) {
-                            String t = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
-                            req.getSession().setAttribute(ConstantsClass.CURRENT_TASK, t);
-                            req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
-                            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_DATE_PARSE);
-                            req.getRequestDispatcher(ConstantsClass.EDIT_TASK_ADDRESS).forward(req, resp);
-                        } else {
-                            resp.getWriter().print(ConstantsClass.ERROR_XSD_COMPARING);
-                        }
+                        incorrectEditTask(req, resp, name, description, planned, notification, ConstantsClass.ERROR_DATE_PARSE);
                     }
                 }
                 break;
@@ -353,6 +341,31 @@ public class Servlet extends HttpServlet {
             case ConstantsClass.BACK_TO_TASKS:
                 req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
                 break;
+        }
+    }
+
+    private void incorrectEditTask(HttpServletRequest req, HttpServletResponse resp, String name,
+                                   String description, String planned, String notification, String message)
+            throws ServletException, IOException {
+        try {
+            xmlUtils.writeTask(new Task(name, currentTask.getStatus(),
+                            description, notification, planned,
+                            0, currentTask.getUpload(), currentTask.getChange(), currentJournal.getId()),
+                    req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
+        } catch (Exception ex) {
+            resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
+        }
+        boolean taskCorrect = xmlUtils.compareWithXsd(
+                req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE),
+                req.getServletContext().getRealPath(ConstantsClass.TASK_XSD_FILE));
+        if (taskCorrect) {
+            String t = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
+            req.setAttribute(ConstantsClass.CURRENT_TASK, t);
+            req.setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
+            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
+            req.getRequestDispatcher(ConstantsClass.EDIT_TASK_ADDRESS).forward(req, resp);
+        } else {
+            resp.getWriter().print(ConstantsClass.ERROR_XSD_COMPARING);
         }
     }
 
@@ -461,19 +474,13 @@ public class Servlet extends HttpServlet {
                 String name = req.getParameter(ConstantsClass.NAME);
                 String description = req.getParameter(ConstantsClass.DESCRIPTION);
 
-                if (name.length() > ConstantsClass.NAME_FIELD_LENGTH) {
-                    req.setAttribute(ConstantsClass.NAME, name);
-                    req.setAttribute(ConstantsClass.DESCRIPTION, description);
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NAME_LENGTH);
-                    req.getRequestDispatcher(ConstantsClass.ADD_JOURNAL_ADDRESS).forward(req, resp);
+                if (name.length() == 0 || name.length() > ConstantsClass.NAME_FIELD_LENGTH) {
+                    incorrectAddJournal(req, resp, name, description, ConstantsClass.ERROR_NAME_LENGTH);
                 } else if (description.length() > ConstantsClass.DESCRIPTION_FIELD_LENGTH) {
-                    req.setAttribute(ConstantsClass.NAME, name);
-                    req.setAttribute(ConstantsClass.DESCRIPTION, description);
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_DESCRIPTION_LENGTH);
-                    req.getRequestDispatcher(ConstantsClass.ADD_JOURNAL_ADDRESS).forward(req, resp);
+                    incorrectAddJournal(req, resp, name, description, ConstantsClass.ERROR_DESCRIPTION_LENGTH);
                 } else {
                     // todo добавляешь новый журнал по name, description
-                    int userId = 0; //какой юзер сейчас работает, кто создал задачу
+                    int userId = 0;// todo юзера верни после signin/signup и запиши его в локальную пер currentUser. Потом его айди бери просто
 //                    try {
 //                        controller.addJournal(name, description, userId);
 //                    } catch (SQLException e) {
@@ -487,6 +494,28 @@ public class Servlet extends HttpServlet {
         }
     }
 
+    private void incorrectAddJournal(HttpServletRequest req, HttpServletResponse resp,
+                                     String name, String description, String message)
+            throws ServletException, IOException {
+        try {
+            xmlUtils.writeJournal(new Journal(name, description),
+                    req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
+        } catch (Exception e) {
+            resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
+        }
+        boolean journalCorrect = xmlUtils.compareWithXsd(
+                req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE),
+                req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XSD_FILE));
+        if (journalCorrect) {
+            String j = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
+            req.setAttribute(ConstantsClass.JOURNAL_PARAMETER, j);
+            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
+            req.getRequestDispatcher(ConstantsClass.ADD_JOURNAL_ADDRESS).forward(req, resp);
+        } else {
+            resp.getWriter().print(ConstantsClass.ERROR_XSD_COMPARING);
+        }
+    }
+
     private void doEditJournal(HttpServletRequest req, HttpServletResponse resp) throws
             ServletException, IOException {
         String useraction = req.getParameter(ConstantsClass.USERACTION);
@@ -495,20 +524,14 @@ public class Servlet extends HttpServlet {
                 String name = req.getParameter(ConstantsClass.NAME);
                 String description = req.getParameter(ConstantsClass.DESCRIPTION);
 
-                if (name.length() > ConstantsClass.NAME_FIELD_LENGTH) {
-                    req.setAttribute(ConstantsClass.NAME, name);
-                    req.setAttribute(ConstantsClass.DESCRIPTION, description);
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NAME_LENGTH);
-                    req.getRequestDispatcher(ConstantsClass.EDIT_JOURNAL_ADDRESS).forward(req, resp);
+                if (name.length() == 0 || name.length() > ConstantsClass.NAME_FIELD_LENGTH) {
+                    incorrectEditJournal(req, resp, name, description, ConstantsClass.ERROR_NAME_LENGTH);
                 } else if (description.length() > ConstantsClass.DESCRIPTION_FIELD_LENGTH) {
-                    req.setAttribute(ConstantsClass.NAME, name);
-                    req.setAttribute(ConstantsClass.DESCRIPTION, description);
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_DESCRIPTION_LENGTH);
-                    req.getRequestDispatcher(ConstantsClass.EDIT_JOURNAL_ADDRESS).forward(req, resp);
+                    incorrectEditJournal(req, resp, name, description, ConstantsClass.ERROR_DESCRIPTION_LENGTH);
                 } else {
                     int id = (int) req.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL_ID);
                     // todo вызов метода изменения журнала по id
-                    //наверное можно просто каррент джорнал отправлять, меняя у него все поля
+                    //наверное можно просто каррент джорнал отправлять, меняя у него все поля //todo да, можно
 //                    try {
 //                        controller.editJournal(null);
 //                    } catch (SQLException e) {
@@ -519,6 +542,28 @@ public class Servlet extends HttpServlet {
             case ConstantsClass.BACK_TO_MAIN:
                 req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
                 break;
+        }
+    }
+
+    private void incorrectEditJournal(HttpServletRequest req, HttpServletResponse resp,
+                                      String name, String description, String message)
+            throws ServletException, IOException {
+        try {
+            xmlUtils.writeJournal(new Journal(name, description),
+                    req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
+        } catch (Exception e) {
+            resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
+        }
+        boolean journalCorrect = xmlUtils.compareWithXsd(
+                req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE),
+                req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XSD_FILE));
+        if (journalCorrect) {
+            String j = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
+            req.setAttribute(ConstantsClass.JOURNAL_PARAMETER, j);
+            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
+            req.getRequestDispatcher(ConstantsClass.EDIT_JOURNAL_ADDRESS).forward(req, resp);
+        } else {
+            resp.getWriter().print(ConstantsClass.ERROR_XSD_COMPARING);
         }
     }
 
@@ -534,12 +579,22 @@ public class Servlet extends HttpServlet {
                 usernumber = req.getParameter(ConstantsClass.USERNUMBER);
                 if (usernumber != null && !usernumber.equals("")) {
                     int num = Integer.parseInt(usernumber);
-
-                    req.setAttribute(ConstantsClass.NAME, journals.get(num).getName());
-                    req.setAttribute(ConstantsClass.DESCRIPTION, journals.get(num).getDescription());
-                    req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_ID, journals.get(num).getId());
-
-                    req.getRequestDispatcher(ConstantsClass.EDIT_JOURNAL_ADDRESS).forward(req, resp);
+                    currentJournal = journals.get(num);
+                    try {
+                        xmlUtils.writeJournal(currentJournal,
+                                req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
+                    } catch (Exception e) {
+                        resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
+                    }
+                    boolean journalCorrect = xmlUtils.compareWithXsd(
+                            req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE),
+                            req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XSD_FILE));
+                    if (journalCorrect) {
+                        String j = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
+                        req.setAttribute(ConstantsClass.JOURNAL_PARAMETER, j);
+                        req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_ID, journals.get(num).getId());
+                        req.getRequestDispatcher(ConstantsClass.EDIT_JOURNAL_ADDRESS).forward(req, resp);
+                    }
                 } else {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_JOURNAL);
                     req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
@@ -595,28 +650,67 @@ public class Servlet extends HttpServlet {
             case ConstantsClass.SORT:
                 String sortColumn = req.getParameter(ConstantsClass.SORT_COLUMN); // name||description
                 String sortCriteria = req.getParameter(ConstantsClass.SORT_CRITERIA); // asc||desc
-                String sortedJournals;
-                // todo формируешь новый journal container с отсортированными журанлами,
-                // пишешь его в xml, сравниваешь ее с xsd (тут наверное какой то void метод).
-                // Затем обновляешь container и journals(список журналов) этого класса(без этого все отвалится:) )
-                // дальше то, что ниже
+                String filterLike = req.getParameter(ConstantsClass.FILTER_LIKE);
+                String filterEquals = req.getParameter(ConstantsClass.FILTER_EQUALS);
 
-                //аналог с тасками
+                if (filterLike != null && !filterLike.equals("")) {
+                    if(!isLikeFilterCorrect(filterLike)) {
+                        req.setAttribute(ConstantsClass.FILTER_LIKE, filterLike);
+                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_FILTER_LIKE);
+                        req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                    } else {
+                        sortActionJournals(req, resp);
+                    }
+                } else if (filterEquals!= null && !filterEquals.equals("")) {
+                    if(!isEqualsFilterCorrect(filterEquals)) {
+                        req.setAttribute(ConstantsClass.FILTER_EQUALS, filterEquals);
+                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_FILTER_EQUALS);
+                        req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                    } else {
+                        sortActionJournals(req, resp);
+                    }
+                }
+                break;
+        }
+    }
+
+    private void sortActionJournals(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        resp.getWriter().print("success");
+        String sortedJournals;
+        // todo формируешь новый journal container с отсортированными журанлами,
+        // пишешь его в xml, сравниваешь ее с xsd (тут наверное какой то void метод).
+        // Затем обновляешь container и journals(список журналов) этого класса(без этого все отвалится:) )
+        // дальше то, что ниже
+
+        //аналог с тасками
 //                try {
 //                    sortedJournals = controller.getSortedJournals(sortColumn, sortCriteria);
 //                } catch (SQLException e) {
 //                    e.printStackTrace();
 //                }
 
-                String xmlFile = xmlUtils.parseXmlToString(req.getServletContext().
-                        getRealPath(ConstantsClass.JOURNALS_XML_FILE));
-                if (xmlFile != null)
-                    req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, xmlFile);
-                else
-                    resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
+//        String xmlFile = xmlUtils.parseXmlToString(req.getServletContext().
+//                getRealPath(ConstantsClass.JOURNALS_XML_FILE));
+//        if (xmlFile != null)
+//            req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, xmlFile);
+//        else
+//            resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
+//
+//        req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+    }
 
-                req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
-                break;
-        }
+    private boolean isLikeFilterCorrect(String like) {
+        Pattern pattern = Pattern.compile("[%_]*[A-Za-z0-9]+[%_]*");
+        Matcher matcher = pattern.matcher(like);
+
+        return matcher.matches();
+    }
+
+    private boolean isEqualsFilterCorrect(String equals) {
+        Pattern pattern = Pattern.compile("[A-Za-z0-9]+");
+        Matcher matcher = pattern.matcher(equals);
+
+        return matcher.matches();
     }
 }

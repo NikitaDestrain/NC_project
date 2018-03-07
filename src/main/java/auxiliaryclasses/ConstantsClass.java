@@ -67,6 +67,8 @@ public class ConstantsClass {
     public static final String ERROR_NAME_LENGTH = "The length of the \"name\" field \n should be between 0 and 18 characters";
     public static final String ERROR_DESCRIPTION_LENGTH = "The length of the \"description\" field \n should be less than 80 characters";
     public static final String ERROR_DATE_PARSE = "Enter date in format [d]d-[m]m-yyyy!";
+    public static final String ERROR_FILTER_LIKE = "\"Like\" filter should contain latin characters, numbers, \"%\" and \"_\" symbols!";
+    public static final String ERROR_FILTER_EQUALS = "\"Equals\" filter should contain latin characters and numbers!";
 
     // web constants
 
@@ -106,6 +108,9 @@ public class ConstantsClass {
     public static final String SORT_CRITERIA = "sortcriteria";
     public static final String SORT_ASC = "asc";
     public static final String SORT_DESC = "desc";
+    public static final String FILTER_LIKE = "like";
+    public static final String FILTER_EQUALS = "equals";
+    public static final String FILTER_TYPE = "filtertype";
     public static final String STATUS = "status";
     public static final String PLANNED_DATE = "planneddate";
     public static final String NOTIFICATION_DATE = "notificationdate";

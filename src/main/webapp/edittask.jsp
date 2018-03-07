@@ -19,7 +19,6 @@
             font-weight: bold;
             font-family: "Yu Gothic Light"
         }
-
         table {
             width: auto;
             height: auto;
@@ -28,31 +27,31 @@
             border-collapse: collapse;
             background-color: khaki;
         }
-
         caption {
             margin-bottom: 10px;
             font-weight: bold;
             font-family: "Yu Gothic Light";
         }
-
         td {
             text-align: center;
         }
-
         form {
             display: inline-block;
             text-align: center;
         }
-
         .align-right {
             text-align: right;
         }
-
-        .align-left {
+        .align-status {
             text-align: center;
             color: #FF0000;
         }
-
+        .align-center {
+            text-align: center;
+        }
+        .align-left {
+            text-align: left;
+        }
     </style>
     <script type="text/javascript">
         function buttonClick(x) {
@@ -80,7 +79,26 @@
 
         <table>
             <caption>Edit task</caption>
-            <x:parse xml="${sessionScope.task}" var="task"/>
+            <x:parse xml="${requestScope.task}" var="task"/>
+            <tr>
+                <td class="align-center" colspan="2">
+                    Journal name: <%=request.getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME)==null?"":request.getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME)%></td>
+            </tr>
+            <tr>
+                <td class="align-status" colspan="2">
+                    Task status: <x:out select="$task/task/status"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="align-center" colspan="2">
+                    Upload date: <x:out select="$task/task/upload"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="align-center" colspan="2">
+                    Change date: <x:out select="$task/task/change"/>
+                </td>
+            </tr>
             <tr>
                 <td class="align-right">Name</td>
                 <td class="align-right">
@@ -110,26 +128,8 @@
                 </td>
             </tr>
             <tr>
-                <td class="align-right">Upload date</td>
-                <td class="align-right">
-                    <input type="text" name="<%=ConstantsClass.UPLOAD_DATE%>" id="upload"
-                           value="<x:out select="$task/task/upload"/>"
-                    >
-                </td>
-            </tr>
-            <tr>
-                <td class="align-right">Change date</td>
-                <td class="align-right">
-                    <input type="text" name="<%=ConstantsClass.CHANGE_DATE%>" id="change"
-                           value="<x:out select="$task/task/change"/>">
-                </td>
-            </tr>
-            <tr>
-                <td class="align-right">Journal name: <%=request.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME)%></td>
-            </tr>
-            <tr>
                 <td class="align-right">Change journal name</td>
-                <td class="align-right">
+                <td class="align-left">
                     <select name=<%=ConstantsClass.JOURNAL_NAME%>>
                         <x:parse xml="${sessionScope.journalNames}" var="names"/>
                         <x:forEach select="$names/journalNames/name" var="name">
@@ -140,16 +140,11 @@
             </tr>
             <tr>
                 <td class="align-right">Change task status</td>
-                <td class="align-right">
+                <td class="align-left">
                     <select name="<%=ConstantsClass.STATUS%>">
                         <option value="<%=ConstantsClass.CANCELLED_STATUS%>">Cancelled</option>
                         <option value="<%=ConstantsClass.COMPLETED_STATUS%>">Completed</option>
                     </select>
-                </td>
-            </tr>
-            <tr>
-                <td class="align-left">
-                    Task status: <x:out select="$task/task/status"/>
                 </td>
             </tr>
             <tr>
@@ -162,10 +157,12 @@
         <div class="center">
             <input type="button" id="backtomain" value="Back to main page" onclick="buttonClick(this)">
         </div>
-        <div class="center">
-            <%=request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)==null?"":request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)%>
-        </div>
     </form>
+</div>
+<div align="center">
+    <%=
+    request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" : request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)
+    %>
 </div>
 </body>
 </html>

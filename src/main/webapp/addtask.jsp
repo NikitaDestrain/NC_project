@@ -18,7 +18,6 @@
             font-weight: bold;
             font-family: "Yu Gothic Light"
         }
-
         table {
             width: auto;
             height: auto;
@@ -27,24 +26,26 @@
             border-collapse: collapse;
             background-color: khaki;
         }
-
         caption {
             margin-bottom: 10px;
             font-weight: bold;
             font-family: "Yu Gothic Light";
         }
-
         td {
             text-align: center;
         }
-
         form {
             display: inline-block;
             text-align: center;
         }
-
         .align-right {
             text-align: right;
+        }
+        .align-center {
+            text-align: center;
+        }
+        .align-left {
+            text-align: left;
         }
     </style>
     <script type="text/javascript">
@@ -74,9 +75,9 @@
         <table>
             <caption>Add task</caption>
         <%
-            if (request.getSession().getAttribute(ConstantsClass.CURRENT_TASK) != null) {
+            if (request.getAttribute(ConstantsClass.CURRENT_TASK) != null) {
         %>
-        <x:parse xml="${sessionScope.task}" var="task"/>
+        <x:parse xml="${requestScope.task}" var="task"/>
             <tr>
                 <td class="align-right">Name</td>
                 <td class="align-right">
@@ -103,21 +104,6 @@
                 <td class="align-right">
                     <input type="text" name="<%=ConstantsClass.NOTIFICATION_DATE%>"
                            value="<x:out select="$task/task/notification"/>">
-                </td>
-            </tr>
-            <tr>
-                <td class="align-right">Upload date</td>
-                <td class="align-right">
-                    <input type="text" name="<%=ConstantsClass.UPLOAD_DATE%>"
-                           value="<x:out select="$task/task/upload"/>"
-                    >
-                </td>
-            </tr>
-            <tr>
-                <td class="align-right">Change date</td>
-                <td class="align-right">
-                    <input type="text" name="<%=ConstantsClass.CHANGE_DATE%>"
-                           value="<x:out select="$task/task/change"/>">
                 </td>
             </tr>
             <%
@@ -152,27 +138,12 @@
                                value="">
                     </td>
                 </tr>
-                <tr>
-                    <td class="align-right">Upload date</td>
-                    <td class="align-right">
-                        <input type="text" name="<%=ConstantsClass.UPLOAD_DATE%>"
-                               value=""
-                        >
-                    </td>
-                </tr>
-                <tr>
-                    <td class="align-right">Change date</td>
-                    <td class="align-right">
-                        <input type="text" name="<%=ConstantsClass.CHANGE_DATE%>"
-                               value="">
-                    </td>
-                </tr>
             <%
                 }
             %>
             <tr>
                 <td class="align-right">Journal name</td>
-                <td class="align-right">
+                <td class="align-left">
                     <select name=<%=ConstantsClass.JOURNAL_NAME%>>
                         <x:parse xml="${sessionScope.journalNames}" var="names"/>
                         <x:forEach select="$names/journalNames/name" var="name">
@@ -191,10 +162,12 @@
         <div class="center">
             <input type="button" id="backtomain" value="Back to main page" onclick="buttonClick(this)">
         </div>
-        <div class="center">
-            <%=request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)==null?"":request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)%>
-        </div>
     </form>
+</div>
+<div align="center">
+    <%=
+    request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" : request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)
+    %>
 </div>
 </body>
 </html>

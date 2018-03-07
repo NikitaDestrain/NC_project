@@ -37,20 +37,17 @@
             border-collapse: collapse;
             background-color: khaki;
         }
-
         .main-th {
             padding: 5px;
             border: 1px solid black;
             text-align: center;
         }
-
         .main-td {
             border: 1px solid black;
             padding: 5px;
-            text-align: left;
+            text-align: center;
             padding-right: 20px;
         }
-
         .button-table {
             width: auto;
             height: auto;
@@ -58,50 +55,33 @@
             border-collapse: collapse;
             background-color: khaki;
         }
-
         .button-table-td {
             padding: 5px;
             text-align: center;
             padding-right: 20px;
         }
-
         caption {
             margin-bottom: 10px;
             font-weight: bold;
             font-family: "Yu Gothic Light";
         }
-
         .count {
             background-color: darkkhaki;
             font-weight: bold;
             border: 1px solid black;
             text-align: center;
         }
-
         input[type="submit"] {
             display: block;
             align-self: center;
         }
-
-        .label {
-            margin-bottom: 10px;
-            font-weight: bold;
-            font-family: "Yu Gothic Light"
-        }
-
         div {
             align: center;
         }
-
         .center {
             text-align: center;
             font-weight: bold;
         }
-
-        .namelabel {
-            text-align: right;
-        }
-
         .button-div {
             background-color: khaki;
             width: auto;
@@ -109,6 +89,24 @@
         }
     </style>
     <script type="text/javascript">
+        function filterType() {
+            var select = document.getElementById("type");
+            var type = select.options[select.selectedIndex].value;
+            switch (type) {
+                case "" :
+                    document.getElementById("liketype").disabled = true;
+                    document.getElementById("equalstype").disabled = true;
+                    break;
+                case "like":
+                    document.getElementById("liketype").disabled = false;
+                    document.getElementById("equalstype").disabled = true;
+                    break;
+                case "equals":
+                    document.getElementById("equalstype").disabled = false;
+                    document.getElementById("liketype").disabled = true;
+                    break;
+            }
+        }
         function buttonClick(x) {
             switch (x.id) {
                 case "add":
@@ -151,7 +149,7 @@
     </script>
 </head>
 <body>
-<div class="center">TASK SCHEDULER</div>
+<div align="center"><strong>TASK SCHEDULER</strong></div>
 <div align="center">
     <form method="post" id="mainform" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
 
@@ -264,6 +262,42 @@
                     </td>
                 </tr>
                 <tr>
+                    <td>
+                        Choose filter:
+                    </td>
+                    <td>
+                        <select id="type" onchange="filterType()">
+                            <option value=""></option>
+                            <option value="like">
+                                Like
+                            </option>
+                            <option value="equals">
+                                Equals
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Like:
+                    </td>
+                    <td>
+                        <input type="text" id="liketype" name="<%=ConstantsClass.FILTER_LIKE%>"
+                               value="<%=request.getAttribute(ConstantsClass.FILTER_LIKE)==null?"":request.getAttribute(ConstantsClass.FILTER_LIKE)%>"
+                               disabled>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Equals:
+                    </td>
+                    <td>
+                        <input type="text" id="equalstype" name="<%=ConstantsClass.FILTER_EQUALS%>"
+                               value="<%=request.getAttribute(ConstantsClass.FILTER_EQUALS)==null?"":request.getAttribute(ConstantsClass.FILTER_EQUALS)%>"
+                               disabled>
+                    </td>
+                </tr>
+                <tr>
                     <td class="button-table-td" colspan="3">
                         <input type="button" id="sort" value="Sort" onclick="buttonClick(this)">
                     </td>
@@ -273,10 +307,12 @@
         <div class="center">
             <input type="button" id="back" value="Back to main page" onclick="buttonClick(this)">
         </div>
-        <div class="center">
-            <%=request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)==null?"":request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)%>
-        </div>
     </form>
+</div>
+<div align="center">
+    <%=
+    request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" : request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)
+    %>
 </div>
 </body>
 </html>

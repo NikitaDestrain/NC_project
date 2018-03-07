@@ -275,6 +275,21 @@ public class Task implements Comparable<Task>, Serializable {
         this.change = parseDate(changeDate);
     }
 
+    public String getNotification() {
+        return notification;
+    }
+
+    public String getPlanned() {
+        return planned;
+    }
+
+    public String getUpload() {
+        return upload;
+    }
+
+    public String getChange() {
+        return change;
+    }
 
     public int getJournalId() {
         return journalId;

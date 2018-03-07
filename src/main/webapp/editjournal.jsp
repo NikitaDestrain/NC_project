@@ -1,3 +1,4 @@
+<%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 <%@ page import="auxiliaryclasses.ConstantsClass" %><%--
   Created by IntelliJ IDEA.
   User: ывв
@@ -14,7 +15,6 @@
             font-weight: bold;
             font-family: "Yu Gothic Light"
         }
-
         table {
             width: auto;
             height: auto;
@@ -23,31 +23,25 @@
             border-collapse: collapse;
             background-color: khaki;
         }
-
         caption {
             margin-bottom: 10px;
             font-weight: bold;
             font-family: "Yu Gothic Light";
         }
-
         td {
             text-align: center;
         }
-
         form {
             display: inline-block;
             text-align: center;
         }
-
         .align-right {
             text-align: right;
         }
-
         .align-left {
             text-align: center;
             color: #FF0000;
         }
-
     </style>
     <script type="text/javascript">
         function buttonClick(x) {
@@ -72,18 +66,19 @@
 
         <table>
             <caption>Edit journal</caption>
+            <x:parse xml="${requestScope.journal}" var="journal"/>
             <tr>
                 <td class="align-right">Name</td>
                 <td class="align-right">
                     <input type="text" name="<%=ConstantsClass.NAME%>"
-                           value="<%=request.getAttribute(ConstantsClass.NAME)==null?"":request.getAttribute(ConstantsClass.NAME)%>">
+                           value="<x:out select="$journal/journal/name"/>">
                 </td>
             </tr>
             <tr>
                 <td class="align-right">Description</td>
                 <td class="align-right">
                     <input type="text" name="<%=ConstantsClass.DESCRIPTION%>"
-                           value="<%=request.getAttribute(ConstantsClass.DESCRIPTION)==null?"":request.getAttribute(ConstantsClass.DESCRIPTION)%>">
+                           value="<x:out select="$journal/journal/description"/>">
                 </td>
             </tr>
             <tr>
@@ -93,12 +88,12 @@
         <div class="center">
             <input type="button" id="back" value="Back to main page" onclick="buttonClick(this)">
         </div>
-        <div align="center">
-            <%=
-            request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)==null?"":request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)
-            %>
-        </div>
     </form>
+</div>
+<div align="center">
+    <%=
+    request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" : request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)
+    %>
 </div>
 </body>
 </html>

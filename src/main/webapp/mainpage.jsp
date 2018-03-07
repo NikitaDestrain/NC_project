@@ -27,20 +27,17 @@
             border-collapse: collapse;
             background-color: khaki;
         }
-
         .main-th {
             padding: 5px;
             border: 1px solid black;
             text-align: center;
         }
-
         .main-td {
             border: 1px solid black;
             padding: 5px;
             text-align: center;
             padding-right: 20px;
         }
-
         .button-table {
             width: auto;
             height: auto;
@@ -48,40 +45,33 @@
             border-collapse: collapse;
             background-color: khaki;
         }
-
         .button-table-td {
             padding: 5px;
             text-align: center;
             padding-right: 20px;
         }
-
         caption {
             margin-bottom: 10px;
             font-weight: bold;
             font-family: "Yu Gothic Light";
         }
-
         .count {
             background-color: darkkhaki;
             font-weight: bold;
             border: 1px solid black;
             text-align: center;
         }
-
         input[type="submit"] {
             display: block;
             align-self: center;
         }
-
         div {
             align: center;
         }
-
         .center {
             text-align: center;
             font-weight: bold;
         }
-
         .button-div {
             background-color: khaki;
             width: auto;
@@ -89,6 +79,24 @@
         }
     </style>
     <script type="text/javascript">
+        function filterType() {
+            var select = document.getElementById("type");
+            var type = select.options[select.selectedIndex].value;
+            switch (type) {
+                case "" :
+                    document.getElementById("liketype").disabled = true;
+                    document.getElementById("equalstype").disabled = true;
+                    break;
+                case "like":
+                    document.getElementById("liketype").disabled = false;
+                    document.getElementById("equalstype").disabled = true;
+                    break;
+                case "equals":
+                    document.getElementById("equalstype").disabled = false;
+                    document.getElementById("liketype").disabled = true;
+                    break;
+            }
+        }
         function buttonClick(x) {
             switch (x.id) {
                 case "add":
@@ -102,7 +110,7 @@
                 case "delete":
                     var radios = document.getElementsByName("usernumber");
                     var checked = false;
-                    for (var i = 0; i< radios.length; i++) {
+                    for (var i = 0; i < radios.length; i++) {
                         if (radios[i].checked) {
                             checked = true;
                             break;
@@ -134,99 +142,146 @@
 <%
     int count = 0;
 %>
-<form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
+<div align="center"><strong>TASK SCHEDULER</strong></div>
+<div align="center">
+    <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
 
-    <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
-    <input type="hidden" name="<%=ConstantsClass.ACTION%>" value=<%=ConstantsClass.DO_CRUD_FROM_MAIN%>>
+        <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
+        <input type="hidden" name="<%=ConstantsClass.ACTION%>" value=<%=ConstantsClass.DO_CRUD_FROM_MAIN%>>
 
-    <table class="main-table">
-        <caption>Journals</caption>
-        <tr>
-            <th class="count">№</th>
-            <th class="main-th">Name</th>
-            <th class="main-th">Description</th>
-        </tr>
-        <x:parse xml="${sessionScope.journalContainer}" var="container"/>
-        <x:forEach select="$container/journalContainer/journals/entry" var="journal">
-        <tr>
-            <td class="count">
-                <label>
-                    <%=count%>
-                    <input type="radio" name="<%=ConstantsClass.USERNUMBER%>" value="<%=count++%>"/>
-                </label>
-            </td>
-            <td class="main-td">
-                <x:out select="$journal/value/name"/>
-            </td>
-            <td class="main-td">
-                <x:out select="$journal/value/description"/>
-            </td>
-        </tr>
-        </x:forEach>
-    </table>
-    <div align="center" class="button-div">
-        <table class="button-table">
+        <table class="main-table">
+            <caption>Journals</caption>
             <tr>
-                <td class="button-table-td"><input type="button" id="choose" value="Choose journal"
-                                                   onclick="buttonClick(this)"></td>
-                <td class="button-table-td"><input type="button" id="add" value="Add journal"
-                                                   onclick="buttonClick(this)"></td>
-                <td class="button-table-td"><input type="button" id="edit" value="Edit journal"
-                                                   onclick="buttonClick(this)"></td>
-                <td class="button-table-td"><input type="button" id="delete" value="Delete journal"
-                                                   onclick="buttonClick(this)"></td>
+                <th class="count">№</th>
+                <th class="main-th">Name</th>
+                <th class="main-th">Description</th>
             </tr>
+            <x:parse xml="${sessionScope.journalContainer}" var="container"/>
+            <x:forEach select="$container/journalContainer/journals/entry" var="journal">
+                <tr>
+                    <td class="count">
+                        <label>
+                            <%=count%>
+                            <input type="radio" name="<%=ConstantsClass.USERNUMBER%>" value="<%=count++%>"/>
+                        </label>
+                    </td>
+                    <td class="main-td">
+                        <x:out select="$journal/value/name"/>
+                    </td>
+                    <td class="main-td">
+                        <x:out select="$journal/value/description"/>
+                    </td>
+                </tr>
+            </x:forEach>
         </table>
-    </div>
-    <div align="center">
-        <table class="button-table">
-            <tr>
-                <td>Sort by:</td>
-                <td>
-                    <select name="<%=ConstantsClass.SORT_COLUMN%>">
-                        <option value="<%=ConstantsClass.NAME%>">
-                            Name
-                        </option>
-                        <option value="<%=ConstantsClass.DESCRIPTION%>">
-                            Description
-                        </option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Criteria:
-                </td>
-                <td>
-                    <select name="<%=ConstantsClass.SORT_CRITERIA%>">
-                        <option value="<%=ConstantsClass.SORT_ASC%>">
-                            Ascending
-                        </option>
-                        <option value="<%=ConstantsClass.SORT_DESC%>">
-                            Descending
-                        </option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td class="button-table-td" colspan="3">
-                    <input type="button" id="sort" value="Sort" onclick="buttonClick(this)">
-                </td>
-            </tr>
-        </table>
-    </div>
-    <div class="center">
-        <%=
-        request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" : request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)
-        %>
-    </div>
-</form>
-<%--<%--%>
-<%--} else {--%>
-<%--%>--%>
-
-<%--<%--%>
-    <%--}--%>
-<%--%>--%>
+        <div align="center" class="button-div">
+            <table class="button-table">
+                <tr>
+                    <td class="button-table-td"><input type="button" id="choose" value="Choose journal"
+                                                       onclick="buttonClick(this)"></td>
+                    <td class="button-table-td"><input type="button" id="add" value="Add journal"
+                                                       onclick="buttonClick(this)"></td>
+                    <td class="button-table-td"><input type="button" id="edit" value="Edit journal"
+                                                       onclick="buttonClick(this)"></td>
+                    <td class="button-table-td"><input type="button" id="delete" value="Delete journal"
+                                                       onclick="buttonClick(this)"></td>
+                </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table class="button-table">
+                <tr>
+                    <td>Sort by:</td>
+                    <td>
+                        <select name="<%=ConstantsClass.SORT_COLUMN%>">
+                            <option value="<%=ConstantsClass.NAME%>">
+                                Name
+                            </option>
+                            <option value="<%=ConstantsClass.DESCRIPTION%>">
+                                Description
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Criteria:
+                    </td>
+                    <td>
+                        <select name="<%=ConstantsClass.SORT_CRITERIA%>">
+                            <option value="<%=ConstantsClass.SORT_ASC%>">
+                                Ascending
+                            </option>
+                            <option value="<%=ConstantsClass.SORT_DESC%>">
+                                Descending
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Criteria:
+                    </td>
+                    <td>
+                        <select name="<%=ConstantsClass.SORT_CRITERIA%>">
+                            <option value="<%=ConstantsClass.SORT_ASC%>">
+                                Ascending
+                            </option>
+                            <option value="<%=ConstantsClass.SORT_DESC%>">
+                                Descending
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Choose filter:
+                    </td>
+                    <td>
+                        <select id="type" onchange="filterType()">
+                            <option value=""></option>
+                            <option value="like">
+                                Like
+                            </option>
+                            <option value="equals">
+                                Equals
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Like:
+                    </td>
+                    <td>
+                        <input type="text" id="liketype" name="<%=ConstantsClass.FILTER_LIKE%>"
+                        value="<%=request.getAttribute(ConstantsClass.FILTER_LIKE)==null?"":request.getAttribute(ConstantsClass.FILTER_LIKE)%>"
+                               disabled>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Equals:
+                    </td>
+                    <td>
+                        <input type="text" id="equalstype" name="<%=ConstantsClass.FILTER_EQUALS%>"
+                               value="<%=request.getAttribute(ConstantsClass.FILTER_EQUALS)==null?"":request.getAttribute(ConstantsClass.FILTER_EQUALS)%>"
+                               disabled>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="button-table-td" colspan="3">
+                        <input type="button" id="sort" value="Sort" onclick="buttonClick(this)">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
+</div>
+<div align="center">
+    <%=
+    request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" : request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)
+    %>
+</div>
 </body>
 </html>
