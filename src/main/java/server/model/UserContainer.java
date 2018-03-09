@@ -30,6 +30,14 @@ public class UserContainer {
         return users.get(id);
     }
 
+    public User getUserByLogin(String login) {
+        for (User user : getUsers()) {
+            if (user.getLogin().equals(login))
+                return user;
+        }
+        return null;
+    }
+
     public void setRole(int id, String role) {
         users.get(id).setRole(role);
     }

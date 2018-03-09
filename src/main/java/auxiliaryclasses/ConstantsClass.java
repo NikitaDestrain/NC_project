@@ -40,7 +40,7 @@ public class ConstantsClass {
     public static final String TASK_XML_FILE = "/task.xml";
     public static final String TASK_XSD_FILE = "/task.xsd";
     public static final String USER_DATA = "USER_DATA";
-    public static final String SCRIPT_FILE = "/databasescript.sql";
+    public static final String SCRIPT_FILE = "scripts/databasescript.sql";
 
     public static final int SERVER_TREATMENT = 1;
     public static final int NOT_SERVER_TREATMENT = 0;
@@ -138,4 +138,8 @@ public class ConstantsClass {
     public static final int NAME_FIELD_LENGTH = 18;
     public static final int DESCRIPTION_FIELD_LENGTH = 80;
     public static final String CURRENT_STATUS = "curstatus";
+
+    public static final String USER_ROLE = "User";
+    public static final String MODERATOR_ROLE = "Moderator";
+    public static final String ADMINISTRATOR_ROLE = "Administrator";
 }

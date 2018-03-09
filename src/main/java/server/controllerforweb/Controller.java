@@ -55,12 +55,14 @@ public class Controller {
         return instance;
     }
 
-    private boolean checkDate(Date date) {
-        return !date.before(Calendar.getInstance().getTime());
+    public User signInUser(String login, String password) {
+        if (userAuthorizer.isUserDataCorrect(login, password))
+            return userContainer.getUserByLogin(login);
+        else return null;
     }
 
     public void addUser(String login, String password, String role) throws ControllerActionException {
-        if (userAuthorizer.isSuchLoginExists(login)) {
+        if (!userAuthorizer.isSuchLoginExists(login) && password != null) {
             try {
                 User user = usersDAO.create(login, password, role);
                 userContainer.addUser(user);
@@ -68,7 +70,8 @@ public class Controller {
             } catch (SQLException e) {
                 throw new ControllerActionException("Error! User has been not added.");
             }
-        }
+        } else
+            throw new ControllerActionException("Error! Login does not exist.");
     }
 
     public void deleteUser(int id) throws ControllerActionException {
@@ -90,38 +93,38 @@ public class Controller {
 
     }
 
-    public String getUser(int id) throws ControllerActionException {
+    public String getUser(int id, String path) throws ControllerActionException {
         try {
             User user = userContainer.getUser(id);
             if (user == null)
                 throw new ControllerActionException("Incorrect id! User has been not found.");
-            File file = new File("data/user.xml");
+            File file = new File(path);
             JAXBContext context = JAXBContext.newInstance(User.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(user, file);
-            return xmlUtils.parseXmlToString("data/user.xml");
+            return xmlUtils.parseXmlToString(path);
         } catch (JAXBException | IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public String getUsers() {
+    public String getUsers(String path) {
         try {
-            File file = new File("data/users.xml");
+            File file = new File(path);
             JAXBContext context = JAXBContext.newInstance(UserContainer.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(userContainer, file);
-            return xmlUtils.parseXmlToString("data/users.xml");
+            return xmlUtils.parseXmlToString(path);
         } catch (JAXBException | IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public String getSortedUsers(String column, String criteria) throws ControllerActionException {
+    public String getSortedUsers(String column, String criteria, String path) throws ControllerActionException {
         try {
             List<User> sortedUsers = usersDAO.getSortedByCriteria(column, criteria);
             UserContainer sortedUserContainer = new UserContainer();
@@ -129,12 +132,12 @@ public class Controller {
                 for (User user : sortedUsers)
                     sortedUserContainer.addUser(user);
             try {
-                File file = new File("data/sortedUsers.xml");
+                File file = new File(path);
                 JAXBContext context = JAXBContext.newInstance(UserContainer.class);
                 Marshaller marshaller = context.createMarshaller();
                 marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
                 marshaller.marshal(sortedUserContainer, file);
-                return xmlUtils.parseXmlToString("data/sortedUsers.xml");
+                return xmlUtils.parseXmlToString(path);
             } catch (JAXBException | IOException e) {
                 e.printStackTrace();
             }
@@ -186,7 +189,7 @@ public class Controller {
         }
     }
 
-    public String getTask(int journalId, int taskId, String path) { // todo сделай параметр String path, тк я смогу норм путь получить только так getServletContext().getRealPath(path)
+    public String getTask(int journalId, int taskId, String path) {
         try {
             File file = new File(path);
             JAXBContext context = JAXBContext.newInstance(Task.class);

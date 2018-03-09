@@ -31,7 +31,6 @@ public class PostgreSQLDAOFactory implements DAOFactory {
     private PostgreSQLDAOFactory(String path) {
         connection = getConnection();
         executeSqlStartScript(path);
-        //setConnection(START_SCRIPT_NAME);
     }
 
     private PostgreSQLDAOFactory() {
@@ -50,37 +49,12 @@ public class PostgreSQLDAOFactory implements DAOFactory {
         return instance;
     }
 
-    public void setConnection(String pathStartScript) {
-        try {
-            Class.forName(DRIVER_NAME);
-            connection = DriverManager.getConnection(DB_URL, USER, PASS);
-        } catch (SQLException e) {
-            System.out.println("Error connection");
-        } catch (ClassNotFoundException e) {
-            System.out.println("Driver was not found");
-        }
-        //раскоментить когда будут соединены два слоя
-        /*
-        try {
-            Context context = new InitialContext();
-            Context env = (Context) context.lookup("java:comp/env");
-            this.dataSource = (DataSource) env.lookup("jdbc/cracker");
-        } catch (NamingException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }*/
-        executeSqlStartScript(pathStartScript);
-    }
-
     @Override
     public Connection getConnection() {
-        //todo также после того как свяжем исползовать
-        // todo через сервлет все норм
         try {
             Context context = new InitialContext();
             Context env = (Context) context.lookup("java:comp/env");
-            this.dataSource = (DataSource) env.lookup("jdbc/cracker");
+            dataSource = (DataSource) env.lookup("jdbc/cracker");
             return dataSource.getConnection();
         } catch (NamingException | SQLException e) {
             e.printStackTrace();
@@ -103,11 +77,10 @@ public class PostgreSQLDAOFactory implements DAOFactory {
         return new PostgreSQLUsersDAO(connection);
     }
 
-    public void executeSqlStartScript(String path) {
+    private void executeSqlStartScript(String path) {
         String delimiter = ";";
         Scanner scanner;
         try {
-            //todo замменить на path
             scanner = new Scanner(new FileInputStream(path)).useDelimiter(delimiter);
             Statement currentStatement = null;
             while (scanner.hasNext()) {
