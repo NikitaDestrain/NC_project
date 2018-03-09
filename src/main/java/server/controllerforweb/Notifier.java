@@ -1,6 +1,5 @@
 package server.controllerforweb;
 
-import server.controllerforweb.NotificationTimer;
 import server.model.Task;
 
 import java.util.HashMap;

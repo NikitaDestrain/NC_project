@@ -4,7 +4,6 @@ import database.postgresql.PostgreSQLDAOFactory;
 import database.postgresql.PostgreSQLJournalDAO;
 import database.postgresql.PostgreSQLTasksDAO;
 import database.postgresql.PostgreSQLUsersDAO;
-import server.controller.LifecycleManager;
 import server.exceptions.ControllerActionException;
 import server.model.*;
 
