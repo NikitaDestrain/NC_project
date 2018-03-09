@@ -68,6 +68,9 @@ public class Task implements Comparable<Task>, Serializable {
     @XmlElement(name = "journalId")
     private int journalId;
 
+    @XmlElement(name = "isRescheduled")
+    private boolean isRescheduled;
+
     public Task() {
     }
 
@@ -93,7 +96,6 @@ public class Task implements Comparable<Task>, Serializable {
         this.uploadDate = uploadDate;
         this.changeDate = changeDate;
         this.journalId = journalId;
-
         this.notification = parseDate(notificationDate);
         this.planned = parseDate(plannedDate);
         this.upload = parseDate(uploadDate);
@@ -140,11 +142,16 @@ public class Task implements Comparable<Task>, Serializable {
         this.name = task.getName();
         this.status = task.getStatus();
         this.description = task.getDescription();
-        this.notificationDate = task.getNotificationDate();
-        this.plannedDate = task.getPlannedDate();
+        if (this.notificationDate != task.getNotificationDate()) {
+            this.notificationDate = task.getNotificationDate();
+            isRescheduled = true;
+        }
+        if (this.plannedDate != task.plannedDate) {
+            this.plannedDate = task.getPlannedDate();
+            isRescheduled = true;
+        }
         this.changeDate = task.getChangeDate();
         this.uploadDate = task.getUploadDate();
-
         this.notification = parseDate(task.getNotificationDate());
         this.planned = parseDate(task.getPlannedDate());
         this.upload = parseDate(task.getUploadDate());
@@ -221,8 +228,11 @@ public class Task implements Comparable<Task>, Serializable {
      * @param notificationDate the new task notification time
      */
     public void setNotificationDate(Date notificationDate) {
-        this.notificationDate = notificationDate;
-        this.notification = parseDate(notificationDate);
+        if (this.notificationDate != notificationDate) {
+            this.notificationDate = notificationDate;
+            this.notification = parseDate(notificationDate);
+            isRescheduled = true;
+        }
     }
 
     /**
@@ -240,8 +250,11 @@ public class Task implements Comparable<Task>, Serializable {
      * @param plannedDate new planned task time
      */
     public void setPlannedDate(Date plannedDate) {
-        this.plannedDate = plannedDate;
-        this.planned = parseDate(plannedDate);
+        if (this.plannedDate != plannedDate) {
+            this.plannedDate = plannedDate;
+            this.planned = parseDate(plannedDate);
+            isRescheduled = true;
+        }
     }
 
     /**
@@ -297,6 +310,10 @@ public class Task implements Comparable<Task>, Serializable {
 
     public void setJournalId(int journalId) {
         this.journalId = journalId;
+    }
+
+    public boolean isRescheduled() {
+        return isRescheduled;
     }
 
     //вернет -1 если у задачи переданной в кач-ве аргумента дата идет позже

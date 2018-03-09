@@ -29,6 +29,7 @@ public class Controller {
     private PostgreSQLTasksDAO tasksDAO;
     private XmlUtils xmlUtils;
     private UserAuthorizer userAuthorizer;
+    private Notifier notifier;
     private static Controller instance;
 
     //todo статусы у задачи
@@ -41,6 +42,7 @@ public class Controller {
         tasksDAO = (PostgreSQLTasksDAO) postgreSQLDAOFactory.getTasksDao();
         userAuthorizer = UserAuthorizer.getInstance();
         xmlUtils = XmlUtils.getInstance();
+        notifier = new Notifier();
         //todo создать классы исклдючений для некорректного заполнения контейнера
         try {
             createUserContainer();
@@ -167,6 +169,7 @@ public class Controller {
         try {
             Task task = tasksDAO.create(name, TaskStatus.Planned, description, notificationDate, plannedDate, journalId);
             journalContainer.getJournal(journalId).addTask(task);
+            notifier.addNotification(task);
         } catch (SQLException e) {
             throw new ControllerActionException("Error! Task has not been added.");
         }
@@ -176,6 +179,7 @@ public class Controller {
         try {
             tasksDAO.delete(task.getId());
             journalContainer.getJournal(task.getJournalId()).removeTask(task.getId());
+            notifier.cancelNotification(task.getId());
         } catch (SQLException e) {
             throw new ControllerActionException("Error! Task has not been deleted.");
         }
@@ -183,7 +187,14 @@ public class Controller {
 
     public void editTask(Task task) throws ControllerActionException {
         try {
+            if (task.isRescheduled() && statusManager.isStatusConversionValid(task.getStatus(), TaskStatus.Rescheduled)) {
+                task.setStatus(TaskStatus.Rescheduled);
+                notifier.editNotification(task);
+            }
+            if (task.getStatus() == TaskStatus.Completed || task.getStatus() == TaskStatus.Cancelled)
+                notifier.cancelNotification(task.getId());
             tasksDAO.update(task);
+
         } catch (SQLException e) {
             throw new ControllerActionException("Error! Task has not been edited.");
         }
@@ -288,6 +299,17 @@ public class Controller {
 
     public Task getTaskObject(int journalId, int taskId) {
         return journalContainer.getJournal(journalId).getTask(taskId);
+    }
+
+    public void setOverdue(Task task) {
+        try {
+            if (statusManager.isStatusConversionValid(task.getStatus(), TaskStatus.Overdue)) {
+                task.setStatus(TaskStatus.Overdue);
+                editTask(task);
+            }
+        } catch (ControllerActionException e) {
+            e.printStackTrace();
+        }
     }
 
 

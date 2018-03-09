@@ -1,6 +1,5 @@
 package server.controller;
 
-import server.model.Task;
 import server.model.TaskStatus;
 
 public class LifecycleManager {
