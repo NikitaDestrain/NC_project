@@ -1,11 +1,10 @@
 package servlet;
 
-
 import auxiliaryclasses.ConstantsClass;
-import client.commandprocessor.PasswordEncoder;
+import server.controller.PasswordEncoder;
 import database.postgresql.PostgreSQLDAOFactory;
-import server.controllerforweb.Controller;
-import server.controllerforweb.XmlUtils;
+import server.controller.Controller;
+import server.controller.XmlUtils;
 import server.exceptions.ControllerActionException;
 import server.model.*;
 

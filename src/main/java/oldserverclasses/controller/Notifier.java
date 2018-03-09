@@ -1,10 +1,8 @@
-package server.controller;
+package oldserverclasses.controller;
 
 import server.model.Task;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
+import java.util.*;
 
 public class Notifier {
 
@@ -18,8 +16,7 @@ public class Notifier {
     protected void addNotification(Task task) {
         NotificationTimer notificationTimer = new NotificationTimer(task);
         Timer timer = new Timer(true);
-        timer.schedule(notificationTimer, task.getNotificationDate().getTime() - System.currentTimeMillis()
-                + 86400000);
+        timer.schedule(notificationTimer, task.getNotificationDate().getTime() - System.currentTimeMillis());
         timers.put(task.getId(), timer);
     }
 
@@ -38,8 +35,7 @@ public class Notifier {
             timer_old.cancel();
             NotificationTimer notificationTimer = new NotificationTimer(task);
             Timer timer = new Timer(true);
-            timer.schedule(notificationTimer, task.getNotificationDate().getTime() - System.currentTimeMillis()
-                    + 86400000);
+            timer.schedule(notificationTimer, task.getNotificationDate().getTime() - System.currentTimeMillis());
             timers.put(task.getId(), timer);
         }
     }

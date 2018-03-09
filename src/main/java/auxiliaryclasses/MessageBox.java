@@ -1,6 +1,6 @@
 package auxiliaryclasses;
 
-import client.network.ClientNetworkFacade;
+import oldclientclasses.client.network.ClientNetworkFacade;
 
 import javax.swing.*;
 

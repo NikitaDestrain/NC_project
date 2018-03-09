@@ -1,19 +1,12 @@
 package server.controller;
 
-import auxiliaryclasses.MessageBox;
-import server.commandproccessor.ServerCommandSender;
-import server.exceptions.UnsuccessfulCommandActionException;
 import server.model.Task;
-import server.network.StreamContainer;
+import server.model.TaskStatus;
 
-import java.io.DataOutputStream;
-import java.util.List;
 import java.util.TimerTask;
 
 public class NotificationTimer extends TimerTask {
     private Task task;
-    private List<DataOutputStream> clients;
-    private ServerCommandSender commandSender = ServerCommandSender.getInstance();
 
     protected NotificationTimer(Task task) {
         this.task = task;
@@ -21,22 +14,7 @@ public class NotificationTimer extends TimerTask {
 
     @Override
     public void run() {
-        boolean overdue = true;
-        clients = StreamContainer.getInstance().getClientNotificationOutputStreams();
-        if (clients != null) {
-            for (DataOutputStream client : clients) {
-                System.out.println("Send notification to client");
-                try {
-                    commandSender.sendNotificationCommand(task, client);
-                } catch (UnsuccessfulCommandActionException e) {
-                    MessageBox.getInstance().showMessage("Could not send notification command!");
-                }
-                System.out.println("Success");
-                overdue = false;
-            }
-        }
-        if (overdue) {
-            Controller.getInstance().setOverdue(task.getId());
-        }
+        if(task.getStatus() != TaskStatus.Completed || task.getStatus() != TaskStatus.Cancelled)
+            Controller.getInstance().setOverdue(task);
     }
 }

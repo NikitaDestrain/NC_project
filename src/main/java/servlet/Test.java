@@ -1,12 +1,7 @@
 package servlet;
 
-import auxiliaryclasses.ConstantsClass;
-import server.controllerforweb.XmlUtils;
-import server.model.*;
-
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
-import java.sql.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

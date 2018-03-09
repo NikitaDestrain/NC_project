@@ -1,6 +1,6 @@
 package server.factories;
 
-import server.commandproccessor.Command;
+import oldserverclasses.commandproccessor.Command;
 
 public class ServerCommandFactory {
 
