@@ -94,15 +94,19 @@
             var type = select.options[select.selectedIndex].value;
             switch (type) {
                 case "" :
+                    document.getElementById("liketype").value = "";
+                    document.getElementById("equalstype").value = "";
                     document.getElementById("liketype").disabled = true;
                     document.getElementById("equalstype").disabled = true;
                     break;
                 case "like":
                     document.getElementById("liketype").disabled = false;
+                    document.getElementById("equalstype").value = "";
                     document.getElementById("equalstype").disabled = true;
                     break;
                 case "equals":
                     document.getElementById("equalstype").disabled = false;
+                    document.getElementById("liketype").value = "";
                     document.getElementById("liketype").disabled = true;
                     break;
             }
@@ -141,8 +145,13 @@
                     document.forms[0].submit();
                     break;
                 case "sort":
-                    document.getElementById("hid").value = "Sort";
-                    document.forms[0].submit();
+                    if (document.getElementById("sortcolumn").value.localeCompare("") == 0 ||
+                        document.getElementById("sortcriteria").value.localeCompare("") == 0)
+                        alert("Choose column and criterion to perform a sorting!");
+                    else {
+                        document.getElementById("hid").value = "Sort";
+                        document.forms[0].submit();
+                    }
                     break;
             }
         }
@@ -221,7 +230,7 @@
                 <tr>
                     <td>Sort by:</td>
                     <td>
-                        <select name="<%=ConstantsClass.SORT_COLUMN%>">
+                        <select name="<%=ConstantsClass.SORT_COLUMN%>" id="<%=ConstantsClass.SORT_COLUMN%>">
                             <option value="<%=ConstantsClass.STATUS%>">
                                 Status
                             </option>
@@ -248,10 +257,10 @@
                 </tr>
                 <tr>
                     <td>
-                        Criteria:
+                        Criterion:
                     </td>
                     <td>
-                        <select name="<%=ConstantsClass.SORT_CRITERIA%>">
+                        <select name="<%=ConstantsClass.SORT_CRITERIA%>" id="<%=ConstantsClass.SORT_CRITERIA%>>
                             <option value="<%=ConstantsClass.SORT_ASC%>">
                                 Ascending
                             </option>

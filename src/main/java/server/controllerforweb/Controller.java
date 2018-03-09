@@ -186,35 +186,35 @@ public class Controller {
         }
     }
 
-    public String getTask(int journalId, int taskId) { // todo сделай параметр String path, тк я смогу норм путь получить только так getServletContext().getRealPath(path)
+    public String getTask(int journalId, int taskId, String path) { // todo сделай параметр String path, тк я смогу норм путь получить только так getServletContext().getRealPath(path)
         try {
-            File file = new File("data/task.xml");
+            File file = new File(path);
             JAXBContext context = JAXBContext.newInstance(Task.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(journalContainer.getJournal(journalId).getTask(taskId), file);
-            return xmlUtils.parseXmlToString("data/task.xml");
+            return xmlUtils.parseXmlToString(path);
         } catch (JAXBException | IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public String getTasks(int journalId) {
+    public String getTasks(int journalId, String path) {
         try {
-            File file = new File("data/tasks.xml");
+            File file = new File(path);
             JAXBContext context = JAXBContext.newInstance(Journal.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(journalContainer.getJournal(journalId), file);
-            return xmlUtils.parseXmlToString("data/tasks.xml");
+            return xmlUtils.parseXmlToString(path);
         } catch (JAXBException | IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public String getSortedTasks(String column, String criteria) throws ControllerActionException {
+    public String getSortedTasks(String column, String criteria, String path) throws ControllerActionException {
         try {
             List<Task> sortedTasks = tasksDAO.getSortedByCriteria(column, criteria);
             Journal sortedTasksJournal = new Journal();
@@ -222,12 +222,12 @@ public class Controller {
                 for (Task task : sortedTasks)
                     sortedTasksJournal.addTask(task);
             try {
-                File file = new File("data/sortedTasks.xml");
+                File file = new File(path);
                 JAXBContext context = JAXBContext.newInstance(Journal.class);
                 Marshaller marshaller = context.createMarshaller();
                 marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
                 marshaller.marshal(sortedTasksJournal, file);
-                return xmlUtils.parseXmlToString("data/sortedTasks.xml");
+                return xmlUtils.parseXmlToString(path);
             } catch (JAXBException | IOException e) {
                 e.printStackTrace();
             }
@@ -237,7 +237,7 @@ public class Controller {
         return null;
     }
 
-    public String getFilteredTasksByPattern(String column, String pattern, String criteria) throws ControllerActionException {
+    public String getFilteredTasksByPattern(String column, String pattern, String criteria, String path) throws ControllerActionException {
         try {
             List<Task> sortedTasks = tasksDAO.getFilteredByPattern(column, pattern, criteria);
             Journal sortedTasksJournal = new Journal();
@@ -245,12 +245,12 @@ public class Controller {
                 for (Task task : sortedTasks)
                     sortedTasksJournal.addTask(task);
             try {
-                File file = new File("data/sortedTasks.xml");
+                File file = new File(path);
                 JAXBContext context = JAXBContext.newInstance(Journal.class);
                 Marshaller marshaller = context.createMarshaller();
                 marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
                 marshaller.marshal(sortedTasksJournal, file);
-                return xmlUtils.parseXmlToString("data/sortedTasks.xml");
+                return xmlUtils.parseXmlToString(path);
             } catch (JAXBException | IOException e) {
                 e.printStackTrace();
             }
@@ -260,7 +260,7 @@ public class Controller {
         return null;
     }
 
-    public String getFilteredTasksByEquals(String column, String equal, String criteria) throws ControllerActionException {
+    public String getFilteredTasksByEquals(String column, String equal, String criteria, String path) throws ControllerActionException {
         try {
             List<Task> sortedTasks = tasksDAO.getFilteredByEquals(column, equal, criteria);
             Journal sortedTasksJournal = new Journal();
@@ -268,12 +268,12 @@ public class Controller {
                 for (Task task : sortedTasks)
                     sortedTasksJournal.addTask(task);
             try {
-                File file = new File("data/sortedTasks.xml");
+                File file = new File(path);
                 JAXBContext context = JAXBContext.newInstance(Journal.class);
                 Marshaller marshaller = context.createMarshaller();
                 marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
                 marshaller.marshal(sortedTasksJournal, file);
-                return xmlUtils.parseXmlToString("data/sortedTasks.xml");
+                return xmlUtils.parseXmlToString(path);
             } catch (JAXBException | IOException e) {
                 e.printStackTrace();
             }
@@ -318,38 +318,38 @@ public class Controller {
         }
     }
 
-    public String getJournal(int id) throws ControllerActionException {
+    public String getJournal(int id, String path) throws ControllerActionException {
         try {
-            File file = new File("data/journal.xml");
+            File file = new File(path);
             Journal journal = journalContainer.getJournal(id);
             if (journal == null)
-                throw new ControllerActionException("Error! Journal has been not found.");
+                throw new ControllerActionException("Error! Journal has not been found.");
             JAXBContext context = JAXBContext.newInstance(Journal.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(journal, file);
-            return xmlUtils.parseXmlToString("data/journal.xml");
+            return xmlUtils.parseXmlToString(path);
         } catch (JAXBException | IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public String getJournals() {
+    public String getJournals(String path) {
         try {
-            File file = new File("data/journals.xml");
+            File file = new File(path);
             JAXBContext context = JAXBContext.newInstance(JournalContainer.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(journalContainer, file);
-            return xmlUtils.parseXmlToString("data/journals.xml");
+            return xmlUtils.parseXmlToString(path);
         } catch (JAXBException | IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public String getSortedJournals(String column, String criteria) throws ControllerActionException {
+    public String getSortedJournals(String column, String criteria, String path) throws ControllerActionException {
         try {
             List<Journal> sortedJournals = journalDAO.getSortedByCriteria(column, criteria);
             JournalContainer sortedJournalContainer = new JournalContainer();
@@ -357,12 +357,12 @@ public class Controller {
                 for (Journal journal : sortedJournals)
                     sortedJournalContainer.addJournal(journal);
             try {
-                File file = new File("data/sortedJournals.xml");
+                File file = new File(path);
                 JAXBContext context = JAXBContext.newInstance(JournalContainer.class);
                 Marshaller marshaller = context.createMarshaller();
                 marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
                 marshaller.marshal(sortedJournalContainer, file);
-                return xmlUtils.parseXmlToString("data/sortedJournals.xml");
+                return xmlUtils.parseXmlToString(path);
             } catch (JAXBException | IOException e) {
                 e.printStackTrace();
             }
@@ -372,7 +372,7 @@ public class Controller {
         return null;
     }
 
-    public String getFilteredJournalsByPattern(String column, String pattern, String criteria) throws ControllerActionException {
+    public String getFilteredJournalsByPattern(String column, String pattern, String criteria, String path) throws ControllerActionException {
         try {
             List<Journal> sortedJournals = journalDAO.getFilteredByPattern(column, pattern, criteria);
             JournalContainer sortedJournalContainer = new JournalContainer();
@@ -380,12 +380,12 @@ public class Controller {
                 for (Journal journal : sortedJournals)
                     sortedJournalContainer.addJournal(journal);
             try {
-                File file = new File("data/sortedJournals.xml");
+                File file = new File(path);
                 JAXBContext context = JAXBContext.newInstance(JournalContainer.class);
                 Marshaller marshaller = context.createMarshaller();
                 marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
                 marshaller.marshal(sortedJournalContainer, file);
-                return xmlUtils.parseXmlToString("data/sortedJournals.xml");
+                return xmlUtils.parseXmlToString(path);
             } catch (JAXBException | IOException e) {
                 e.printStackTrace();
             }
@@ -395,7 +395,7 @@ public class Controller {
         return null;
     }
 
-    public String getFilteredJournalsByEquals(String column, String equal, String criteria) throws ControllerActionException {
+    public String getFilteredJournalsByEquals(String column, String equal, String criteria, String path) throws ControllerActionException {
         try {
             List<Journal> sortedJournals = journalDAO.getFilteredByPattern(column, equal, criteria);
             JournalContainer sortedJournalContainer = new JournalContainer();
@@ -403,12 +403,12 @@ public class Controller {
                 for (Journal journal : sortedJournals)
                     sortedJournalContainer.addJournal(journal);
             try {
-                File file = new File("data/sortedJournals.xml");
+                File file = new File(path);
                 JAXBContext context = JAXBContext.newInstance(JournalContainer.class);
                 Marshaller marshaller = context.createMarshaller();
                 marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
                 marshaller.marshal(sortedJournalContainer, file);
-                return xmlUtils.parseXmlToString("data/sortedJournals.xml");
+                return xmlUtils.parseXmlToString(path);
             } catch (JAXBException | IOException e) {
                 e.printStackTrace();
             }
@@ -424,6 +424,10 @@ public class Controller {
 
     public JournalContainer getJournalContainer() {
         return journalContainer;
+    }
+
+    public JournalNamesContainer getJournalNamesContainer() {
+        return journalNamesContainer;
     }
 
     private void createUserContainer() throws ControllerActionException {

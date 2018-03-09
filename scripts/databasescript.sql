@@ -30,7 +30,7 @@ CREATE SEQUENCE IF NOT EXISTS auto_increment
 CREATE TABLE IF NOT EXISTS "Users" (
   "User_id"           BIGINT DEFAULT nextval('auto_increment' :: REGCLASS) NOT NULL,
   "Login"             CHARACTER VARYING(18)                                NOT NULL UNIQUE,
-  "Password"          CHARACTER VARYING(30)                                NOT NULL,
+  "Password"          CHARACTER VARYING(40)                                NOT NULL,
   "Role"              CHARACTER VARYING(18)                                NOT NULL,
   "Registration_date" DATE                                                 NOT NULL,
   PRIMARY KEY ("User_id")

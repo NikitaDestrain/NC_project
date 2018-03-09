@@ -54,6 +54,21 @@ public class PostgreSQLUsersDAO implements UsersDAO {
     }
 
     @Override
+    public User getByLoginAndPassword(String login, String password) throws SQLException {
+        String sql = "SELECT * FROM \"Users\" WHERE \"Login\" = ? AND \"Password\" = ?;";
+        User user;
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setString(1, login);
+            stm.setString(2, password);
+            ResultSet rs = stm.executeQuery();
+            rs.next();
+            user = UserFactory.createUser(rs.getInt("User_id"), rs.getString("Login"),
+                    rs.getString("Password"), rs.getString("Role"), rs.getDate("Registration_date"));
+        }
+        return user;
+    }
+
+    @Override
     public void update(User user) throws SQLException {
         String sql = "UPDATE \"Users\" SET \"Login\" = ?, \"Password\" = ?, \"Role\" = ? WHERE \"User_id\" = ?";
         try (PreparedStatement stm = connection.prepareStatement(sql);) {

@@ -37,8 +37,10 @@
             var password = document.getElementById("password").value;
             var repeat = document.getElementById("repeat").value;
             if (login.length != 0 && password.length != 0 && repeat.length != 0) {
-                if (password.localeCompare(repeat) == 0)
+                if (password.localeCompare(repeat) == 0) {
+                    document.getElementById("hid").value = "signup";
                     document.forms[0].submit();
+                }
                 else
                     alert("Passwords have to be equal!")
             }
@@ -54,7 +56,7 @@
 
     <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
 
-        <input type="hidden" name="<%=ConstantsClass.ACTION%>" value=<%=ConstantsClass.DO_SIGN_UP%>/>
+        <input type="hidden" name="<%=ConstantsClass.ACTION%>" id="hid"/>
 
         <table>
             <tr>
@@ -71,7 +73,8 @@
             <tr>
 
                 <td class="align-right">Repeat password:</td>
-                <td><input type="password" name="<%=ConstantsClass.REPEAT_PASSWORD_PARAMETER%>" value="" id="repeat"/></td>
+                <td><input type="password" name="<%=ConstantsClass.REPEAT_PASSWORD_PARAMETER%>" value="" id="repeat"/>
+                </td>
             </tr>
             <tr>
                 <td class="align-right" colspan="2"><input type="button" value="Sign up" onclick="buttonClick()"/></td>

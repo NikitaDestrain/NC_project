@@ -3,7 +3,11 @@ package servlet;
 
 import auxiliaryclasses.ConstantsClass;
 import client.commandprocessor.PasswordEncoder;
+import database.postgresql.PostgreSQLDAOFactory;
+import server.controllerforweb.Controller;
+import server.controllerforweb.UserAuthorizer;
 import server.controllerforweb.XmlUtils;
+import server.exceptions.ControllerActionException;
 import server.model.*;
 
 import javax.naming.Context;
@@ -18,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,7 +35,9 @@ public class Servlet extends HttpServlet {
     private DataSource dataSource;
     private PasswordEncoder encoder = PasswordEncoder.getInstance();
     private XmlUtils xmlUtils = XmlUtils.getInstance();
-    //private Controller controller = Controller.getInstance();
+    private UserAuthorizer authorizer = UserAuthorizer.getInstance();
+    private Controller controller = Controller.getInstance();
+    private PostgreSQLDAOFactory factory;
 
     private JournalContainer container;
 
@@ -42,25 +49,28 @@ public class Servlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        ServletContext servletContext = config.getServletContext();
-        try {
-            Context context = new InitialContext();
-            Context env = (Context) context.lookup("java:comp/env");
-            this.dataSource = (DataSource) env.lookup("jdbc/cracker");
-            this.connection = dataSource.getConnection();
-        } catch (NamingException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-        try { // todo после действий в sign in и sign up удалить этот блок, он тестовый
-            String path = servletContext.getRealPath(ConstantsClass.JOURNALS_XML_FILE);
-            container = xmlUtils.readJournalContainer(path);
-            journals = container.getJournals();
-        } catch (Exception e) {
+//        try {
+//            Context context = new InitialContext();
+//            Context env = (Context) context.lookup("java:comp/env");
+//            this.dataSource = (DataSource) env.lookup("jdbc/cracker");
+//            this.connection = dataSource.getConnection();
+//        } catch (NamingException e) {
+//            e.printStackTrace();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+        factory = PostgreSQLDAOFactory.getInstance(config.getServletContext().getRealPath(ConstantsClass.SCRIPT_FILE));
 
-        }
+        //        ServletContext servletContext = config.getServletContext();
+
+//        try { // todo после действий в sign in и sign up удалить этот блок, он тестовый
+//            String path = servletContext.getRealPath(ConstantsClass.JOURNALS_XML_FILE);
+//            container = xmlUtils.readJournalContainer(path);
+//            journals = container.getJournals();
+//        } catch (Exception e) {
+//
+//        }
     }
 
     @Override
@@ -105,6 +115,12 @@ public class Servlet extends HttpServlet {
             names.add(j.getName());
         }
         return names;
+    }
+
+    private void updateJournals(HttpServletRequest req) throws Exception {
+        JournalContainer container = xmlUtils.readJournalContainer(req.getServletContext().
+                getRealPath(ConstantsClass.JOURNALS_XML_FILE));
+        journals = container.getJournals();
     }
 
     private void doActionFromTasks(HttpServletRequest req, HttpServletResponse resp)
@@ -169,7 +185,6 @@ public class Servlet extends HttpServlet {
                 String sortCriteria = req.getParameter(ConstantsClass.SORT_CRITERIA); // asc||desc
                 String filterLike = req.getParameter(ConstantsClass.FILTER_LIKE);
                 String filterEquals = req.getParameter(ConstantsClass.FILTER_EQUALS);
-                String sortResult;
 
                 if (filterLike!= null && !filterLike.equals("")) {
                     if(!isLikeFilterCorrect(filterLike)) {
@@ -177,7 +192,7 @@ public class Servlet extends HttpServlet {
                         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_FILTER_LIKE);
                         req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
                     } else {
-                        sortActionTasks(req, resp);
+                        sortActionTasks(req, resp, sortColumn, sortCriteria, filterLike, filterEquals);
                     }
                 } else if (filterEquals!= null && !filterEquals.equals("")) {
                     if(!isEqualsFilterCorrect(filterEquals)) {
@@ -185,14 +200,15 @@ public class Servlet extends HttpServlet {
                         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_FILTER_EQUALS);
                         req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
                     } else {
-                        sortActionTasks(req, resp);
+                        sortActionTasks(req, resp, sortColumn, sortCriteria, filterLike, filterEquals);
                     }
                 }
                 break;
         }
     }
 
-    private void sortActionTasks (HttpServletRequest req, HttpServletResponse resp)
+    private void sortActionTasks (HttpServletRequest req, HttpServletResponse resp, String sortColumn,
+                                  String sortCriteria, String filterLike, String filterEquals)
             throws ServletException, IOException{
         resp.getWriter().print("success");
         // todo формируешь новый journal container с отсортированными журанлами,
@@ -394,31 +410,26 @@ public class Servlet extends HttpServlet {
             case ConstantsClass.DO_SIGN_IN:
                 login = req.getParameter(ConstantsClass.LOGIN_PARAMETER);
                 password = req.getParameter(ConstantsClass.PASSWORD_PARAMETER);
-//                        try {
-//                            encryptedPassword = encoder.encode(password);
-//                        } catch (NoSuchAlgorithmException e) {
-//                            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
-//                            req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
-//                            break;
-//                        }
-//
-//                        if (authorizer.isUserDataCorrect(login, encryptedPassword)) {
-//                            String xmlFile = xmlUtils.parseXmlToString(req.getServletContext().
-//                            getRealPath(ConstantsClass.JOURNALS_XML_FILE));
-//                    if (xmlFile != null)
-//                        req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, xmlFile);
-//                    else
-//                        resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
-//
-//                    req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
-//                        } else {
-//                            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_IN);
-//                            req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
-//                        } // todo раскомменти как соединишь authorizer'a с дао, а то, что ниже в блоке удали
+                try {
+                    encryptedPassword = encoder.encode(password);
+                } catch (NoSuchAlgorithmException e) {
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
+                    req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
+                    req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
+                    break;
+                }
 
-                if (login.equals("1") && password.equals("1")) {
-                    String xmlFile = xmlUtils.parseXmlToString(req.getServletContext().
+                if (authorizer.isUserDataCorrect(login, encryptedPassword)) {
+                    currentUser = authorizer.getSignedUser();
+                    String xmlFile = controller.getJournals(req.getServletContext().
                             getRealPath(ConstantsClass.JOURNALS_XML_FILE));
+                    try {
+                        updateJournals(req);
+                    } catch (Exception e) {
+                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_IN);
+                        req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
+                        req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
+                    }
                     if (xmlFile != null)
                         req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, xmlFile);
                     else
@@ -427,8 +438,23 @@ public class Servlet extends HttpServlet {
                     req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
                 } else {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_IN);
+                    req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
                     req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
                 }
+
+//                if (login.equals("1") && password.equals("1")) {
+//                    String xmlFile = xmlUtils.parseXmlToString(req.getServletContext().
+//                            getRealPath(ConstantsClass.JOURNALS_XML_FILE));
+//                    if (xmlFile != null)
+//                        req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, xmlFile);
+//                    else
+//                        resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
+//
+//                    req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+//                } else {
+//                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_IN);
+//                    req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
+//                }
                 break;
             case ConstantsClass.DO_SIGN_UP:
                 req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
@@ -437,33 +463,40 @@ public class Servlet extends HttpServlet {
     }
 
     private void doSignUp(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        String login = req.getParameter(ConstantsClass.LOGIN_PARAMETER);
-//        String password = req.getParameter(ConstantsClass.PASSWORD_PARAMETER);
-//        String encryptedPassword;
-//
-//        if (authorizer.isSuchLoginExists(login)) {
-//            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.EXIST_LOGIN);
-//            req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
-//        } else {
-//            try {
-//                encryptedPassword = encoder.encode(password);
-//            } catch (NoSuchAlgorithmException e) {
-//                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
-//                req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
-//            }
-//            authorizer.addUser(login, password);
-//
-        // todo после добавления нового пользователя нужно будет сформировать journal container, обновить местный container и journals + сформировать и проверить xml, сунуть их в сессию. в sign in то же самое
+        String login = req.getParameter(ConstantsClass.LOGIN_PARAMETER);
+        String password = req.getParameter(ConstantsClass.PASSWORD_PARAMETER);
+        String encryptedPassword = null;
 
-//            String xmlFile = xmlUtils.parseXmlToString(req.getServletContext().
-//                    getRealPath(ConstantsClass.JOURNALS_XML_FILE));
-//            if (xmlFile != null)
-//                req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, xmlFile);
-//            else
-//                resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
-//
-//            req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
-////        }
+        if (authorizer.isSuchLoginExists(login)) {
+            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.EXIST_LOGIN);
+            req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
+        } else {
+            try {
+                encryptedPassword = encoder.encode(password);
+            } catch (NoSuchAlgorithmException e) {
+                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
+                req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
+                req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
+            }
+            authorizer.addUser(login, encryptedPassword);
+            currentUser = authorizer.getSignedUser();
+
+            String xmlFile = controller.getJournals(req.getServletContext().
+                    getRealPath(ConstantsClass.JOURNALS_XML_FILE));
+            try {
+                updateJournals(req);
+            } catch (Exception e) {
+                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_UP);
+                req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
+                req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
+            }
+            if (xmlFile != null)
+                req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, xmlFile);
+            else
+                resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
+
+            req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+        }
     }
 
     private void doAddJournal(HttpServletRequest req, HttpServletResponse resp) throws
@@ -480,12 +513,15 @@ public class Servlet extends HttpServlet {
                     incorrectAddJournal(req, resp, name, description, ConstantsClass.ERROR_DESCRIPTION_LENGTH);
                 } else {
                     // todo добавляешь новый журнал по name, description
-                    int userId = 0;// todo юзера верни после signin/signup и запиши его в локальную пер currentUser. Потом его айди бери просто
-//                    try {
-//                        controller.addJournal(name, description, userId);
-//                    } catch (SQLException e) {
-//                        e.printStackTrace();
-//                    }
+                    int userId = currentUser.getId();// todo юзера верни после signin/signup и запиши его в локальную пер currentUser. Потом его айди бери просто
+                    try {
+                        controller.addJournal(name, description, userId);
+                        updateJournals(req);
+                    } catch (ControllerActionException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        incorrectAddJournal(req, resp, name, description, ConstantsClass.ERROR_PROPERTY);
+                    }
                 }
                 break;
             case ConstantsClass.BACK_TO_MAIN:
@@ -659,7 +695,7 @@ public class Servlet extends HttpServlet {
                         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_FILTER_LIKE);
                         req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
                     } else {
-                        sortActionJournals(req, resp);
+                        sortActionJournals(req, resp, sortColumn, sortCriteria, filterLike, filterEquals);
                     }
                 } else if (filterEquals!= null && !filterEquals.equals("")) {
                     if(!isEqualsFilterCorrect(filterEquals)) {
@@ -667,14 +703,15 @@ public class Servlet extends HttpServlet {
                         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_FILTER_EQUALS);
                         req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
                     } else {
-                        sortActionJournals(req, resp);
+                        sortActionJournals(req, resp, sortColumn, sortCriteria, filterLike, filterEquals);
                     }
                 }
                 break;
         }
     }
 
-    private void sortActionJournals(HttpServletRequest req, HttpServletResponse resp)
+    private void sortActionJournals(HttpServletRequest req, HttpServletResponse resp, String sortColumn,
+                                    String sortCriteria, String filterLike, String filterEquals)
             throws ServletException, IOException {
         resp.getWriter().print("success");
         String sortedJournals;

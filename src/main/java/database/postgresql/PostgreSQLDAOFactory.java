@@ -25,11 +25,23 @@ public class PostgreSQLDAOFactory implements DAOFactory {
     private static final String DRIVER_NAME = "org.postgresql.Driver";
     private static final String START_SCRIPT_NAME = "scripts/databasescript.sql";
     private static PostgreSQLDAOFactory instance;
-    //private DataSource dataSource;
+    private DataSource dataSource;
     private Connection connection;
 
+    private PostgreSQLDAOFactory(String path) {
+        connection = getConnection();
+        executeSqlStartScript(path);
+        //setConnection(START_SCRIPT_NAME);
+    }
+
     private PostgreSQLDAOFactory() {
-        setConnection(START_SCRIPT_NAME);
+        connection = getConnection();
+    }
+
+    public static PostgreSQLDAOFactory getInstance(String path) {
+        if (instance == null)
+            instance = new PostgreSQLDAOFactory(path);
+        return instance;
     }
 
     public static PostgreSQLDAOFactory getInstance() {
@@ -64,15 +76,16 @@ public class PostgreSQLDAOFactory implements DAOFactory {
     @Override
     public Connection getConnection() {
         //todo также после того как свяжем исползовать
-        /*if (dataSource != null) {
-            try {
-                return dataSource.getConnection();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        // todo через сервлет все норм
+        try {
+            Context context = new InitialContext();
+            Context env = (Context) context.lookup("java:comp/env");
+            this.dataSource = (DataSource) env.lookup("jdbc/cracker");
+            return dataSource.getConnection();
+        } catch (NamingException | SQLException e) {
+            e.printStackTrace();
+            return null;
         }
-        return null;*/
-        return connection;
     }
 
     @Override
