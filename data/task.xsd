@@ -26,6 +26,7 @@
                 <xs:element name="changeDate" type="xs:dateTime" minOccurs="0"/>
                 <xs:element name="change" type="xs:string"/>
                 <xs:element name="journalId" type="xs:nonNegativeInteger"/>
+                <xs:element name="isRescheduled" type="xs:boolean"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
