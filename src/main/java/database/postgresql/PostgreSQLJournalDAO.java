@@ -108,7 +108,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
 
     public List<Journal> getFilteredByPattern(String column, String pattern, String criteria) throws SQLException {
         List<Journal> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Journal\" WHERE ? LIKE '%?%' ORDER BY ? ?";
+        String sql = "SELECT * FROM \"Journal\" WHERE ? LIKE ? ORDER BY ? ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, column);
             statement.setString(2, pattern);
@@ -125,7 +125,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
 
     public List<Journal> getFilteredByEquals(String column, String equal, String criteria) throws SQLException {
         List<Journal> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Journal\" WHERE ? = '?' ORDER BY ? ?";
+        String sql = "SELECT * FROM \"Journal\" WHERE ? = ? ORDER BY ? ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, column); // todo можно без '?', setString автоматом все вставит как надо. и кстати у нас не обязательно стринг будет, мы же можем и по дате сортировать. setObject бахни и все. в методе с лайком то же самое
             statement.setString(2, equal);

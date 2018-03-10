@@ -30,6 +30,13 @@ public class JournalContainer {
         return journals.get(id);
     }
 
+    public Journal getJournal(String name) {
+        for (Journal journal : getJournals())
+            if ((journal.getName()).equals(name))
+                return journal;
+        return null;
+    }
+
     public List<Journal> getJournals() {
         LinkedList<Journal> list = new LinkedList<>(journals.values());
         return Collections.unmodifiableList(list);

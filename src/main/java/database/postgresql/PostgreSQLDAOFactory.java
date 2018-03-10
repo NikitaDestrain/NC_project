@@ -19,16 +19,18 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 public class PostgreSQLDAOFactory implements DAOFactory {
-    private static final String DB_URL = "jdbc:postgresql://localhost:5432/postgres";
-    private static final String USER = "postgres";
-    private static final String PASS = "root";
-    private static final String DRIVER_NAME = "org.postgresql.Driver";
-    private static final String START_SCRIPT_NAME = "scripts/databasescript.sql";
     private static PostgreSQLDAOFactory instance;
     private DataSource dataSource;
     private Connection connection;
 
     private PostgreSQLDAOFactory(String path) {
+        try {
+            Context context = new InitialContext();
+            Context env = (Context) context.lookup("java:comp/env");
+            dataSource = (DataSource) env.lookup("jdbc/cracker");
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
         connection = getConnection();
         executeSqlStartScript(path);
     }
@@ -52,11 +54,8 @@ public class PostgreSQLDAOFactory implements DAOFactory {
     @Override
     public Connection getConnection() {
         try {
-            Context context = new InitialContext();
-            Context env = (Context) context.lookup("java:comp/env");
-            dataSource = (DataSource) env.lookup("jdbc/cracker");
             return dataSource.getConnection();
-        } catch (NamingException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }

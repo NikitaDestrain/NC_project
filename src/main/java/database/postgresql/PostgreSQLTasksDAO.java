@@ -136,7 +136,7 @@ public class PostgreSQLTasksDAO implements TasksDAO {
     @Override
     public List<Task> getFilteredByPattern(String column, String pattern, String criteria) throws SQLException {
         List<Task> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Tasks\" WHERE ? LIKE '%?%' ORDER BY ? ?";
+        String sql = "SELECT * FROM \"Tasks\" WHERE ? LIKE ? ORDER BY ? ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, column);
             statement.setString(2, pattern);
@@ -157,7 +157,7 @@ public class PostgreSQLTasksDAO implements TasksDAO {
     @Override
     public List<Task> getFilteredByEquals(String column, String equal, String criteria) throws SQLException {
         List<Task> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Tasks\" WHERE ? = '?' ORDER BY ? ?";
+        String sql = "SELECT * FROM \"Tasks\" WHERE ? = ? ORDER BY ? ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, column);
             statement.setString(2, equal);

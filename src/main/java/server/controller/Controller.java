@@ -41,7 +41,6 @@ public class Controller {
         userAuthorizer = UserAuthorizer.getInstance();
         xmlUtils = XmlUtils.getInstance();
         notifier = new Notifier();
-        //todo создать классы исклдючений для некорректного заполнения контейнера
         try {
             createUserContainer();
             createJournalContainer();
@@ -98,11 +97,7 @@ public class Controller {
             User user = userContainer.getUser(id);
             if (user == null)
                 throw new ControllerActionException("Incorrect id! User has been not found.");
-            File file = new File(path);
-            JAXBContext context = JAXBContext.newInstance(User.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(user, file);
+            marshal(path, User.class, user);
             return xmlUtils.parseXmlToString(path);
         } catch (JAXBException | IOException e) {
             e.printStackTrace();
@@ -112,11 +107,7 @@ public class Controller {
 
     public String getUsers(String path) {
         try {
-            File file = new File(path);
-            JAXBContext context = JAXBContext.newInstance(UserContainer.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(userContainer, file);
+            marshal(path, UserContainer.class, userContainer);
             return xmlUtils.parseXmlToString(path);
         } catch (JAXBException | IOException e) {
             e.printStackTrace();
@@ -132,11 +123,7 @@ public class Controller {
                 for (User user : sortedUsers)
                     sortedUserContainer.addUser(user);
             try {
-                File file = new File(path);
-                JAXBContext context = JAXBContext.newInstance(UserContainer.class);
-                Marshaller marshaller = context.createMarshaller();
-                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-                marshaller.marshal(sortedUserContainer, file);
+                marshal(path, UserContainer.class, sortedUserContainer);
                 return xmlUtils.parseXmlToString(path);
             } catch (JAXBException | IOException e) {
                 e.printStackTrace();
@@ -200,11 +187,7 @@ public class Controller {
 
     public String getTask(int journalId, int taskId, String path) {
         try {
-            File file = new File(path);
-            JAXBContext context = JAXBContext.newInstance(Task.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(journalContainer.getJournal(journalId).getTask(taskId), file);
+            marshal(path, Task.class, journalContainer.getJournal(journalId).getTask(taskId));
             return xmlUtils.parseXmlToString(path);
         } catch (JAXBException | IOException e) {
             e.printStackTrace();
@@ -214,11 +197,7 @@ public class Controller {
 
     public String getTasks(int journalId, String path) {
         try {
-            File file = new File(path);
-            JAXBContext context = JAXBContext.newInstance(Journal.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(journalContainer.getJournal(journalId), file);
+            marshal(path, Journal.class, journalContainer.getJournal(journalId));
             return xmlUtils.parseXmlToString(path);
         } catch (JAXBException | IOException e) {
             e.printStackTrace();
@@ -229,16 +208,13 @@ public class Controller {
     public String getSortedTasks(String column, String criteria, String path) throws ControllerActionException {
         try {
             List<Task> sortedTasks = tasksDAO.getSortedByCriteria(column, criteria);
+            System.out.println(sortedTasks);
             Journal sortedTasksJournal = new Journal();
             if (sortedTasks != null)
                 for (Task task : sortedTasks)
                     sortedTasksJournal.addTask(task);
             try {
-                File file = new File(path);
-                JAXBContext context = JAXBContext.newInstance(Journal.class);
-                Marshaller marshaller = context.createMarshaller();
-                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-                marshaller.marshal(sortedTasksJournal, file);
+                marshal(path, Journal.class, sortedTasksJournal);
                 return xmlUtils.parseXmlToString(path);
             } catch (JAXBException | IOException e) {
                 e.printStackTrace();
@@ -257,11 +233,7 @@ public class Controller {
                 for (Task task : sortedTasks)
                     sortedTasksJournal.addTask(task);
             try {
-                File file = new File(path);
-                JAXBContext context = JAXBContext.newInstance(Journal.class);
-                Marshaller marshaller = context.createMarshaller();
-                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-                marshaller.marshal(sortedTasksJournal, file);
+                marshal(path, Journal.class, sortedTasksJournal);
                 return xmlUtils.parseXmlToString(path);
             } catch (JAXBException | IOException e) {
                 e.printStackTrace();
@@ -280,11 +252,7 @@ public class Controller {
                 for (Task task : sortedTasks)
                     sortedTasksJournal.addTask(task);
             try {
-                File file = new File(path);
-                JAXBContext context = JAXBContext.newInstance(Journal.class);
-                Marshaller marshaller = context.createMarshaller();
-                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-                marshaller.marshal(sortedTasksJournal, file);
+                marshal(path, Journal.class, sortedTasksJournal);
                 return xmlUtils.parseXmlToString(path);
             } catch (JAXBException | IOException e) {
                 e.printStackTrace();
@@ -343,14 +311,10 @@ public class Controller {
 
     public String getJournal(int id, String path) throws ControllerActionException {
         try {
-            File file = new File(path);
             Journal journal = journalContainer.getJournal(id);
             if (journal == null)
                 throw new ControllerActionException("Error! Journal has not been found.");
-            JAXBContext context = JAXBContext.newInstance(Journal.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(journal, file);
+            marshal(path, Journal.class, journal);
             return xmlUtils.parseXmlToString(path);
         } catch (JAXBException | IOException e) {
             e.printStackTrace();
@@ -360,11 +324,7 @@ public class Controller {
 
     public String getJournals(String path) {
         try {
-            File file = new File(path);
-            JAXBContext context = JAXBContext.newInstance(JournalContainer.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(journalContainer, file);
+            marshal(path, JournalContainer.class, journalContainer);
             return xmlUtils.parseXmlToString(path);
         } catch (JAXBException | IOException e) {
             e.printStackTrace();
@@ -380,11 +340,7 @@ public class Controller {
                 for (Journal journal : sortedJournals)
                     sortedJournalContainer.addJournal(journal);
             try {
-                File file = new File(path);
-                JAXBContext context = JAXBContext.newInstance(JournalContainer.class);
-                Marshaller marshaller = context.createMarshaller();
-                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-                marshaller.marshal(sortedJournalContainer, file);
+                marshal(path, JournalContainer.class, sortedJournalContainer);
                 return xmlUtils.parseXmlToString(path);
             } catch (JAXBException | IOException e) {
                 e.printStackTrace();
@@ -403,11 +359,7 @@ public class Controller {
                 for (Journal journal : sortedJournals)
                     sortedJournalContainer.addJournal(journal);
             try {
-                File file = new File(path);
-                JAXBContext context = JAXBContext.newInstance(JournalContainer.class);
-                Marshaller marshaller = context.createMarshaller();
-                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-                marshaller.marshal(sortedJournalContainer, file);
+                marshal(path, JournalContainer.class, sortedJournalContainer);
                 return xmlUtils.parseXmlToString(path);
             } catch (JAXBException | IOException e) {
                 e.printStackTrace();
@@ -426,11 +378,7 @@ public class Controller {
                 for (Journal journal : sortedJournals)
                     sortedJournalContainer.addJournal(journal);
             try {
-                File file = new File(path);
-                JAXBContext context = JAXBContext.newInstance(JournalContainer.class);
-                Marshaller marshaller = context.createMarshaller();
-                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-                marshaller.marshal(sortedJournalContainer, file);
+                marshal(path, JournalContainer.class, sortedJournalContainer);
                 return xmlUtils.parseXmlToString(path);
             } catch (JAXBException | IOException e) {
                 e.printStackTrace();
@@ -443,6 +391,10 @@ public class Controller {
 
     public Journal getJournalObject(int id) {
         return journalContainer.getJournal(id);
+    }
+
+    public Journal getJournalObject(String name) {
+        return journalContainer.getJournal(name);
     }
 
     public JournalContainer getJournalContainer() {
@@ -466,10 +418,22 @@ public class Controller {
     private void createJournalContainer() throws ControllerActionException {
         try {
             journalContainer = new JournalContainer();
-            for (Journal journal : journalDAO.getAll())
+            for (Journal journal : journalDAO.getAll()){
                 journalContainer.addJournal(journal);
+                for (Task task: tasksDAO.getAll())
+                    if(task.getJournalId() == journal.getId())
+                        journal.addTask(task);
+            }
         } catch (SQLException e) {
             throw new ControllerActionException();
         }
+    }
+
+    private void marshal(String path, Class className, Object object) throws JAXBException {
+        File file = new File(path);
+        JAXBContext context = JAXBContext.newInstance(className);
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        marshaller.marshal(object, file);
     }
 }
