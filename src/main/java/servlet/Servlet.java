@@ -94,12 +94,30 @@ public class Servlet extends HttpServlet {
             resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
     }
 
+    private void updateSortedJournals(HttpServletRequest req, HttpServletResponse resp, String sortedJournals) throws ServletException, IOException {
+        journals = controller.getJournalContainer().getJournals();
+        if (sortedJournals != null) {
+            req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, sortedJournals);
+            req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+        } else
+            resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
+    }
+
     private void updateTasks(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String updatedJournal = controller.getTasks(currentJournal.getId(),
                 req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
         if (updatedJournal != null) {
             currentJournal = controller.getJournalObject(currentJournal.getId()); // todo не работает перенос задачи из журнала в журнал. В бд все норм
             req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, updatedJournal);
+            req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+        } else
+            resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
+    }
+
+    private void updateSortedTasks(HttpServletRequest req, HttpServletResponse resp, String sortedJournals) throws ServletException, IOException {
+        if (sortedJournals != null) {
+            currentJournal = controller.getJournalObject(currentJournal.getId());
+            req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, sortedJournals);
             req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
         } else
             resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
@@ -152,7 +170,7 @@ public class Servlet extends HttpServlet {
                         controller.deleteTask(currentTask);
                         updateTasks(req, resp);
                     } catch (ControllerActionException e) {
-                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
+                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
                         req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
                     }
                 } else {
@@ -182,6 +200,8 @@ public class Servlet extends HttpServlet {
                     } else {
                         sortActionTasks(req, resp, sortColumn, sortCriteria, filterLike, filterEquals);
                     }
+                } else {
+                    sortActionTasks(req, resp, sortColumn, sortCriteria, null, null);
                 }
                 break;
         }
@@ -190,25 +210,36 @@ public class Servlet extends HttpServlet {
     private void sortActionTasks(HttpServletRequest req, HttpServletResponse resp, String sortColumn,
                                  String sortCriteria, String filterLike, String filterEquals)
             throws ServletException, IOException {
-        //resp.getWriter().print("success");
-        // todo формируешь новый journal container с отсортированными журанлами,
-        // пишешь его в xml, сравниваешь ее с xsd (тут наверное какой то void метод).
-        // Затем обновляешь container, journals(список журналов) и current journal этого класса(без этого все отвалится:) )
-        // дальше то, что ниже
-
-        String xmlFile = null;
-        try {
-            xmlFile = controller.getSortedTasks(sortColumn, sortCriteria, req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
-        } catch (ControllerActionException e) {
-            e.printStackTrace();
-            //todo оповещение о неудаче
+        String sortedTasks = null;
+        if (filterEquals == null && filterLike == null) {
+            try {
+                sortedTasks = controller.getSortedTasks(sortColumn, sortCriteria, req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
+                updateSortedTasks(req, resp, sortedTasks);
+            } catch (ControllerActionException e) {
+                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
+                req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+            }
+        } else if (filterEquals != null) {
+            try {
+                sortedTasks = controller.getFilteredTasksByEquals(sortColumn, filterEquals, sortCriteria, req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
+                updateSortedTasks(req, resp, sortedTasks);
+            } catch (ControllerActionException e) {
+                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
+                req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+            }
+        } else if (filterLike != null) {
+            try {
+                sortedTasks = controller.getFilteredTasksByPattern(sortColumn, filterLike, sortCriteria, req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
+                updateSortedTasks(req, resp, sortedTasks);
+            } catch (ControllerActionException e) {
+                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
+                req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+            }
         }
-        //todo обговорить проверку с xsd
-        if (xmlFile != null)
-            req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, xmlFile);
-        else
-            resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
-        req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+
+        updateJournals(req, resp);
+
+        req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
     }
 
     private void doAddTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -240,8 +271,8 @@ public class Servlet extends HttpServlet {
                             controller.addTask(name, description, notificationDate, plannedDate,
                                     journalId == -1 ? currentJournal.getId() : journalId);
                             updateTasks(req, resp);
-                        } catch (Exception e) {
-                            incorrectAddTask(req, resp, name, description, notification, planned, ConstantsClass.UNSUCCESSFUL_ACTION);
+                        } catch (ControllerActionException e) {
+                            incorrectAddTask(req, resp, name, description, notification, planned, e.getMessage());
                         }
                     } catch (IllegalArgumentException e) {
                         incorrectAddTask(req, resp, name, description, notification, planned, ConstantsClass.ERROR_DATE_PARSE);
@@ -319,7 +350,7 @@ public class Servlet extends HttpServlet {
                         try {
                             controller.editTask(currentTask);
                             updateTasks(req, resp);
-                        } catch (Exception e) {
+                        } catch (ControllerActionException e) {
                             incorrectEditTask(req, resp, name, description, planned, notification, e.getMessage());
                             //todo оповещение; предлагаю отправлять оповещение об exception, как в строчке выше
                         }
@@ -428,7 +459,7 @@ public class Servlet extends HttpServlet {
 
             req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
         } catch (ControllerActionException e) {
-            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_UP);
+            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
             req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
             req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
         }
@@ -452,9 +483,7 @@ public class Servlet extends HttpServlet {
                         controller.addJournal(name, description, userId);
                         updateJournals(req, resp);
                     } catch (ControllerActionException e) {
-                        e.printStackTrace();
-                    } catch (Exception e) {
-                        incorrectAddJournal(req, resp, name, description, ConstantsClass.ERROR_PROPERTY);
+                        incorrectAddJournal(req, resp, name, description, e.getMessage());
                     }
                 }
                 break;
@@ -505,9 +534,8 @@ public class Servlet extends HttpServlet {
                     try {
                         controller.editJournal(currentJournal, oldName);
                         updateJournals(req, resp);
-
                     } catch (ControllerActionException e) {
-                        incorrectEditJournal(req, resp, name, description, ConstantsClass.UNSUCCESSFUL_ACTION);
+                        incorrectEditJournal(req, resp, name, description, e.getMessage());
                     }
                 }
                 break;
@@ -576,12 +604,11 @@ public class Servlet extends HttpServlet {
                 usernumber = req.getParameter(ConstantsClass.USERNUMBER);
                 if (usernumber != null && !usernumber.equals("")) {
                     int num = Integer.parseInt(usernumber);
-                    //todo проверить логику
                     try {
                         controller.deleteJournal(num);
                         updateJournals(req, resp);
                     } catch (ControllerActionException e) {
-                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
+                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
                         req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
                     }
                 } else {
@@ -656,22 +683,25 @@ public class Servlet extends HttpServlet {
         if (filterEquals == null && filterLike == null) {
             try {
                 sortedJournals = controller.getSortedJournals(sortColumn, sortCriteria, req.getServletContext().getRealPath(ConstantsClass.JOURNALS_XML_FILE));
+                updateSortedJournals(req, resp, sortedJournals);
             } catch (ControllerActionException e) {
-                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
+                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
                 req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
             }
         } else if (filterEquals != null) {
             try {
                 sortedJournals = controller.getFilteredJournalsByEquals(sortColumn, filterEquals, sortCriteria, req.getServletContext().getRealPath(ConstantsClass.JOURNALS_XML_FILE));
+                updateSortedJournals(req, resp, sortedJournals);
             } catch (ControllerActionException e) {
-                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
+                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
                 req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
             }
         } else if (filterLike != null) {
             try {
                 sortedJournals = controller.getFilteredJournalsByPattern(sortColumn, filterLike, sortCriteria, req.getServletContext().getRealPath(ConstantsClass.JOURNALS_XML_FILE));
+                updateSortedJournals(req, resp, sortedJournals);
             } catch (ControllerActionException e) {
-                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
+                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
                 req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
             }
         }
