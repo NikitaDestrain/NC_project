@@ -170,8 +170,9 @@
                 <tr>
                     <td class="count">
                         <label>
-                            <%=count%>
-                            <input type="radio" name="<%=ConstantsClass.USERNUMBER%>" value="<%=count++%>"/>
+                            <%=count++%>
+                            <input type="radio" name="<%=ConstantsClass.USERNUMBER%>"
+                                   value="<x:out select="$journal/value/id"/>"/>
                         </label>
                     </td>
                     <td class="main-td">

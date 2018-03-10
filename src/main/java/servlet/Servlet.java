@@ -90,10 +90,19 @@ public class Servlet extends HttpServlet {
         if (updatedJournals != null) {
             req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, updatedJournals);
             req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
-        }
-        else
+        } else
             resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
+    }
 
+    private void updateTasks(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String updatedJournal = controller.getTasks(currentJournal.getId(),
+                req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
+        if (updatedJournal != null) {
+            currentJournal = controller.getJournalObject(currentJournal.getId()); // todo не работает перенос задачи из журнала в журнал. В бд все норм
+            req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, updatedJournal);
+            req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+        } else
+            resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
     }
 
     private void doActionFromTasks(HttpServletRequest req, HttpServletResponse resp)
@@ -111,7 +120,7 @@ public class Servlet extends HttpServlet {
                 usernumber = req.getParameter(ConstantsClass.USERNUMBER);
                 if (usernumber != null && !usernumber.equals("")) {
                     int num = Integer.parseInt(usernumber);
-                    currentTask = currentJournal.getTasks().get(num);
+                    currentTask = controller.getTaskObject(currentJournal.getId(), num);
                     req.getSession().setAttribute(ConstantsClass.CURRENT_STATUS, currentTask.getStatus());
                     try {
                         xmlUtils.writeTask(currentTask, req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
@@ -138,9 +147,10 @@ public class Servlet extends HttpServlet {
                 usernumber = req.getParameter(ConstantsClass.USERNUMBER);
                 if (usernumber != null && !usernumber.equals("")) {
                     int num = Integer.parseInt(usernumber);
-                    Task task = currentJournal.getTasks().get(num);
+                    currentTask = controller.getTaskObject(currentJournal.getId(), num);
                     try {
-                        controller.deleteTask(task);
+                        controller.deleteTask(currentTask);
+                        updateTasks(req, resp);
                     } catch (ControllerActionException e) {
                         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
                         req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
@@ -209,6 +219,8 @@ public class Servlet extends HttpServlet {
                 String description = req.getParameter(ConstantsClass.DESCRIPTION);
                 String planned = req.getParameter(ConstantsClass.PLANNED_DATE);
                 String notification = req.getParameter(ConstantsClass.NOTIFICATION_DATE);
+                String journalName = req.getParameter(ConstantsClass.JOURNAL_NAME);
+                int journalId = -1;
 
                 if (name.length() == 0 || name.length() > ConstantsClass.NAME_FIELD_LENGTH) {
                     incorrectAddTask(req, resp, name, description, notification, planned, ConstantsClass.ERROR_NAME_LENGTH);
@@ -222,12 +234,12 @@ public class Servlet extends HttpServlet {
                         notificationDate = Date.valueOf(reverseDate(notification));
 
                         try {
-                            controller.addTask(name, description, notificationDate, plannedDate, currentJournal.getId());
-                            String updatedJournal = controller.getTasks(currentJournal.getId(),
-                                    req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
-                            currentJournal = xmlUtils.readJournal(req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
-                            req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, updatedJournal);
-                            req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                            if (!journalName.equals("")) {
+                                journalId = controller.getJournalObject(journalName).getId();
+                            }
+                            controller.addTask(name, description, notificationDate, plannedDate,
+                                    journalId == -1 ? currentJournal.getId() : journalId);
+                            updateTasks(req, resp);
                         } catch (Exception e) {
                             incorrectAddTask(req, resp, name, description, notification, planned, ConstantsClass.UNSUCCESSFUL_ACTION);
                         }
@@ -273,16 +285,17 @@ public class Servlet extends HttpServlet {
             case ConstantsClass.SAVE:
                 String name = req.getParameter(ConstantsClass.NAME);
                 String description = req.getParameter(ConstantsClass.DESCRIPTION);
-                TaskStatus taskStatus = TaskStatus.valueOf(req.getParameter(ConstantsClass.STATUS)); // todo статус
+                String status = req.getParameter(ConstantsClass.STATUS);
+                TaskStatus taskStatus;
                 String planned = req.getParameter(ConstantsClass.PLANNED_DATE);
                 String notification = req.getParameter(ConstantsClass.NOTIFICATION_DATE);
+                String journalName = req.getParameter(ConstantsClass.JOURNAL_NAME);
 
                 if (name.length() == 0 || name.length() > ConstantsClass.NAME_FIELD_LENGTH) {
                     incorrectEditTask(req, resp, name, description, planned, notification, ConstantsClass.ERROR_NAME_LENGTH);
                 } else if (description.length() > ConstantsClass.DESCRIPTION_FIELD_LENGTH) {
                     incorrectEditTask(req, resp, name, description, planned, notification, ConstantsClass.ERROR_DESCRIPTION_LENGTH);
                 } else {
-
                     Date plannedDate;
                     Date notificationDate;
                     try {
@@ -291,18 +304,21 @@ public class Servlet extends HttpServlet {
 
                         currentTask.setName(name);
                         currentTask.setDescription(description);
-                        currentTask.setStatus(taskStatus);
+
+                        if (!journalName.equals("")) {
+                            currentTask.setJournalId(controller.getJournalObject(journalName).getId());
+                        }
+
+                        if (!status.equals("")) {
+                            taskStatus = TaskStatus.valueOf(status);
+                            currentTask.setStatus(taskStatus);
+                        }
                         currentTask.setPlannedDate(plannedDate);
-                        currentTask.setPlannedDate(notificationDate);
+                        currentTask.setNotificationDate(notificationDate);
 
                         try {
                             controller.editTask(currentTask);
-                            currentJournal = controller.getJournalObject(currentJournal.getId());
-                            String updatedJournal = controller.getTasks(currentJournal.getId(),
-                                    req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
-
-                            req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, updatedJournal);
-                            req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                            updateTasks(req, resp);
                         } catch (Exception e) {
                             incorrectEditTask(req, resp, name, description, planned, notification, e.getMessage());
                             //todo оповещение; предлагаю отправлять оповещение об exception, как в строчке выше
@@ -381,9 +397,6 @@ public class Servlet extends HttpServlet {
                 }
                 currentUser = controller.signInUser(login, encryptedPassword);
                 if (currentUser != null) {
-                    String xmlFile = controller.getJournals(req.getServletContext().
-                            getRealPath(ConstantsClass.JOURNALS_XML_FILE));
-
                     updateJournals(req, resp);
                 } else {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_IN);
@@ -415,7 +428,6 @@ public class Servlet extends HttpServlet {
 
             req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
         } catch (ControllerActionException e) {
-            //todo сказать что рега не прошла
             req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_UP);
             req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
             req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
@@ -539,7 +551,7 @@ public class Servlet extends HttpServlet {
                 usernumber = req.getParameter(ConstantsClass.USERNUMBER);
                 if (usernumber != null && !usernumber.equals("")) {
                     int num = Integer.parseInt(usernumber);
-                    currentJournal = journals.get(num);
+                    currentJournal = controller.getJournalObject(num);
                     try {
                         xmlUtils.writeJournal(currentJournal,
                                 req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
@@ -566,7 +578,7 @@ public class Servlet extends HttpServlet {
                     int num = Integer.parseInt(usernumber);
                     //todo проверить логику
                     try {
-                        controller.deleteJournal(journals.get(num).getId());
+                        controller.deleteJournal(num);
                         updateJournals(req, resp);
                     } catch (ControllerActionException e) {
                         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
@@ -580,7 +592,7 @@ public class Servlet extends HttpServlet {
             case ConstantsClass.CHOOSE: // записали в сессию текущий журнал и имена
                 usernumber = req.getParameter(ConstantsClass.USERNUMBER);
                 if (usernumber != null) {
-                    currentJournal = journals.get(Integer.parseInt(usernumber));
+                    currentJournal = controller.getJournalObject(Integer.parseInt(usernumber));
                     try {
                         xmlUtils.writeJournal(currentJournal, req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
                         xmlUtils.writeNames(new JournalNamesContainer(getJournalNames()),

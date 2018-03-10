@@ -179,7 +179,6 @@ public class Controller {
             if (task.getStatus() == TaskStatus.Completed || task.getStatus() == TaskStatus.Cancelled)
                 notifier.cancelNotification(task.getId());
             tasksDAO.update(task);
-
         } catch (SQLException e) {
             throw new ControllerActionException("Error! Task has not been edited.");
         }

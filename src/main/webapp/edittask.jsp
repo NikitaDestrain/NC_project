@@ -131,6 +131,7 @@
                 <td class="align-right">Change journal name</td>
                 <td class="align-left">
                     <select name=<%=ConstantsClass.JOURNAL_NAME%>>
+                        <option value=""></option>
                         <x:parse xml="${sessionScope.journalNames}" var="names"/>
                         <x:forEach select="$names/journalNames/name" var="name">
                             <option value="<x:out select="$name"/>"><x:out select="$name"/></option>
@@ -142,6 +143,7 @@
                 <td class="align-right">Change task status</td>
                 <td class="align-left">
                     <select name="<%=ConstantsClass.STATUS%>">
+                        <option value=""></option>
                         <option value="<%=ConstantsClass.CANCELLED_STATUS%>">Cancelled</option>
                         <option value="<%=ConstantsClass.COMPLETED_STATUS%>">Completed</option>
                     </select>

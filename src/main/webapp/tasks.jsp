@@ -185,8 +185,9 @@
                 <tr>
                     <td class="count">
                         <label>
-                            <%=count%>
-                            <input type="radio" name="<%=ConstantsClass.USERNUMBER%>" value="<%=count++%>"/>
+                            <%=count++%>
+                            <input type="radio" name="<%=ConstantsClass.USERNUMBER%>"
+                                   value="<x:out select="$task/value/id"/>"/>
                         </label>
                     </td>
                     <td class="main-td">
@@ -231,6 +232,7 @@
                     <td>Sort by:</td>
                     <td>
                         <select name="<%=ConstantsClass.SORT_COLUMN%>" id="<%=ConstantsClass.SORT_COLUMN%>">
+                            <option value=""></option>
                             <option value="<%=ConstantsClass.STATUS%>">
                                 Status
                             </option>
@@ -260,7 +262,8 @@
                         Criterion:
                     </td>
                     <td>
-                        <select name="<%=ConstantsClass.SORT_CRITERIA%>" id="<%=ConstantsClass.SORT_CRITERIA%>>
+                        <select name="<%=ConstantsClass.SORT_CRITERIA%>" id="<%=ConstantsClass.SORT_CRITERIA%>">
+                            <option value=""></option>
                             <option value="<%=ConstantsClass.SORT_ASC%>">
                                 Ascending
                             </option>

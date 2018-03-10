@@ -69,7 +69,7 @@ public class Test {
 //            e.getMessage();
 //        }
 
-        System.out.println(isLikeFilterCorrect(""));
+        System.out.println(isLikeFilterCorrect("%%t_%"));
     }
 
     private static boolean isLikeFilterCorrect(String like) {

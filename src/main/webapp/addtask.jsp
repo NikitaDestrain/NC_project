@@ -145,6 +145,7 @@
                 <td class="align-right">Journal name</td>
                 <td class="align-left">
                     <select name=<%=ConstantsClass.JOURNAL_NAME%>>
+                        <option value=""></option>
                         <x:parse xml="${sessionScope.journalNames}" var="names"/>
                         <x:forEach select="$names/journalNames/name" var="name">
                             <option value="<x:out select="$name"/>"><x:out select="$name"/></option>
