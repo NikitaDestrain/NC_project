@@ -435,31 +435,28 @@ public class Servlet extends HttpServlet {
             req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_AUTH);
             req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
             req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
-        }
-        else {
-            if (authorizer.isSuchLoginExists(login)) {
-                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.EXIST_LOGIN);
+        } else {
+            try {
+                encryptedPassword = encoder.encode(password);
+            } catch (NoSuchAlgorithmException e) {
+                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
                 req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
                 req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
-            } else {
-                try {
-                    encryptedPassword = encoder.encode(password);
-                } catch (NoSuchAlgorithmException e) {
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
-                    req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
-                    req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
-                }
-                try {
-                    controller.addUser(login, encryptedPassword, ConstantsClass.USER_ROLE);
-                    currentUser = controller.signInUser(login, encryptedPassword);
+            }
+            try {
+                controller.addUser(login, encryptedPassword, ConstantsClass.USER_ROLE);
+                currentUser = controller.signInUser(login, encryptedPassword);
+                if (currentUser != null)
                     updateJournals(req, resp);
-
-                    req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
-                } catch (ControllerActionException e) {
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
+                else {
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_UP);
                     req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
                     req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
                 }
+            } catch (ControllerActionException e) {
+                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
+                req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
+                req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
             }
         }
     }
