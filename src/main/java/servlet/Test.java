@@ -69,12 +69,12 @@ public class Test {
 //            e.getMessage();
 //        }
 
-        System.out.println(isLikeFilterCorrect("%%t_%"));
+        System.out.println(isLatinChars("artem 123"));
     }
 
-    private static boolean isLikeFilterCorrect(String like) {
-        Pattern pattern = Pattern.compile("[%_]*[A-Za-z0-9]+[%_]*");
-        Matcher matcher = pattern.matcher(like);
+    private static boolean isLatinChars(String s) {
+        Pattern pattern = Pattern.compile("[A-Za-z0-9]+\\s*[A-Za-z0-9]*"); // a342aa
+        Matcher matcher = pattern.matcher(s);
 
         return matcher.matches();
     }

@@ -1,9 +1,5 @@
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
-<%@ page import="auxiliaryclasses.ConstantsClass" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.LinkedList" %>
-<%@ page import="java.util.Calendar" %>
-<%@ page import="java.util.Date" %><%--
+<%@ page import="auxiliaryclasses.ConstantsClass" %><%--
   Created by IntelliJ IDEA.
   User: ывв
   Date: 18.02.2018
@@ -128,7 +124,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="align-right">Change journal name</td>
+                <td class="align-right">Change journal</td>
                 <td class="align-left">
                     <select name=<%=ConstantsClass.JOURNAL_NAME%>>
                         <option value=""></option>

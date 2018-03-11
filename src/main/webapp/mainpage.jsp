@@ -1,14 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
-
-<%@ page import="auxiliaryclasses.ConstantsClass" %>
-<%@ page import="server.model.Journal" %>
-<%@ page import="java.util.LinkedList" %>
-<%@ page import="server.model.JournalContainer" %>
-<%@ page import="java.io.File" %>
-<%@ page import="javax.xml.bind.JAXBContext" %>
-<%@ page import="javax.xml.bind.Unmarshaller" %>
-<%@ page import="javax.xml.bind.JAXBException" %><%--
+<%@ page import="auxiliaryclasses.ConstantsClass" %><%--
   Created by IntelliJ IDEA.
   User: ывв
   Date: 26.02.2018

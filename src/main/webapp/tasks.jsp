@@ -1,22 +1,4 @@
-<%@ page import="java.io.PrintWriter" %>
-<%@ page import="java.sql.ResultSet" %>
-<%@ page import="java.sql.SQLException" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.LinkedList" %>
-<%@ page import="com.sun.xml.internal.ws.server.ServerRtException" %>
-<%@ page import="servlet.beans.SelectResultBean" %>
-<%@ page import="servlet.beans.User" %>
 <%@ page import="auxiliaryclasses.ConstantsClass" %>
-<%@ page import="server.model.Task" %>
-<%@ page import="server.factories.TaskFactory" %>
-<%@ page import="server.model.TaskStatus" %>
-<%@ page import="java.util.Date" %>
-<%@ page import="java.util.Calendar" %>
-<%@ page import="javax.xml.bind.JAXBContext" %>
-<%@ page import="server.model.Journal" %>
-<%@ page import="javax.xml.bind.JAXBException" %>
-<%@ page import="javax.xml.bind.Unmarshaller" %>
-<%@ page import="java.io.File" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %><%--
   Created by IntelliJ IDEA.
