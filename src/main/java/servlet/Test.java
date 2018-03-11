@@ -69,11 +69,11 @@ public class Test {
 //            e.getMessage();
 //        }
 
-        System.out.println(isLatinChars("artem 123"));
+        System.out.println(isCorrectDescription("artem 1"));
     }
 
-    private static boolean isLatinChars(String s) {
-        Pattern pattern = Pattern.compile("[A-Za-z0-9]+\\s*[A-Za-z0-9]*"); // a342aa
+    private static boolean isCorrectDescription(String s) {
+        Pattern pattern = Pattern.compile("[A-Za-z0-9]*\\s*[A-Za-z0-9]*"); // a342aa
         Matcher matcher = pattern.matcher(s);
 
         return matcher.matches();

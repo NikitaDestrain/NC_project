@@ -71,6 +71,7 @@ public class ConstantsClass {
     public static final String ERROR_FILTER_LIKE = "\"Like\" filter should contain latin characters, numbers, \"%\" and \"_\" symbols!";
     public static final String ERROR_FILTER_EQUALS = "\"Equals\" filter should contain latin characters and numbers!";
     public static final String ERROR_AUTH = "Login and password should contain latin characters, whitespaces and numbers!\nAnd login length should not be more than 18 characters!";
+    public static final String ERROR_NO_DATA_FOR_THIS_CRITERION = "There was no suitable data for this request!";
 
     // web constants
 
@@ -113,12 +114,12 @@ public class ConstantsClass {
     public static final String SORT_DESC = "DESC";
     public static final String FILTER_LIKE = "LIKE";
     public static final String FILTER_EQUALS = "equals";
-    public static final String FILTER_TYPE = "filtertype";
-    public static final String STATUS = "status";
-    public static final String PLANNED_DATE = "Planned_Date";
-    public static final String NOTIFICATION_DATE = "Notification_Date";
-    public static final String UPLOAD_DATE = "Upload_Date";
-    public static final String CHANGE_DATE = "Change_Date";
+
+    public static final String STATUS = "Status";
+    public static final String PLANNED_DATE = "Planned_date";
+    public static final String NOTIFICATION_DATE = "Notification_date";
+    public static final String UPLOAD_DATE = "Upload_date";
+    public static final String CHANGE_DATE = "Change_date";
 
     public static final String JOURNAL_NAMES = "journalNames";
     public static final String CURRENT_TASK = "task";
@@ -131,6 +132,8 @@ public class ConstantsClass {
     public static final String JOURNAL_CONTAINER_PARAMETER = "journalContainer";
     public static final String JOURNAL_PARAMETER = "journal";
     public static final String CURRENT_JOURNAL_ID = "curId";
+    public static final String IS_SORTED = "issorted";
+    public static final String SHOW_ALL = "allvals";
 
     public static final String NAME = "Name";
     public static final String DESCRIPTION = "Description";

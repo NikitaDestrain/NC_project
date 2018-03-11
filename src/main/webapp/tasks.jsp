@@ -135,6 +135,10 @@
                         document.forms[0].submit();
                     }
                     break;
+                case "allvals":
+                    document.getElementById("hid").value = "allvals";
+                    document.forms[0].submit();
+                    break;
             }
         }
     </script>
@@ -161,6 +165,7 @@
             </tr>
             <%
                 int count = 0;
+                boolean isSorted = request.getAttribute(ConstantsClass.IS_SORTED)==null?false:(boolean)request.getAttribute(ConstantsClass.IS_SORTED);
             %>
             <x:parse xml="${sessionScope.journal}" var="container"/>
             <x:forEach select="$container/journal/tasks/entry" var="task">
@@ -224,7 +229,7 @@
                             <option value="<%=ConstantsClass.DESCRIPTION%>">
                                 Description
                             </option>
-                            <option name="<%=ConstantsClass.PLANNED_DATE%>">
+                            <option value="<%=ConstantsClass.PLANNED_DATE%>">
                                 Planned date
                             </option>
                             <option value="<%=ConstantsClass.NOTIFICATION_DATE%>">
@@ -301,6 +306,15 @@
         <div class="center">
             <input type="button" id="back" value="Back to main page" onclick="buttonClick(this)">
         </div>
+        <%
+            if (isSorted) {
+        %>
+        <div align="center">
+            <input type="button" id="allvals" value="Show all values" onclick="buttonClick(this)">
+        </div>
+        <%
+            }
+        %>
     </form>
 </div>
 <div align="center">

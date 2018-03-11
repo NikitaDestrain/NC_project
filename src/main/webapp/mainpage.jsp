@@ -19,17 +19,20 @@
             border-collapse: collapse;
             background-color: khaki;
         }
+
         .main-th {
             padding: 5px;
             border: 1px solid black;
             text-align: center;
         }
+
         .main-td {
             border: 1px solid black;
             padding: 5px;
             text-align: center;
             padding-right: 20px;
         }
+
         .button-table {
             width: auto;
             height: auto;
@@ -37,33 +40,31 @@
             border-collapse: collapse;
             background-color: khaki;
         }
+
         .button-table-td {
             padding: 5px;
             text-align: center;
             padding-right: 20px;
         }
+
         caption {
             margin-bottom: 10px;
             font-weight: bold;
             font-family: "Yu Gothic Light";
         }
+
         .count {
             background-color: darkkhaki;
             font-weight: bold;
             border: 1px solid black;
             text-align: center;
         }
+
         input[type="submit"] {
             display: block;
             align-self: center;
         }
-        div {
-            align: center;
-        }
-        .center {
-            text-align: center;
-            font-weight: bold;
-        }
+
         .button-div {
             background-color: khaki;
             width: auto;
@@ -93,6 +94,7 @@
                     break;
             }
         }
+
         function buttonClick(x) {
             switch (x.id) {
                 case "add":
@@ -128,12 +130,16 @@
                     break;
                 case "sort":
                     if (document.getElementById("sortcolumn").value.localeCompare("") == 0 ||
-                    document.getElementById("sortcriteria").value.localeCompare("") == 0)
+                        document.getElementById("sortcriteria").value.localeCompare("") == 0)
                         alert("Choose column and criterion to perform a sorting!");
                     else {
                         document.getElementById("hid").value = "Sort";
                         document.forms[0].submit();
                     }
+                    break;
+                case "allvals":
+                    document.getElementById("hid").value = "allvals";
+                    document.forms[0].submit();
                     break;
             }
         }
@@ -141,6 +147,7 @@
 </head>
 <body>
 <%
+    boolean isSorted = request.getAttribute(ConstantsClass.IS_SORTED)==null?false:(boolean)request.getAttribute(ConstantsClass.IS_SORTED);
     int count = 0;
 %>
 <div align="center"><strong>TASK SCHEDULER</strong></div>
@@ -244,7 +251,7 @@
                     </td>
                     <td>
                         <input type="text" id="liketype" name="<%=ConstantsClass.FILTER_LIKE%>"
-                        value="<%=request.getAttribute(ConstantsClass.FILTER_LIKE)==null?"":request.getAttribute(ConstantsClass.FILTER_LIKE)%>"
+                               value="<%=request.getAttribute(ConstantsClass.FILTER_LIKE)==null?"":request.getAttribute(ConstantsClass.FILTER_LIKE)%>"
                                disabled>
                     </td>
                 </tr>
@@ -265,6 +272,15 @@
                 </tr>
             </table>
         </div>
+        <%
+            if (isSorted) {
+        %>
+        <div align="center">
+            <input type="button" id="allvals" value="Show all values" onclick="buttonClick(this)">
+        </div>
+        <%
+            }
+        %>
     </form>
 </div>
 <div align="center">

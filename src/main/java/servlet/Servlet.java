@@ -89,10 +89,9 @@ public class Servlet extends HttpServlet {
 
     private void updateSortedJournals(HttpServletRequest req, HttpServletResponse resp, String sortedJournals) throws ServletException, IOException {
         //todo то же самое что с апдейт таскс
-        //данные не поменялись, нет смысла обновлять джорналс
-        journals = controller.getJournalContainer().getJournals();
         if (sortedJournals != null) {
             req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, sortedJournals);
+            req.setAttribute(ConstantsClass.IS_SORTED, true);
             req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
         } else
             resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
@@ -108,11 +107,11 @@ public class Servlet extends HttpServlet {
             resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
     }
 
-    private void updateSortedTasks(HttpServletRequest req, HttpServletResponse resp, String sortedJournals) throws ServletException, IOException {
-        if (sortedJournals != null) {
+    private void updateSortedTasks(HttpServletRequest req, HttpServletResponse resp, String sortedTasks) throws ServletException, IOException {
+        if (sortedTasks != null) {
             //todo здесь нужно взять данные из хмл, так как модель не меняется, чтобы не затереть при паттерне
-            currentJournal = controller.getJournalObject(currentJournal.getId());
-            req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, sortedJournals);
+            req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, sortedTasks);
+            req.setAttribute(ConstantsClass.IS_SORTED, true);
             req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
         } else
             resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
@@ -199,38 +198,54 @@ public class Servlet extends HttpServlet {
                     sortActionTasks(req, resp, sortColumn, sortCriteria, null, null);
                 }
                 break;
+            case ConstantsClass.SHOW_ALL :
+                updateTasks(req, resp);
+                break;
         }
     }
 
     private void sortActionTasks(HttpServletRequest req, HttpServletResponse resp, String sortColumn,
                                  String sortCriteria, String filterLike, String filterEquals)
             throws ServletException, IOException {
-        String sortedTasks = null;
+        String sortedTasks;
         if (filterEquals == null && filterLike == null) {
             try {
                 sortedTasks = controller.getSortedTasks(currentJournal.getId(), sortColumn, sortCriteria);
-                updateSortedTasks(req, resp, sortedTasks);
+                if (sortedTasks == null) {
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
+                    req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                } else {
+                    updateSortedTasks(req, resp, sortedTasks);
+                }
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-                req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
             }
         } else if (filterEquals != null) {
             try {
                 sortedTasks = controller.getFilteredTasksByEquals(currentJournal.getId(), sortColumn, filterEquals, sortCriteria);
-                //если сортед таскс налл, то нет ничего подходяшего
-                updateSortedTasks(req, resp, sortedTasks);
+                if (sortedTasks == null) {
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
+                    req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                } else {
+                    updateSortedTasks(req, resp, sortedTasks);
+                }
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-                req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
             }
         } else if (filterLike != null) {
             try {
                 sortedTasks = controller.getFilteredTasksByPattern(currentJournal.getId(), sortColumn, filterLike, sortCriteria);
-                //если сортед таскс налл, то нет ничего подходяшего
-                updateSortedTasks(req, resp, sortedTasks);
+                if (sortedTasks == null) {
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
+                    req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                } else {
+                    updateSortedTasks(req, resp, sortedTasks);
+                }
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-                req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
             }
         }
         req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
@@ -598,7 +613,7 @@ public class Servlet extends HttpServlet {
                     req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
                 }
                 break;
-            case ConstantsClass.DELETE: // норм
+            case ConstantsClass.DELETE:
                 usernumber = req.getParameter(ConstantsClass.USERNUMBER);
                 if (usernumber != null && !usernumber.equals("")) {
                     int num = Integer.parseInt(usernumber);
@@ -671,17 +686,25 @@ public class Servlet extends HttpServlet {
                     sortActionJournals(req, resp, sortColumn, sortCriteria, null, null);
                 }
                 break;
+            case ConstantsClass.SHOW_ALL :
+                updateJournals(req, resp);
+                break;
         }
     }
 
     private void sortActionJournals(HttpServletRequest req, HttpServletResponse resp, String sortColumn,
                                     String sortCriteria, String filterLike, String filterEquals)
             throws ServletException, IOException {
-        String sortedJournals = null;
+        String sortedJournals;
         if (filterEquals == null && filterLike == null) {
             try {
                 sortedJournals = controller.getSortedJournals(sortColumn, sortCriteria);
-                updateSortedJournals(req, resp, sortedJournals);
+                if (sortedJournals == null) {
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
+                    req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                } else {
+                    updateSortedJournals(req, resp, sortedJournals);
+                }
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
                 req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
@@ -689,8 +712,12 @@ public class Servlet extends HttpServlet {
         } else if (filterEquals != null) {
             try {
                 sortedJournals = controller.getFilteredJournalsByEquals(sortColumn, filterEquals, sortCriteria);
-                //если сортед джорналс налл ничего не подходит
-                updateSortedJournals(req, resp, sortedJournals);
+                if (sortedJournals == null) {
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
+                    req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                } else {
+                    updateSortedJournals(req, resp, sortedJournals);
+                }
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
                 req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
@@ -698,8 +725,12 @@ public class Servlet extends HttpServlet {
         } else if (filterLike != null) {
             try {
                 sortedJournals = controller.getFilteredJournalsByPattern(sortColumn, filterLike, sortCriteria);
-                //если сортед джорналс налл ничего не подходит
-                updateSortedJournals(req, resp, sortedJournals);
+                if (sortedJournals == null) {
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
+                    req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                } else {
+                    updateSortedJournals(req, resp, sortedJournals);
+                }
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
                 req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
@@ -738,7 +769,7 @@ public class Servlet extends HttpServlet {
     }
 
     private boolean isCorrectDescription(String s) {
-        Pattern pattern = Pattern.compile("[A-Za-z0-9]*"); // a342aa
+        Pattern pattern = Pattern.compile("[A-Za-z0-9]*\\s*[A-Za-z0-9]*"); // a342aa
         Matcher matcher = pattern.matcher(s);
 
         return matcher.matches();
