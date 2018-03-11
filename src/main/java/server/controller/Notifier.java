@@ -17,7 +17,7 @@ public class Notifier {
 
     //выставление таймера для таски
     protected void addNotification(Task task) {
-        if(checkStatus(task)) {
+        if (checkStatus(task) && checkTime(task)) {
             NotificationTimer notificationTimer = new NotificationTimer(task);
             Timer timer = new Timer(true);
             timer.schedule(notificationTimer, task.getNotificationDate().getTime() - System.currentTimeMillis()
@@ -50,5 +50,11 @@ public class Notifier {
     private boolean checkStatus(Task task) {
         return task.getStatus() != TaskStatus.Cancelled && task.getStatus() != TaskStatus.Completed
                 && task.getStatus() != TaskStatus.Overdue;
+    }
+
+    private boolean checkTime(Task task) {
+        if ((task.getNotificationDate().getTime() - System.currentTimeMillis()) >= 0)
+            return true;
+        return false;
     }
 }
