@@ -111,7 +111,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
         String sql = "SELECT * FROM \"Journal\" WHERE ? LIKE ? ORDER BY ? ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, column);
-            statement.setString(2, pattern);
+            statement.setObject(2, pattern);
             statement.setString(3, column);
             statement.setString(4, criteria.toUpperCase());
             ResultSet rs = statement.executeQuery();
@@ -128,7 +128,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
         String sql = "SELECT * FROM \"Journal\" WHERE ? = ? ORDER BY ? ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, column); // todo можно без '?', setString автоматом все вставит как надо. и кстати у нас не обязательно стринг будет, мы же можем и по дате сортировать. setObject бахни и все. в методе с лайком то же самое
-            statement.setString(2, equal);
+            statement.setObject(2, equal);
             statement.setString(3, column);
             statement.setString(4, criteria.toUpperCase());
             ResultSet rs = statement.executeQuery();

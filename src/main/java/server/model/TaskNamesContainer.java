@@ -8,17 +8,17 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-@XmlRootElement(name = "journalNames")
+@XmlRootElement(name = "taskNames")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class JournalNamesContainer {
+public class TaskNamesContainer {
     @XmlElement(name = "name")
     private List<String> names;
 
-    public JournalNamesContainer(List<String> names) {
+    public TaskNamesContainer(List<String> names) {
         this.names = names;
     }
 
-    public JournalNamesContainer() {
+    public TaskNamesContainer() {
         names = new LinkedList<>();
     }
 

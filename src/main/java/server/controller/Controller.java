@@ -10,8 +10,7 @@ import server.model.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import java.io.File;
-import java.io.IOException;
+import java.io.StringWriter;
 import java.sql.SQLException;
 import java.sql.Date;
 import java.util.List;
@@ -20,26 +19,25 @@ public class Controller {
     private JournalContainer journalContainer;
     private UserContainer userContainer;
     private JournalNamesContainer journalNamesContainer;
+    private TaskNamesContainer taskNamesContainer;
     private LifecycleManager statusManager;
     private PostgreSQLDAOFactory postgreSQLDAOFactory;
     private PostgreSQLUsersDAO usersDAO;
     private PostgreSQLJournalDAO journalDAO;
     private PostgreSQLTasksDAO tasksDAO;
-    private XmlUtils xmlUtils;
     private UserAuthorizer userAuthorizer;
     private Notifier notifier;
     private static Controller instance;
 
-    //todo статусы у задачи
     private Controller() {
         journalNamesContainer = new JournalNamesContainer();
+        taskNamesContainer = new TaskNamesContainer();
         postgreSQLDAOFactory = PostgreSQLDAOFactory.getInstance();
         statusManager = LifecycleManager.getInstance();
         usersDAO = (PostgreSQLUsersDAO) postgreSQLDAOFactory.getUsersDao();
         journalDAO = (PostgreSQLJournalDAO) postgreSQLDAOFactory.getJournalDao();
         tasksDAO = (PostgreSQLTasksDAO) postgreSQLDAOFactory.getTasksDao();
         userAuthorizer = UserAuthorizer.getInstance();
-        xmlUtils = XmlUtils.getInstance();
         notifier = new Notifier();
         try {
             createUserContainer();
@@ -67,10 +65,10 @@ public class Controller {
                 userContainer.addUser(user);
                 userAuthorizer.addUser(user);
             } catch (SQLException e) {
-                throw new ControllerActionException("Error! User has been not added.");
+                throw new ControllerActionException("Error! User has been not added. Try later.");
             }
         } else
-            throw new ControllerActionException("Error! Login does not exist.");
+            throw new ControllerActionException("Error! Login already exists.");
     }
 
     public void deleteUser(int id) throws ControllerActionException {
@@ -79,7 +77,7 @@ public class Controller {
             userAuthorizer.removeUser(userContainer.getUser(id).getLogin());
             userContainer.removeUser(id);
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! User has been not deleted.");
+            throw new ControllerActionException("Error! User has been not deleted. Try later.");
         }
     }
 
@@ -87,35 +85,33 @@ public class Controller {
         try {
             usersDAO.update(user);
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! User has been not edited.");
+            throw new ControllerActionException("Error! User has been not edited. Try later.");
         }
 
     }
 
-    public String getUser(int id, String path) throws ControllerActionException {
+    public String getUser(int id) throws ControllerActionException {
         try {
             User user = userContainer.getUser(id);
             if (user == null)
                 throw new ControllerActionException("Incorrect id! User has been not found.");
-            marshal(path, User.class, user);
-            return xmlUtils.parseXmlToString(path);
-        } catch (JAXBException | IOException e) {
+            return marshalToString(User.class, user);
+        } catch (JAXBException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public String getUsers(String path) {
+    public String getUsers() {
         try {
-            marshal(path, UserContainer.class, userContainer);
-            return xmlUtils.parseXmlToString(path);
-        } catch (JAXBException | IOException e) {
+            return marshalToString(UserContainer.class, userContainer);
+        } catch (JAXBException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public String getSortedUsers(String column, String criteria, String path) throws ControllerActionException {
+    public String getSortedUsers(String column, String criteria) throws ControllerActionException {
         try {
             List<User> sortedUsers = usersDAO.getSortedByCriteria(column, criteria);
             UserContainer sortedUserContainer = new UserContainer();
@@ -123,9 +119,8 @@ public class Controller {
                 for (User user : sortedUsers)
                     sortedUserContainer.addUser(user);
             try {
-                marshal(path, UserContainer.class, sortedUserContainer);
-                return xmlUtils.parseXmlToString(path);
-            } catch (JAXBException | IOException e) {
+                return marshalToString(UserContainer.class, sortedUserContainer);
+            } catch (JAXBException e) {
                 e.printStackTrace();
             }
         } catch (SQLException e) {
@@ -141,7 +136,7 @@ public class Controller {
             usersDAO.update(userContainer.getUser(id));
         } catch (SQLException e) {
             userContainer.setRole(id, oldRole);
-            throw new ControllerActionException("Error! User's role has been not edited.");
+            throw new ControllerActionException("Error! User's role has been not edited. Try later.");
         }
     }
 
@@ -152,11 +147,14 @@ public class Controller {
 
     public void addTask(String name, String description, Date notificationDate, Date plannedDate, Integer journalId) throws ControllerActionException {
         try {
+            if (taskNamesContainer.isContain(name))
+                throw new ControllerActionException("Error! Name already exists.");
             Task task = tasksDAO.create(name, TaskStatus.Planned, description, notificationDate, plannedDate, journalId);
             journalContainer.getJournal(journalId).addTask(task);
             notifier.addNotification(task);
+            taskNamesContainer.addName(name);
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! Task has not been added.");
+            throw new ControllerActionException("Error! Task has not been added. Try later.");
         }
     }
 
@@ -165,12 +163,46 @@ public class Controller {
             tasksDAO.delete(task.getId());
             journalContainer.getJournal(task.getJournalId()).removeTask(task.getId());
             notifier.cancelNotification(task.getId());
+            taskNamesContainer.deleteName(task.getName());
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! Task has not been deleted.");
+            throw new ControllerActionException("Error! Task has not been deleted. Try later.");
         }
     }
 
-    public void editTask(Task task) throws ControllerActionException {
+    public void editTask(int taskId, int oldJournalId, String name, TaskStatus status, String description, Date notificationDate,
+                         Date plannedDate, String newJournalName) throws ControllerActionException {
+        if (name.equals(""))
+            throw new ControllerActionException("Error! Name can not be empty.");
+
+        if (taskNamesContainer.isContain(name))
+            throw new ControllerActionException("Error! Name already exists.");
+
+        Journal oldJournal = getJournalObject(oldJournalId);
+        if (oldJournal == null)
+            throw new ControllerActionException("Error! Journal has not been found.");
+        Task task = oldJournal.getTask(taskId);
+        Journal newJournal = getJournalObject(newJournalName);
+        int newJournalId = -1;
+        if (newJournal != null)
+            newJournalId = newJournal.getId();
+
+        //backup
+        String oldName = task.getName();
+        TaskStatus oldStatus = task.getStatus();
+        String oldDescription = task.getDescription();
+        Date oldNotificationDate = task.getNotificationDate();
+        Date oldPlannedDate = task.getPlannedDate();
+        Date oldChangeDate = task.getChangeDate();
+
+        if (status != null)
+            setAllDataInTask(task, name, status, description, notificationDate, plannedDate,
+                    new Date(System.currentTimeMillis()), newJournalId);
+        else
+            setAllDataInTask(task, name, oldStatus, description, notificationDate, plannedDate,
+                    new Date(System.currentTimeMillis()), newJournalId);
+        if (newJournalId != -1)
+            replaceTask(taskId, oldJournalId, newJournalId);
+
         try {
             if (task.isRescheduled() && statusManager.isStatusConversionValid(task.getStatus(), TaskStatus.Rescheduled)) {
                 task.setStatus(TaskStatus.Rescheduled);
@@ -180,42 +212,62 @@ public class Controller {
                 notifier.cancelNotification(task.getId());
             tasksDAO.update(task);
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! Task has not been edited.");
+            setAllDataInTask(task, oldName, oldStatus, oldDescription, oldNotificationDate, oldPlannedDate, oldChangeDate, oldJournalId);
+            if (newJournalId != -1)
+                replaceTask(taskId, newJournalId, oldJournalId);
+            throw new ControllerActionException("Error! Task has not been edited. Try later.");
         }
     }
 
-    public String getTask(int journalId, int taskId, String path) {
+    private void setAllDataInTask(Task task, String name, TaskStatus status, String description, Date notificationDate,
+                                  Date plannedDate, Date changeDate, int newJournalId) {
+        task.setName(name);
+        task.setStatus(status);
+        task.setDescription(description);
+        task.setNotificationDate(notificationDate);
+        task.setPlannedDate(plannedDate);
+        if (newJournalId != -1)
+            task.setJournalId(newJournalId);
+        task.setChangeDate(changeDate);
+    }
+
+    private void replaceTask(int taskId, int oldJournalId, int newJournalId) {
+        Journal oldJournal = getJournalObject(oldJournalId);
+        Task task = oldJournal.getTask(taskId);
+        Journal newJournal = getJournalObject(newJournalId);
+
+        oldJournal.removeTask(taskId);
+        newJournal.addTask(task);
+    }
+
+    public String getTask(int journalId, int taskId) {
         try {
-            marshal(path, Task.class, journalContainer.getJournal(journalId).getTask(taskId));
-            return xmlUtils.parseXmlToString(path);
-        } catch (JAXBException | IOException e) {
+            return marshalToString(Task.class, journalContainer.getJournal(journalId).getTask(taskId));
+        } catch (JAXBException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public String getTasks(int journalId, String path) {
+    public String getTasks(int journalId) {
         try {
-            marshal(path, Journal.class, journalContainer.getJournal(journalId));
-            return xmlUtils.parseXmlToString(path);
-        } catch (JAXBException | IOException e) {
+            return marshalToString(Journal.class, journalContainer.getJournal(journalId));
+        } catch (JAXBException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public String getSortedTasks(String column, String criteria, String path) throws ControllerActionException {
+    public String getSortedTasks(String column, String criteria) throws ControllerActionException {
         try {
             List<Task> sortedTasks = tasksDAO.getSortedByCriteria(column, criteria);
-            System.out.println(sortedTasks);
             Journal sortedTasksJournal = new Journal();
             if (sortedTasks != null)
                 for (Task task : sortedTasks)
                     sortedTasksJournal.addTask(task);
             try {
-                marshal(path, Journal.class, sortedTasksJournal);
-                return xmlUtils.parseXmlToString(path);
-            } catch (JAXBException | IOException e) {
+                return marshalToString(Journal.class, sortedTasksJournal);
+            } catch (JAXBException e) {
                 e.printStackTrace();
             }
         } catch (SQLException e) {
@@ -224,7 +276,7 @@ public class Controller {
         return null;
     }
 
-    public String getFilteredTasksByPattern(String column, String pattern, String criteria, String path) throws ControllerActionException {
+    public String getFilteredTasksByPattern(String column, String pattern, String criteria) throws ControllerActionException {
         try {
             List<Task> sortedTasks = tasksDAO.getFilteredByPattern(column, pattern, criteria);
             Journal sortedTasksJournal = new Journal();
@@ -232,9 +284,8 @@ public class Controller {
                 for (Task task : sortedTasks)
                     sortedTasksJournal.addTask(task);
             try {
-                marshal(path, Journal.class, sortedTasksJournal);
-                return xmlUtils.parseXmlToString(path);
-            } catch (JAXBException | IOException e) {
+                return marshalToString(Journal.class, sortedTasksJournal);
+            } catch (JAXBException e) {
                 e.printStackTrace();
             }
         } catch (SQLException e) {
@@ -243,7 +294,7 @@ public class Controller {
         return null;
     }
 
-    public String getFilteredTasksByEquals(String column, String equal, String criteria, String path) throws ControllerActionException {
+    public String getFilteredTasksByEquals(String column, String equal, String criteria) throws ControllerActionException {
         try {
             List<Task> sortedTasks = tasksDAO.getFilteredByEquals(column, equal, criteria);
             Journal sortedTasksJournal = new Journal();
@@ -251,9 +302,8 @@ public class Controller {
                 for (Task task : sortedTasks)
                     sortedTasksJournal.addTask(task);
             try {
-                marshal(path, Journal.class, sortedTasksJournal);
-                return xmlUtils.parseXmlToString(path);
-            } catch (JAXBException | IOException e) {
+                return marshalToString(Journal.class, sortedTasksJournal);
+            } catch (JAXBException e) {
                 e.printStackTrace();
             }
         } catch (SQLException e) {
@@ -270,7 +320,8 @@ public class Controller {
         try {
             if (statusManager.isStatusConversionValid(task.getStatus(), TaskStatus.Overdue)) {
                 task.setStatus(TaskStatus.Overdue);
-                editTask(task);
+                editTask(task.getId(), task.getJournalId(), task.getName(), task.getStatus(), task.getDescription(),
+                        task.getNotificationDate(), task.getPlannedDate(), getJournalObject(task.getJournalId()).getName());
             }
         } catch (ControllerActionException e) {
             e.printStackTrace();
@@ -279,12 +330,14 @@ public class Controller {
 
 
     public void addJournal(String name, String description, Integer userId) throws ControllerActionException {
+        if (journalNamesContainer.isContain(name))
+            throw new ControllerActionException("Error! Name already exists.");
         try {
             Journal journal = journalDAO.create(name, description, userId);
             journalContainer.addJournal(journal);
             journalNamesContainer.addName(journal.getName());
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! Journal has not been added.");
+            throw new ControllerActionException("Error! Journal has not been added. Try later.");
         }
     }
 
@@ -294,44 +347,63 @@ public class Controller {
             journalNamesContainer.deleteName(journalContainer.getJournal(id).getName());
             journalContainer.removeJournal(id);
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! Journal has not been deleted.");
+            throw new ControllerActionException("Error! Journal has not been deleted. Try later.");
         }
     }
 
-    //перед вызовом метода запомнить старое имя, необходимо для удаления, только потом менять данные и отправлять объектом
-    public void editJournal(Journal journal, String oldName) throws ControllerActionException {
+    public void editJournal(int journalId, String name, String description) throws ControllerActionException {
+        if (name.equals(""))
+            throw new ControllerActionException("Error! Name can not be empty.");
+
+        if (journalNamesContainer.isContain(name))
+            throw new ControllerActionException("Error! Name already exists.");
+
+        Journal journal = journalContainer.getJournal(journalId);
+        if (journal == null)
+            throw new ControllerActionException("Error! Journal has not been found.");
+
+        //backup
+        String oldName = journal.getName();
+        String oldDescription = journal.getDescription();
+
+        setAllDataInJournal(journal, name, description);
+
         try {
             journalDAO.update(journal);
-            journalNamesContainer.editName(oldName, journal.getName());
+            journalNamesContainer.editName(oldName, name);
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! Journal has not been edited.");
+            setAllDataInJournal(journal, oldName, oldDescription);
+            throw new ControllerActionException("Error! Journal has not been edited. Try later.");
         }
     }
 
-    public String getJournal(int id, String path) throws ControllerActionException {
+    private void setAllDataInJournal(Journal journal, String name, String description) {
+        journal.setName(name);
+        journal.setDescription(description);
+    }
+
+    public String getJournal(int id) throws ControllerActionException {
         try {
             Journal journal = journalContainer.getJournal(id);
             if (journal == null)
-                throw new ControllerActionException("Error! Journal has not been found.");
-            marshal(path, Journal.class, journal);
-            return xmlUtils.parseXmlToString(path);
-        } catch (JAXBException | IOException e) {
+                throw new ControllerActionException("Error! Journal has not been found. Try later.");
+            return marshalToString(Journal.class, journal);
+        } catch (JAXBException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public String getJournals(String path) {
+    public String getJournals() {
         try {
-            marshal(path, JournalContainer.class, journalContainer);
-            return xmlUtils.parseXmlToString(path);
-        } catch (JAXBException | IOException e) {
+            return marshalToString(JournalContainer.class, journalContainer);
+        } catch (JAXBException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public String getSortedJournals(String column, String criteria, String path) throws ControllerActionException {
+    public String getSortedJournals(String column, String criteria) throws ControllerActionException {
         try {
             List<Journal> sortedJournals = journalDAO.getSortedByCriteria(column, criteria);
             JournalContainer sortedJournalContainer = new JournalContainer();
@@ -339,9 +411,8 @@ public class Controller {
                 for (Journal journal : sortedJournals)
                     sortedJournalContainer.addJournal(journal);
             try {
-                marshal(path, JournalContainer.class, sortedJournalContainer);
-                return xmlUtils.parseXmlToString(path);
-            } catch (JAXBException | IOException e) {
+                return marshalToString(JournalContainer.class, sortedJournalContainer);
+            } catch (JAXBException e) {
                 e.printStackTrace();
             }
         } catch (SQLException e) {
@@ -350,7 +421,7 @@ public class Controller {
         return null;
     }
 
-    public String getFilteredJournalsByPattern(String column, String pattern, String criteria, String path) throws ControllerActionException {
+    public String getFilteredJournalsByPattern(String column, String pattern, String criteria) throws ControllerActionException {
         try {
             List<Journal> sortedJournals = journalDAO.getFilteredByPattern(column, pattern, criteria);
             JournalContainer sortedJournalContainer = new JournalContainer();
@@ -358,9 +429,8 @@ public class Controller {
                 for (Journal journal : sortedJournals)
                     sortedJournalContainer.addJournal(journal);
             try {
-                marshal(path, JournalContainer.class, sortedJournalContainer);
-                return xmlUtils.parseXmlToString(path);
-            } catch (JAXBException | IOException e) {
+                return marshalToString(JournalContainer.class, sortedJournalContainer);
+            } catch (JAXBException e) {
                 e.printStackTrace();
             }
         } catch (SQLException e) {
@@ -369,7 +439,7 @@ public class Controller {
         return null;
     }
 
-    public String getFilteredJournalsByEquals(String column, String equal, String criteria, String path) throws ControllerActionException {
+    public String getFilteredJournalsByEquals(String column, String equal, String criteria) throws ControllerActionException {
         try {
             List<Journal> sortedJournals = journalDAO.getFilteredByPattern(column, equal, criteria);
             JournalContainer sortedJournalContainer = new JournalContainer();
@@ -377,9 +447,8 @@ public class Controller {
                 for (Journal journal : sortedJournals)
                     sortedJournalContainer.addJournal(journal);
             try {
-                marshal(path, JournalContainer.class, sortedJournalContainer);
-                return xmlUtils.parseXmlToString(path);
-            } catch (JAXBException | IOException e) {
+                return marshalToString(JournalContainer.class, sortedJournalContainer);
+            } catch (JAXBException e) {
                 e.printStackTrace();
             }
         } catch (SQLException e) {
@@ -393,7 +462,9 @@ public class Controller {
     }
 
     public Journal getJournalObject(String name) {
-        return journalContainer.getJournal(name);
+        if (!name.equals(""))
+            return journalContainer.getJournal(name);
+        return null;
     }
 
     public JournalContainer getJournalContainer() {
@@ -417,22 +488,26 @@ public class Controller {
     private void createJournalContainer() throws ControllerActionException {
         try {
             journalContainer = new JournalContainer();
-            for (Journal journal : journalDAO.getAll()){
+            for (Journal journal : journalDAO.getAll()) {
                 journalContainer.addJournal(journal);
-                for (Task task: tasksDAO.getAll())
-                    if(task.getJournalId() == journal.getId())
+                journalNamesContainer.addName(journal.getName());
+                for (Task task : tasksDAO.getAll())
+                    if (task.getJournalId() == journal.getId()) {
                         journal.addTask(task);
+                        taskNamesContainer.addName(task.getName());
+                    }
             }
         } catch (SQLException e) {
             throw new ControllerActionException();
         }
     }
 
-    private void marshal(String path, Class className, Object object) throws JAXBException {
-        File file = new File(path);
+    private String marshalToString(Class className, Object object) throws JAXBException {
+        StringWriter sw = new StringWriter();
         JAXBContext context = JAXBContext.newInstance(className);
         Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshaller.marshal(object, file);
+        marshaller.marshal(object, sw);
+        return sw.toString();
     }
 }

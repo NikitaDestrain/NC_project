@@ -86,7 +86,7 @@ public class Servlet extends HttpServlet {
 
     private void updateJournals(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         journals = controller.getJournalContainer().getJournals();
-        String updatedJournals = controller.getJournals(req.getServletContext().getRealPath(ConstantsClass.JOURNALS_XML_FILE));
+        String updatedJournals = controller.getJournals();
         if (updatedJournals != null) {
             req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, updatedJournals);
             req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
@@ -104,10 +104,9 @@ public class Servlet extends HttpServlet {
     }
 
     private void updateTasks(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String updatedJournal = controller.getTasks(currentJournal.getId(),
-                req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
+        String updatedJournal = controller.getTasks(currentJournal.getId());
         if (updatedJournal != null) {
-            currentJournal = controller.getJournalObject(currentJournal.getId()); // todo не работает перенос задачи из журнала в журнал. В бд все норм
+            currentJournal = controller.getJournalObject(currentJournal.getId());
             req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, updatedJournal);
             req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
         } else
@@ -213,7 +212,7 @@ public class Servlet extends HttpServlet {
         String sortedTasks = null;
         if (filterEquals == null && filterLike == null) {
             try {
-                sortedTasks = controller.getSortedTasks(sortColumn, sortCriteria, req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
+                sortedTasks = controller.getSortedTasks(sortColumn, sortCriteria);
                 updateSortedTasks(req, resp, sortedTasks);
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
@@ -221,7 +220,7 @@ public class Servlet extends HttpServlet {
             }
         } else if (filterEquals != null) {
             try {
-                sortedTasks = controller.getFilteredTasksByEquals(sortColumn, filterEquals, sortCriteria, req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
+                sortedTasks = controller.getFilteredTasksByEquals(sortColumn, filterEquals, sortCriteria);
                 updateSortedTasks(req, resp, sortedTasks);
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
@@ -229,7 +228,7 @@ public class Servlet extends HttpServlet {
             }
         } else if (filterLike != null) {
             try {
-                sortedTasks = controller.getFilteredTasksByPattern(sortColumn, filterLike, sortCriteria, req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
+                sortedTasks = controller.getFilteredTasksByPattern(sortColumn, filterLike, sortCriteria);
                 updateSortedTasks(req, resp, sortedTasks);
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
@@ -333,26 +332,17 @@ public class Servlet extends HttpServlet {
                         plannedDate = Date.valueOf(reverseDate(planned));
                         notificationDate = Date.valueOf(reverseDate(notification));
 
-                        currentTask.setName(name);
-                        currentTask.setDescription(description);
-
-                        if (!journalName.equals("")) {
-                            currentTask.setJournalId(controller.getJournalObject(journalName).getId());
-                        }
-
                         if (!status.equals("")) {
                             taskStatus = TaskStatus.valueOf(status);
-                            currentTask.setStatus(taskStatus);
-                        }
-                        currentTask.setPlannedDate(plannedDate);
-                        currentTask.setNotificationDate(notificationDate);
+                        } else
+                            taskStatus = null;
 
                         try {
-                            controller.editTask(currentTask);
+                            controller.editTask(currentTask.getId(), currentTask.getJournalId(), name, taskStatus,
+                                    description, notificationDate, plannedDate, journalName);
                             updateTasks(req, resp);
                         } catch (ControllerActionException e) {
                             incorrectEditTask(req, resp, name, description, planned, notification, e.getMessage());
-                            //todo оповещение; предлагаю отправлять оповещение об exception, как в строчке выше
                         }
                     } catch (IllegalArgumentException e) {
                         incorrectEditTask(req, resp, name, description, planned, notification, ConstantsClass.ERROR_DATE_PARSE);
@@ -528,11 +518,8 @@ public class Servlet extends HttpServlet {
                 } else if (description.length() > ConstantsClass.DESCRIPTION_FIELD_LENGTH) {
                     incorrectEditJournal(req, resp, name, description, ConstantsClass.ERROR_DESCRIPTION_LENGTH);
                 } else {
-                    String oldName = currentJournal.getName();
-                    currentJournal.setName(name);
-                    currentJournal.setDescription(description);
                     try {
-                        controller.editJournal(currentJournal, oldName);
+                        controller.editJournal(currentJournal.getId(), name, description);
                         updateJournals(req, resp);
                     } catch (ControllerActionException e) {
                         incorrectEditJournal(req, resp, name, description, e.getMessage());
@@ -592,7 +579,7 @@ public class Servlet extends HttpServlet {
                     if (journalCorrect) {
                         String j = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
                         req.setAttribute(ConstantsClass.JOURNAL_PARAMETER, j);
-                        req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_ID, journals.get(num).getId());
+                        req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_ID, currentJournal);
                         req.getRequestDispatcher(ConstantsClass.EDIT_JOURNAL_ADDRESS).forward(req, resp);
                     }
                 } else {
@@ -682,7 +669,7 @@ public class Servlet extends HttpServlet {
         String sortedJournals = null;
         if (filterEquals == null && filterLike == null) {
             try {
-                sortedJournals = controller.getSortedJournals(sortColumn, sortCriteria, req.getServletContext().getRealPath(ConstantsClass.JOURNALS_XML_FILE));
+                sortedJournals = controller.getSortedJournals(sortColumn, sortCriteria);
                 updateSortedJournals(req, resp, sortedJournals);
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
@@ -690,7 +677,7 @@ public class Servlet extends HttpServlet {
             }
         } else if (filterEquals != null) {
             try {
-                sortedJournals = controller.getFilteredJournalsByEquals(sortColumn, filterEquals, sortCriteria, req.getServletContext().getRealPath(ConstantsClass.JOURNALS_XML_FILE));
+                sortedJournals = controller.getFilteredJournalsByEquals(sortColumn, filterEquals, sortCriteria);
                 updateSortedJournals(req, resp, sortedJournals);
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
@@ -698,7 +685,7 @@ public class Servlet extends HttpServlet {
             }
         } else if (filterLike != null) {
             try {
-                sortedJournals = controller.getFilteredJournalsByPattern(sortColumn, filterLike, sortCriteria, req.getServletContext().getRealPath(ConstantsClass.JOURNALS_XML_FILE));
+                sortedJournals = controller.getFilteredJournalsByPattern(sortColumn, filterLike, sortCriteria);
                 updateSortedJournals(req, resp, sortedJournals);
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());

@@ -139,7 +139,7 @@ public class PostgreSQLTasksDAO implements TasksDAO {
         String sql = "SELECT * FROM \"Tasks\" WHERE ? LIKE ? ORDER BY ? ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, column);
-            statement.setString(2, pattern);
+            statement.setObject(2, pattern);
             statement.setString(3, column);
             statement.setString(4, criteria.toUpperCase());
             ResultSet rs = statement.executeQuery();
@@ -160,7 +160,7 @@ public class PostgreSQLTasksDAO implements TasksDAO {
         String sql = "SELECT * FROM \"Tasks\" WHERE ? = ? ORDER BY ? ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, column);
-            statement.setString(2, equal);
+            statement.setObject(2, equal);
             statement.setString(3, column);
             statement.setString(4, criteria.toUpperCase());
             ResultSet rs = statement.executeQuery();
