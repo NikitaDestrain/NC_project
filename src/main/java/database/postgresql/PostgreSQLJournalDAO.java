@@ -1,5 +1,6 @@
 package database.postgresql;
 
+import auxiliaryclasses.ConstantsClass;
 import database.daointerfaces.JournalDAO;
 import server.factories.JournalFactory;
 import server.model.Journal;
@@ -93,10 +94,9 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     @Override
     public List<Journal> getSortedByCriteria(String column, String criteria) throws SQLException {
         List<Journal> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Journal\" ORDER BY ? ?";
+        String sql = "SELECT * FROM \"Journal\" ORDER BY \"%s\" %s";
+        sql = String.format(sql, column, criteria);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, column);
-            statement.setString(2, criteria.toUpperCase());
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 list.add(JournalFactory.createJournal(rs.getInt("Journal_id"), rs.getString("Name"),
@@ -108,12 +108,9 @@ public class PostgreSQLJournalDAO implements JournalDAO {
 
     public List<Journal> getFilteredByPattern(String column, String pattern, String criteria) throws SQLException {
         List<Journal> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Journal\" WHERE ? LIKE ? ORDER BY ? ?";
+        String sql = "SELECT * FROM \"Journal\" WHERE \"%s\"::text LIKE \'%s%s%s\' ORDER BY \"%s\" %s";
+        sql = String.format(sql, column, '%', pattern, '%', column, criteria);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, column);
-            statement.setObject(2, pattern);
-            statement.setString(3, column);
-            statement.setString(4, criteria.toUpperCase());
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 list.add(JournalFactory.createJournal(rs.getInt("Journal_id"), rs.getString("Name"),
@@ -125,12 +122,9 @@ public class PostgreSQLJournalDAO implements JournalDAO {
 
     public List<Journal> getFilteredByEquals(String column, String equal, String criteria) throws SQLException {
         List<Journal> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Journal\" WHERE ? = ? ORDER BY ? ?";
+        String sql = "SELECT * FROM \"Journal\" WHERE \"%s\"::text = \'%s\' ORDER BY \"%s\" %s";
+        sql = String.format(sql, column, equal, column, criteria);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, column); // todo можно без '?', setString автоматом все вставит как надо. и кстати у нас не обязательно стринг будет, мы же можем и по дате сортировать. setObject бахни и все. в методе с лайком то же самое
-            statement.setObject(2, equal);
-            statement.setString(3, column);
-            statement.setString(4, criteria.toUpperCase());
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 list.add(JournalFactory.createJournal(rs.getInt("Journal_id"), rs.getString("Name"),

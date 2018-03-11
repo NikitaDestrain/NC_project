@@ -18,9 +18,9 @@ public interface TasksDAO {
 
     public List<Task> getAll() throws SQLException;
 
-    public List<Task> getSortedByCriteria(String column, String criteria) throws SQLException;
+    public List<Task> getSortedByCriteria(int journalId, String column, String criteria) throws SQLException;
 
-    public List<Task> getFilteredByPattern(String column, String pattern, String criteria) throws SQLException;
+    public List<Task> getFilteredByPattern(int journalId, String column, String pattern, String criteria) throws SQLException;
 
-    public List<Task> getFilteredByEquals(String column, String equal, String criteria) throws SQLException;
+    public List<Task> getFilteredByEquals(int journalId, String column, String equal, String criteria) throws SQLException;
 }

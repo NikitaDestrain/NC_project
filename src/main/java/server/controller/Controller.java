@@ -144,15 +144,30 @@ public class Controller {
         return userContainer.getUser(id);
     }
 
+    private boolean checkDate(Date plannedDate, Date notificationDate) throws ControllerActionException {
+        if (plannedDate.before(new Date(System.currentTimeMillis())))
+            throw new ControllerActionException("Error! Planned date can not be in the past.");
+
+        if (notificationDate.before(new Date(System.currentTimeMillis())))
+            throw new ControllerActionException("Error! Notification date can not be in the past.");
+
+        if (!notificationDate.before(plannedDate) && !notificationDate.equals(plannedDate))
+            throw new ControllerActionException("Error! Notification date can not be after planned.");
+
+        return true;
+    }
 
     public void addTask(String name, String description, Date notificationDate, Date plannedDate, Integer journalId) throws ControllerActionException {
         try {
             if (taskNamesContainer.isContain(name))
                 throw new ControllerActionException("Error! Name already exists.");
-            Task task = tasksDAO.create(name, TaskStatus.Planned, description, notificationDate, plannedDate, journalId);
-            journalContainer.getJournal(journalId).addTask(task);
-            notifier.addNotification(task);
-            taskNamesContainer.addName(name);
+
+            if (checkDate(plannedDate, notificationDate)) {
+                Task task = tasksDAO.create(name, TaskStatus.Planned, description, notificationDate, plannedDate, journalId);
+                journalContainer.getJournal(journalId).addTask(task);
+                notifier.addNotification(task);
+                taskNamesContainer.addName(name);
+            }
         } catch (SQLException e) {
             throw new ControllerActionException("Error! Task has not been added. Try later.");
         }
@@ -174,13 +189,17 @@ public class Controller {
         if (name.equals(""))
             throw new ControllerActionException("Error! Name can not be empty.");
 
-        if (taskNamesContainer.isContain(name))
-            throw new ControllerActionException("Error! Name already exists.");
+        if (!checkDate(plannedDate, notificationDate))
+            return;
 
         Journal oldJournal = getJournalObject(oldJournalId);
         if (oldJournal == null)
             throw new ControllerActionException("Error! Journal has not been found.");
+
         Task task = oldJournal.getTask(taskId);
+        if (taskNamesContainer.isContain(name) && !task.getName().equals(name))
+            throw new ControllerActionException("Error! Name already exists.");
+
         Journal newJournal = getJournalObject(newJournalName);
         int newJournalId = -1;
         if (newJournal != null)
@@ -258,9 +277,9 @@ public class Controller {
         return null;
     }
 
-    public String getSortedTasks(String column, String criteria) throws ControllerActionException {
+    public String getSortedTasks(int journalId, String column, String criteria) throws ControllerActionException {
         try {
-            List<Task> sortedTasks = tasksDAO.getSortedByCriteria(column, criteria);
+            List<Task> sortedTasks = tasksDAO.getSortedByCriteria(journalId, column, criteria);
             Journal sortedTasksJournal = new Journal();
             if (sortedTasks != null)
                 for (Task task : sortedTasks)
@@ -271,14 +290,14 @@ public class Controller {
                 e.printStackTrace();
             }
         } catch (SQLException e) {
-            throw new ControllerActionException();
+            throw new ControllerActionException("Error! Try later!");
         }
         return null;
     }
 
-    public String getFilteredTasksByPattern(String column, String pattern, String criteria) throws ControllerActionException {
+    public String getFilteredTasksByPattern(int journalId, String column, String pattern, String criteria) throws ControllerActionException {
         try {
-            List<Task> sortedTasks = tasksDAO.getFilteredByPattern(column, pattern, criteria);
+            List<Task> sortedTasks = tasksDAO.getFilteredByPattern(journalId, column, pattern, criteria);
             Journal sortedTasksJournal = new Journal();
             if (sortedTasks != null)
                 for (Task task : sortedTasks)
@@ -289,14 +308,14 @@ public class Controller {
                 e.printStackTrace();
             }
         } catch (SQLException e) {
-            throw new ControllerActionException();
+            throw new ControllerActionException("Error! Try later!");
         }
         return null;
     }
 
-    public String getFilteredTasksByEquals(String column, String equal, String criteria) throws ControllerActionException {
+    public String getFilteredTasksByEquals(int journalId, String column, String equal, String criteria) throws ControllerActionException {
         try {
-            List<Task> sortedTasks = tasksDAO.getFilteredByEquals(column, equal, criteria);
+            List<Task> sortedTasks = tasksDAO.getFilteredByEquals(journalId, column, equal, criteria);
             Journal sortedTasksJournal = new Journal();
             if (sortedTasks != null)
                 for (Task task : sortedTasks)
@@ -307,7 +326,7 @@ public class Controller {
                 e.printStackTrace();
             }
         } catch (SQLException e) {
-            throw new ControllerActionException();
+            throw new ControllerActionException("Error! Try later!");
         }
         return null;
     }
@@ -355,12 +374,12 @@ public class Controller {
         if (name.equals(""))
             throw new ControllerActionException("Error! Name can not be empty.");
 
-        if (journalNamesContainer.isContain(name))
-            throw new ControllerActionException("Error! Name already exists.");
-
         Journal journal = journalContainer.getJournal(journalId);
         if (journal == null)
             throw new ControllerActionException("Error! Journal has not been found.");
+
+        if (journalNamesContainer.isContain(name) && !journal.getName().equals(name))
+            throw new ControllerActionException("Error! Name already exists.");
 
         //backup
         String oldName = journal.getName();
@@ -416,7 +435,7 @@ public class Controller {
                 e.printStackTrace();
             }
         } catch (SQLException e) {
-            throw new ControllerActionException();
+            throw new ControllerActionException("Error! Try later!");
         }
         return null;
     }
@@ -434,14 +453,14 @@ public class Controller {
                 e.printStackTrace();
             }
         } catch (SQLException e) {
-            throw new ControllerActionException();
+            throw new ControllerActionException("Error! Try later!");
         }
         return null;
     }
 
     public String getFilteredJournalsByEquals(String column, String equal, String criteria) throws ControllerActionException {
         try {
-            List<Journal> sortedJournals = journalDAO.getFilteredByPattern(column, equal, criteria);
+            List<Journal> sortedJournals = journalDAO.getFilteredByEquals(column, equal, criteria);
             JournalContainer sortedJournalContainer = new JournalContainer();
             if (sortedJournals != null)
                 for (Journal journal : sortedJournals)
@@ -452,7 +471,7 @@ public class Controller {
                 e.printStackTrace();
             }
         } catch (SQLException e) {
-            throw new ControllerActionException();
+            throw new ControllerActionException("Error! Try later!");
         }
         return null;
     }
@@ -493,6 +512,7 @@ public class Controller {
                 journalNamesContainer.addName(journal.getName());
                 for (Task task : tasksDAO.getAll())
                     if (task.getJournalId() == journal.getId()) {
+                        notifier.addNotification(task);
                         journal.addTask(task);
                         taskNamesContainer.addName(task.getName());
                     }

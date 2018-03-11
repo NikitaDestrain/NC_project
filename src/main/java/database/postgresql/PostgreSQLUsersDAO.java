@@ -107,10 +107,9 @@ public class PostgreSQLUsersDAO implements UsersDAO {
     @Override
     public List<User> getSortedByCriteria(String column, String criteria) throws SQLException {
         List<User> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Users\" ORDER BY ? ?";
+        String sql = "SELECT * FROM \"Users\" ORDER BY \"%s\" %s";
+        sql = String.format(sql, column, criteria);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, column);
-            statement.setString(2, criteria.toUpperCase());
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 list.add(UserFactory.createUser(rs.getInt("User_id"), rs.getString("Login"),

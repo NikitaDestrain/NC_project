@@ -1,6 +1,7 @@
 package server.controller;
 
 import server.model.Task;
+import server.model.TaskStatus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,11 +17,13 @@ public class Notifier {
 
     //выставление таймера для таски
     protected void addNotification(Task task) {
-        NotificationTimer notificationTimer = new NotificationTimer(task);
-        Timer timer = new Timer(true);
-        timer.schedule(notificationTimer, task.getNotificationDate().getTime() - System.currentTimeMillis()
-                + 86400000);
-        timers.put(task.getId(), timer);
+        if(checkStatus(task)) {
+            NotificationTimer notificationTimer = new NotificationTimer(task);
+            Timer timer = new Timer(true);
+            timer.schedule(notificationTimer, task.getNotificationDate().getTime() - System.currentTimeMillis()
+                    + 86400000);
+            timers.put(task.getId(), timer);
+        }
     }
 
     //отменяет таймер для таски
@@ -42,5 +45,10 @@ public class Notifier {
                     + 86400000);
             timers.put(task.getId(), timer);
         }
+    }
+
+    private boolean checkStatus(Task task) {
+        return task.getStatus() != TaskStatus.Cancelled && task.getStatus() != TaskStatus.Completed
+                && task.getStatus() != TaskStatus.Overdue;
     }
 }

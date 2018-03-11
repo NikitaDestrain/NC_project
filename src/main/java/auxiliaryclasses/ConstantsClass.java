@@ -105,18 +105,20 @@ public class ConstantsClass {
     public static final String CHOOSE = "Choose";
     public static final String SORT = "Sort";
 
+    //SORT/FILTER CONSTANT
     public static final String SORT_COLUMN = "sortcolumn";
     public static final String SORT_CRITERIA = "sortcriteria";
-    public static final String SORT_ASC = "asc";
-    public static final String SORT_DESC = "desc";
-    public static final String FILTER_LIKE = "like";
+    public static final String SORT_ASC = "ASC";
+    public static final String SORT_DESC = "DESC";
+    public static final String FILTER_LIKE = "LIKE";
     public static final String FILTER_EQUALS = "equals";
     public static final String FILTER_TYPE = "filtertype";
     public static final String STATUS = "status";
-    public static final String PLANNED_DATE = "planneddate";
-    public static final String NOTIFICATION_DATE = "notificationdate";
-    public static final String UPLOAD_DATE = "uploaddate";
-    public static final String CHANGE_DATE = "changedate";
+    public static final String PLANNED_DATE = "Planned_Date";
+    public static final String NOTIFICATION_DATE = "Notification_Date";
+    public static final String UPLOAD_DATE = "Upload_Date";
+    public static final String CHANGE_DATE = "Change_Date";
+
     public static final String JOURNAL_NAMES = "journalNames";
     public static final String CURRENT_TASK = "task";
     public static final String CURRENT_JOURNAL_NAME = "curname";
@@ -129,8 +131,8 @@ public class ConstantsClass {
     public static final String JOURNAL_PARAMETER = "journal";
     public static final String CURRENT_JOURNAL_ID = "curId";
 
-    public static final String NAME = "name";
-    public static final String DESCRIPTION = "description";
+    public static final String NAME = "Name";
+    public static final String DESCRIPTION = "Description";
 
     public static final String SAVE = "Save";
     public static final String OK = "OK";

@@ -95,6 +95,8 @@ public class Servlet extends HttpServlet {
     }
 
     private void updateSortedJournals(HttpServletRequest req, HttpServletResponse resp, String sortedJournals) throws ServletException, IOException {
+        //todo то же самое что с апдейт таскс
+        //данные не поменялись, нет смысла обновлять джорналс
         journals = controller.getJournalContainer().getJournals();
         if (sortedJournals != null) {
             req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, sortedJournals);
@@ -115,6 +117,7 @@ public class Servlet extends HttpServlet {
 
     private void updateSortedTasks(HttpServletRequest req, HttpServletResponse resp, String sortedJournals) throws ServletException, IOException {
         if (sortedJournals != null) {
+            //todo здесь нужно взять данные из хмл, так как модель не меняется, чтобы не затереть при паттерне
             currentJournal = controller.getJournalObject(currentJournal.getId());
             req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, sortedJournals);
             req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
@@ -212,7 +215,7 @@ public class Servlet extends HttpServlet {
         String sortedTasks = null;
         if (filterEquals == null && filterLike == null) {
             try {
-                sortedTasks = controller.getSortedTasks(sortColumn, sortCriteria);
+                sortedTasks = controller.getSortedTasks(currentJournal.getId(), sortColumn, sortCriteria);
                 updateSortedTasks(req, resp, sortedTasks);
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
@@ -220,7 +223,8 @@ public class Servlet extends HttpServlet {
             }
         } else if (filterEquals != null) {
             try {
-                sortedTasks = controller.getFilteredTasksByEquals(sortColumn, filterEquals, sortCriteria);
+                sortedTasks = controller.getFilteredTasksByEquals(currentJournal.getId(), sortColumn, filterEquals, sortCriteria);
+                //если сортед таскс налл, то нет ничего подходяшего
                 updateSortedTasks(req, resp, sortedTasks);
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
@@ -228,7 +232,8 @@ public class Servlet extends HttpServlet {
             }
         } else if (filterLike != null) {
             try {
-                sortedTasks = controller.getFilteredTasksByPattern(sortColumn, filterLike, sortCriteria);
+                sortedTasks = controller.getFilteredTasksByPattern(currentJournal.getId(), sortColumn, filterLike, sortCriteria);
+                //если сортед таскс налл, то нет ничего подходяшего
                 updateSortedTasks(req, resp, sortedTasks);
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
@@ -678,6 +683,7 @@ public class Servlet extends HttpServlet {
         } else if (filterEquals != null) {
             try {
                 sortedJournals = controller.getFilteredJournalsByEquals(sortColumn, filterEquals, sortCriteria);
+                //если сортед джорналс налл ничего не подходит
                 updateSortedJournals(req, resp, sortedJournals);
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
@@ -686,6 +692,7 @@ public class Servlet extends HttpServlet {
         } else if (filterLike != null) {
             try {
                 sortedJournals = controller.getFilteredJournalsByPattern(sortColumn, filterLike, sortCriteria);
+                //если сортед джорналс налл ничего не подходит
                 updateSortedJournals(req, resp, sortedJournals);
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());

@@ -115,12 +115,12 @@ public class PostgreSQLTasksDAO implements TasksDAO {
     }
 
     @Override
-    public List<Task> getSortedByCriteria(String column, String criteria) throws SQLException {
+    public List<Task> getSortedByCriteria(int journalId, String column, String criteria) throws SQLException {
         List<Task> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Tasks\" ORDER BY ? ?";
+        String sql = "SELECT * FROM \"Tasks\" WHERE \"Journal_id\" = ? ORDER BY \"%s\" %s";
+        sql = String.format(sql, column, criteria);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, column);
-            statement.setString(2, criteria.toUpperCase());
+            statement.setInt(1, journalId);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 list.add(TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),
@@ -134,14 +134,12 @@ public class PostgreSQLTasksDAO implements TasksDAO {
     }
 
     @Override
-    public List<Task> getFilteredByPattern(String column, String pattern, String criteria) throws SQLException {
+    public List<Task> getFilteredByPattern(int journalId, String column, String pattern, String criteria) throws SQLException {
         List<Task> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Tasks\" WHERE ? LIKE ? ORDER BY ? ?";
+        String sql = "SELECT * FROM \"Tasks\" WHERE \"%s\" LIKE \'%s%s%s\' AND \"Journal_id\" = ? ORDER BY \"%s\" %s";
+        sql = String.format(sql, column, '%', pattern, '%', column, criteria);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, column);
-            statement.setObject(2, pattern);
-            statement.setString(3, column);
-            statement.setString(4, criteria.toUpperCase());
+            statement.setInt(1, journalId);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 list.add(TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),
@@ -155,14 +153,12 @@ public class PostgreSQLTasksDAO implements TasksDAO {
     }
 
     @Override
-    public List<Task> getFilteredByEquals(String column, String equal, String criteria) throws SQLException {
+    public List<Task> getFilteredByEquals(int journalId, String column, String equal, String criteria) throws SQLException {
         List<Task> list = new LinkedList<>();
-        String sql = "SELECT * FROM \"Tasks\" WHERE ? = ? ORDER BY ? ?";
+        String sql = "SELECT * FROM \"Tasks\" WHERE \"%s\"::text = \'%s\' AND \"Journal_id\" = ? ORDER BY \"%s\" %s";
+        sql = String.format(sql, column, equal, column, criteria);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, column);
-            statement.setObject(2, equal);
-            statement.setString(3, column);
-            statement.setString(4, criteria.toUpperCase());
+            statement.setInt(1, journalId);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 list.add(TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),
