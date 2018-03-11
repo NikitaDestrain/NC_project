@@ -1,8 +1,5 @@
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
-<%@ page import="auxiliaryclasses.ConstantsClass" %>
-<%@ page import="java.util.LinkedList" %>
-<%@ page import="java.util.Calendar" %>
-<%@ page import="java.util.Date" %><%--
+<%@ page import="auxiliaryclasses.ConstantsClass" %><%--
   Created by IntelliJ IDEA.
   User: ывв
   Date: 18.02.2018
@@ -142,10 +139,9 @@
                 }
             %>
             <tr>
-                <td class="align-right">Journal name</td>
+                <td class="align-right">Journal:</td>
                 <td class="align-left">
                     <select name=<%=ConstantsClass.JOURNAL_NAME%>>
-                        <option value=""></option>
                         <x:parse xml="${sessionScope.journalNames}" var="names"/>
                         <x:forEach select="$names/journalNames/name" var="name">
                             <option value="<x:out select="$name"/>"><x:out select="$name"/></option>

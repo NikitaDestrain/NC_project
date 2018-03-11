@@ -24,18 +24,13 @@ public class PostgreSQLDAOFactory implements DAOFactory {
     private Connection connection;
 
     private PostgreSQLDAOFactory(String path) {
-        try {
-            Context context = new InitialContext();
-            Context env = (Context) context.lookup("java:comp/env");
-            dataSource = (DataSource) env.lookup("jdbc/cracker");
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
+        initDataSource();
         connection = getConnection();
         executeSqlStartScript(path);
     }
 
     private PostgreSQLDAOFactory() {
+        initDataSource();
         connection = getConnection();
     }
 
@@ -49,6 +44,16 @@ public class PostgreSQLDAOFactory implements DAOFactory {
         if (instance == null)
             instance = new PostgreSQLDAOFactory();
         return instance;
+    }
+
+    private void initDataSource() {
+        try {
+            Context context = new InitialContext();
+            Context env = (Context) context.lookup("java:comp/env");
+            dataSource = (DataSource) env.lookup("jdbc/cracker");
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

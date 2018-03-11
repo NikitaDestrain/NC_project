@@ -4,6 +4,7 @@ import auxiliaryclasses.ConstantsClass;
 import server.controller.PasswordEncoder;
 import database.postgresql.PostgreSQLDAOFactory;
 import server.controller.Controller;
+import server.controller.UserAuthorizer;
 import server.controller.XmlUtils;
 import server.exceptions.ControllerActionException;
 import server.model.*;
@@ -17,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,6 +33,7 @@ public class Servlet extends HttpServlet {
     private Journal currentJournal;
     private Task currentTask;
     private User currentUser;
+    private UserAuthorizer authorizer = UserAuthorizer.getInstance();
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -74,14 +75,6 @@ public class Servlet extends HttpServlet {
                 doEditJournal(req, resp);
                 break;
         }
-    }
-
-    private LinkedList<String> getJournalNames() {
-        LinkedList<String> names = new LinkedList<>();
-        for (Journal j : journals) {
-            names.add(j.getName());
-        }
-        return names;
     }
 
     private void updateJournals(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -235,10 +228,7 @@ public class Servlet extends HttpServlet {
                 req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
             }
         }
-
-        updateJournals(req, resp);
-
-        req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+        req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
     }
 
     private void doAddTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -252,9 +242,9 @@ public class Servlet extends HttpServlet {
                 String journalName = req.getParameter(ConstantsClass.JOURNAL_NAME);
                 int journalId = -1;
 
-                if (name.length() == 0 || name.length() > ConstantsClass.NAME_FIELD_LENGTH) {
+                if (name.length() == 0 || name.length() > ConstantsClass.NAME_FIELD_LENGTH || !isLatinChars(name)) {
                     incorrectAddTask(req, resp, name, description, notification, planned, ConstantsClass.ERROR_NAME_LENGTH);
-                } else if (description.length() > ConstantsClass.DESCRIPTION_FIELD_LENGTH) {
+                } else if (description.length() > ConstantsClass.DESCRIPTION_FIELD_LENGTH || !isCorrectDescription(description)) {
                     incorrectAddTask(req, resp, name, description, notification, planned, ConstantsClass.ERROR_DESCRIPTION_LENGTH);
                 } else {
                     Date plannedDate;
@@ -321,9 +311,9 @@ public class Servlet extends HttpServlet {
                 String notification = req.getParameter(ConstantsClass.NOTIFICATION_DATE);
                 String journalName = req.getParameter(ConstantsClass.JOURNAL_NAME);
 
-                if (name.length() == 0 || name.length() > ConstantsClass.NAME_FIELD_LENGTH) {
+                if (name.length() == 0 || name.length() > ConstantsClass.NAME_FIELD_LENGTH || !isLatinChars(name)) {
                     incorrectEditTask(req, resp, name, description, planned, notification, ConstantsClass.ERROR_NAME_LENGTH);
-                } else if (description.length() > ConstantsClass.DESCRIPTION_FIELD_LENGTH) {
+                } else if (description.length() > ConstantsClass.DESCRIPTION_FIELD_LENGTH || !isCorrectDescription(description)) {
                     incorrectEditTask(req, resp, name, description, planned, notification, ConstantsClass.ERROR_DESCRIPTION_LENGTH);
                 } else {
                     Date plannedDate;
@@ -408,23 +398,29 @@ public class Servlet extends HttpServlet {
             case ConstantsClass.DO_SIGN_IN:
                 login = req.getParameter(ConstantsClass.LOGIN_PARAMETER);
                 password = req.getParameter(ConstantsClass.PASSWORD_PARAMETER);
-                try {
-                    encryptedPassword = encoder.encode(password);
-                } catch (NoSuchAlgorithmException e) {
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
+                if (!isCorrectLogin(login) || !isCorrectLogin(password) || login.length() > ConstantsClass.LOGIN_FIELD_LENGTH) {
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_AUTH);
                     req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
                     req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
+                } else {
+                    try {
+                        encryptedPassword = encoder.encode(password);
+                    } catch (NoSuchAlgorithmException e) {
+                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
+                        req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
+                        req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
+                        break;
+                    }
+                    currentUser = controller.signInUser(login, encryptedPassword);
+                    if (currentUser != null) {
+                        updateJournals(req, resp);
+                    } else {
+                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_IN);
+                        req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
+                        req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
+                    }
                     break;
                 }
-                currentUser = controller.signInUser(login, encryptedPassword);
-                if (currentUser != null) {
-                    updateJournals(req, resp);
-                } else {
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_IN);
-                    req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
-                    req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
-                }
-                break;
             case ConstantsClass.DO_SIGN_UP:
                 req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
                 break;
@@ -435,23 +431,36 @@ public class Servlet extends HttpServlet {
         String login = req.getParameter(ConstantsClass.LOGIN_PARAMETER);
         String password = req.getParameter(ConstantsClass.PASSWORD_PARAMETER);
         String encryptedPassword = null;
-        try {
-            encryptedPassword = encoder.encode(password);
-        } catch (NoSuchAlgorithmException e) {
-            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
+        if (!isCorrectLogin(login) || !isCorrectLogin(password) || login.length() > ConstantsClass.LOGIN_FIELD_LENGTH) {
+            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_AUTH);
             req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
             req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
         }
-        try {
-            controller.addUser(login, encryptedPassword, ConstantsClass.USER_ROLE);
-            currentUser = controller.signInUser(login, encryptedPassword);
-            updateJournals(req, resp);
+        else {
+            if (authorizer.isSuchLoginExists(login)) {
+                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.EXIST_LOGIN);
+                req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
+                req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
+            } else {
+                try {
+                    encryptedPassword = encoder.encode(password);
+                } catch (NoSuchAlgorithmException e) {
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
+                    req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
+                    req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
+                }
+                try {
+                    controller.addUser(login, encryptedPassword, ConstantsClass.USER_ROLE);
+                    currentUser = controller.signInUser(login, encryptedPassword);
+                    updateJournals(req, resp);
 
-            req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
-        } catch (ControllerActionException e) {
-            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-            req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
-            req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
+                    req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
+                } catch (ControllerActionException e) {
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
+                    req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
+                    req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
+                }
+            }
         }
     }
 
@@ -463,9 +472,9 @@ public class Servlet extends HttpServlet {
                 String name = req.getParameter(ConstantsClass.NAME);
                 String description = req.getParameter(ConstantsClass.DESCRIPTION);
 
-                if (name.length() == 0 || name.length() > ConstantsClass.NAME_FIELD_LENGTH) {
+                if (name.length() == 0 || name.length() > ConstantsClass.NAME_FIELD_LENGTH || !isLatinChars(name)) {
                     incorrectAddJournal(req, resp, name, description, ConstantsClass.ERROR_NAME_LENGTH);
-                } else if (description.length() > ConstantsClass.DESCRIPTION_FIELD_LENGTH) {
+                } else if (description.length() > ConstantsClass.DESCRIPTION_FIELD_LENGTH || !isCorrectDescription(description)) {
                     incorrectAddJournal(req, resp, name, description, ConstantsClass.ERROR_DESCRIPTION_LENGTH);
                 } else {
                     int userId = currentUser.getId();
@@ -513,9 +522,9 @@ public class Servlet extends HttpServlet {
                 String name = req.getParameter(ConstantsClass.NAME);
                 String description = req.getParameter(ConstantsClass.DESCRIPTION);
 
-                if (name.length() == 0 || name.length() > ConstantsClass.NAME_FIELD_LENGTH) {
+                if (name.length() == 0 || name.length() > ConstantsClass.NAME_FIELD_LENGTH || !isLatinChars(name)) {
                     incorrectEditJournal(req, resp, name, description, ConstantsClass.ERROR_NAME_LENGTH);
-                } else if (description.length() > ConstantsClass.DESCRIPTION_FIELD_LENGTH) {
+                } else if (description.length() > ConstantsClass.DESCRIPTION_FIELD_LENGTH || !isCorrectDescription(description)) {
                     incorrectEditJournal(req, resp, name, description, ConstantsClass.ERROR_DESCRIPTION_LENGTH);
                 } else {
                     try {
@@ -609,7 +618,7 @@ public class Servlet extends HttpServlet {
                     currentJournal = controller.getJournalObject(Integer.parseInt(usernumber));
                     try {
                         xmlUtils.writeJournal(currentJournal, req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
-                        xmlUtils.writeNames(new JournalNamesContainer(getJournalNames()),
+                        xmlUtils.writeNames(controller.getJournalNamesContainer(),
                                 req.getServletContext().getRealPath(ConstantsClass.NAMES_XML_FILE));
                     } catch (Exception e) {
                         resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
@@ -692,9 +701,6 @@ public class Servlet extends HttpServlet {
                 req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
             }
         }
-
-        updateJournals(req, resp);
-
         req.getRequestDispatcher(ConstantsClass.MAIN_PAGE_ADDRESS).forward(req, resp);
     }
 
@@ -709,6 +715,27 @@ public class Servlet extends HttpServlet {
     private boolean isEqualsFilterCorrect(String equals) {
         Pattern pattern = Pattern.compile("[A-Za-z0-9]+");
         Matcher matcher = pattern.matcher(equals);
+
+        return matcher.matches();
+    }
+
+    private boolean isLatinChars(String s) {
+        Pattern pattern = Pattern.compile("[A-Za-z0-9]+\\s*[A-Za-z0-9]*"); // a342aa
+        Matcher matcher = pattern.matcher(s);
+
+        return matcher.matches();
+    }
+
+    private boolean isCorrectLogin(String s) {
+        Pattern pattern = Pattern.compile("[A-Za-z0-9]+"); // a342aa
+        Matcher matcher = pattern.matcher(s);
+
+        return matcher.matches();
+    }
+
+    private boolean isCorrectDescription(String s) {
+        Pattern pattern = Pattern.compile("[A-Za-z0-9]*"); // a342aa
+        Matcher matcher = pattern.matcher(s);
 
         return matcher.matches();
     }
