@@ -147,7 +147,7 @@
 </head>
 <body>
 <%
-    boolean isSorted = request.getAttribute(ConstantsClass.IS_SORTED)==null?false:(boolean)request.getAttribute(ConstantsClass.IS_SORTED);
+    boolean isSorted = request.getAttribute(ConstantsClass.IS_SORTED) == null ? false : (boolean)request.getAttribute(ConstantsClass.IS_SORTED);
     int count = 0;
 %>
 <div align="center"><strong>TASK SCHEDULER</strong></div>

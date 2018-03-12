@@ -165,7 +165,7 @@
             </tr>
             <%
                 int count = 0;
-                boolean isSorted = request.getAttribute(ConstantsClass.IS_SORTED)==null?false:(boolean)request.getAttribute(ConstantsClass.IS_SORTED);
+                boolean isSorted = request.getAttribute(ConstantsClass.IS_SORTED) == null ? false : (boolean)request.getAttribute(ConstantsClass.IS_SORTED);
             %>
             <x:parse xml="${sessionScope.journal}" var="container"/>
             <x:forEach select="$container/journal/tasks/entry" var="task">

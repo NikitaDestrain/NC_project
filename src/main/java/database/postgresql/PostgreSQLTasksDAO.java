@@ -129,8 +129,6 @@ public class PostgreSQLTasksDAO implements TasksDAO {
                         rs.getDate("Upload_date"), rs.getDate("Change_date"),
                         rs.getInt("Journal_id")));
             }
-        } catch (SQLException e) {
-
         }
         return Collections.unmodifiableList(list);
     }

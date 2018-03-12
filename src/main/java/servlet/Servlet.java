@@ -33,7 +33,6 @@ public class Servlet extends HttpServlet {
     private Journal currentJournal;
     private Task currentTask;
     private User currentUser;
-    private UserAuthorizer authorizer = UserAuthorizer.getInstance();
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -634,23 +633,18 @@ public class Servlet extends HttpServlet {
                 if (usernumber != null) {
                     currentJournal = controller.getJournalObject(Integer.parseInt(usernumber));
                     try {
-                        xmlUtils.writeJournal(currentJournal, req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
                         xmlUtils.writeNames(controller.getJournalNamesContainer(),
                                 req.getServletContext().getRealPath(ConstantsClass.NAMES_XML_FILE));
                     } catch (Exception e) {
                         resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
                     }
-                    boolean journalCorrect = xmlUtils.compareWithXsd(
-                            req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE),
-                            req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XSD_FILE));
                     boolean namesCorrect = xmlUtils.compareWithXsd(
                             req.getServletContext().getRealPath(ConstantsClass.NAMES_XML_FILE),
                             req.getServletContext().getRealPath(ConstantsClass.NAMES_XSD_FILE));
-                    if (journalCorrect && namesCorrect) {
-                        String j = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XML_FILE));
+                    if (namesCorrect) {
                         String n = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.NAMES_XML_FILE));
                         req.getSession().setAttribute(ConstantsClass.JOURNAL_NAMES, n);
-                        req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, j);
+                        req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, controller.getTasks(currentJournal.getId()));
                         req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
                     } else {
                         resp.getWriter().print(ConstantsClass.ERROR_XSD_COMPARING);
