@@ -106,6 +106,7 @@ public class ConstantsClass {
     public static final String CHANGE_JOURNAL = "changejournal";
     public static final String CHOOSE = "Choose";
     public static final String SORT = "Sort";
+    public static final String RELOAD = "reload";
 
     //SORT/FILTER CONSTANT
     public static final String SORT_COLUMN = "sortcolumn";

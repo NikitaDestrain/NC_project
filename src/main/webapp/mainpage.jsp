@@ -141,6 +141,10 @@
                     document.getElementById("hid").value = "allvals";
                     document.forms[0].submit();
                     break;
+                case "reload":
+                    document.getElementById("hid").value = "reload";
+                    document.forms[0].submit();
+                    break;
             }
         }
     </script>
@@ -268,6 +272,7 @@
                 <tr>
                     <td class="button-table-td" colspan="3">
                         <input type="button" id="sort" value="Sort" onclick="buttonClick(this)">
+                        <input type="button" id="reload" value="Reload" onclick="buttonClick(this)">
                     </td>
                 </tr>
             </table>

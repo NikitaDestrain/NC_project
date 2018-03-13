@@ -28,8 +28,6 @@ public class Servlet extends HttpServlet {
     private XmlUtils xmlUtils = XmlUtils.getInstance();
     private Controller controller;
     private PostgreSQLDAOFactory dbFactory;
-    private JournalContainer container;
-    private List<Journal> journals;
     private Journal currentJournal;
     private Task currentTask;
     private User currentUser;
@@ -77,7 +75,6 @@ public class Servlet extends HttpServlet {
     }
 
     private void updateJournals(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        journals = controller.getJournalContainer().getJournals();
         String updatedJournals = controller.getJournals();
         if (updatedJournals != null) {
             req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, updatedJournals);
@@ -199,6 +196,9 @@ public class Servlet extends HttpServlet {
                 break;
             case ConstantsClass.SHOW_ALL :
                 updateTasks(req, resp);
+                break;
+            case ConstantsClass.RELOAD :
+                updateJournals(req, resp);
                 break;
         }
     }
@@ -681,6 +681,9 @@ public class Servlet extends HttpServlet {
                 }
                 break;
             case ConstantsClass.SHOW_ALL :
+                updateJournals(req, resp);
+                break;
+            case ConstantsClass.RELOAD :
                 updateJournals(req, resp);
                 break;
         }

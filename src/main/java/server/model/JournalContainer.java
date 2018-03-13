@@ -11,7 +11,7 @@ public class JournalContainer {
     private Map<Integer, Journal> journals;
 
     public JournalContainer() {
-        journals = new HashMap<>();
+        journals = new LinkedHashMap<>();
     }
 
     public void addJournal(Journal journal) {

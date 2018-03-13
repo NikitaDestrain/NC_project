@@ -24,7 +24,7 @@ public class Journal implements Serializable {
      * Creates new Journal object and instantiates new {@code HashMap} of tasks
      */
     public Journal() {
-        tasks = new HashMap<>();
+        tasks = new LinkedHashMap<>();
     }
 
     public Journal(int id, String name, String description, int userId) {
