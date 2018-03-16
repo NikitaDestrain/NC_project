@@ -1,0 +1,37 @@
+body {
+    font-weight: bold;
+    font-family: "Yu Gothic Light"
+}
+table {
+    width: auto;
+    height: auto;
+    padding: 10px;
+    border: 1px solid gray;
+    border-collapse: collapse;
+    background-color: khaki;
+}
+caption {
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-family: "Yu Gothic Light";
+}
+td {
+    text-align: center;
+}
+form {
+    display: inline-block;
+    text-align: center;
+}
+.align-right {
+    text-align: right;
+}
+.align-status {
+    text-align: center;
+    color: #FF0000;
+}
+.align-center {
+    text-align: center;
+}
+.align-left {
+    text-align: left;
+}

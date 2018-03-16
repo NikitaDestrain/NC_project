@@ -12,64 +12,7 @@
 <head>
     <title>Journals</title>
     <style type="text/css">
-        .main-table {
-            width: 100%;
-            height: auto;
-            padding: 10px;
-            border-collapse: collapse;
-            background-color: khaki;
-        }
-
-        .main-th {
-            padding: 5px;
-            border: 1px solid black;
-            text-align: center;
-        }
-
-        .main-td {
-            border: 1px solid black;
-            padding: 5px;
-            text-align: center;
-            padding-right: 20px;
-        }
-
-        .button-table {
-            width: auto;
-            height: auto;
-            padding: 10px;
-            border-collapse: collapse;
-            background-color: khaki;
-        }
-
-        .button-table-td {
-            padding: 5px;
-            text-align: center;
-            padding-right: 20px;
-        }
-
-        caption {
-            margin-bottom: 10px;
-            font-weight: bold;
-            font-family: "Yu Gothic Light";
-        }
-
-        .count {
-            background-color: darkkhaki;
-            font-weight: bold;
-            border: 1px solid black;
-            text-align: center;
-        }
-
-        input[type="submit"] {
-            display: block;
-            align-self: center;
-        }
-
-        .button-div {
-            background-color: khaki;
-            width: auto;
-            height: auto;
-        }
+        <%@include file="css/journal.css"%>
     </style>
     <script type="text/javascript">
         function filterType() {
@@ -156,10 +99,10 @@
 %>
 <div align="center"><strong>TASK SCHEDULER</strong></div>
 <div align="center">
-    <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
+    <form method="post" action="<%=ConstantsClass.JOURNAL_SERVLET_ADDRESS%>">
 
         <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
-        <input type="hidden" name="<%=ConstantsClass.ACTION%>" value=<%=ConstantsClass.DO_CRUD_FROM_MAIN%>>
+        <input type="hidden" name="<%=ConstantsClass.ACTION%>" value=<%=ConstantsClass.DO_CRUD_FROM_JOURNAL%>>
 
         <table class="main-table">
             <caption>Journals</caption>

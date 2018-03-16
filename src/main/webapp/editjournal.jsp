@@ -10,38 +10,8 @@
 <html>
 <head>
     <title>Edit journal</title>
-    <style type="text/css" media="screen">
-        body {
-            font-weight: bold;
-            font-family: "Yu Gothic Light"
-        }
-        table {
-            width: auto;
-            height: auto;
-            padding: 10px;
-            border: 1px solid gray;
-            border-collapse: collapse;
-            background-color: khaki;
-        }
-        caption {
-            margin-bottom: 10px;
-            font-weight: bold;
-            font-family: "Yu Gothic Light";
-        }
-        td {
-            text-align: center;
-        }
-        form {
-            display: inline-block;
-            text-align: center;
-        }
-        .align-right {
-            text-align: right;
-        }
-        .align-left {
-            text-align: center;
-            color: #FF0000;
-        }
+    <style>
+        <%@include file="css/cu-journal.css"%>
     </style>
     <script type="text/javascript">
         function buttonClick(x) {
@@ -59,7 +29,7 @@
 </head>
 <body>
 <div align="center">
-    <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
+    <form method="post" action="<%=ConstantsClass.JOURNAL_SERVLET_ADDRESS%>">
 
         <input type="hidden" name="<%=ConstantsClass.ACTION%>" value="<%=ConstantsClass.DO_EDIT_JOURNAL%>">
         <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>

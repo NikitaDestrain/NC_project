@@ -73,10 +73,14 @@ public class ConstantsClass {
     public static final String ERROR_AUTH = "Login and password should contain latin characters, whitespaces and numbers!\nAnd login length should not be more than 18 characters!";
     public static final String ERROR_NO_DATA_FOR_THIS_CRITERION = "There was no suitable data for this request!";
 
+    public static final String CURRENT_USER = "currentuser";
+
     // web constants
 
-    public static final String SERVLET_ADDRESS = "/taskscheduler";
-    public static final String MAIN_PAGE_ADDRESS = "/mainpage";
+    public static final String AUTH_SERVLET_ADDRESS = "/authservlet";
+    public static final String JOURNAL_SERVLET_ADDRESS = "/journalservlet";
+    public static final String TASK_SERVLET_ADDRESS = "/taskservlet";
+    public static final String JOURNAL_PAGE_ADDRESS = "/mainpage";
     public static final String TASKS_PAGE_ADDRESS = "/tasks";
     public static final String SIGN_IN_ADDRESS = "/signin";
     public static final String SIGN_UP_ADDRESS = "/signup";
@@ -91,7 +95,7 @@ public class ConstantsClass {
     public static final String DO_SELECT = "select";
     public static final String DO_ADD_TASK = "addtask";
     public static final String DO_EDIT_TASK = "edittask";
-    public static final String DO_CRUD_FROM_MAIN = "crudactionmain";
+    public static final String DO_CRUD_FROM_JOURNAL = "crudactionmain";
     public static final String DO_CRUD_FROM_TASKS = "crudactiontasks";
     public static final String DO_ADD_JOURNAL = "addjournal";
     public static final String DO_EDIT_JOURNAL = "editjournal";
@@ -125,6 +129,7 @@ public class ConstantsClass {
     public static final String JOURNAL_NAMES = "journalNames";
     public static final String CURRENT_TASK = "task";
     public static final String CURRENT_JOURNAL_NAME = "curname";
+    public static final String CURRENT_JOURNAL = "currentjournal";
 
     public static final String LOGIN_PARAMETER = "login";
     public static final String PASSWORD_PARAMETER = "password";

@@ -10,26 +10,7 @@
 <head>
     <title>Sign up</title>
     <style type="text/css">
-
-        #content {
-            position: relative;
-        }
-
-        .align-right {
-            text-align: right;
-        }
-
-        table {
-            border: 1px solid gray;
-            padding: 20px;
-            background-color: khaki;
-        }
-
-        .message {
-            font-size: 16px;
-            font-weight: bold;
-            font-color: red;
-        }
+        <%@include file="css/signup.css"%>
     </style>
     <script type="text/javascript">
         function buttonClick() {
@@ -54,7 +35,7 @@
 
     <h3>New Account</h3>
 
-    <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
+    <form method="post" action=<%=ConstantsClass.AUTH_SERVLET_ADDRESS%>>
 
         <input type="hidden" name="<%=ConstantsClass.ACTION%>" id="hid"/>
 

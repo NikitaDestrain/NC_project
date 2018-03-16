@@ -11,30 +11,7 @@
     <title>Sign in</title>
 </head>
 <style type="text/css">
-
-    #content {
-        position: relative;
-    }
-
-    .align-right {
-        text-align: right;
-    }
-
-    .align-left {
-        text-align: left;
-    }
-
-    table {
-        border: 1px solid gray;
-        padding: 20px;
-        background-color: khaki;
-    }
-
-    .login-error {
-        font-size: 16px;
-        font-weight: bold;
-        color: red;
-    }
+    <%@include file="css/signin.css"%>
 </style>
 <script type="text/javascript">
     function buttonClick(x) {
@@ -61,7 +38,7 @@
 
     <h3>Sign In</h3>
 
-    <form method="post" action=<%=ConstantsClass.SERVLET_ADDRESS%>>
+    <form method="post" action=<%=ConstantsClass.AUTH_SERVLET_ADDRESS%>>
 
         <input type="hidden" name="<%=ConstantsClass.USERACTION%>" id="hid"/>
         <input type="hidden" name="<%=ConstantsClass.ACTION%>" value="<%=ConstantsClass.DO_SIGN_IN%>">
