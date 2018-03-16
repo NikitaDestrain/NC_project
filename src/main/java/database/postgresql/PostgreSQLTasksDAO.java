@@ -14,7 +14,7 @@ import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PostgreSQLTasksDAO implements TasksDAO {
+public class PostgreSQLTasksDAO implements TasksDAO { //todo vlla - аналогично журналу - тонны копипасты
     private final Connection connection;
 
     public PostgreSQLTasksDAO(Connection connection) {

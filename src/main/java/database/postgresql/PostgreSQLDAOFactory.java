@@ -52,7 +52,7 @@ public class PostgreSQLDAOFactory implements DAOFactory {
             Context env = (Context) context.lookup("java:comp/env");
             dataSource = (DataSource) env.lookup("jdbc/cracker");
         } catch (NamingException e) {
-            e.printStackTrace();
+            e.printStackTrace(); //todo vlla сами знаете
         }
     }
 

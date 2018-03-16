@@ -95,9 +95,13 @@ public class Controller {
             User user = userContainer.getUser(id);
             if (user == null)
                 throw new ControllerActionException("Incorrect id! User has been not found.");
-            return marshalToString(User.class, user);
+            return marshalToString(User.class, user); //todo vlla не считаю, что контроллер должен одновременно заниматься и маршаллингом.
+            // Во первых - это не его обязанность!!!
+            // Во вторых - а если вам понадобится произвести какую-либо операцию с юзером (например, сохранить его объект в сессии), а не сразу отдавать его в UI?
+            // В общем, контроллер возвращает Java-объекты, с которыми могут работать различные классы.
+            // Преобразовывать из в XML нужно именно там, где это необходимо. И делать это должен другой, специализированный класс.
         } catch (JAXBException e) {
-            e.printStackTrace();
+            e.printStackTrace(); //todo vlla
         }
         return null;
     }

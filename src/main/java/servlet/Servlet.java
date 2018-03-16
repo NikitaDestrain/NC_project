@@ -23,7 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @WebServlet(ConstantsClass.SERVLET_ADDRESS)
-public class Servlet extends HttpServlet {
+public class Servlet extends HttpServlet { //todo vlla АДСКИ перегруженный класс. Распилить, отрефакторить, вынести дублирующийся код в отдельные методы
     private PasswordEncoder encoder = PasswordEncoder.getInstance();
     private XmlUtils xmlUtils = XmlUtils.getInstance();
     private Controller controller;

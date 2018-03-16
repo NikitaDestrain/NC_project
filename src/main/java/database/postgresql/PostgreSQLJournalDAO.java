@@ -82,7 +82,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
         List<Journal> list = new LinkedList<>();
         String sql = "SELECT * FROM \"Journal\"";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet rs = statement.executeQuery();
+            ResultSet rs = statement.executeQuery(); //todo vlla очень много дублирующегося кода. См. этот метод и все последующие
             while (rs.next()) {
                 list.add(JournalFactory.createJournal(rs.getInt("Journal_id"), rs.getString("Name"),
                         rs.getString("Description"), rs.getInt("User_id")));
