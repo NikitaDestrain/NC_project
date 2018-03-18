@@ -2,6 +2,7 @@ package server.controller;
 
 import database.daointerfaces.UsersDAO;
 import database.postgresql.PostgreSQLDAOFactory;
+import server.exceptions.DAOFactoryActionException;
 import server.model.User;
 
 import java.sql.SQLException;
@@ -11,15 +12,16 @@ import java.util.Map;
 
 public class UserAuthorizer {
     private Map<String, String> userData;
-    private UsersDAO usersDAO = PostgreSQLDAOFactory.getInstance().getUsersDao();
+    private UsersDAO usersDAO;
 
     private static UserAuthorizer instance;
 
     private UserAuthorizer() {
-        userData = new HashMap<>();
         try {
+            usersDAO = PostgreSQLDAOFactory.getInstance().getUsersDao();
+            userData = new HashMap<>();
             createStartUserData();
-        } catch (SQLException e) {
+        } catch (SQLException | DAOFactoryActionException e) {
             e.printStackTrace();
         }
     }

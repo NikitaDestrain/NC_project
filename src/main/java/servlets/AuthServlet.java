@@ -5,6 +5,7 @@ import server.controller.PasswordEncoder;
 import database.postgresql.PostgreSQLDAOFactory;
 import server.controller.Controller;
 import server.exceptions.ControllerActionException;
+import server.exceptions.DAOFactoryActionException;
 import server.model.*;
 
 import javax.servlet.ServletConfig;
@@ -19,16 +20,23 @@ import java.security.NoSuchAlgorithmException;
 @WebServlet(ConstantsClass.AUTH_SERVLET_ADDRESS)
 public class AuthServlet extends HttpServlet { //todo vlla АДСКИ перегруженный класс. Распилить, отрефакторить, вынести дублирующийся код в отдельные методы
     private PasswordEncoder encoder = PasswordEncoder.getInstance();
-    private DataUpdateUtil updateUtil = DataUpdateUtil.getInstance();
+    private DataUpdateUtil updateUtil;
     private PatternChecker patternChecker = PatternChecker.getInstance();
-    private Controller controller = Controller.getInstance();
+    private Controller controller;
 
     private PostgreSQLDAOFactory dbFactory;
     private User currentUser;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        dbFactory = PostgreSQLDAOFactory.getInstance(config.getServletContext().getRealPath(ConstantsClass.SCRIPT_FILE));
+        try {
+            dbFactory = PostgreSQLDAOFactory.getInstance(config.getServletContext().getRealPath(ConstantsClass.SCRIPT_FILE));
+            controller = Controller.getInstance();
+            updateUtil = DataUpdateUtil.getInstance();
+        } catch (DAOFactoryActionException | ControllerActionException e) {
+            //сообщение об ошибке, можно взять из месседжа
+            throw new ServletException();
+        }
     }
 
     @Override

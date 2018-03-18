@@ -1,5 +1,6 @@
 package server.controller;
 
+import server.exceptions.ControllerActionException;
 import server.model.Task;
 import server.model.TaskStatus;
 
@@ -15,6 +16,10 @@ public class NotificationTimer extends TimerTask {
     @Override
     public void run() {
         if(task.getStatus() != TaskStatus.Completed || task.getStatus() != TaskStatus.Cancelled)
-            Controller.getInstance().setOverdue(task);
+            try {
+                Controller.getInstance().setOverdue(task);
+            } catch (ControllerActionException e) {
+                e.printStackTrace();
+            }
     }
 }

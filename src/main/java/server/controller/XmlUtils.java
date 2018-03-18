@@ -7,6 +7,7 @@ import server.model.Task;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
@@ -26,12 +27,21 @@ public class XmlUtils {
     private XmlUtils() {
     }
 
+    public String marshalToXmlString(Class className, Object object) throws JAXBException {
+        StringWriter sw = new StringWriter();
+        JAXBContext context = JAXBContext.newInstance(className);
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        marshaller.marshal(object, sw);
+        return sw.toString();
+    }
+
     public String parseXmlToString(String path) throws IOException {
         try {
             BufferedReader br = new BufferedReader(new FileReader(new File(path)));
             String line;
             StringBuilder sb = new StringBuilder();
-            while((line=br.readLine())!= null) {
+            while ((line = br.readLine()) != null) {
                 sb.append(line.trim());
             }
             return sb.toString();

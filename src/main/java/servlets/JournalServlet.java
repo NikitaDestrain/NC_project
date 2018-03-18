@@ -5,18 +5,20 @@ import server.controller.Controller;
 import server.controller.XmlUtils;
 import server.exceptions.ControllerActionException;
 import server.model.Journal;
+import server.model.JournalContainer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXBException;
 import java.io.IOException;
 
 @WebServlet(ConstantsClass.JOURNAL_SERVLET_ADDRESS)
 public class JournalServlet extends HttpServlet {
-    private Controller controller = Controller.getInstance();
-    private DataUpdateUtil updateUtil = DataUpdateUtil.getInstance();
+    private Controller controller;
+    private DataUpdateUtil updateUtil;
     private XmlUtils xmlUtils = XmlUtils.getInstance();
     private PatternChecker patternChecker = PatternChecker.getInstance();
 
@@ -34,6 +36,13 @@ public class JournalServlet extends HttpServlet {
 
     private void doActionFromMain(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        try {
+            updateUtil = DataUpdateUtil.getInstance();
+            controller = Controller.getInstance();
+        } catch (ControllerActionException e) {
+            //todo сообщение об ошибке
+            e.printStackTrace();
+        }
         String useraction = req.getParameter(ConstantsClass.USERACTION);
         String usernumber;
         switch (useraction) {
@@ -47,9 +56,10 @@ public class JournalServlet extends HttpServlet {
                     int num = Integer.parseInt(usernumber);
                     String journal = null;
                     try {
-                        journal = controller.getJournal(num);
-                    } catch (ControllerActionException e) {
-                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
+                        Journal journalObject = controller.getJournal(num);
+                        journal = xmlUtils.marshalToXmlString(journalObject.getClass(), journalObject);
+                    } catch (JAXBException e) {
+                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_LAZY_MESSAGE);
                         req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
                     }
                     boolean journalCorrect = false;
@@ -62,7 +72,7 @@ public class JournalServlet extends HttpServlet {
                     }
                     if (journalCorrect) {
                         req.setAttribute(ConstantsClass.JOURNAL_PARAMETER, journal);
-                        req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL, controller.getJournalObject(num));
+                        req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL, controller.getJournal(num));
                         req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.FALSE);
                         req.getRequestDispatcher(ConstantsClass.UPDATE_JOURNALS_ADDRESS).forward(req, resp);
                     }
@@ -90,7 +100,7 @@ public class JournalServlet extends HttpServlet {
             case ConstantsClass.CHOOSE: // записали в сессию текущий журнал и имена
                 usernumber = req.getParameter(ConstantsClass.USERNUMBER);
                 if (usernumber != null) {
-                    currentJournal = controller.getJournalObject(Integer.parseInt(usernumber));
+                    currentJournal = controller.getJournal(Integer.parseInt(usernumber));
                     req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL, currentJournal);
                     try {
                         xmlUtils.writeNames(controller.getJournalNamesContainer(),
@@ -145,10 +155,16 @@ public class JournalServlet extends HttpServlet {
     private void sortActionJournals(HttpServletRequest req, HttpServletResponse resp, String sortColumn,
                                     String sortCriteria, String filterLike, String filterEquals)
             throws ServletException, IOException {
-        String sortedJournals;
+        String sortedJournals = null;
         if (filterEquals == null && filterLike == null) {
             try {
-                sortedJournals = controller.getSortedJournals(sortColumn, sortCriteria);
+                JournalContainer sortedJournalsContainer = controller.getSortedJournals(sortColumn, sortCriteria);
+                try {
+                    sortedJournals = xmlUtils.marshalToXmlString(sortedJournalsContainer.getClass(), sortedJournalsContainer);
+                } catch (JAXBException e) {
+                    e.printStackTrace();
+                    //todo обсудить
+                }
                 if (sortedJournals == null) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
                     req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
@@ -161,7 +177,13 @@ public class JournalServlet extends HttpServlet {
             }
         } else if (filterEquals != null) {
             try {
-                sortedJournals = controller.getFilteredJournalsByEquals(sortColumn, filterEquals, sortCriteria);
+                JournalContainer sortedJournalsContainer = controller.getFilteredJournalsByEquals(sortColumn, filterEquals, sortCriteria);
+                try {
+                    sortedJournals = xmlUtils.marshalToXmlString(sortedJournalsContainer.getClass(), sortedJournalsContainer);
+                } catch (JAXBException e) {
+                    e.printStackTrace();
+                    //todo обсудить
+                }
                 if (sortedJournals == null) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
                     req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
@@ -174,7 +196,13 @@ public class JournalServlet extends HttpServlet {
             }
         } else if (filterLike != null) {
             try {
-                sortedJournals = controller.getFilteredJournalsByPattern(sortColumn, filterLike, sortCriteria);
+                JournalContainer sortedJournalsContainer = controller.getFilteredJournalsByPattern(sortColumn, filterLike, sortCriteria);
+                try {
+                    sortedJournals = xmlUtils.marshalToXmlString(sortedJournalsContainer.getClass(), sortedJournalsContainer);
+                } catch (JAXBException e) {
+                    e.printStackTrace();
+                    //todo обсудить
+                }
                 if (sortedJournals == null) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
                     req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);

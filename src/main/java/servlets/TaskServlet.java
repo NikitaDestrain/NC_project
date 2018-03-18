@@ -12,12 +12,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXBException;
 import java.io.IOException;
 
 @WebServlet(ConstantsClass.TASK_SERVLET_ADDRESS)
 public class TaskServlet extends HttpServlet {
-    private Controller controller = Controller.getInstance();
-    private DataUpdateUtil updateUtil = DataUpdateUtil.getInstance();
+    private Controller controller;
+    private DataUpdateUtil updateUtil;
     private XmlUtils xmlUtils = XmlUtils.getInstance();
     private PatternChecker patternChecker = PatternChecker.getInstance();
 
@@ -35,6 +36,13 @@ public class TaskServlet extends HttpServlet {
 
     private void doActionFromTasks(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        try {
+            controller = Controller.getInstance();
+            updateUtil = DataUpdateUtil.getInstance();
+        } catch (ControllerActionException e) {
+            //todo обсудить
+            e.printStackTrace();
+        }
         String useraction = req.getParameter(ConstantsClass.USERACTION);
         String usernumber;
         Journal currentJournal = (Journal) req.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL);
@@ -50,7 +58,7 @@ public class TaskServlet extends HttpServlet {
                 usernumber = req.getParameter(ConstantsClass.USERNUMBER);
                 if (usernumber != null && !usernumber.equals("")) {
                     int num = Integer.parseInt(usernumber);
-                    currentTask = controller.getTaskObject(currentJournal.getId(), num);
+                    currentTask = controller.getTask(currentJournal.getId(), num);
                     req.getSession().setAttribute(ConstantsClass.CURRENT_TASK, currentTask);
                     req.getSession().setAttribute(ConstantsClass.CURRENT_STATUS, currentTask.getStatus());
                     try {
@@ -85,7 +93,7 @@ public class TaskServlet extends HttpServlet {
                 usernumber = req.getParameter(ConstantsClass.USERNUMBER);
                 if (usernumber != null && !usernumber.equals("")) {
                     int num = Integer.parseInt(usernumber);
-                    currentTask = controller.getTaskObject(currentJournal.getId(), num);
+                    currentTask = controller.getTask(currentJournal.getId(), num);
                     try {
                         controller.deleteTask(currentTask);
                         updateUtil.updateTasks(req, resp, currentJournal);
@@ -124,10 +132,10 @@ public class TaskServlet extends HttpServlet {
                     sortActionTasks(req, resp, sortColumn, sortCriteria, null, null);
                 }
                 break;
-            case ConstantsClass.SHOW_ALL :
+            case ConstantsClass.SHOW_ALL:
                 updateUtil.updateTasks(req, resp, currentJournal);
                 break;
-            case ConstantsClass.RELOAD :
+            case ConstantsClass.RELOAD:
                 updateUtil.updateJournals(req, resp);
                 break;
         }
@@ -137,10 +145,15 @@ public class TaskServlet extends HttpServlet {
                                  String sortCriteria, String filterLike, String filterEquals)
             throws ServletException, IOException {
         Journal currentJournal = (Journal) req.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL);
-        String sortedTasks;
+        String sortedTasks = null;
         if (filterEquals == null && filterLike == null) {
             try {
-                sortedTasks = controller.getSortedTasks(currentJournal.getId(), sortColumn, sortCriteria);
+                Journal tasks = controller.getSortedTasks(currentJournal.getId(), sortColumn, sortCriteria);
+                try {
+                    sortedTasks = xmlUtils.marshalToXmlString(tasks.getClass(), tasks);
+                } catch (JAXBException e) {
+                    //todo обсудить
+                }
                 if (sortedTasks == null) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
                     req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
@@ -153,7 +166,12 @@ public class TaskServlet extends HttpServlet {
             }
         } else if (filterEquals != null) {
             try {
-                sortedTasks = controller.getFilteredTasksByEquals(currentJournal.getId(), sortColumn, filterEquals, sortCriteria);
+                Journal tasks = controller.getFilteredTasksByEquals(currentJournal.getId(), sortColumn, filterEquals, sortCriteria);
+                try {
+                    sortedTasks = xmlUtils.marshalToXmlString(tasks.getClass(), tasks);
+                } catch (JAXBException e) {
+                    //todo обсудить
+                }
                 if (sortedTasks == null) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
                     req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
@@ -166,7 +184,12 @@ public class TaskServlet extends HttpServlet {
             }
         } else if (filterLike != null) {
             try {
-                sortedTasks = controller.getFilteredTasksByPattern(currentJournal.getId(), sortColumn, filterLike, sortCriteria);
+                Journal tasks = controller.getFilteredTasksByPattern(currentJournal.getId(), sortColumn, filterLike, sortCriteria);
+                try {
+                    sortedTasks = xmlUtils.marshalToXmlString(tasks.getClass(), tasks);
+                } catch (JAXBException e) {
+                    //todo обсудить
+                }
                 if (sortedTasks == null) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
                     req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);

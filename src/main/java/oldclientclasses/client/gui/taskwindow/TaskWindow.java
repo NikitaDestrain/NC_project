@@ -1,21 +1,6 @@
 package oldclientclasses.client.gui.taskwindow;
 
-import auxiliaryclasses.MessageBox;
-import oldclientclasses.client.commandprocessor.ClientCommandSender;
-import oldclientclasses.client.factories.TaskFactory;
-import oldclientclasses.client.gui.mainform.MainForm;
-import server.model.Task;
-import server.model.TaskStatus;
-import oldclientclasses.client.network.ClientNetworkFacade;
-import server.exceptions.UnsuccessfulCommandActionException;
-
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 public class TaskWindow extends JFrame {
 /*

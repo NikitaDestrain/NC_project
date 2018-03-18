@@ -72,6 +72,7 @@ public class ConstantsClass {
     public static final String ERROR_FILTER_EQUALS = "\"Equals\" filter should contain latin characters and numbers!";
     public static final String ERROR_AUTH = "Login and password should contain latin characters, whitespaces and numbers!\nAnd login length should not be more than 18 characters!";
     public static final String ERROR_NO_DATA_FOR_THIS_CRITERION = "There was no suitable data for this request!";
+    public static final String ERROR_LAZY_MESSAGE = "Error! Try later";
 
     public static final String CURRENT_USER = "currentuser";
 

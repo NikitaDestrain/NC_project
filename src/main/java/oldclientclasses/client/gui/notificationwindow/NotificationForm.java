@@ -1,21 +1,6 @@
 package oldclientclasses.client.gui.notificationwindow;
 
-import auxiliaryclasses.MessageBox;
-import oldclientclasses.client.commandprocessor.ClientCommandSender;
-import server.exceptions.UnsuccessfulCommandActionException;
-import oldclientclasses.client.gui.mainform.MainForm;
-import server.exceptions.IllegalPropertyException;
-import server.model.Task;
-
-import oldclientclasses.client.network.ClientNetworkFacade;
-import oldclientclasses.client.properties.ParserProperties;
-import auxiliaryclasses.ConstantsClass;
-import server.model.TaskStatus;
-
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.io.IOException;
 
 public class NotificationForm extends JFrame {
     /*

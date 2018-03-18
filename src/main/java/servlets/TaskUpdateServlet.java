@@ -18,8 +18,8 @@ import java.sql.Date;
 
 @WebServlet(ConstantsClass.TASK_UPDATE_SERVLET_ADDRESS)
 public class TaskUpdateServlet extends HttpServlet {
-    private Controller controller = Controller.getInstance();
-    private DataUpdateUtil updateUtil = DataUpdateUtil.getInstance();
+    private Controller controller;
+    private DataUpdateUtil updateUtil;
     private XmlUtils xmlUtils = XmlUtils.getInstance();
     private PatternChecker patternChecker = PatternChecker.getInstance();
 
@@ -37,6 +37,13 @@ public class TaskUpdateServlet extends HttpServlet {
     }
 
     private void doAddTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            controller = Controller.getInstance();
+            updateUtil = DataUpdateUtil.getInstance();
+        } catch (ControllerActionException e) {
+            //todo обсудить
+            e.printStackTrace();
+        }
         String useraction = req.getParameter(ConstantsClass.USERACTION);
         Journal currentJournal = (Journal) req.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL);
         switch (useraction) {
@@ -61,7 +68,7 @@ public class TaskUpdateServlet extends HttpServlet {
 
                         try {
                             if (!journalName.equals("")) {
-                                journalId = controller.getJournalObject(journalName).getId();
+                                journalId = controller.getJournal(journalName).getId();
                             }
                             controller.addTask(name, description, notificationDate, plannedDate,
                                     journalId == -1 ? currentJournal.getId() : journalId);
@@ -113,6 +120,13 @@ public class TaskUpdateServlet extends HttpServlet {
     }
 
     private void doEditTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            controller = Controller.getInstance();
+            updateUtil = DataUpdateUtil.getInstance();
+        } catch (ControllerActionException e) {
+            //todo обсудить
+            e.printStackTrace();
+        }
         String useraction = req.getParameter(ConstantsClass.USERACTION);
         Journal currentJournal = (Journal) req.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL);
         switch (useraction) {
@@ -147,7 +161,7 @@ public class TaskUpdateServlet extends HttpServlet {
                             Task currentTask = (Task) req.getSession().getAttribute(ConstantsClass.CURRENT_TASK);
                             controller.editTask(currentTask.getId(), currentTask.getJournalId(), name, taskStatus,
                                     description, notificationDate, plannedDate, journalName);
-                            updateUtil.updateTasks(req, resp,currentJournal);
+                            updateUtil.updateTasks(req, resp, currentJournal);
                         } catch (ControllerActionException e) {
                             incorrectEditTask(req, resp, name, description, planned, notification, e.getMessage(), currentJournal);
                         }

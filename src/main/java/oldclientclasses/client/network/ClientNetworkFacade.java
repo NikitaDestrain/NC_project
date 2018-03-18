@@ -5,7 +5,7 @@ import oldclientclasses.client.commandprocessor.ClientCommandSender;
 import oldclientclasses.client.commandprocessor.Command;
 import oldclientclasses.client.commandprocessor.ClientCommandParser;
 import auxiliaryclasses.ConstantsClass;
-import server.exceptions.UnsuccessfulCommandActionException;
+import oldserverclasses.exceptions.UnsuccessfulCommandActionException;
 
 import java.io.*;
 import java.net.ServerSocket;

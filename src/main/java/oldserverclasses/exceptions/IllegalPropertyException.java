@@ -1,4 +1,4 @@
-package server.exceptions;
+package oldserverclasses.exceptions;
 
 /**
  * @see oldserverclasses.properties.ParserProperties#getProperty(String) (String)

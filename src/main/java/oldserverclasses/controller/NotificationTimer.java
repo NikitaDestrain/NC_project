@@ -2,7 +2,7 @@ package oldserverclasses.controller;
 
 import auxiliaryclasses.MessageBox;
 import oldserverclasses.commandproccessor.ServerCommandSender;
-import server.exceptions.UnsuccessfulCommandActionException;
+import oldserverclasses.exceptions.UnsuccessfulCommandActionException;
 import server.model.Task;
 import oldserverclasses.network.StreamContainer;
 

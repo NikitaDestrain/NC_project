@@ -1,4 +1,4 @@
-package server.exceptions;
+package oldserverclasses.exceptions;
 
 public class UnsuccessfulCommandActionException extends RuntimeException {
 

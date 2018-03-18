@@ -5,7 +5,7 @@ import oldclientclasses.client.commandprocessor.ClientCommandSender;
 import server.model.Task;
 import server.model.TaskStatus;
 import oldclientclasses.client.network.ClientNetworkFacade;
-import server.exceptions.UnsuccessfulCommandActionException;
+import oldserverclasses.exceptions.UnsuccessfulCommandActionException;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.Calendar;

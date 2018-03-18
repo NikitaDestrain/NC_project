@@ -30,10 +30,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             stm.executeUpdate();
             try (PreparedStatement stm2 = connection.prepareStatement(sqlSelect)) {
                 stm2.setString(1, login);
-                ResultSet rs2 = stm2.executeQuery();
-                rs2.next();
-                user = UserFactory.createUser(rs2.getInt("User_id"), rs2.getString("Login"),
-                        rs2.getString("Password"), rs2.getString("Role"), rs2.getDate("Registration_date"));
+                user = createUserByResultSet(stm2.executeQuery());
             }
         }
         return user;
@@ -45,10 +42,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
         User user;
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             stm.setInt(1, id);
-            ResultSet rs = stm.executeQuery();
-            rs.next();
-            user = UserFactory.createUser(rs.getInt("User_id"), rs.getString("Login"),
-                    rs.getString("Password"), rs.getString("Role"), rs.getDate("Registration_date"));
+            user = createUserByResultSet(stm.executeQuery());
         }
         return user;
     }
@@ -60,10 +54,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             stm.setString(1, login);
             stm.setString(2, password);
-            ResultSet rs = stm.executeQuery();
-            rs.next();
-            user = UserFactory.createUser(rs.getInt("User_id"), rs.getString("Login"),
-                    rs.getString("Password"), rs.getString("Role"), rs.getDate("Registration_date"));
+            user = createUserByResultSet(stm.executeQuery());
         }
         return user;
     }
@@ -91,31 +82,38 @@ public class PostgreSQLUsersDAO implements UsersDAO {
 
     @Override
     public List<User> getAll() throws SQLException {
-        List<User> list = new LinkedList<>();
+        List<User> list;
         String sql = "SELECT * FROM \"Users\"";
         System.out.println(connection);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                list.add(UserFactory.createUser(rs.getInt("User_id"), rs.getString("Login"),
-                        rs.getString("Password"), rs.getString("Role"), rs.getDate("Registration_date")));
-            }
+            list = createListByResultSet(statement.executeQuery());
         }
         return Collections.unmodifiableList(list);
     }
 
     @Override
     public List<User> getSortedByCriteria(String column, String criteria) throws SQLException {
-        List<User> list = new LinkedList<>();
+        List<User> list;
         String sql = "SELECT * FROM \"Users\" ORDER BY \"%s\" %s";
         sql = String.format(sql, column, criteria);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                list.add(UserFactory.createUser(rs.getInt("User_id"), rs.getString("Login"),
-                        rs.getString("Password"), rs.getString("Role"), rs.getDate("Registration_date")));
-            }
+            list = createListByResultSet(statement.executeQuery());
         }
         return Collections.unmodifiableList(list);
+    }
+
+    private User createUserByResultSet(ResultSet rs) throws SQLException {
+        rs.next();
+        return UserFactory.createUser(rs.getInt("User_id"), rs.getString("Login"),
+                rs.getString("Password"), rs.getString("Role"), rs.getDate("Registration_date"));
+    }
+
+    private List<User> createListByResultSet(ResultSet rs) throws SQLException {
+        List<User> list = new LinkedList<>();
+        while (rs.next()) {
+            list.add(UserFactory.createUser(rs.getInt("User_id"), rs.getString("Login"),
+                    rs.getString("Password"), rs.getString("Role"), rs.getDate("Registration_date")));
+        }
+        return list;
     }
 }

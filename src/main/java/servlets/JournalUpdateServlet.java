@@ -16,8 +16,8 @@ import java.io.IOException;
 
 @WebServlet(ConstantsClass.JOURNAL_UPDATE_SERVLET_ADDRESS)
 public class JournalUpdateServlet extends HttpServlet {
-    private Controller controller = Controller.getInstance();
-    private DataUpdateUtil updateUtil = DataUpdateUtil.getInstance();
+    private Controller controller;
+    private DataUpdateUtil updateUtil;
     private XmlUtils xmlUtils = XmlUtils.getInstance();
     private PatternChecker patternChecker = PatternChecker.getInstance();
 
@@ -36,6 +36,13 @@ public class JournalUpdateServlet extends HttpServlet {
 
     private void doAddJournal(HttpServletRequest req, HttpServletResponse resp) throws
             ServletException, IOException {
+        try {
+            controller = Controller.getInstance();
+            updateUtil = DataUpdateUtil.getInstance();
+        } catch (ControllerActionException e) {
+            //todo обсудить
+            e.printStackTrace();
+        }
         String useraction = req.getParameter(ConstantsClass.USERACTION);
         User currentUser = (User) req.getSession().getAttribute(ConstantsClass.CURRENT_USER);
         switch (useraction) {
@@ -93,6 +100,13 @@ public class JournalUpdateServlet extends HttpServlet {
 
     private void doEditJournal(HttpServletRequest req, HttpServletResponse resp) throws
             ServletException, IOException {
+        try {
+            controller = Controller.getInstance();
+            updateUtil = DataUpdateUtil.getInstance();
+        } catch (ControllerActionException e) {
+            //todo обсудить
+            e.printStackTrace();
+        }
         String useraction = req.getParameter(ConstantsClass.USERACTION);
         switch (useraction) {
             case ConstantsClass.SAVE:

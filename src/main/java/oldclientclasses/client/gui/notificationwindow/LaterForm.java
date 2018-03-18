@@ -1,22 +1,6 @@
 package oldclientclasses.client.gui.notificationwindow;
 
-import auxiliaryclasses.MessageBox;
-import oldclientclasses.client.commandprocessor.ClientCommandSender;
-import server.exceptions.IllegalPropertyException;
-import server.exceptions.UnsuccessfulCommandActionException;
-import oldclientclasses.client.gui.mainform.MainForm;
-import server.model.Task;
-import server.model.TaskStatus;
-import oldclientclasses.client.network.ClientNetworkFacade;
-import oldclientclasses.client.properties.ParserProperties;
-import auxiliaryclasses.ConstantsClass;
-
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
 
 public class LaterForm extends JFrame {
     /*

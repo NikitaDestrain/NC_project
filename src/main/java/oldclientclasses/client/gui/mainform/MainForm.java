@@ -1,21 +1,6 @@
 package oldclientclasses.client.gui.mainform;
 
-import auxiliaryclasses.MessageBox;
-import oldclientclasses.client.commandprocessor.ClientCommandSender;
-import server.exceptions.UnsuccessfulCommandActionException;
-import oldclientclasses.client.gui.taskwindow.TaskWindow;
-import server.exceptions.IllegalPropertyException;
-import server.model.Journal;
-import server.model.Task;
-import oldclientclasses.client.network.ClientNetworkFacade;
-import oldclientclasses.client.properties.ParserProperties;
-import auxiliaryclasses.ConstantsClass;
-
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.IOException;
-import java.util.LinkedList;
 
 public class MainForm extends JFrame {
     /*

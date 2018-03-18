@@ -6,7 +6,7 @@ import oldserverclasses.commandproccessor.ServerCommandSender;
 import oldserverclasses.commandproccessor.User;
 import oldserverclasses.controller.Controller;
 import oldserverclasses.controller.UserAuthorizer;
-import server.exceptions.UnsuccessfulCommandActionException;
+import oldserverclasses.exceptions.UnsuccessfulCommandActionException;
 import oldserverclasses.network.StreamContainer;
 
 public class SignInCommandHandler implements CommandHandler {

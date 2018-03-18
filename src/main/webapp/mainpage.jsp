@@ -154,7 +154,8 @@
                 <tr>
                     <td>Sort by:</td>
                     <td>
-                        <select class="form-control" name="<%=ConstantsClass.SORT_COLUMN%>" id="<%=ConstantsClass.SORT_COLUMN%>">
+                        <select class="form-control" name="<%=ConstantsClass.SORT_COLUMN%>"
+                                id="<%=ConstantsClass.SORT_COLUMN%>">
                             <option value=""></option>
                             <option value="<%=ConstantsClass.NAME%>">
                                 Name
@@ -170,7 +171,8 @@
                         Criterion:
                     </td>
                     <td>
-                        <select class="form-control" name="<%=ConstantsClass.SORT_CRITERIA%>" id="<%=ConstantsClass.SORT_CRITERIA%>">
+                        <select class="form-control" name="<%=ConstantsClass.SORT_CRITERIA%>"
+                                id="<%=ConstantsClass.SORT_CRITERIA%>">
                             <option value=""></option>
                             <option value="<%=ConstantsClass.SORT_ASC%>">
                                 Ascending
@@ -219,8 +221,12 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <input type="button" class="btn btn-outline-primary" id="sort" value="Sort" onclick="buttonClick(this)">
-                        <input type="button" class="btn btn-outline-primary" id="reload" value="Reload" onclick="buttonClick(this)">
+                        <div align="center">
+                            <input type="button" class="btn btn-outline-primary" id="sort" value="Sort"
+                                   onclick="buttonClick(this)">
+                            <input type="button" class="btn btn-outline-primary" id="reload" value="Reload"
+                                   onclick="buttonClick(this)">
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -229,7 +235,8 @@
             if (isSorted) {
         %>
         <div align="center">
-            <input type="button" class="btn btn-outline-primary" id="allvals" value="Show all values" onclick="buttonClick(this)">
+            <input type="button" class="btn btn-outline-primary" id="allvals" value="Show all values"
+                   onclick="buttonClick(this)">
         </div>
         <%
             }

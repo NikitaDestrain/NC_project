@@ -5,12 +5,9 @@ import database.postgresql.PostgreSQLJournalDAO;
 import database.postgresql.PostgreSQLTasksDAO;
 import database.postgresql.PostgreSQLUsersDAO;
 import server.exceptions.ControllerActionException;
+import server.exceptions.DAOFactoryActionException;
 import server.model.*;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import java.io.StringWriter;
 import java.sql.SQLException;
 import java.sql.Date;
 import java.util.List;
@@ -29,25 +26,25 @@ public class Controller {
     private Notifier notifier;
     private static Controller instance;
 
-    private Controller() {
+    private Controller() throws ControllerActionException {
         journalNamesContainer = new JournalNamesContainer();
         taskNamesContainer = new TaskNamesContainer();
-        postgreSQLDAOFactory = PostgreSQLDAOFactory.getInstance();
+        try {
+            postgreSQLDAOFactory = PostgreSQLDAOFactory.getInstance();
+        } catch (DAOFactoryActionException e) {
+            throw new ControllerActionException();
+        }
         statusManager = LifecycleManager.getInstance();
         usersDAO = (PostgreSQLUsersDAO) postgreSQLDAOFactory.getUsersDao();
         journalDAO = (PostgreSQLJournalDAO) postgreSQLDAOFactory.getJournalDao();
         tasksDAO = (PostgreSQLTasksDAO) postgreSQLDAOFactory.getTasksDao();
         userAuthorizer = UserAuthorizer.getInstance();
         notifier = new Notifier();
-        try {
-            createUserContainer();
-            createJournalContainer();
-        } catch (ControllerActionException e) {
-            e.printStackTrace();
-        }
+        createUserContainer();
+        createJournalContainer();
     }
 
-    public static synchronized Controller getInstance() {
+    public static synchronized Controller getInstance() throws ControllerActionException {
         if (instance == null) instance = new Controller();
         return instance;
     }
@@ -65,7 +62,7 @@ public class Controller {
                 userContainer.addUser(user);
                 userAuthorizer.addUser(user);
             } catch (SQLException e) {
-                throw new ControllerActionException("Error! User has been not added. Try later.");
+                throw new ControllerActionException("Error! User has not been added. Try later.");
             }
         } else
             throw new ControllerActionException("Error! Login already exists.");
@@ -77,7 +74,7 @@ public class Controller {
             userAuthorizer.removeUser(userContainer.getUser(id).getLogin());
             userContainer.removeUser(id);
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! User has been not deleted. Try later.");
+            throw new ControllerActionException("Error! User has not been deleted. Try later.");
         }
     }
 
@@ -85,52 +82,30 @@ public class Controller {
         try {
             usersDAO.update(user);
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! User has been not edited. Try later.");
+            throw new ControllerActionException("Error! User has not been edited. Try later.");
         }
 
     }
 
-    public String getUser(int id) throws ControllerActionException {
-        try {
-            User user = userContainer.getUser(id);
-            if (user == null)
-                throw new ControllerActionException("Incorrect id! User has been not found.");
-            return marshalToString(User.class, user); //todo vlla не считаю, что контроллер должен одновременно заниматься и маршаллингом.
-            // Во первых - это не его обязанность!!!
-            // Во вторых - а если вам понадобится произвести какую-либо операцию с юзером (например, сохранить его объект в сессии), а не сразу отдавать его в UI?
-            // В общем, контроллер возвращает Java-объекты, с которыми могут работать различные классы.
-            // Преобразовывать из в XML нужно именно там, где это необходимо. И делать это должен другой, специализированный класс.
-        } catch (JAXBException e) {
-            e.printStackTrace(); //todo vlla
-        }
-        return null;
+    public User getUser(int id) {
+        return userContainer.getUser(id);
     }
 
-    public String getUsers() {
-        try {
-            return marshalToString(UserContainer.class, userContainer);
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public UserContainer getUsers() {
+        return userContainer;
     }
 
-    public String getSortedUsers(String column, String criteria) throws ControllerActionException {
+    public UserContainer getSortedUsers(String column, String criteria) throws ControllerActionException {
         try {
             List<User> sortedUsers = usersDAO.getSortedByCriteria(column, criteria);
             UserContainer sortedUserContainer = new UserContainer();
             if (sortedUsers != null)
                 for (User user : sortedUsers)
                     sortedUserContainer.addUser(user);
-            try {
-                return marshalToString(UserContainer.class, sortedUserContainer);
-            } catch (JAXBException e) {
-                e.printStackTrace();
-            }
+            return sortedUserContainer;
         } catch (SQLException e) {
             throw new ControllerActionException();
         }
-        return null;
     }
 
     public void editUserRole(int id, String role) throws ControllerActionException {
@@ -144,9 +119,6 @@ public class Controller {
         }
     }
 
-    public User getUserObject(int id) {
-        return userContainer.getUser(id);
-    }
 
     private boolean checkDate(Date plannedDate, Date notificationDate) throws ControllerActionException {
         if (plannedDate.before(new Date(System.currentTimeMillis())))
@@ -196,7 +168,7 @@ public class Controller {
         if (!checkDate(plannedDate, notificationDate))
             return;
 
-        Journal oldJournal = getJournalObject(oldJournalId);
+        Journal oldJournal = getJournal(oldJournalId);
         if (oldJournal == null)
             throw new ControllerActionException("Error! Journal has not been found.");
 
@@ -204,7 +176,7 @@ public class Controller {
         if (taskNamesContainer.isContain(name) && !task.getName().equals(name))
             throw new ControllerActionException("Error! Name already exists.");
 
-        Journal newJournal = getJournalObject(newJournalName);
+        Journal newJournal = getJournal(newJournalName);
         int newJournalId = -1;
         if (newJournal != null)
             newJournalId = newJournal.getId();
@@ -255,88 +227,59 @@ public class Controller {
     }
 
     private void replaceTask(int taskId, int oldJournalId, int newJournalId) {
-        Journal oldJournal = getJournalObject(oldJournalId);
+        Journal oldJournal = getJournal(oldJournalId);
         Task task = oldJournal.getTask(taskId);
-        Journal newJournal = getJournalObject(newJournalId);
+        Journal newJournal = getJournal(newJournalId);
 
         oldJournal.removeTask(taskId);
         newJournal.addTask(task);
     }
 
-    public String getTask(int journalId, int taskId) {
-        try {
-            return marshalToString(Task.class, journalContainer.getJournal(journalId).getTask(taskId));
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public Task getTask(int journalId, int taskId) {
+        return journalContainer.getJournal(journalId).getTask(taskId);
     }
 
-    public String getTasks(int journalId) {
-        try {
-            return marshalToString(Journal.class, journalContainer.getJournal(journalId));
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public Journal getTasks(int journalId) {
+        return journalContainer.getJournal(journalId);
     }
 
-    public String getSortedTasks(int journalId, String column, String criteria) throws ControllerActionException {
+    public Journal getSortedTasks(int journalId, String column, String criteria) throws ControllerActionException {
         try {
             List<Task> sortedTasks = tasksDAO.getSortedByCriteria(journalId, column, criteria);
             Journal sortedTasksJournal = new Journal();
             if (sortedTasks != null)
                 for (Task task : sortedTasks)
                     sortedTasksJournal.addTask(task);
-            try {
-                return marshalToString(Journal.class, sortedTasksJournal);
-            } catch (JAXBException e) {
-                e.printStackTrace();
-            }
+            return sortedTasksJournal;
         } catch (SQLException e) {
             throw new ControllerActionException("Error! Try later!");
         }
-        return null;
     }
 
-    public String getFilteredTasksByPattern(int journalId, String column, String pattern, String criteria) throws ControllerActionException {
+    public Journal getFilteredTasksByPattern(int journalId, String column, String pattern, String criteria) throws ControllerActionException {
         try {
             List<Task> sortedTasks = tasksDAO.getFilteredByPattern(journalId, column, pattern, criteria);
             Journal sortedTasksJournal = new Journal();
             if (sortedTasks != null)
                 for (Task task : sortedTasks)
                     sortedTasksJournal.addTask(task);
-            try {
-                return marshalToString(Journal.class, sortedTasksJournal);
-            } catch (JAXBException e) {
-                e.printStackTrace();
-            }
+            return sortedTasksJournal;
         } catch (SQLException e) {
             throw new ControllerActionException("Error! Try later!");
         }
-        return null;
     }
 
-    public String getFilteredTasksByEquals(int journalId, String column, String equal, String criteria) throws ControllerActionException {
+    public Journal getFilteredTasksByEquals(int journalId, String column, String equal, String criteria) throws ControllerActionException {
         try {
             List<Task> sortedTasks = tasksDAO.getFilteredByEquals(journalId, column, equal, criteria);
             Journal sortedTasksJournal = new Journal();
             if (sortedTasks != null)
                 for (Task task : sortedTasks)
                     sortedTasksJournal.addTask(task);
-            try {
-                return marshalToString(Journal.class, sortedTasksJournal);
-            } catch (JAXBException e) {
-                e.printStackTrace();
-            }
+            return sortedTasksJournal;
         } catch (SQLException e) {
             throw new ControllerActionException("Error! Try later!");
         }
-        return null;
-    }
-
-    public Task getTaskObject(int journalId, int taskId) {
-        return journalContainer.getJournal(journalId).getTask(taskId);
     }
 
     public void setOverdue(Task task) {
@@ -344,13 +287,12 @@ public class Controller {
             if (statusManager.isStatusConversionValid(task.getStatus(), TaskStatus.Overdue)) {
                 task.setStatus(TaskStatus.Overdue);
                 editTask(task.getId(), task.getJournalId(), task.getName(), task.getStatus(), task.getDescription(),
-                        task.getNotificationDate(), task.getPlannedDate(), getJournalObject(task.getJournalId()).getName());
+                        task.getNotificationDate(), task.getPlannedDate(), getJournal(task.getJournalId()).getName());
             }
         } catch (ControllerActionException e) {
             e.printStackTrace();
         }
     }
-
 
     public void addJournal(String name, String description, Integer userId) throws ControllerActionException {
         if (journalNamesContainer.isContain(name))
@@ -405,93 +347,57 @@ public class Controller {
         journal.setDescription(description);
     }
 
-    public String getJournal(int id) throws ControllerActionException {
-        try {
-            Journal journal = journalContainer.getJournal(id);
-            if (journal == null)
-                throw new ControllerActionException("Error! Journal has not been found. Try later.");
-            return marshalToString(Journal.class, journal);
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
+    public Journal getJournal(int id) {
+        return journalContainer.getJournal(id);
+    }
+
+    public Journal getJournal(String name) {
+        if (!name.equals(""))
+            return journalContainer.getJournal(name);
         return null;
     }
 
-    public String getJournals() {
-        try {
-            return marshalToString(JournalContainer.class, journalContainer);
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public JournalContainer getJournals() {
+        return journalContainer;
     }
 
-    public String getSortedJournals(String column, String criteria) throws ControllerActionException {
+    public JournalContainer getSortedJournals(String column, String criteria) throws ControllerActionException {
         try {
             List<Journal> sortedJournals = journalDAO.getSortedByCriteria(column, criteria);
             JournalContainer sortedJournalContainer = new JournalContainer();
             if (sortedJournals != null)
                 for (Journal journal : sortedJournals)
                     sortedJournalContainer.addJournal(journal);
-            try {
-                return marshalToString(JournalContainer.class, sortedJournalContainer);
-            } catch (JAXBException e) {
-                e.printStackTrace();
-            }
+            return sortedJournalContainer;
         } catch (SQLException e) {
             throw new ControllerActionException("Error! Try later!");
         }
-        return null;
     }
 
-    public String getFilteredJournalsByPattern(String column, String pattern, String criteria) throws ControllerActionException {
+    public JournalContainer getFilteredJournalsByPattern(String column, String pattern, String criteria) throws ControllerActionException {
         try {
             List<Journal> sortedJournals = journalDAO.getFilteredByPattern(column, pattern, criteria);
             JournalContainer sortedJournalContainer = new JournalContainer();
             if (sortedJournals != null)
                 for (Journal journal : sortedJournals)
                     sortedJournalContainer.addJournal(journal);
-            try {
-                return marshalToString(JournalContainer.class, sortedJournalContainer);
-            } catch (JAXBException e) {
-                e.printStackTrace();
-            }
+            return sortedJournalContainer;
         } catch (SQLException e) {
             throw new ControllerActionException("Error! Try later!");
         }
-        return null;
     }
 
-    public String getFilteredJournalsByEquals(String column, String equal, String criteria) throws ControllerActionException {
+    public JournalContainer getFilteredJournalsByEquals(String column, String equal, String criteria) throws ControllerActionException {
         try {
             List<Journal> sortedJournals = journalDAO.getFilteredByEquals(column, equal, criteria);
             JournalContainer sortedJournalContainer = new JournalContainer();
             if (sortedJournals != null)
                 for (Journal journal : sortedJournals)
                     sortedJournalContainer.addJournal(journal);
-            try {
-                return marshalToString(JournalContainer.class, sortedJournalContainer);
-            } catch (JAXBException e) {
-                e.printStackTrace();
-            }
+            return sortedJournalContainer;
         } catch (SQLException e) {
             throw new ControllerActionException("Error! Try later!");
         }
-        return null;
-    }
-
-    public Journal getJournalObject(int id) {
-        return journalContainer.getJournal(id);
-    }
-
-    public Journal getJournalObject(String name) {
-        if (!name.equals(""))
-            return journalContainer.getJournal(name);
-        return null;
-    }
-
-    public JournalContainer getJournalContainer() {
-        return journalContainer;
     }
 
     public JournalNamesContainer getJournalNamesContainer() {
@@ -524,14 +430,5 @@ public class Controller {
         } catch (SQLException e) {
             throw new ControllerActionException();
         }
-    }
-
-    private String marshalToString(Class className, Object object) throws JAXBException {
-        StringWriter sw = new StringWriter();
-        JAXBContext context = JAXBContext.newInstance(className);
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshaller.marshal(object, sw);
-        return sw.toString();
     }
 }

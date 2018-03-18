@@ -1,6 +1,6 @@
 package oldclientclasses.client.properties;
 
-import server.exceptions.IllegalPropertyException;
+import oldserverclasses.exceptions.IllegalPropertyException;
 
 import java.io.FileInputStream;
 import java.io.IOException;

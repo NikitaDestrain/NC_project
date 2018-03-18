@@ -2,7 +2,7 @@ package oldserverclasses.network;
 
 import auxiliaryclasses.ConstantsClass;
 import auxiliaryclasses.MessageBox;
-import server.exceptions.IllegalPropertyException;
+import oldserverclasses.exceptions.IllegalPropertyException;
 import oldserverclasses.gui.authforms.AuthForm;
 import oldserverclasses.properties.ParserProperties;
 

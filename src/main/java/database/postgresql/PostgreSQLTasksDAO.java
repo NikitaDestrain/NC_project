@@ -14,7 +14,7 @@ import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PostgreSQLTasksDAO implements TasksDAO { //todo vlla - аналогично журналу - тонны копипасты
+public class PostgreSQLTasksDAO implements TasksDAO { //todo vlla - аналогично журналу - тонны копипасты DONE
     private final Connection connection;
 
     public PostgreSQLTasksDAO(Connection connection) {
@@ -40,13 +40,7 @@ public class PostgreSQLTasksDAO implements TasksDAO { //todo vlla - аналог
             stm.executeUpdate();
             try (PreparedStatement stm2 = connection.prepareStatement(sqlSelect)) {
                 stm2.setString(1, name);
-                ResultSet rs2 = stm2.executeQuery();
-                rs2.next();
-                task = TaskFactory.createTask(rs2.getInt("Task_id"), rs2.getString("Name"),
-                        rs2.getString("Status"), rs2.getString("Description"),
-                        rs2.getDate("Notification_date"), rs2.getDate("Planned_date"),
-                        rs2.getDate("Upload_date"), rs2.getDate("Change_date"),
-                        rs2.getInt("Journal_id"));
+                task = createTaskByResultSet(stm2.executeQuery());
             }
         }
         return task;
@@ -58,13 +52,7 @@ public class PostgreSQLTasksDAO implements TasksDAO { //todo vlla - аналог
         Task task;
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             stm.setInt(1, id);
-            ResultSet rs = stm.executeQuery();
-            rs.next();
-            task = TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),
-                    rs.getString("Status"), rs.getString("Description"),
-                    rs.getDate("Notification_date"), rs.getDate("Planned_date"),
-                    rs.getDate("Upload_date"), rs.getDate("Change_date"),
-                    rs.getInt("Journal_id"));
+            task = createTaskByResultSet(stm.executeQuery());
         }
         return task;
     }
@@ -99,75 +87,68 @@ public class PostgreSQLTasksDAO implements TasksDAO { //todo vlla - аналог
 
     @Override
     public List<Task> getAll() throws SQLException {
-        List<Task> list = new LinkedList<>();
+        List<Task> list;
         String sql = "SELECT * FROM \"Tasks\"";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                list.add(TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),
-                        rs.getString("Status"), rs.getString("Description"),
-                        rs.getDate("Notification_date"), rs.getDate("Planned_date"),
-                        rs.getDate("Upload_date"), rs.getDate("Change_date"),
-                        rs.getInt("Journal_id")));
-            }
+            list = createListByResultSet(statement.executeQuery());
         }
         return Collections.unmodifiableList(list);
     }
 
     @Override
     public List<Task> getSortedByCriteria(int journalId, String column, String criteria) throws SQLException {
-        List<Task> list = new LinkedList<>();
+        List<Task> list;
         String sql = "SELECT * FROM \"Tasks\" WHERE \"Journal_id\" = ? ORDER BY \"%s\" %s";
         sql = String.format(sql, column, criteria);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, journalId);
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                list.add(TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),
-                        rs.getString("Status"), rs.getString("Description"),
-                        rs.getDate("Notification_date"), rs.getDate("Planned_date"),
-                        rs.getDate("Upload_date"), rs.getDate("Change_date"),
-                        rs.getInt("Journal_id")));
-            }
+            list = createListByResultSet(statement.executeQuery());
         }
         return Collections.unmodifiableList(list);
     }
 
     @Override
     public List<Task> getFilteredByPattern(int journalId, String column, String pattern, String criteria) throws SQLException {
-        List<Task> list = new LinkedList<>();
+        List<Task> list;
         String sql = "SELECT * FROM \"Tasks\" WHERE \"%s\" LIKE \'%s%s%s\' AND \"Journal_id\" = ? ORDER BY \"%s\" %s";
         sql = String.format(sql, column, '%', pattern, '%', column, criteria);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, journalId);
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                list.add(TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),
-                        rs.getString("Status"), rs.getString("Description"),
-                        rs.getDate("Notification_date"), rs.getDate("Planned_date"),
-                        rs.getDate("Upload_date"), rs.getDate("Change_date"),
-                        rs.getInt("Journal_id")));
-            }
+            list = createListByResultSet(statement.executeQuery());
         }
         return Collections.unmodifiableList(list);
     }
 
     @Override
     public List<Task> getFilteredByEquals(int journalId, String column, String equal, String criteria) throws SQLException {
-        List<Task> list = new LinkedList<>();
+        List<Task> list;
         String sql = "SELECT * FROM \"Tasks\" WHERE \"%s\"::text = \'%s\' AND \"Journal_id\" = ? ORDER BY \"%s\" %s";
         sql = String.format(sql, column, equal, column, criteria);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, journalId);
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                list.add(TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),
-                        rs.getString("Status"), rs.getString("Description"),
-                        rs.getDate("Notification_date"), rs.getDate("Planned_date"),
-                        rs.getDate("Upload_date"), rs.getDate("Change_date"),
-                        rs.getInt("Journal_id")));
-            }
+            list = createListByResultSet(statement.executeQuery());
         }
         return Collections.unmodifiableList(list);
+    }
+
+    private Task createTaskByResultSet(ResultSet rs) throws SQLException {
+        rs.next();
+        return TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),
+                rs.getString("Status"), rs.getString("Description"),
+                rs.getDate("Notification_date"), rs.getDate("Planned_date"),
+                rs.getDate("Upload_date"), rs.getDate("Change_date"),
+                rs.getInt("Journal_id"));
+    }
+
+    private List<Task> createListByResultSet(ResultSet rs) throws SQLException {
+        List<Task> list = new LinkedList<>();
+        while (rs.next()) {
+            list.add(TaskFactory.createTask(rs.getInt("Task_id"), rs.getString("Name"),
+                    rs.getString("Status"), rs.getString("Description"),
+                    rs.getDate("Notification_date"), rs.getDate("Planned_date"),
+                    rs.getDate("Upload_date"), rs.getDate("Change_date"),
+                    rs.getInt("Journal_id")));
+        }
+        return list;
     }
 }

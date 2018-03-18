@@ -4,7 +4,7 @@ import oldclientclasses.client.factories.ClientCommandFactory;
 import server.model.Task;
 import oldclientclasses.client.network.ClientNetworkFacade;
 import auxiliaryclasses.ConstantsClass;
-import server.exceptions.UnsuccessfulCommandActionException;
+import oldserverclasses.exceptions.UnsuccessfulCommandActionException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

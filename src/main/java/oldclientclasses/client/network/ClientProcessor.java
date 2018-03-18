@@ -4,7 +4,7 @@ import auxiliaryclasses.MessageBox;
 import oldclientclasses.client.gui.authforms.AuthForm;
 import oldclientclasses.client.properties.ParserProperties;
 import auxiliaryclasses.ConstantsClass;
-import server.exceptions.IllegalPropertyException;
+import oldserverclasses.exceptions.IllegalPropertyException;
 
 import javax.swing.*;
 import java.io.IOException;

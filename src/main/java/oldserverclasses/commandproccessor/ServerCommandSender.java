@@ -1,7 +1,7 @@
 package oldserverclasses.commandproccessor;
 
 import auxiliaryclasses.ConstantsClass;
-import server.exceptions.UnsuccessfulCommandActionException;
+import oldserverclasses.exceptions.UnsuccessfulCommandActionException;
 import server.factories.ServerCommandFactory;
 import server.model.Journal;
 import server.model.Task;

@@ -6,7 +6,7 @@ import oldclientclasses.client.commandprocessor.PasswordEncoder;
 import oldclientclasses.client.gui.UserContainer;
 import oldclientclasses.client.network.ClientNetworkFacade;
 import oldclientclasses.client.commandprocessor.ClientCommandSender;
-import server.exceptions.UnsuccessfulCommandActionException;
+import oldserverclasses.exceptions.UnsuccessfulCommandActionException;
 
 import javax.swing.*;
 import javax.swing.border.Border;
