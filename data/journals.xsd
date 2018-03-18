@@ -14,7 +14,7 @@
                                             <xs:complexType>
                                                 <xs:sequence>
                                                     <xs:element name="id" type="xs:nonNegativeInteger"/>
-                                                    <xs:element name="name" type="xs:string"/>
+                                                    <xs:element name="name" type="xs:string" minOccurs="0"/>
                                                     <xs:element name="description" type="xs:string" minOccurs="0"/>
                                                     <xs:element name="userId" type="xs:nonNegativeInteger"/>
                                                     <xs:element name="tasks">
@@ -29,7 +29,7 @@
                                                                                 <xs:complexType>
                                                                                     <xs:sequence>
                                                                                         <xs:element name="name"
-                                                                                                    type="xs:string"/>
+                                                                                                    type="xs:string" minOccurs="0"/>
                                                                                         <xs:element name="status">
                                                                                             <xs:simpleType>
                                                                                                 <xs:restriction

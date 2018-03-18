@@ -1,10 +1,9 @@
-package servlet;
+package servlets;
 
 import auxiliaryclasses.ConstantsClass;
 import server.controller.PasswordEncoder;
 import database.postgresql.PostgreSQLDAOFactory;
 import server.controller.Controller;
-import server.controller.XmlUtils;
 import server.exceptions.ControllerActionException;
 import server.model.*;
 
@@ -16,9 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.sql.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @WebServlet(ConstantsClass.AUTH_SERVLET_ADDRESS)
 public class AuthServlet extends HttpServlet { //todo vlla АДСКИ перегруженный класс. Распилить, отрефакторить, вынести дублирующийся код в отдельные методы

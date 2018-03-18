@@ -14,6 +14,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class XmlUtils {
     private static XmlUtils ourInstance = new XmlUtils();
@@ -39,17 +40,16 @@ public class XmlUtils {
         }
     }
 
-    public boolean compareWithXsd(String nameFileXML, String nameFileXSD) {
+    public boolean compareWithXsd(String nameFileXML, String nameFileXSD) throws Exception {
         try {
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             Schema schema = factory.newSchema(new StreamSource(nameFileXSD));
             Validator valid = schema.newValidator();
-            valid.validate(new StreamSource(nameFileXML));
+            valid.validate(new StreamSource(new ByteArrayInputStream(nameFileXML.getBytes(StandardCharsets.UTF_8))));
             System.out.println("Валидация прошла успешно");
             return true;
         } catch (Exception e) {
-            System.out.println("Ошибка валидации " + e.getMessage());
-            return false;
+            throw new Exception("Ошибка валидации " + e.getMessage());
         }
     }
 

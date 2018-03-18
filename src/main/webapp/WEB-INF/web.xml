@@ -47,53 +47,23 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>updatepage</servlet-name>
-        <jsp-file>/updatepage.jsp</jsp-file>
+        <servlet-name>updatetasks</servlet-name>
+        <jsp-file>/updatetasks.jsp</jsp-file>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>updatepage</servlet-name>
-        <url-pattern>/updatepage</url-pattern>
+        <servlet-name>updatetasks</servlet-name>
+        <url-pattern>/updatetasks</url-pattern>
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>addtask</servlet-name>
-        <jsp-file>/addtask.jsp</jsp-file>
+        <servlet-name>updatejournals</servlet-name>
+        <jsp-file>/updatejournals.jsp</jsp-file>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>addtask</servlet-name>
-        <url-pattern>/addtask</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>edittask</servlet-name>
-        <jsp-file>/edittask.jsp</jsp-file>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>edittask</servlet-name>
-        <url-pattern>/edittask</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>addjournal</servlet-name>
-        <jsp-file>/addjournal.jsp</jsp-file>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>addjournal</servlet-name>
-        <url-pattern>/addjournal</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>editjournal</servlet-name>
-        <jsp-file>/editjournal.jsp</jsp-file>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>editjournal</servlet-name>
-        <url-pattern>/editjournal</url-pattern>
+        <servlet-name>updatejournals</servlet-name>
+        <url-pattern>/updatejournals</url-pattern>
     </servlet-mapping>
 
     <resource-ref>

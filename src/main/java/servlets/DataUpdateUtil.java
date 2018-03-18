@@ -1,4 +1,4 @@
-package servlet;
+package servlets;
 
 import auxiliaryclasses.ConstantsClass;
 import server.controller.Controller;
@@ -33,7 +33,7 @@ public class DataUpdateUtil {
         //todo то же самое что с апдейт таскс
         if (sortedJournals != null) {
             req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, sortedJournals);
-            req.setAttribute(ConstantsClass.IS_SORTED, true);
+            req.setAttribute(ConstantsClass.IS_SORTED, Boolean.TRUE);
             req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
         } else
             resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
@@ -52,7 +52,7 @@ public class DataUpdateUtil {
         if (sortedTasks != null) {
             //todo здесь нужно взять данные из хмл, так как модель не меняется, чтобы не затереть при паттерне
             req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, sortedTasks);
-            req.setAttribute(ConstantsClass.IS_SORTED, true);
+            req.setAttribute(ConstantsClass.IS_SORTED, Boolean.TRUE);
             req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
         } else
             resp.getWriter().print(ConstantsClass.ERROR_XML_READING);

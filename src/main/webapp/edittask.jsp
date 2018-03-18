@@ -10,24 +10,11 @@
 <html>
 <head>
     <title>Edit task</title>
-    <style type="text/css" media="screen">
-        <%@include file="css/cu-task.css"%>
+    <style type="text/css">
+        <%@include file="bootstrap/css/bootstrap.min.css"%>
     </style>
     <script type="text/javascript">
-        function buttonClick(x) {
-            switch (x.id) {
-                case "save":
-                    document.getElementById("hid").value = "Save";
-                    break;
-                case "backtomain":
-                    document.getElementById("hid").value = "backtomain";
-                    break;
-                case "backtotasks":
-                    document.getElementById("hid").value = "backtotasks";
-                    break;
-            }
-            document.forms[0].submit();
-        }
+
     </script>
 </head>
 <body>
@@ -35,15 +22,11 @@
     <form method="post" action=<%=ConstantsClass.TASK_SERVLET_ADDRESS%>>
 
         <input type="hidden" name="<%=ConstantsClass.ACTION%>" value="<%=ConstantsClass.DO_EDIT_TASK%>">
-        <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
-
-        <table>
-            <caption>Edit task</caption>
+        <div align="center">
+            Journal name: <%=request.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME)==null?"":request.getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME)%>
+        </div>
+        <table class="table">
             <x:parse xml="${requestScope.task}" var="task"/>
-            <tr>
-                <td class="align-center" colspan="2">
-                    Journal name: <%=request.getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME)==null?"":request.getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME)%></td>
-            </tr>
             <tr>
                 <td class="align-status" colspan="2">
                     Task status: <x:out select="$task/task/status"/>
@@ -62,35 +45,35 @@
             <tr>
                 <td class="align-right">Name</td>
                 <td class="align-right">
-                    <input type="text" name="<%=ConstantsClass.NAME%>"
+                    <input type="text" id="editname" class="form-control" name="<%=ConstantsClass.NAME%>"
                            value="<x:out select="$task/task/name"/>">
                 </td>
             </tr>
             <tr>
                 <td class="align-right">Description</td>
                 <td class="align-right">
-                    <input type="text" name="<%=ConstantsClass.DESCRIPTION%>"
+                    <input type="text" class="form-control" name="<%=ConstantsClass.DESCRIPTION%>"
                            value="<x:out select="$task/task/description"/>">
                 </td>
             </tr>
             <tr>
                 <td class="align-right">Planned date</td>
                 <td class="align-right">
-                    <input type="text" name="<%=ConstantsClass.PLANNED_DATE%>" id="planned"
+                    <input type="text" class="form-control" name="<%=ConstantsClass.PLANNED_DATE%>" id="planned"
                            value="<x:out select="$task/task/planned"/>">
                 </td>
             </tr>
             <tr>
                 <td class="align-right">Notification date</td>
                 <td class="align-right">
-                    <input type="text" name="<%=ConstantsClass.NOTIFICATION_DATE%>" id="notification"
+                    <input type="text" class="form-control" name="<%=ConstantsClass.NOTIFICATION_DATE%>" id="notification"
                            value="<x:out select="$task/task/notification"/>">
                 </td>
             </tr>
             <tr>
                 <td class="align-right">Change journal</td>
                 <td class="align-left">
-                    <select name=<%=ConstantsClass.JOURNAL_NAME%>>
+                    <select class="form-control" name=<%=ConstantsClass.JOURNAL_NAME%>>
                         <option value=""></option>
                         <x:parse xml="${sessionScope.journalNames}" var="names"/>
                         <x:forEach select="$names/journalNames/name" var="name">
@@ -102,7 +85,7 @@
             <tr>
                 <td class="align-right">Change task status</td>
                 <td class="align-left">
-                    <select name="<%=ConstantsClass.STATUS%>">
+                    <select class="form-control" name="<%=ConstantsClass.STATUS%>">
                         <option value=""></option>
                         <option value="<%=ConstantsClass.CANCELLED_STATUS%>">Cancelled</option>
                         <option value="<%=ConstantsClass.COMPLETED_STATUS%>">Completed</option>
@@ -110,14 +93,14 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><input type="button" id="save" value="Save" onclick="buttonClick(this)"></td>
+                <td colspan="2"><input type="button" class="btn btn-outline-success" id="save" value="Save" onclick="buttonClickEdit(this)"></td>
             </tr>
         </table>
         <div class="center">
-            <input type="button" id="backtotasks" value="Back to tasks page" onclick="buttonClick(this)">
+            <input type="button" id="backtotasks" value="Back to tasks page" onclick="buttonClickEdit(this)">
         </div>
         <div class="center">
-            <input type="button" id="backtomain" value="Back to main page" onclick="buttonClick(this)">
+            <input type="button" id="backtomain" value="Back to main page" onclick="buttonClickEdit(this)">
         </div>
     </form>
 </div>

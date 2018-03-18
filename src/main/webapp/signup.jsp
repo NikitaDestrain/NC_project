@@ -10,7 +10,7 @@
 <head>
     <title>Sign up</title>
     <style type="text/css">
-        <%@include file="css/signup.css"%>
+        <%@include file="/bootstrap/css/bootstrap.min.css"%>
     </style>
     <script type="text/javascript">
         function buttonClick() {
@@ -32,43 +32,48 @@
 </head>
 <body>
 <div align="center">
+    <h4>New Account</h4>
 
-    <h3>New Account</h3>
+    <form method="post" action="<%=ConstantsClass.AUTH_SERVLET_ADDRESS%>" role="form">
 
-    <form method="post" action=<%=ConstantsClass.AUTH_SERVLET_ADDRESS%>>
+        <div class="form-group">
+            <input type="hidden" name="<%=ConstantsClass.ACTION%>" id="hid"/>
 
-        <input type="hidden" name="<%=ConstantsClass.ACTION%>" id="hid"/>
-
-        <table>
-            <tr>
-                <td class="align-right">Username:</td>
-                <td><input type="text" name="<%=ConstantsClass.LOGIN_PARAMETER%>" id="login"
-                           value="<%= request.getAttribute(ConstantsClass.LOGIN_PARAMETER)!=null?
+            <table>
+                <tr>
+                    <td>Username:</td>
+                    <td>
+                        <input type="text" class="form-control"
+                               name="<%=ConstantsClass.LOGIN_PARAMETER%>" id="login"
+                               value="<%= request.getAttribute(ConstantsClass.LOGIN_PARAMETER)!=null?
                            request.getAttribute(ConstantsClass.LOGIN_PARAMETER):"" %>"/>
-                </td>
-            </tr>
-            <tr>
-                <td class="align-right">Password:</td>
-                <td><input type="password" name="<%=ConstantsClass.PASSWORD_PARAMETER%>" value="" id="password"/></td>
-            </tr>
-            <tr>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Password:</td>
+                    <td>
+                        <input type="password" class="form-control" name="<%=ConstantsClass.PASSWORD_PARAMETER%>"
+                               value="" id="password"/>
+                    </td>
+                </tr>
+                <tr>
 
-                <td class="align-right">Repeat password:</td>
-                <td><input type="password" name="<%=ConstantsClass.REPEAT_PASSWORD_PARAMETER%>" value="" id="repeat"/>
-                </td>
-            </tr>
-            <tr>
-                <td class="align-right" colspan="2"><input type="button" value="Sign up" onclick="buttonClick()"/></td>
-            </tr>
-
-        </table>
-
-        <p class="message"><%= request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) != null ?
+                    <td>Repeat password:</td>
+                    <td>
+                        <input type="password" class="form-control" name="<%=ConstantsClass.REPEAT_PASSWORD_PARAMETER%>"
+                               value="" id="repeat"/>
+                    </td>
+                </tr>
+            </table>
+            <div align="center">
+                <input type="button" class="btn btn-outline-success" value="Sign up"
+                       onclick="buttonClick()"/>
+            </div>
+        </div>
+        <div align="center"><%= request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) != null ?
                 request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) : "" %>
-        </p>
-
+        </div>
     </form>
-
 </div>
 </body>
 </html>

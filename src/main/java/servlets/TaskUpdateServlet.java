@@ -1,4 +1,4 @@
-package servlet;
+package servlets;
 
 import auxiliaryclasses.ConstantsClass;
 import server.controller.Controller;
@@ -16,14 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Date;
 
-@WebServlet(ConstantsClass.TASK_SERVLET_ADDRESS)
-public class TaskServlet extends HttpServlet {
+@WebServlet(ConstantsClass.TASK_UPDATE_SERVLET_ADDRESS)
+public class TaskUpdateServlet extends HttpServlet {
     private Controller controller = Controller.getInstance();
     private DataUpdateUtil updateUtil = DataUpdateUtil.getInstance();
     private XmlUtils xmlUtils = XmlUtils.getInstance();
     private PatternChecker patternChecker = PatternChecker.getInstance();
-
-    private Task currentTask;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,149 +33,7 @@ public class TaskServlet extends HttpServlet {
             case ConstantsClass.DO_EDIT_TASK:
                 doEditTask(req, resp);
                 break;
-            case ConstantsClass.DO_CRUD_FROM_TASKS:
-                doActionFromTasks(req, resp);
-                break;
         }
-    }
-
-    private void doActionFromTasks(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        String useraction = req.getParameter(ConstantsClass.USERACTION);
-        String usernumber;
-        Journal currentJournal = (Journal) req.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL);
-        switch (useraction) {
-            case ConstantsClass.ADD:
-                req.getRequestDispatcher(ConstantsClass.ADD_TASK_ADDRESS).forward(req, resp);
-                break;
-            case ConstantsClass.BACK_TO_MAIN:
-                req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
-                break;
-            case ConstantsClass.UPDATE: // имена в сессии
-                usernumber = req.getParameter(ConstantsClass.USERNUMBER);
-                if (usernumber != null && !usernumber.equals("")) {
-                    int num = Integer.parseInt(usernumber);
-                    currentTask = controller.getTaskObject(currentJournal.getId(), num);
-                    req.getSession().setAttribute(ConstantsClass.CURRENT_STATUS, currentTask.getStatus());
-                    try {
-                        xmlUtils.writeTask(currentTask, req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
-                    } catch (Exception e) {
-                        resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
-                    }
-                    boolean taskCorrect = xmlUtils.compareWithXsd(
-                            req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE),
-                            req.getServletContext().getRealPath(ConstantsClass.TASK_XSD_FILE));
-                    if (taskCorrect) {
-                        String t = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
-                        req.setAttribute(ConstantsClass.CURRENT_TASK, t);
-                        req.setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
-                        req.getRequestDispatcher(ConstantsClass.EDIT_TASK_ADDRESS).forward(req, resp);
-                    } else {
-                        resp.getWriter().print(ConstantsClass.ERROR_XSD_COMPARING);
-                    }
-                } else {
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_TASK);
-                    req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
-                }
-                break;
-            case ConstantsClass.DELETE:
-                usernumber = req.getParameter(ConstantsClass.USERNUMBER);
-                if (usernumber != null && !usernumber.equals("")) {
-                    int num = Integer.parseInt(usernumber);
-                    currentTask = controller.getTaskObject(currentJournal.getId(), num);
-                    try {
-                        controller.deleteTask(currentTask);
-                        updateUtil.updateTasks(req, resp, currentJournal);
-                    } catch (ControllerActionException e) {
-                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-                        req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
-                    }
-                } else {
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_TASK);
-                    req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
-                }
-                break;
-            case ConstantsClass.SORT:
-                String sortColumn = req.getParameter(ConstantsClass.SORT_COLUMN); // name||description
-                String sortCriteria = req.getParameter(ConstantsClass.SORT_CRITERIA); // asc||desc
-                String filterLike = req.getParameter(ConstantsClass.FILTER_LIKE);
-                String filterEquals = req.getParameter(ConstantsClass.FILTER_EQUALS);
-
-                if (filterLike != null && !filterLike.equals("")) {
-                    if (!patternChecker.isLikeFilterCorrect(filterLike)) {
-                        req.setAttribute(ConstantsClass.FILTER_LIKE, filterLike);
-                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_FILTER_LIKE);
-                        req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
-                    } else {
-                        sortActionTasks(req, resp, sortColumn, sortCriteria, filterLike, filterEquals);
-                    }
-                } else if (filterEquals != null && !filterEquals.equals("")) {
-                    if (!patternChecker.isEqualsFilterCorrect(filterEquals)) {
-                        req.setAttribute(ConstantsClass.FILTER_EQUALS, filterEquals);
-                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_FILTER_EQUALS);
-                        req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
-                    } else {
-                        sortActionTasks(req, resp, sortColumn, sortCriteria, filterLike, filterEquals);
-                    }
-                } else {
-                    sortActionTasks(req, resp, sortColumn, sortCriteria, null, null);
-                }
-                break;
-            case ConstantsClass.SHOW_ALL :
-                updateUtil.updateTasks(req, resp, currentJournal);
-                break;
-            case ConstantsClass.RELOAD :
-                updateUtil.updateJournals(req, resp);
-                break;
-        }
-    }
-
-    private void sortActionTasks(HttpServletRequest req, HttpServletResponse resp, String sortColumn,
-                                 String sortCriteria, String filterLike, String filterEquals)
-            throws ServletException, IOException {
-        Journal currentJournal = (Journal) req.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL);
-        String sortedTasks;
-        if (filterEquals == null && filterLike == null) {
-            try {
-                sortedTasks = controller.getSortedTasks(currentJournal.getId(), sortColumn, sortCriteria);
-                if (sortedTasks == null) {
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
-                    req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
-                } else {
-                    updateUtil.updateSortedTasks(req, resp, sortedTasks);
-                }
-            } catch (ControllerActionException e) {
-                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
-            }
-        } else if (filterEquals != null) {
-            try {
-                sortedTasks = controller.getFilteredTasksByEquals(currentJournal.getId(), sortColumn, filterEquals, sortCriteria);
-                if (sortedTasks == null) {
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
-                    req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
-                } else {
-                    updateUtil.updateSortedTasks(req, resp, sortedTasks);
-                }
-            } catch (ControllerActionException e) {
-                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
-            }
-        } else if (filterLike != null) {
-            try {
-                sortedTasks = controller.getFilteredTasksByPattern(currentJournal.getId(), sortColumn, filterLike, sortCriteria);
-                if (sortedTasks == null) {
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
-                    req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
-                } else {
-                    updateUtil.updateSortedTasks(req, resp, sortedTasks);
-                }
-            } catch (ControllerActionException e) {
-                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
-            }
-        }
-        req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
     }
 
     private void doAddTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -237,14 +93,20 @@ public class TaskServlet extends HttpServlet {
         } catch (Exception ex) {
             resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
         }
-        boolean taskCorrect = xmlUtils.compareWithXsd(
-                req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE),
-                req.getServletContext().getRealPath(ConstantsClass.TASK_XSD_FILE));
+        boolean taskCorrect = false;
+        try {
+            taskCorrect = xmlUtils.compareWithXsd(
+                    req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE),
+                    req.getServletContext().getRealPath(ConstantsClass.TASK_XSD_FILE));
+        } catch (Exception e) {
+            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
+            req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
+        }
         if (taskCorrect) {
             String t = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
             req.setAttribute(ConstantsClass.CURRENT_TASK, t);
             req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
-            req.getRequestDispatcher(ConstantsClass.ADD_TASK_ADDRESS).forward(req, resp);
+            req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
         } else {
             resp.getWriter().print(ConstantsClass.ERROR_XSD_COMPARING);
         }
@@ -282,6 +144,7 @@ public class TaskServlet extends HttpServlet {
                             taskStatus = null;
 
                         try {
+                            Task currentTask = (Task) req.getSession().getAttribute(ConstantsClass.CURRENT_TASK);
                             controller.editTask(currentTask.getId(), currentTask.getJournalId(), name, taskStatus,
                                     description, notificationDate, plannedDate, journalName);
                             updateUtil.updateTasks(req, resp,currentJournal);
@@ -306,6 +169,7 @@ public class TaskServlet extends HttpServlet {
                                    String description, String planned, String notification, String message, Journal currentJournal)
             throws ServletException, IOException {
         try {
+            Task currentTask = (Task) req.getSession().getAttribute(ConstantsClass.CURRENT_TASK);
             xmlUtils.writeTask(new Task(name, currentTask.getStatus(),
                             description, notification, planned,
                             0, currentTask.getUpload(), currentTask.getChange(), currentJournal.getId()),
@@ -313,15 +177,21 @@ public class TaskServlet extends HttpServlet {
         } catch (Exception ex) {
             resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
         }
-        boolean taskCorrect = xmlUtils.compareWithXsd(
-                req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE),
-                req.getServletContext().getRealPath(ConstantsClass.TASK_XSD_FILE));
+        boolean taskCorrect = false;
+        try {
+            taskCorrect = xmlUtils.compareWithXsd(
+                    req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE),
+                    req.getServletContext().getRealPath(ConstantsClass.TASK_XSD_FILE));
+        } catch (Exception e) {
+            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
+            req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
+        }
         if (taskCorrect) {
             String t = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
             req.setAttribute(ConstantsClass.CURRENT_TASK, t);
             req.setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
             req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
-            req.getRequestDispatcher(ConstantsClass.EDIT_TASK_ADDRESS).forward(req, resp);
+            req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
         } else {
             resp.getWriter().print(ConstantsClass.ERROR_XSD_COMPARING);
         }

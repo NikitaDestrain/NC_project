@@ -77,17 +77,19 @@ public class ConstantsClass {
 
     // web constants
 
+    public static final String IS_ADD = "isadd";
+
     public static final String AUTH_SERVLET_ADDRESS = "/authservlet";
     public static final String JOURNAL_SERVLET_ADDRESS = "/journalservlet";
+    public static final String JOURNAL_UPDATE_SERVLET_ADDRESS = "/journalupdateservlet";
     public static final String TASK_SERVLET_ADDRESS = "/taskservlet";
+    public static final String TASK_UPDATE_SERVLET_ADDRESS = "/taskupdateservlet";
     public static final String JOURNAL_PAGE_ADDRESS = "/mainpage";
     public static final String TASKS_PAGE_ADDRESS = "/tasks";
     public static final String SIGN_IN_ADDRESS = "/signin";
     public static final String SIGN_UP_ADDRESS = "/signup";
-    public static final String ADD_TASK_ADDRESS = "/addtask";
-    public static final String EDIT_TASK_ADDRESS = "/edittask";
-    public static final String ADD_JOURNAL_ADDRESS = "/addjournal";
-    public static final String EDIT_JOURNAL_ADDRESS = "/editjournal";
+    public static final String UPDATE_TASKS_ADDRESS = "/updatetasks";
+    public static final String UPDATE_JOURNALS_ADDRESS = "/updatejournals";
 
     public static final String DO_SIGN_IN = "signin";
     public static final String SIGN_IN_ACTION = "signinaction";

@@ -12,7 +12,7 @@
 <head>
     <title>Task scheduler</title>
     <style type="text/css">
-        <%@include file="css/task.css"%>
+        <%@include file="bootstrap/css/bootstrap.min.css"%>
     </style>
     <script type="text/javascript">
         function filterType() {
@@ -113,7 +113,7 @@
             </tr>
             <%
                 int count = 0;
-                boolean isSorted = request.getAttribute(ConstantsClass.IS_SORTED) == null ? false : (boolean)request.getAttribute(ConstantsClass.IS_SORTED);
+                Boolean isSorted = request.getAttribute(ConstantsClass.IS_SORTED) == null ? false : (Boolean) request.getAttribute(ConstantsClass.IS_SORTED);
             %>
             <x:parse xml="${sessionScope.journal}" var="container"/>
             <x:forEach select="$container/journal/tasks/entry" var="task">

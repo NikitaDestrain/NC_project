@@ -1,4 +1,6 @@
-package servlet;
+package servlets;
+
+import server.controller.XmlUtils;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -69,7 +71,11 @@ public class Test {
 //            e.getMessage();
 //        }
 
-        System.out.println(isCorrectDescription("artem 1"));
+        try {
+            XmlUtils.getInstance().compareWithXsd("data/names.xml","data/names.xsd");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static boolean isCorrectDescription(String s) {

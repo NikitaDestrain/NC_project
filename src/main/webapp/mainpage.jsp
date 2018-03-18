@@ -12,7 +12,7 @@
 <head>
     <title>Journals</title>
     <style type="text/css">
-        <%@include file="css/journal.css"%>
+        <%@include file="bootstrap/css/bootstrap.min.css"%>
     </style>
     <script type="text/javascript">
         function filterType() {
@@ -94,62 +94,67 @@
 </head>
 <body>
 <%
-    boolean isSorted = request.getAttribute(ConstantsClass.IS_SORTED) == null ? false : (boolean)request.getAttribute(ConstantsClass.IS_SORTED);
+    Boolean isSorted = request.getAttribute(ConstantsClass.IS_SORTED) == null ? false : (Boolean) request.getAttribute(ConstantsClass.IS_SORTED);
     int count = 0;
 %>
-<div align="center"><strong>TASK SCHEDULER</strong></div>
-<div align="center">
-    <form method="post" action="<%=ConstantsClass.JOURNAL_SERVLET_ADDRESS%>">
-
+<div align="center"><strong>Journals</strong></div>
+<form method="post" action="<%=ConstantsClass.JOURNAL_SERVLET_ADDRESS%>" role="form">
+    <div class="form-group">
         <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
         <input type="hidden" name="<%=ConstantsClass.ACTION%>" value=<%=ConstantsClass.DO_CRUD_FROM_JOURNAL%>>
 
-        <table class="main-table">
-            <caption>Journals</caption>
+        <table class="table">
             <tr>
-                <th class="count">№</th>
-                <th class="main-th">Name</th>
-                <th class="main-th">Description</th>
+                <th>№</th>
+                <th>Name</th>
+                <th>Description</th>
             </tr>
             <x:parse xml="${sessionScope.journalContainer}" var="container"/>
             <x:forEach select="$container/journalContainer/journals/entry" var="journal">
                 <tr>
-                    <td class="count">
+                    <td>
                         <label>
-                            <%=count++%>
-                            <input type="radio" name="<%=ConstantsClass.USERNUMBER%>"
+                            <input type="radio" class="form-control" name="<%=ConstantsClass.USERNUMBER%>"
                                    value="<x:out select="$journal/value/id"/>"/>
                         </label>
                     </td>
-                    <td class="main-td">
+                    <td>
                         <x:out select="$journal/value/name"/>
                     </td>
-                    <td class="main-td">
+                    <td>
                         <x:out select="$journal/value/description"/>
                     </td>
                 </tr>
             </x:forEach>
         </table>
-        <div align="center" class="button-div">
-            <table class="button-table">
+        <div align="center">
+            <table>
                 <tr>
-                    <td class="button-table-td"><input type="button" id="choose" value="Choose journal"
-                                                       onclick="buttonClick(this)"></td>
-                    <td class="button-table-td"><input type="button" id="add" value="Add journal"
-                                                       onclick="buttonClick(this)"></td>
-                    <td class="button-table-td"><input type="button" id="edit" value="Edit journal"
-                                                       onclick="buttonClick(this)"></td>
-                    <td class="button-table-td"><input type="button" id="delete" value="Delete journal"
-                                                       onclick="buttonClick(this)"></td>
+                    <td><input type="button" class="btn btn-outline-success"
+                               id="choose" value="Choose journal"
+                               onclick="buttonClick(this)">
+                    </td>
+                    <td><input type="button" class="btn btn-outline-success"
+                               id="add" value="Add journal"
+                               onclick="buttonClick(this)">
+                    </td>
+                    <td><input type="button" class="btn btn-outline-success"
+                               id="edit" value="Edit journal"
+                               onclick="buttonClick(this)">
+                    </td>
+                    <td><input type="button" class="btn btn-outline-success"
+                               id="delete" value="Delete journal"
+                               onclick="buttonClick(this)">
+                    </td>
                 </tr>
             </table>
         </div>
         <div align="center">
-            <table class="button-table">
+            <table>
                 <tr>
                     <td>Sort by:</td>
                     <td>
-                        <select name="<%=ConstantsClass.SORT_COLUMN%>" id="<%=ConstantsClass.SORT_COLUMN%>">
+                        <select class="form-control" name="<%=ConstantsClass.SORT_COLUMN%>" id="<%=ConstantsClass.SORT_COLUMN%>">
                             <option value=""></option>
                             <option value="<%=ConstantsClass.NAME%>">
                                 Name
@@ -165,7 +170,7 @@
                         Criterion:
                     </td>
                     <td>
-                        <select name="<%=ConstantsClass.SORT_CRITERIA%>" id="<%=ConstantsClass.SORT_CRITERIA%>">
+                        <select class="form-control" name="<%=ConstantsClass.SORT_CRITERIA%>" id="<%=ConstantsClass.SORT_CRITERIA%>">
                             <option value=""></option>
                             <option value="<%=ConstantsClass.SORT_ASC%>">
                                 Ascending
@@ -181,7 +186,7 @@
                         Choose filter:
                     </td>
                     <td>
-                        <select id="type" onchange="filterType()">
+                        <select class="form-control" id="type" onchange="filterType()">
                             <option value=""></option>
                             <option value="like">
                                 Like
@@ -197,7 +202,7 @@
                         Like:
                     </td>
                     <td>
-                        <input type="text" id="liketype" name="<%=ConstantsClass.FILTER_LIKE%>"
+                        <input class="form-control" type="text" id="liketype" name="<%=ConstantsClass.FILTER_LIKE%>"
                                value="<%=request.getAttribute(ConstantsClass.FILTER_LIKE)==null?"":request.getAttribute(ConstantsClass.FILTER_LIKE)%>"
                                disabled>
                     </td>
@@ -207,15 +212,15 @@
                         Equals:
                     </td>
                     <td>
-                        <input type="text" id="equalstype" name="<%=ConstantsClass.FILTER_EQUALS%>"
+                        <input type="text" class="form-control" id="equalstype" name="<%=ConstantsClass.FILTER_EQUALS%>"
                                value="<%=request.getAttribute(ConstantsClass.FILTER_EQUALS)==null?"":request.getAttribute(ConstantsClass.FILTER_EQUALS)%>"
                                disabled>
                     </td>
                 </tr>
                 <tr>
-                    <td class="button-table-td" colspan="3">
-                        <input type="button" id="sort" value="Sort" onclick="buttonClick(this)">
-                        <input type="button" id="reload" value="Reload" onclick="buttonClick(this)">
+                    <td colspan="2">
+                        <input type="button" class="btn btn-outline-primary" id="sort" value="Sort" onclick="buttonClick(this)">
+                        <input type="button" class="btn btn-outline-primary" id="reload" value="Reload" onclick="buttonClick(this)">
                     </td>
                 </tr>
             </table>
@@ -224,13 +229,13 @@
             if (isSorted) {
         %>
         <div align="center">
-            <input type="button" id="allvals" value="Show all values" onclick="buttonClick(this)">
+            <input type="button" class="btn btn-outline-primary" id="allvals" value="Show all values" onclick="buttonClick(this)">
         </div>
         <%
             }
         %>
-    </form>
-</div>
+    </div>
+</form>
 <div align="center">
     <%=
     request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" : request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)

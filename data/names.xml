@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <journalNames>
-    <name>j1</name>
+    <name>test1</name>
     <name>j2</name>
+    <name>1</name>
+    <name>journal1</name>
 </journalNames>

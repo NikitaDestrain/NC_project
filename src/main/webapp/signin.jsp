@@ -11,7 +11,7 @@
     <title>Sign in</title>
 </head>
 <style type="text/css">
-    <%@include file="css/signin.css"%>
+    <%@include file="/bootstrap/css/bootstrap.min.css"%>
 </style>
 <script type="text/javascript">
     function buttonClick(x) {
@@ -35,41 +35,41 @@
 </head>
 <body>
 <div align="center">
+<h4>Sign In</h4>
 
-    <h3>Sign In</h3>
-
-    <form method="post" action=<%=ConstantsClass.AUTH_SERVLET_ADDRESS%>>
-
+<form method="post" action="<%=ConstantsClass.AUTH_SERVLET_ADDRESS%>" role="form">
+    <div class="form-group">
         <input type="hidden" name="<%=ConstantsClass.USERACTION%>" id="hid"/>
         <input type="hidden" name="<%=ConstantsClass.ACTION%>" value="<%=ConstantsClass.DO_SIGN_IN%>">
 
         <table>
             <tr>
-                <td class="align-right">Username:</td>
-                <td><input type="text" name="login" id="login"
+                <td>Username:</td>
+                <td><input type="text" class="form-control" name="login" id="login"
                            value="<%= request.getAttribute(ConstantsClass.LOGIN_PARAMETER)!=null?
                            request.getAttribute(ConstantsClass.LOGIN_PARAMETER):"" %>"/>
                 </td>
             </tr>
             <tr>
-                <td class="align-right">Password:</td>
-                <td><input type="password" name="password" id="password"
+                <td>Password:</td>
+                <td><input type="password" class="form-control" name="password" id="password"
                            value="<%= request.getAttribute(ConstantsClass.PASSWORD_PARAMETER)!=null?
                            request.getAttribute(ConstantsClass.PASSWORD_PARAMETER):"" %>"/>
                 </td>
             </tr>
-            <tr>
-                <td class="align-left"><input type="button" value="Sign in" id="signin"
-                                              onclick="buttonClick(this)"/></td>
-                <td class="align-right" colspan="2"><input type="button" value="Sign up" id="signup"
-                                                           onclick="buttonClick(this)"/></td>
-            </tr>
         </table>
-
-        <p class="login-error"><%= request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) != null ?
-                request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) : "" %>
-        </p>
-    </form>
+        <div align="center">
+            <input type="button" class="btn btn-outline-success" value="Sign in" id="signin"
+                   onclick="buttonClick(this)"/>
+            <input type="button" class="btn btn-outline-primary" value="Sign up"
+                   id="signup"
+                   onclick="buttonClick(this)"/>
+        </div>
+    </div>
+    <div align="center"><%= request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) != null ?
+            request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) : "" %>
+    </div>
+</form>
 </div>
 </body>
 </html>
