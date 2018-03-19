@@ -40,8 +40,7 @@ public class JournalServlet extends HttpServlet {
             updateUtil = DataUpdateUtil.getInstance();
             controller = Controller.getInstance();
         } catch (ControllerActionException e) {
-            //todo сообщение об ошибке
-            e.printStackTrace();
+            resp.getWriter().print(ConstantsClass.ERROR_LAZY_MESSAGE);
         }
         String useraction = req.getParameter(ConstantsClass.USERACTION);
         String usernumber;
@@ -160,8 +159,7 @@ public class JournalServlet extends HttpServlet {
                 try {
                     sortedJournals = xmlUtils.marshalToXmlString(sortedJournalsContainer.getClass(), sortedJournalsContainer);
                 } catch (JAXBException e) {
-                    e.printStackTrace();
-                    //todo обсудить
+                    resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
                 }
                 if (sortedJournals == null) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
@@ -179,8 +177,7 @@ public class JournalServlet extends HttpServlet {
                 try {
                     sortedJournals = xmlUtils.marshalToXmlString(sortedJournalsContainer.getClass(), sortedJournalsContainer);
                 } catch (JAXBException e) {
-                    e.printStackTrace();
-                    //todo обсудить
+                    resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
                 }
                 if (sortedJournals == null) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
@@ -198,8 +195,7 @@ public class JournalServlet extends HttpServlet {
                 try {
                     sortedJournals = xmlUtils.marshalToXmlString(sortedJournalsContainer.getClass(), sortedJournalsContainer);
                 } catch (JAXBException e) {
-                    e.printStackTrace();
-                    //todo обсудить
+                    resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
                 }
                 if (sortedJournals == null) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);

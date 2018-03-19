@@ -40,8 +40,7 @@ public class TaskServlet extends HttpServlet {
             controller = Controller.getInstance();
             updateUtil = DataUpdateUtil.getInstance();
         } catch (ControllerActionException e) {
-            //todo обсудить
-            e.printStackTrace();
+            resp.getWriter().print(ConstantsClass.ERROR_LAZY_MESSAGE);
         }
         String useraction = req.getParameter(ConstantsClass.USERACTION);
         String usernumber;
@@ -139,7 +138,7 @@ public class TaskServlet extends HttpServlet {
                 try {
                     sortedTasks = xmlUtils.marshalToXmlString(tasks.getClass(), tasks);
                 } catch (JAXBException e) {
-                    //todo обсудить
+                    resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
                 }
                 if (sortedTasks == null) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
@@ -157,7 +156,7 @@ public class TaskServlet extends HttpServlet {
                 try {
                     sortedTasks = xmlUtils.marshalToXmlString(tasks.getClass(), tasks);
                 } catch (JAXBException e) {
-                    //todo обсудить
+                    resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
                 }
                 if (sortedTasks == null) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
@@ -175,7 +174,7 @@ public class TaskServlet extends HttpServlet {
                 try {
                     sortedTasks = xmlUtils.marshalToXmlString(tasks.getClass(), tasks);
                 } catch (JAXBException e) {
-                    //todo обсудить
+                    resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
                 }
                 if (sortedTasks == null) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);

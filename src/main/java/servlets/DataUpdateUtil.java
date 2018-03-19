@@ -42,7 +42,6 @@ public class DataUpdateUtil {
     }
 
     public void updateSortedJournals(HttpServletRequest req, HttpServletResponse resp, String sortedJournals) throws ServletException, IOException {
-        //todo то же самое что с апдейт таскс
         if (sortedJournals != null) {
             req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, sortedJournals);
             req.setAttribute(ConstantsClass.IS_SORTED, Boolean.TRUE);
@@ -66,7 +65,6 @@ public class DataUpdateUtil {
 
     public void updateSortedTasks(HttpServletRequest req, HttpServletResponse resp, String sortedTasks) throws ServletException, IOException {
         if (sortedTasks != null) {
-            //todo здесь нужно взять данные из хмл, так как модель не меняется, чтобы не затереть при паттерне
             req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, sortedTasks);
             req.setAttribute(ConstantsClass.IS_SORTED, Boolean.TRUE);
             req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);

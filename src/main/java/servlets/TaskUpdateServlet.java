@@ -41,8 +41,7 @@ public class TaskUpdateServlet extends HttpServlet {
             controller = Controller.getInstance();
             updateUtil = DataUpdateUtil.getInstance();
         } catch (ControllerActionException e) {
-            //todo обсудить
-            e.printStackTrace();
+            resp.getWriter().print(ConstantsClass.ERROR_LAZY_MESSAGE);
         }
         String useraction = req.getParameter(ConstantsClass.USERACTION);
         Journal currentJournal = (Journal) req.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL);
@@ -110,8 +109,7 @@ public class TaskUpdateServlet extends HttpServlet {
             controller = Controller.getInstance();
             updateUtil = DataUpdateUtil.getInstance();
         } catch (ControllerActionException e) {
-            //todo обсудить
-            e.printStackTrace();
+            resp.getWriter().print(ConstantsClass.ERROR_LAZY_MESSAGE);
         }
         String useraction = req.getParameter(ConstantsClass.USERACTION);
         Journal currentJournal = (Journal) req.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL);
