@@ -93,30 +93,16 @@ public class TaskUpdateServlet extends HttpServlet {
 
     private void incorrectAddTask(HttpServletRequest req, HttpServletResponse resp, String name,
                                   String description, String notification, String planned, String message) throws ServletException, IOException {
+        String t = null;
         try {
-            xmlUtils.writeTask(new Task(name, TaskStatus.Planned, description, notification, planned,
-                            0, "", "", 0),
-                    req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
+            t = xmlUtils.marshalToXmlString(Task.class, new Task(name, TaskStatus.Planned, description, notification, planned,
+                    0, "", "", 0));
         } catch (Exception ex) {
             resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
         }
-        boolean taskCorrect = false;
-        try {
-            taskCorrect = xmlUtils.compareWithXsd(
-                    req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE),
-                    req.getServletContext().getRealPath(ConstantsClass.TASK_XSD_FILE));
-        } catch (Exception e) {
-            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-            req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
-        }
-        if (taskCorrect) {
-            String t = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
-            req.setAttribute(ConstantsClass.CURRENT_TASK, t);
-            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
-            req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
-        } else {
-            resp.getWriter().print(ConstantsClass.ERROR_XSD_COMPARING);
-        }
+        req.setAttribute(ConstantsClass.CURRENT_TASK_XML, t);
+        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
+        req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
     }
 
     private void doEditTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -182,33 +168,19 @@ public class TaskUpdateServlet extends HttpServlet {
     private void incorrectEditTask(HttpServletRequest req, HttpServletResponse resp, String name,
                                    String description, String planned, String notification, String message, Journal currentJournal)
             throws ServletException, IOException {
+        String t = null;
         try {
             Task currentTask = (Task) req.getSession().getAttribute(ConstantsClass.CURRENT_TASK);
-            xmlUtils.writeTask(new Task(name, currentTask.getStatus(),
-                            description, notification, planned,
-                            0, currentTask.getUpload(), currentTask.getChange(), currentJournal.getId()),
-                    req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
+            t = xmlUtils.marshalToXmlString(Task.class, new Task(name, currentTask.getStatus(),
+                    description, notification, planned,
+                    0, currentTask.getUpload(), currentTask.getChange(), currentJournal.getId()));
         } catch (Exception ex) {
             resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
         }
-        boolean taskCorrect = false;
-        try {
-            taskCorrect = xmlUtils.compareWithXsd(
-                    req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE),
-                    req.getServletContext().getRealPath(ConstantsClass.TASK_XSD_FILE));
-        } catch (Exception e) {
-            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-            req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
-        }
-        if (taskCorrect) {
-            String t = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
-            req.setAttribute(ConstantsClass.CURRENT_TASK, t);
-            req.setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
-            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
-            req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
-        } else {
-            resp.getWriter().print(ConstantsClass.ERROR_XSD_COMPARING);
-        }
+        req.setAttribute(ConstantsClass.CURRENT_TASK, t);
+        req.setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
+        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
+        req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
     }
 
     // 12-08-1980

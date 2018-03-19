@@ -62,20 +62,10 @@ public class JournalServlet extends HttpServlet {
                         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_LAZY_MESSAGE);
                         req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
                     }
-                    boolean journalCorrect = false;
-                    try {
-                        journalCorrect = xmlUtils.compareWithXsd(journal,
-                                req.getServletContext().getRealPath(ConstantsClass.JOURNAL_XSD_FILE));
-                    } catch (Exception e) {
-                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_JOURNAL);
-                        req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
-                    }
-                    if (journalCorrect) {
-                        req.setAttribute(ConstantsClass.JOURNAL_PARAMETER, journal);
-                        req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL, controller.getJournal(num));
-                        req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.FALSE);
-                        req.getRequestDispatcher(ConstantsClass.UPDATE_JOURNALS_ADDRESS).forward(req, resp);
-                    }
+                    req.setAttribute(ConstantsClass.JOURNAL_PARAMETER, journal);
+                    req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL, controller.getJournal(num));
+                    req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.FALSE);
+                    req.getRequestDispatcher(ConstantsClass.UPDATE_JOURNALS_ADDRESS).forward(req, resp);
                 } else {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_JOURNAL);
                     req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
@@ -109,8 +99,16 @@ public class JournalServlet extends HttpServlet {
                         resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
                     }
                     String n = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.NAMES_XML_FILE));
+                    String j = null;
+                    try {
+                        j = xmlUtils.marshalToXmlString(Journal.class, currentJournal);
+                    } catch (JAXBException e) {
+                        req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, "");
+                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_XML_WRITING);
+                        req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                    }
                     req.getSession().setAttribute(ConstantsClass.JOURNAL_NAMES, n);
-                    req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, controller.getTasks(currentJournal.getId()));
+                    req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, j);
                     req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
                 } else {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_JOURNAL);

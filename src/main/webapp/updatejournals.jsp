@@ -75,7 +75,7 @@
             <input type="hidden" name="<%=ConstantsClass.ACTION%>" value="<%=ConstantsClass.DO_ADD_JOURNAL%>">
             <div align="center"><strong>Add journal</strong></div>
 
-            <table class="table">
+            <table>
                 <%
                     if (request.getAttribute(ConstantsClass.JOURNAL_PARAMETER) != null) {
                 %>

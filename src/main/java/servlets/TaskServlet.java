@@ -61,29 +61,16 @@ public class TaskServlet extends HttpServlet {
                     currentTask = controller.getTask(currentJournal.getId(), num);
                     req.getSession().setAttribute(ConstantsClass.CURRENT_TASK, currentTask);
                     req.getSession().setAttribute(ConstantsClass.CURRENT_STATUS, currentTask.getStatus());
+                    String t = null;
                     try {
-                        xmlUtils.writeTask(currentTask, req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
+                        t = xmlUtils.marshalToXmlString(Task.class, currentTask);
                     } catch (Exception e) {
                         resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
                     }
-                    boolean taskCorrect = false;
-                    try {
-                        taskCorrect = xmlUtils.compareWithXsd(
-                                req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE),
-                                req.getServletContext().getRealPath(ConstantsClass.TASK_XSD_FILE));
-                    } catch (Exception e) {
-                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-                        req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
-                    }
-                    if (taskCorrect) {
-                        String t = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.TASK_XML_FILE));
-                        req.setAttribute(ConstantsClass.CURRENT_TASK, t);
-                        req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
-                        req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.FALSE);
-                        req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
-                    } else {
-                        resp.getWriter().print(ConstantsClass.ERROR_XSD_COMPARING);
-                    }
+                    req.setAttribute(ConstantsClass.CURRENT_TASK_XML, t);
+                    req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
+                    req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.FALSE);
+                    req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
                 } else {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_TASK);
                     req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);

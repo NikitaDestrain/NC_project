@@ -95,9 +95,8 @@
 <body>
 <%
     Boolean isSorted = request.getAttribute(ConstantsClass.IS_SORTED) == null ? false : (Boolean) request.getAttribute(ConstantsClass.IS_SORTED);
-    int count = 0;
 %>
-<div align="center"><strong>Journals</strong></div>
+<div align="center"><strong>JOURNALS</strong></div>
 <form method="post" action="<%=ConstantsClass.JOURNAL_SERVLET_ADDRESS%>" role="form">
     <div class="form-group">
         <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
@@ -219,17 +218,11 @@
                                disabled>
                     </td>
                 </tr>
-                <tr>
-                    <td colspan="2">
-                        <div align="center">
-                            <input type="button" class="btn btn-outline-primary" id="sort" value="Sort"
-                                   onclick="buttonClick(this)">
-                            <input type="button" class="btn btn-outline-primary" id="reload" value="Reload"
-                                   onclick="buttonClick(this)">
-                        </div>
-                    </td>
-                </tr>
             </table>
+            <div align="center">
+                <input type="button" class="btn btn-outline-success" id="sort" value="Sort"
+                       onclick="buttonClick(this)">
+            </div>
         </div>
         <%
             if (isSorted) {

@@ -92,15 +92,17 @@
     </script>
 </head>
 <body>
+<%
+    Boolean isSorted = request.getAttribute(ConstantsClass.IS_SORTED) == null ? false : (Boolean) request.getAttribute(ConstantsClass.IS_SORTED);
+%>
 <div align="center"><strong>TASK SCHEDULER</strong></div>
 <div align="center">
-    <form method="post" id="mainform" action="<%=ConstantsClass.TASK_SERVLET_ADDRESS%>">
-
+    <form method="post" id="mainform" action="<%=ConstantsClass.TASK_SERVLET_ADDRESS%>" role="form">
+        <div class="form-group">
         <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
         <input type="hidden" name="<%=ConstantsClass.ACTION%>" value=<%=ConstantsClass.DO_CRUD_FROM_TASKS%>>
 
-        <table class="main-table">
-            <caption>Tasks</caption>
+        <table class="table">
             <tr>
                 <th class="count">№</th>
                 <th class="main-th">Status</th>
@@ -111,62 +113,57 @@
                 <th class="main-th">Upload date</th>
                 <th class="main-th">Change date</th>
             </tr>
-            <%
-                int count = 0;
-                Boolean isSorted = request.getAttribute(ConstantsClass.IS_SORTED) == null ? false : (Boolean) request.getAttribute(ConstantsClass.IS_SORTED);
-            %>
             <x:parse xml="${sessionScope.journal}" var="container"/>
             <x:forEach select="$container/journal/tasks/entry" var="task">
                 <tr>
-                    <td class="count">
+                    <td>
                         <label>
-                            <%=count++%>
-                            <input type="radio" name="<%=ConstantsClass.USERNUMBER%>"
+                            <input type="radio" class="form-control" name="<%=ConstantsClass.USERNUMBER%>"
                                    value="<x:out select="$task/value/id"/>"/>
                         </label>
                     </td>
-                    <td class="main-td">
+                    <td>
                         <x:out select="$task/value/status"/>
                     </td>
-                    <td class="main-td">
+                    <td>
                         <x:out select="$task/value/name"/>
                     </td>
-                    <td class="main-td">
+                    <td>
                         <x:out select="$task/value/description"/>
                     </td>
-                    <td class="main-td">
+                    <td>
                         <x:out select="$task/value/planned"/>
                     </td>
-                    <td class="main-td">
+                    <td>
                         <x:out select="$task/value/notification"/>
                     </td>
-                    <td class="main-td">
+                    <td>
                         <x:out select="$task/value/upload"/>
                     </td>
-                    <td class="main-td">
+                    <td>
                         <x:out select="$task/value/change"/>
                     </td>
                 </tr>
             </x:forEach>
         </table>
-        <div align="center" class="button-div">
-            <table class="button-table">
+        <div align="center">
+            <table>
                 <tr>
-                    <td class="button-table-td"><input type="button" id="add" value="Add task"
+                    <td><input type="button" class="btn btn-outline-success" id="add" value="Add task"
                                                        onclick="buttonClick(this)"></td>
-                    <td class="button-table-td"><input type="button" id="edit" value="Edit task"
+                    <td><input type="button" class="btn btn-outline-success" id="edit" value="Edit task"
                                                        onclick="buttonClick(this)"></td>
-                    <td class="button-table-td"><input type="button" id="delete" value="Delete task"
+                    <td><input type="button" class="btn btn-outline-success" id="delete" value="Delete task"
                                                        onclick="buttonClick(this)"></td>
                 </tr>
             </table>
         </div>
         <div align="center">
-            <table class="button-table">
+            <table>
                 <tr>
                     <td>Sort by:</td>
                     <td>
-                        <select name="<%=ConstantsClass.SORT_COLUMN%>" id="<%=ConstantsClass.SORT_COLUMN%>">
+                        <select class="form-control" name="<%=ConstantsClass.SORT_COLUMN%>" id="<%=ConstantsClass.SORT_COLUMN%>">
                             <option value=""></option>
                             <option value="<%=ConstantsClass.STATUS%>">
                                 Status
@@ -197,7 +194,7 @@
                         Criterion:
                     </td>
                     <td>
-                        <select name="<%=ConstantsClass.SORT_CRITERIA%>" id="<%=ConstantsClass.SORT_CRITERIA%>">
+                        <select class="form-control" name="<%=ConstantsClass.SORT_CRITERIA%>" id="<%=ConstantsClass.SORT_CRITERIA%>">
                             <option value=""></option>
                             <option value="<%=ConstantsClass.SORT_ASC%>">
                                 Ascending
@@ -213,7 +210,7 @@
                         Choose filter:
                     </td>
                     <td>
-                        <select id="type" onchange="filterType()">
+                        <select class="form-control" id="type" onchange="filterType()">
                             <option value=""></option>
                             <option value="like">
                                 Like
@@ -229,7 +226,7 @@
                         Like:
                     </td>
                     <td>
-                        <input type="text" id="liketype" name="<%=ConstantsClass.FILTER_LIKE%>"
+                        <input class="form-control" type="text" id="liketype" name="<%=ConstantsClass.FILTER_LIKE%>"
                                value="<%=request.getAttribute(ConstantsClass.FILTER_LIKE)==null?"":request.getAttribute(ConstantsClass.FILTER_LIKE)%>"
                                disabled>
                     </td>
@@ -239,31 +236,29 @@
                         Equals:
                     </td>
                     <td>
-                        <input type="text" id="equalstype" name="<%=ConstantsClass.FILTER_EQUALS%>"
+                        <input class="form-control" type="text" id="equalstype" name="<%=ConstantsClass.FILTER_EQUALS%>"
                                value="<%=request.getAttribute(ConstantsClass.FILTER_EQUALS)==null?"":request.getAttribute(ConstantsClass.FILTER_EQUALS)%>"
                                disabled>
                     </td>
                 </tr>
-                <tr>
-                    <td class="button-table-td" colspan="3">
-                        <input type="button" id="sort" value="Sort" onclick="buttonClick(this)">
-                        <input type="button" id="reload" value="Reload" onclick="buttonClick(this)">
-                    </td>
-                </tr>
             </table>
+            <div align="center">
+                <input type="button" class="btn btn-outline-success" id="sort" value="Sort" onclick="buttonClick(this)">
+            </div>
         </div>
         <div class="center">
-            <input type="button" id="back" value="Back to main page" onclick="buttonClick(this)">
+            <input type="button" id="back" class="btn btn-outline-primary" value="Back to main page" onclick="buttonClick(this)">
         </div>
         <%
             if (isSorted) {
         %>
         <div align="center">
-            <input type="button" id="allvals" value="Show all values" onclick="buttonClick(this)">
+            <input type="button" id="allvals" class="btn btn-outline-primary" value="Show all values" onclick="buttonClick(this)">
         </div>
         <%
             }
         %>
+        </div>
     </form>
 </div>
 <div align="center">

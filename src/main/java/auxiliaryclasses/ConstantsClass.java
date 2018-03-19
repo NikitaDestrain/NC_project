@@ -131,6 +131,7 @@ public class ConstantsClass {
 
     public static final String JOURNAL_NAMES = "journalNames";
     public static final String CURRENT_TASK = "task";
+    public static final String CURRENT_TASK_XML = "taskxml";
     public static final String CURRENT_JOURNAL_NAME = "curname";
     public static final String CURRENT_JOURNAL = "currentjournal";
 

@@ -1,5 +1,6 @@
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
-<%@ page import="auxiliaryclasses.ConstantsClass" %><%--
+<%@ page import="auxiliaryclasses.ConstantsClass" %>
+<%@ page import="server.model.Journal" %><%--
   Created by IntelliJ IDEA.
   User: ывв
   Date: 18.02.2018
@@ -44,6 +45,7 @@
                     break;
             }
         }
+
         function buttonClickEdit(x) {
             switch (x.id) {
                 case "save":
@@ -83,7 +85,7 @@
                 <%
                     if (request.getAttribute(ConstantsClass.CURRENT_TASK) != null) {
                 %>
-                <x:parse xml="${requestScope.task}" var="task"/>
+                <x:parse xml="${requestScope.taskxml}" var="task"/>
                 <tr>
                     <td class="align-right">Name</td>
                     <td class="align-right">
@@ -157,34 +159,32 @@
                         </select>
                     </td>
                 </tr>
-                <div align="center">
-                    <input type="button" class="btn btn-outline-success" id="add" value="Add" onclick="buttonClickAdd(this)">
-                </div>
             </table>
-            <%
-                } else {
-            %>
-            <input type="hidden" name="<%=ConstantsClass.ACTION%>" value="<%=ConstantsClass.DO_EDIT_TASK%>">
             <div align="center">
-                Journal name: <%=request.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME)==null?"":request.getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME)%>
+                <input type="button" class="btn btn-outline-success" id="add" value="Add"
+                       onclick="buttonClickAdd(this)">
+            </div>
+            <%
+            } else {
+            %>
+            <div align="center">
+                <strong>
+                    Journal
+                    name: <%=request.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME) == null ? "" : request.getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME)%>
+                </strong>
+            </div>
+            <input type="hidden" name="<%=ConstantsClass.ACTION%>" value="<%=ConstantsClass.DO_EDIT_TASK%>">
+            <x:parse xml="${requestScope.taskxml}" var="task"/>
+            <div align="center">
+                Task status: <x:out select="$task/task/status"/>
+            </div>
+            <div align="center">
+                Upload date: <x:out select="$task/task/upload"/>
+            </div>
+            <div align="center">
+                Change date: <x:out select="$task/task/change"/>
             </div>
             <table class="table">
-                <x:parse xml="${requestScope.task}" var="task"/>
-                <tr>
-                    <td class="align-status" colspan="2">
-                        Task status: <x:out select="$task/task/status"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="align-center" colspan="2">
-                        Upload date: <x:out select="$task/task/upload"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="align-center" colspan="2">
-                        Change date: <x:out select="$task/task/change"/>
-                    </td>
-                </tr>
                 <tr>
                     <td class="align-right">Name</td>
                     <td class="align-right">
@@ -209,7 +209,8 @@
                 <tr>
                     <td class="align-right">Notification date</td>
                     <td class="align-right">
-                        <input type="text" class="form-control" name="<%=ConstantsClass.NOTIFICATION_DATE%>" id="notification"
+                        <input type="text" class="form-control" name="<%=ConstantsClass.NOTIFICATION_DATE%>"
+                               id="notification"
                                value="<x:out select="$task/task/notification"/>">
                     </td>
                 </tr>
@@ -237,16 +238,19 @@
                 </tr>
             </table>
             <div align="center">
-                <input type="button" class="btn btn-outline-success" id="save" value="Save" onclick="buttonClickEdit(this)">
+                <input type="button" class="btn btn-outline-success" id="save" value="Save"
+                       onclick="buttonClickEdit(this)">
             </div>
             <%
                 }
             %>
             <div class="center">
-                <input type="button" id="backtotasks" class="btn btn-outline-primary" value="Back to tasks page" onclick="buttonClickAdd(this)">
+                <input type="button" id="backtotasks" class="btn btn-outline-primary" value="Back to tasks page"
+                       onclick="buttonClickAdd(this)">
             </div>
             <div class="center">
-                <input type="button" id="backtomain" class="btn btn-outline-primary" value="Back to main page" onclick="buttonClickAdd(this)">
+                <input type="button" id="backtomain" class="btn btn-outline-primary" value="Back to main page"
+                       onclick="buttonClickAdd(this)">
             </div>
         </div>
     </form>
