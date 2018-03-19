@@ -3,6 +3,7 @@ package server.controller;
 import database.daointerfaces.UsersDAO;
 import database.postgresql.PostgreSQLDAOFactory;
 import server.exceptions.DAOFactoryActionException;
+import server.exceptions.UserAuthorizerStartException;
 import server.model.User;
 
 import java.sql.SQLException;
@@ -16,17 +17,17 @@ public class UserAuthorizer {
 
     private static UserAuthorizer instance;
 
-    private UserAuthorizer() {
+    private UserAuthorizer() throws UserAuthorizerStartException {
         try {
             usersDAO = PostgreSQLDAOFactory.getInstance().getUsersDao();
             userData = new HashMap<>();
             createStartUserData();
         } catch (SQLException | DAOFactoryActionException e) {
-            e.printStackTrace();
+            throw new UserAuthorizerStartException();
         }
     }
 
-    public static synchronized UserAuthorizer getInstance() {
+    public static synchronized UserAuthorizer getInstance() throws UserAuthorizerStartException {
         if (instance == null) instance = new UserAuthorizer();
         return instance;
     }

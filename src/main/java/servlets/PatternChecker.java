@@ -6,7 +6,8 @@ import java.util.regex.Pattern;
 public class PatternChecker {
     private static PatternChecker instance;
 
-    private PatternChecker(){}
+    private PatternChecker() {
+    }
 
     public static PatternChecker getInstance() {
         if (instance == null) instance = new PatternChecker();

@@ -8,7 +8,6 @@ public class JournalFactory {
         return new Journal(id, name, description, userId);
     }
 
-    //создает копию без задач
     public static Journal createJournal(Journal journal) {
         return new Journal(journal.getId(), journal.getName(), journal.getDescription(), journal.getUserId());
     }

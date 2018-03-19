@@ -27,18 +27,18 @@ public class ConstantsClass {
     public static final String CANCELLED_STATUS = "Cancelled";
     public static final String COMPLETED_STATUS = "Completed";
 
-    public static String PATH_TO_CONFIG = "data/config.properties";
+    public static final String PATH_TO_CONFIG = "data/properties/config.properties";
     public static final String PATH_TO_JOURNAL = "PATH_TO_JOURNAL";
     public static final String MAIN_FORM_ICON = "MAIN_FORM_ICON";
     public static final String NOTIF_SOUND = "NOTIF_SOUND";
-    public static final String JOURNAL_XML_FILE = "/journal.xml";
-    public static final String NAMES_XML_FILE = "/names.xml";
-    public static final String NAMES_XSD_FILE = "/names.xsd";
-    public static final String JOURNALS_XML_FILE = "/journals.xml";
-    public static final String JOURNAL_XSD_FILE = "/journal.xsd";
-    public static final String JOURNALS_XSD_FILE = "/journals.xsd";
-    public static final String TASK_XML_FILE = "/task.xml";
-    public static final String TASK_XSD_FILE = "/task.xsd";
+    public static final String JOURNAL_XML_FILE = "localbackup/journal.xml";
+    public static final String NAMES_XML_FILE = "localbackup/names.xml";
+    public static final String NAMES_XSD_FILE = "xsd/names.xsd";
+    public static final String JOURNALS_XML_FILE = "localbackup/journals.xml";
+    public static final String JOURNAL_XSD_FILE = "xsd/journal.xsd";
+    public static final String JOURNALS_XSD_FILE = "/xsdjournals.xsd";
+    public static final String TASK_XML_FILE = "localbackup/task.xml";
+    public static final String TASK_XSD_FILE = "xsd/task.xsd";
     public static final String USER_DATA = "USER_DATA";
     public static final String SCRIPT_FILE = "scripts/databasescript.sql";
 

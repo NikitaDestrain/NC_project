@@ -6,6 +6,7 @@ import database.postgresql.PostgreSQLTasksDAO;
 import database.postgresql.PostgreSQLUsersDAO;
 import server.exceptions.ControllerActionException;
 import server.exceptions.DAOFactoryActionException;
+import server.exceptions.UserAuthorizerStartException;
 import server.model.*;
 
 import java.sql.SQLException;
@@ -27,21 +28,21 @@ public class Controller {
     private static Controller instance;
 
     private Controller() throws ControllerActionException {
-        journalNamesContainer = new JournalNamesContainer();
-        taskNamesContainer = new TaskNamesContainer();
         try {
+            journalNamesContainer = new JournalNamesContainer();
+            taskNamesContainer = new TaskNamesContainer();
             postgreSQLDAOFactory = PostgreSQLDAOFactory.getInstance();
-        } catch (DAOFactoryActionException e) {
-            throw new ControllerActionException();
+            statusManager = LifecycleManager.getInstance();
+            usersDAO = (PostgreSQLUsersDAO) postgreSQLDAOFactory.getUsersDao();
+            journalDAO = (PostgreSQLJournalDAO) postgreSQLDAOFactory.getJournalDao();
+            tasksDAO = (PostgreSQLTasksDAO) postgreSQLDAOFactory.getTasksDao();
+            userAuthorizer = UserAuthorizer.getInstance();
+            notifier = new Notifier();
+            createUserContainer();
+            createJournalContainer();
+        } catch (DAOFactoryActionException | UserAuthorizerStartException e) {
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
         }
-        statusManager = LifecycleManager.getInstance();
-        usersDAO = (PostgreSQLUsersDAO) postgreSQLDAOFactory.getUsersDao();
-        journalDAO = (PostgreSQLJournalDAO) postgreSQLDAOFactory.getJournalDao();
-        tasksDAO = (PostgreSQLTasksDAO) postgreSQLDAOFactory.getTasksDao();
-        userAuthorizer = UserAuthorizer.getInstance();
-        notifier = new Notifier();
-        createUserContainer();
-        createJournalContainer();
     }
 
     public static synchronized Controller getInstance() throws ControllerActionException {
@@ -62,10 +63,10 @@ public class Controller {
                 userContainer.addUser(user);
                 userAuthorizer.addUser(user);
             } catch (SQLException e) {
-                throw new ControllerActionException("Error! User has not been added. Try later.");
+                throw new ControllerActionException(ControllerErrorConstants.ERROR_ADD_USER);
             }
         } else
-            throw new ControllerActionException("Error! Login already exists.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_LOGIN_EXISTS);
     }
 
     public void deleteUser(int id) throws ControllerActionException {
@@ -74,7 +75,7 @@ public class Controller {
             userAuthorizer.removeUser(userContainer.getUser(id).getLogin());
             userContainer.removeUser(id);
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! User has not been deleted. Try later.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_DELETE_USER);
         }
     }
 
@@ -82,9 +83,8 @@ public class Controller {
         try {
             usersDAO.update(user);
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! User has not been edited. Try later.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_EDIT_USER);
         }
-
     }
 
     public User getUser(int id) {
@@ -115,20 +115,20 @@ public class Controller {
             usersDAO.update(userContainer.getUser(id));
         } catch (SQLException e) {
             userContainer.setRole(id, oldRole);
-            throw new ControllerActionException("Error! User's role has been not edited. Try later.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_EDIT_USER_ROLE);
         }
     }
 
 
     private boolean checkDate(Date plannedDate, Date notificationDate) throws ControllerActionException {
         if (plannedDate.before(new Date(System.currentTimeMillis())))
-            throw new ControllerActionException("Error! Planned date can not be in the past.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_PAST_PLANNED_DATE);
 
         if (notificationDate.before(new Date(System.currentTimeMillis())))
-            throw new ControllerActionException("Error! Notification date can not be in the past.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_PAST_NOTIFICATION_DATE);
 
         if (!notificationDate.before(plannedDate) && !notificationDate.equals(plannedDate))
-            throw new ControllerActionException("Error! Notification date can not be after planned.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_NOTIFICATION_AFTER_PLANNED);
 
         return true;
     }
@@ -136,7 +136,7 @@ public class Controller {
     public void addTask(String name, String description, Date notificationDate, Date plannedDate, Integer journalId) throws ControllerActionException {
         try {
             if (taskNamesContainer.isContain(name))
-                throw new ControllerActionException("Error! Name already exists.");
+                throw new ControllerActionException(ControllerErrorConstants.ERROR_NAME_EXISTS);
 
             if (checkDate(plannedDate, notificationDate)) {
                 Task task = tasksDAO.create(name, TaskStatus.Planned, description, notificationDate, plannedDate, journalId);
@@ -145,7 +145,7 @@ public class Controller {
                 taskNamesContainer.addName(name);
             }
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! Task has not been added. Try later.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_ADD_TASK);
         }
     }
 
@@ -156,25 +156,25 @@ public class Controller {
             notifier.cancelNotification(task.getId());
             taskNamesContainer.deleteName(task.getName());
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! Task has not been deleted. Try later.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_DELETE_TASK);
         }
     }
 
     public void editTask(int taskId, int oldJournalId, String name, TaskStatus status, String description, Date notificationDate,
                          Date plannedDate, String newJournalName) throws ControllerActionException {
         if (name.equals(""))
-            throw new ControllerActionException("Error! Name can not be empty.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_EMPTY_NAME);
 
         if (!checkDate(plannedDate, notificationDate))
             return;
 
         Journal oldJournal = getJournal(oldJournalId);
         if (oldJournal == null)
-            throw new ControllerActionException("Error! Journal has not been found.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_JOURNAL_NOT_FOUND);
 
         Task task = oldJournal.getTask(taskId);
         if (taskNamesContainer.isContain(name) && !task.getName().equals(name))
-            throw new ControllerActionException("Error! Name already exists.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_NAME_EXISTS);
 
         Journal newJournal = getJournal(newJournalName);
         int newJournalId = -1;
@@ -210,7 +210,7 @@ public class Controller {
             setAllDataInTask(task, oldName, oldStatus, oldDescription, oldNotificationDate, oldPlannedDate, oldChangeDate, oldJournalId);
             if (newJournalId != -1)
                 replaceTask(taskId, newJournalId, oldJournalId);
-            throw new ControllerActionException("Error! Task has not been edited. Try later.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_EDIT_TASK);
         }
     }
 
@@ -252,7 +252,7 @@ public class Controller {
                     sortedTasksJournal.addTask(task);
             return sortedTasksJournal;
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! Try later!");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
         }
     }
 
@@ -265,7 +265,7 @@ public class Controller {
                     sortedTasksJournal.addTask(task);
             return sortedTasksJournal;
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! Try later!");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
         }
     }
 
@@ -278,7 +278,7 @@ public class Controller {
                     sortedTasksJournal.addTask(task);
             return sortedTasksJournal;
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! Try later!");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
         }
     }
 
@@ -296,13 +296,13 @@ public class Controller {
 
     public void addJournal(String name, String description, Integer userId) throws ControllerActionException {
         if (journalNamesContainer.isContain(name))
-            throw new ControllerActionException("Error! Name already exists.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_NAME_EXISTS);
         try {
             Journal journal = journalDAO.create(name, description, userId);
             journalContainer.addJournal(journal);
             journalNamesContainer.addName(journal.getName());
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! Journal has not been added. Try later.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_ADD_JOURNAL);
         }
     }
 
@@ -312,20 +312,20 @@ public class Controller {
             journalNamesContainer.deleteName(journalContainer.getJournal(id).getName());
             journalContainer.removeJournal(id);
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! Journal has not been deleted. Try later.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_DELETE_JOURNAL);
         }
     }
 
     public void editJournal(int journalId, String name, String description) throws ControllerActionException {
         if (name.equals(""))
-            throw new ControllerActionException("Error! Name can not be empty.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_EMPTY_NAME);
 
         Journal journal = journalContainer.getJournal(journalId);
         if (journal == null)
-            throw new ControllerActionException("Error! Journal has not been found.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_JOURNAL_NOT_FOUND);
 
         if (journalNamesContainer.isContain(name) && !journal.getName().equals(name))
-            throw new ControllerActionException("Error! Name already exists.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_NAME_EXISTS);
 
         //backup
         String oldName = journal.getName();
@@ -338,7 +338,7 @@ public class Controller {
             journalNamesContainer.editName(oldName, name);
         } catch (SQLException e) {
             setAllDataInJournal(journal, oldName, oldDescription);
-            throw new ControllerActionException("Error! Journal has not been edited. Try later.");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_EDIT_JOURNAL);
         }
     }
 
@@ -370,7 +370,7 @@ public class Controller {
                     sortedJournalContainer.addJournal(journal);
             return sortedJournalContainer;
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! Try later!");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
         }
     }
 
@@ -383,7 +383,7 @@ public class Controller {
                     sortedJournalContainer.addJournal(journal);
             return sortedJournalContainer;
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! Try later!");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
         }
     }
 
@@ -396,7 +396,7 @@ public class Controller {
                     sortedJournalContainer.addJournal(journal);
             return sortedJournalContainer;
         } catch (SQLException e) {
-            throw new ControllerActionException("Error! Try later!");
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
         }
     }
 
@@ -410,7 +410,7 @@ public class Controller {
             for (User user : usersDAO.getAll())
                 userContainer.addUser(user);
         } catch (SQLException e) {
-            throw new ControllerActionException();
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
         }
     }
 
@@ -428,7 +428,7 @@ public class Controller {
                     }
             }
         } catch (SQLException e) {
-            throw new ControllerActionException();
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
         }
     }
 }

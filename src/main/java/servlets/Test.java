@@ -72,7 +72,7 @@ public class Test {
 //        }
 
         try {
-            XmlUtils.getInstance().compareWithXsd("data/task.xml","data/task.xsd");
+            XmlUtils.getInstance().compareWithXsd("data/task.xml", "data/task.xsd");
         } catch (Exception e) {
             e.printStackTrace();
         }

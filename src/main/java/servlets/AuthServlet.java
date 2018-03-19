@@ -1,12 +1,12 @@
 package servlets;
 
 import auxiliaryclasses.ConstantsClass;
-import server.controller.PasswordEncoder;
 import database.postgresql.PostgreSQLDAOFactory;
 import server.controller.Controller;
+import server.controller.PasswordEncoder;
 import server.exceptions.ControllerActionException;
 import server.exceptions.DAOFactoryActionException;
-import server.model.*;
+import server.model.User;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

@@ -19,6 +19,8 @@ import java.nio.charset.StandardCharsets;
 
 public class XmlUtils {
     private static XmlUtils ourInstance = new XmlUtils();
+    private static final String SUCCESSFULLY_VALIDATION = "Валидация прошла успешно";
+    private static final String UNSUCCESSFULLY_VALIDATION = "Ошибка валидации ";
 
     public static XmlUtils getInstance() {
         return ourInstance;
@@ -56,10 +58,10 @@ public class XmlUtils {
             Schema schema = factory.newSchema(new StreamSource(nameFileXSD));
             Validator valid = schema.newValidator();
             valid.validate(new StreamSource(new ByteArrayInputStream(nameFileXML.getBytes(StandardCharsets.UTF_8))));
-            System.out.println("Валидация прошла успешно");
+            System.out.println(SUCCESSFULLY_VALIDATION);
             return true;
         } catch (Exception e) {
-            throw new Exception("Ошибка валидации " + e.getMessage());
+            throw new Exception(UNSUCCESSFULLY_VALIDATION + e.getMessage());
         }
     }
 
