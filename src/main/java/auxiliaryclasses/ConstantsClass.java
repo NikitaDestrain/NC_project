@@ -36,7 +36,7 @@ public class ConstantsClass {
     public static final String NAMES_XSD_FILE = "xsd/names.xsd";
     public static final String JOURNALS_XML_FILE = "localbackup/journals.xml";
     public static final String JOURNAL_XSD_FILE = "xsd/journal.xsd";
-    public static final String JOURNALS_XSD_FILE = "/xsdjournals.xsd";
+    public static final String JOURNALS_XSD_FILE = "xsd/journals.xsd";
     public static final String TASK_XML_FILE = "localbackup/task.xml";
     public static final String TASK_XSD_FILE = "xsd/task.xsd";
     public static final String USER_DATA = "USER_DATA";
