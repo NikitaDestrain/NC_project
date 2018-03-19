@@ -219,21 +219,21 @@
                     </td>
                 </tr>
             </table>
+            <%
+                if (isSorted) {
+            %>
+            <div align="center">
+                <input type="button" class="btn btn-outline-primary" id="allvals" value="Show all values"
+                       onclick="buttonClick(this)">
+            </div>
+            <%
+                }
+            %>
             <div align="center">
                 <input type="button" class="btn btn-outline-success" id="sort" value="Sort"
                        onclick="buttonClick(this)">
             </div>
         </div>
-        <%
-            if (isSorted) {
-        %>
-        <div align="center">
-            <input type="button" class="btn btn-outline-primary" id="allvals" value="Show all values"
-                   onclick="buttonClick(this)">
-        </div>
-        <%
-            }
-        %>
     </div>
 </form>
 <div align="center">

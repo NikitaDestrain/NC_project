@@ -14,6 +14,7 @@
     <style type="text/css">
         <%@include file="bootstrap/css/bootstrap.min.css"%>
     </style>
+
     <script type="text/javascript">
         function buttonClickAdd(x) {
             switch (x.id) {
@@ -81,6 +82,12 @@
             %>
             <input type="hidden" name="<%=ConstantsClass.ACTION%>" value="<%=ConstantsClass.DO_ADD_TASK%>">
             <div align="center"><strong>Add task</strong></div>
+            <div align="center">
+                <strong>
+                    Current journal
+                    name: <%=request.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME) == null ? "" : request.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME)%>
+                </strong>
+            </div>
             <table class="table">
                 <%
                     if (request.getAttribute(ConstantsClass.CURRENT_TASK) != null) {
@@ -169,8 +176,8 @@
             %>
             <div align="center">
                 <strong>
-                    Journal
-                    name: <%=request.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME) == null ? "" : request.getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME)%>
+                    Current journal
+                    name: <%=request.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME) == null ? "" : request.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME)%>
                 </strong>
             </div>
             <input type="hidden" name="<%=ConstantsClass.ACTION%>" value="<%=ConstantsClass.DO_EDIT_TASK%>">

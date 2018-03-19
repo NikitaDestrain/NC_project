@@ -48,6 +48,7 @@ public class TaskServlet extends HttpServlet {
         switch (useraction) {
             case ConstantsClass.ADD:
                 req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.TRUE);
+                req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
                 req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
                 break;
             case ConstantsClass.BACK_TO_MAIN:
