@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
+    <display-name>HelloWorldServlet</display-name>
+
+    <servlet>
+        <servlet-name>signin</servlet-name>
+        <jsp-file>/signin.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>signin</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>signup</servlet-name>
+        <jsp-file>/signup.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>signup</servlet-name>
+        <url-pattern>/signup</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>mainpage</servlet-name>
+        <jsp-file>/mainpage.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>mainpage</servlet-name>
+        <url-pattern>/mainpage</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>tasks</servlet-name>
+        <jsp-file>/tasks.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>tasks</servlet-name>
+        <url-pattern>/tasks</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>updatetasks</servlet-name>
+        <jsp-file>/updatetasks.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>updatetasks</servlet-name>
+        <url-pattern>/updatetasks</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>updatejournals</servlet-name>
+        <jsp-file>/updatejournals.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>updatejournals</servlet-name>
+        <url-pattern>/updatejournals</url-pattern>
+    </servlet-mapping>
+
+    <resource-ref>
+        <description>DB Connection</description>
+        <res-ref-name>jdbc/cracker</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+</web-app>
