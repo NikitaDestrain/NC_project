@@ -34,7 +34,6 @@ public class AuthServlet extends HttpServlet {
             controller = Controller.getInstance();
             updateUtil = DataUpdateUtil.getInstance();
         } catch (DAOFactoryActionException | ControllerActionException e) {
-            e.printStackTrace();
             throw new ServletException(e.getMessage());
         }
     }
