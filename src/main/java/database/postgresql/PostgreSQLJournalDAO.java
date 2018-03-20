@@ -72,44 +72,27 @@ public class PostgreSQLJournalDAO implements JournalDAO {
 
     @Override
     public List<Journal> getAll() throws SQLException {
-        List<Journal> list;
         String sql = "SELECT * FROM \"Journal\"";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            //todo vlla очень много дублирующегося кода. См. этот метод и все последующие DONE
-            list = createListByResultSet(statement.executeQuery());
-        }
-        return Collections.unmodifiableList(list);
+        return Collections.unmodifiableList(createListByResultSet(sql));
     }
 
     @Override
     public List<Journal> getSortedByCriteria(String column, String criteria) throws SQLException {
-        List<Journal> list;
         String sql = "SELECT * FROM \"Journal\" ORDER BY \"%s\" %s";
         sql = String.format(sql, column, criteria);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            list = createListByResultSet(statement.executeQuery());
-        }
-        return Collections.unmodifiableList(list);
+        return Collections.unmodifiableList(createListByResultSet(sql));
     }
 
     public List<Journal> getFilteredByPattern(String column, String pattern, String criteria) throws SQLException {
-        List<Journal> list;
         String sql = "SELECT * FROM \"Journal\" WHERE \"%s\"::text LIKE \'%s%s%s\' ORDER BY \"%s\" %s";
         sql = String.format(sql, column, '%', pattern, '%', column, criteria);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            list = createListByResultSet(statement.executeQuery());
-        }
-        return Collections.unmodifiableList(list);
+        return Collections.unmodifiableList(createListByResultSet(sql));
     }
 
     public List<Journal> getFilteredByEquals(String column, String equal, String criteria) throws SQLException {
-        List<Journal> list;
         String sql = "SELECT * FROM \"Journal\" WHERE \"%s\"::text = \'%s\' ORDER BY \"%s\" %s";
         sql = String.format(sql, column, equal, column, criteria);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            list = createListByResultSet(statement.executeQuery());
-        }
-        return Collections.unmodifiableList(list);
+        return Collections.unmodifiableList(createListByResultSet(sql));
     }
 
     private Journal createJournalByResultSet(ResultSet rs) throws SQLException {
@@ -118,11 +101,16 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                 rs.getString("Description"), rs.getInt("User_id"));
     }
 
-    private List<Journal> createListByResultSet(ResultSet rs) throws SQLException {
+    private List<Journal> createListByResultSet(String sql) throws SQLException {
         List<Journal> list = new LinkedList<>();
-        while (rs.next()) {
-            list.add(JournalFactory.createJournal(rs.getInt("Journal_id"), rs.getString("Name"),
-                    rs.getString("Description"), rs.getInt("User_id")));
+        ResultSet rs;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            rs = statement.executeQuery();
+
+            while (rs.next()) {
+                list.add(JournalFactory.createJournal(rs.getInt("Journal_id"), rs.getString("Name"),
+                        rs.getString("Description"), rs.getInt("User_id")));
+            }
         }
         return list;
     }

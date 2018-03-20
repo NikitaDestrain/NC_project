@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 @WebServlet(ConstantsClass.AUTH_SERVLET_ADDRESS)
-public class AuthServlet extends HttpServlet { //todo vlla АДСКИ перегруженный класс. Распилить, отрефакторить, вынести дублирующийся код в отдельные методы
+public class AuthServlet extends HttpServlet {
     private PasswordEncoder encoder = PasswordEncoder.getInstance();
     private DataUpdateUtil updateUtil;
     private PatternChecker patternChecker = PatternChecker.getInstance();
@@ -34,8 +34,8 @@ public class AuthServlet extends HttpServlet { //todo vlla АДСКИ перег
             controller = Controller.getInstance();
             updateUtil = DataUpdateUtil.getInstance();
         } catch (DAOFactoryActionException | ControllerActionException e) {
-            //сообщение об ошибке, можно взять из месседжа
-            throw new ServletException();
+            e.printStackTrace();
+            throw new ServletException(e.getMessage());
         }
     }
 

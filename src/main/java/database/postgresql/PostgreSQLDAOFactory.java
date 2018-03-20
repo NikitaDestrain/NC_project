@@ -51,7 +51,7 @@ public class PostgreSQLDAOFactory implements DAOFactory {
             Context env = (Context) context.lookup("java:comp/env");
             dataSource = (DataSource) env.lookup("jdbc/cracker");
         } catch (NamingException e) {
-            throw new DAOFactoryActionException(DAOErrorConstants.INIT_ERROR); //todo vlla сами знаете DONE
+            throw new DAOFactoryActionException(DAOErrorConstants.INIT_ERROR);
         }
     }
 

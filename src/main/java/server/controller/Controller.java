@@ -41,7 +41,7 @@ public class Controller {
             createUserContainer();
             createJournalContainer();
         } catch (DAOFactoryActionException | UserAuthorizerStartException e) {
-            throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
+            throw new ControllerActionException(e.getMessage());
         }
     }
 
@@ -370,7 +370,7 @@ public class Controller {
                     sortedJournalContainer.addJournal(journal);
             return sortedJournalContainer;
         } catch (SQLException e) {
-            throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
+            throw new ControllerActionException(e.getMessage());
         }
     }
 
@@ -383,7 +383,7 @@ public class Controller {
                     sortedJournalContainer.addJournal(journal);
             return sortedJournalContainer;
         } catch (SQLException e) {
-            throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
+            throw new ControllerActionException(e.getMessage());
         }
     }
 
@@ -396,7 +396,7 @@ public class Controller {
                     sortedJournalContainer.addJournal(journal);
             return sortedJournalContainer;
         } catch (SQLException e) {
-            throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
+            throw new ControllerActionException(e.getMessage());
         }
     }
 
@@ -410,7 +410,7 @@ public class Controller {
             for (User user : usersDAO.getAll())
                 userContainer.addUser(user);
         } catch (SQLException e) {
-            throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
+            throw new ControllerActionException(e.getMessage());
         }
     }
 
@@ -428,7 +428,7 @@ public class Controller {
                     }
             }
         } catch (SQLException e) {
-            throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
+            throw new ControllerActionException(e.getMessage());
         }
     }
 }
