@@ -6,9 +6,11 @@
 
     <display-name>HelloWorldServlet</display-name>
 
+    <!--3 lab-->
+
     <servlet>
         <servlet-name>signin</servlet-name>
-        <jsp-file>/signin.jsp</jsp-file>
+        <jsp-file>/lab3/signin.jsp</jsp-file>
     </servlet>
 
     <servlet-mapping>
@@ -18,7 +20,7 @@
 
     <servlet>
         <servlet-name>signup</servlet-name>
-        <jsp-file>/signup.jsp</jsp-file>
+        <jsp-file>/lab3/signup.jsp</jsp-file>
     </servlet>
 
     <servlet-mapping>
@@ -28,7 +30,7 @@
 
     <servlet>
         <servlet-name>mainpage</servlet-name>
-        <jsp-file>/mainpage.jsp</jsp-file>
+        <jsp-file>/lab3/mainpage.jsp</jsp-file>
     </servlet>
 
     <servlet-mapping>
@@ -38,7 +40,7 @@
 
     <servlet>
         <servlet-name>tasks</servlet-name>
-        <jsp-file>/tasks.jsp</jsp-file>
+        <jsp-file>/lab3/tasks.jsp</jsp-file>
     </servlet>
 
     <servlet-mapping>
@@ -48,7 +50,7 @@
 
     <servlet>
         <servlet-name>updatetasks</servlet-name>
-        <jsp-file>/updatetasks.jsp</jsp-file>
+        <jsp-file>/lab3/updatetasks.jsp</jsp-file>
     </servlet>
 
     <servlet-mapping>
@@ -58,12 +60,34 @@
 
     <servlet>
         <servlet-name>updatejournals</servlet-name>
-        <jsp-file>/updatejournals.jsp</jsp-file>
+        <jsp-file>/lab3/updatejournals.jsp</jsp-file>
     </servlet>
 
     <servlet-mapping>
         <servlet-name>updatejournals</servlet-name>
         <url-pattern>/updatejournals</url-pattern>
+    </servlet-mapping>
+    
+    <!--4 lab-->
+
+    <servlet>
+        <servlet-name>index</servlet-name>
+        <jsp-file>/lab4/index.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>index</servlet-name>
+        <url-pattern>/index</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>updatetasks4</servlet-name>
+        <jsp-file>/lab4/updatetasks.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>updatetasks4</servlet-name>
+        <url-pattern>/updatetasks4</url-pattern>
     </servlet-mapping>
 
     <resource-ref>

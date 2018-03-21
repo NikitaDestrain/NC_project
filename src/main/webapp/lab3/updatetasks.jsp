@@ -12,7 +12,7 @@
 <head>
     <title>Update tasks</title>
     <style type="text/css">
-        <%@include file="bootstrap/css/bootstrap.min.css"%>
+        <%@include file="../bootstrap/css/bootstrap.min.css"%>
     </style>
 
     <script type="text/javascript">
@@ -90,33 +90,33 @@
             </div>
             <table class="table">
                 <%
-                    if (request.getAttribute(ConstantsClass.CURRENT_TASK) != null) {
+                    if (request.getAttribute(ConstantsClass.CURRENT_TASK_XML) != null) {
                 %>
                 <x:parse xml="${requestScope.taskxml}" var="task"/>
                 <tr>
-                    <td class="align-right">Name</td>
-                    <td class="align-right">
+                    <td>Name</td>
+                    <td>
                         <input type="text" class="form-control" id="addname" name="<%=ConstantsClass.NAME%>"
                                value="<x:out select="$task/task/name"/>">
                     </td>
                 </tr>
                 <tr>
-                    <td class="align-right">Description</td>
-                    <td class="align-right">
+                    <td>Description</td>
+                    <td>
                         <input type="text" class="form-control" name="<%=ConstantsClass.DESCRIPTION%>"
                                value="<x:out select="$task/task/description"/>">
                     </td>
                 </tr>
                 <tr>
-                    <td class="align-right">Planned date</td>
-                    <td class="align-right">
+                    <td>Planned date</td>
+                    <td>
                         <input type="text" class="form-control" name="<%=ConstantsClass.PLANNED_DATE%>"
                                value="<x:out select="$task/task/planned"/>">
                     </td>
                 </tr>
                 <tr>
-                    <td class="align-right">Notification date</td>
-                    <td class="align-right">
+                    <td>Notification date</td>
+                    <td>
                         <input type="text" class="form-control" name="<%=ConstantsClass.NOTIFICATION_DATE%>"
                                value="<x:out select="$task/task/notification"/>">
                     </td>
@@ -125,29 +125,29 @@
                 } else {
                 %>
                 <tr>
-                    <td class="align-right">Name</td>
-                    <td class="align-right">
+                    <td>Name</td>
+                    <td>
                         <input type="text" class="form-control" id="addname1" name="<%=ConstantsClass.NAME%>"
                                value="">
                     </td>
                 </tr>
                 <tr>
-                    <td class="align-right">Description</td>
-                    <td class="align-right">
+                    <td>Description</td>
+                    <td>
                         <input type="text" class="form-control" name="<%=ConstantsClass.DESCRIPTION%>"
                                value="">
                     </td>
                 </tr>
                 <tr>
-                    <td class="align-right">Planned date</td>
-                    <td class="align-right">
+                    <td>Planned date</td>
+                    <td>
                         <input type="text" class="form-control" name="<%=ConstantsClass.PLANNED_DATE%>"
                                value="">
                     </td>
                 </tr>
                 <tr>
-                    <td class="align-right">Notification date</td>
-                    <td class="align-right">
+                    <td>Notification date</td>
+                    <td>
                         <input type="text" class="form-control" name="<%=ConstantsClass.NOTIFICATION_DATE%>"
                                value="">
                     </td>
@@ -156,8 +156,8 @@
                     }
                 %>
                 <tr>
-                    <td class="align-right">Journal:</td>
-                    <td class="align-left">
+                    <td>Journal:</td>
+                    <td>
                         <select class="form-control" name=<%=ConstantsClass.JOURNAL_NAME%>>
                             <x:parse xml="${sessionScope.journalNames}" var="names"/>
                             <x:forEach select="$names/journalNames/name" var="name">
@@ -193,37 +193,37 @@
             </div>
             <table class="table">
                 <tr>
-                    <td class="align-right">Name</td>
-                    <td class="align-right">
+                    <td>Name</td>
+                    <td>
                         <input type="text" id="editname" class="form-control" name="<%=ConstantsClass.NAME%>"
                                value="<x:out select="$task/task/name"/>">
                     </td>
                 </tr>
                 <tr>
-                    <td class="align-right">Description</td>
-                    <td class="align-right">
+                    <td>Description</td>
+                    <td>
                         <input type="text" class="form-control" name="<%=ConstantsClass.DESCRIPTION%>"
                                value="<x:out select="$task/task/description"/>">
                     </td>
                 </tr>
                 <tr>
-                    <td class="align-right">Planned date</td>
-                    <td class="align-right">
+                    <td>Planned date</td>
+                    <td>
                         <input type="text" class="form-control" name="<%=ConstantsClass.PLANNED_DATE%>" id="planned"
                                value="<x:out select="$task/task/planned"/>">
                     </td>
                 </tr>
                 <tr>
-                    <td class="align-right">Notification date</td>
-                    <td class="align-right">
+                    <td>Notification date</td>
+                    <td>
                         <input type="text" class="form-control" name="<%=ConstantsClass.NOTIFICATION_DATE%>"
                                id="notification"
                                value="<x:out select="$task/task/notification"/>">
                     </td>
                 </tr>
                 <tr>
-                    <td class="align-right">Change journal</td>
-                    <td class="align-left">
+                    <td>Change journal</td>
+                    <td>
                         <select class="form-control" name=<%=ConstantsClass.JOURNAL_NAME%>>
                             <option value=""></option>
                             <x:parse xml="${sessionScope.journalNames}" var="names"/>
@@ -234,8 +234,8 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="align-right">Change task status</td>
-                    <td class="align-left">
+                    <td>Change task status</td>
+                    <td>
                         <select class="form-control" name="<%=ConstantsClass.STATUS%>">
                             <option value=""></option>
                             <option value="<%=ConstantsClass.CANCELLED_STATUS%>">Cancelled</option>

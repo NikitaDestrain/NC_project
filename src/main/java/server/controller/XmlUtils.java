@@ -19,8 +19,10 @@ import java.nio.charset.StandardCharsets;
 
 public class XmlUtils {
     private static XmlUtils ourInstance = new XmlUtils();
-    private static final String SUCCESSFULLY_VALIDATION = "Валидация прошла успешно";
-    private static final String UNSUCCESSFULLY_VALIDATION = "Ошибка валидации ";
+    private static final String SUCCESSFULLY_VALIDATION = "Successful validation!";
+    private static final String UNSUCCESSFULLY_VALIDATION = "Validation error: ";
+    private static final String TASK_CLASS = "server.model.Task";
+    private static final String JOURNAL_CLASS = "server.model.Journal";
 
     public static XmlUtils getInstance() {
         return ourInstance;

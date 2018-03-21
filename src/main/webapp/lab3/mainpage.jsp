@@ -12,7 +12,7 @@
 <head>
     <title>Journals</title>
     <style type="text/css">
-        <%@include file="bootstrap/css/bootstrap.min.css"%>
+        <%@include file="../bootstrap/css/bootstrap.min.css"%>
     </style>
     <script type="text/javascript">
         function filterType() {
