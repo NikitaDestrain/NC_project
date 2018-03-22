@@ -67,7 +67,9 @@ public class TaskServlet extends HttpServlet {
                     } catch (Exception e) {
                         resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
                     }
+                    String xslTask = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.EDIT_TASK_XSL));
                     req.setAttribute(ConstantsClass.CURRENT_TASK_XML, t);
+                    req.getSession().setAttribute(ConstantsClass.XSL_TASK_ATTRIBUTE, xslTask);
                     req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
                     req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.FALSE);
                     req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);

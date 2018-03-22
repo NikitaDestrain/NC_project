@@ -112,6 +112,8 @@ public class JournalUpdateServlet extends HttpServlet {
             resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
         }
         req.setAttribute(ConstantsClass.JOURNAL_PARAMETER, j);
+        String xslJournal = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.ADD_EDIT_JOURNAL_XSL));
+        req.setAttribute(ConstantsClass.XSL_JOURNAL_ATTRIBUTE, xslJournal);
         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
         req.getRequestDispatcher(ConstantsClass.UPDATE_JOURNALS_ADDRESS).forward(req, resp);
     }

@@ -105,7 +105,7 @@
 
             <table class="table">
                 <tr>
-                    <th>№</th>
+                    <th></th>
                     <th>Status</th>
                     <th>Name</th>
                     <th>Description</th>
@@ -114,38 +114,7 @@
                     <th>Upload date</th>
                     <th>Change date</th>
                 </tr>
-                <x:parse xml="${sessionScope.journal}" var="container"/>
-                <x:forEach select="$container/journal/tasks/entry" var="task">
-                    <tr>
-                        <td>
-                            <label>
-                                <input type="radio" class="form-control" name="<%=ConstantsClass.USERNUMBER%>"
-                                       value="<x:out select="$task/value/id"/>"/>
-                            </label>
-                        </td>
-                        <td>
-                            <x:out select="$task/value/status"/>
-                        </td>
-                        <td>
-                            <x:out select="$task/value/name"/>
-                        </td>
-                        <td>
-                            <x:out select="$task/value/description"/>
-                        </td>
-                        <td>
-                            <x:out select="$task/value/planned"/>
-                        </td>
-                        <td>
-                            <x:out select="$task/value/notification"/>
-                        </td>
-                        <td>
-                            <x:out select="$task/value/upload"/>
-                        </td>
-                        <td>
-                            <x:out select="$task/value/change"/>
-                        </td>
-                    </tr>
-                </x:forEach>
+                <x:transform xml="${sessionScope.journal}" xslt="${sessionScope.xslJournal}"/>
             </table>
             <div align="center">
                 <table>

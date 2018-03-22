@@ -79,21 +79,7 @@
                 <%
                     if (request.getAttribute(ConstantsClass.JOURNAL_PARAMETER) != null) {
                 %>
-                <x:parse xml="${requestScope.journal}" var="journal"/>
-                <tr>
-                    <td>Name</td>
-                    <td>
-                        <input type="text" id="addname" class="form-control" name="<%=ConstantsClass.NAME%>"
-                               value="<x:out select="$journal/journal/name"/>">
-                    </td>
-                </tr>
-                <tr>
-                    <td>Description</td>
-                    <td>
-                        <input type="text" class="form-control" name="<%=ConstantsClass.DESCRIPTION%>"
-                               value="<x:out select="$journal/journal/description"/>">
-                    </td>
-                </tr>
+                <x:transform xml="${requestScope.journal}" xslt="${requestScope.xslJournal}"/>
                 <%
                 } else {
                 %>
@@ -126,25 +112,9 @@
             <div align="center"><strong>Edit journal</strong></div>
 
             <table class="table">
-
-                <x:parse xml="${requestScope.journal}" var="journal"/>
-                <tr>
-                    <td>Name</td>
-                    <td>
-                        <input type="text" class="form-control" id="editname"
-                               name="<%=ConstantsClass.NAME%>"
-                               value="<x:out select="$journal/journal/name"/>">
-                    </td>
-                </tr>
-                <tr>
-                    <td>Description</td>
-                    <td>
-                        <input type="text" class="form-control"
-                               name="<%=ConstantsClass.DESCRIPTION%>"
-                               value="<x:out select="$journal/journal/description"/>">
-                    </td>
-                </tr>
+                <x:transform xml="${requestScope.journal}" xslt="${requestScope.xslJournal}"/>
             </table>
+
             <div align="center">
                 <input type="button" class="btn btn-outline-success" id="save" value="Save" onclick="buttonClickEdit(this)">
             </div>

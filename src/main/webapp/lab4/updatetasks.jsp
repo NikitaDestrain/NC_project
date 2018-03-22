@@ -94,7 +94,7 @@
                 if (request.getAttribute(ConstantsClass.CURRENT_TASK_XML) != null) {
             %>
             <x:transform xml="${requestScope.taskxml}" xslt="${requestScope.xslTask}"/>
-            <x:transform xml="${requestScope.journalNames}" xslt="${requestScope.xslNames}"/>
+            <x:transform xml="${sessionScope.journalNames}" xslt="${sessionScope.xslNames}"/>
             <%
                 } else {
             %>
@@ -126,7 +126,7 @@
                            value="">
                 </td>
             </tr>
-                <x:transform xml="${requestScope.journalNames}" xslt="${requestScope.xslNames}"/>
+                <x:transform xml="${sessionScope.journalNames}" xslt="${sessionScope.xslNames}"/>
             <%
                 }
             %>
@@ -138,9 +138,42 @@
             <%
             } else {
             %>
+            <div align="center">
+                <strong>
+                    Current journal
+                    name: <%=request.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME) == null ? "" : request.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME)%>
+                </strong>
+            </div>
+            <input type="hidden" name="<%=ConstantsClass.ACTION%>" value="<%=ConstantsClass.DO_EDIT_TASK%>">
+            <table class="table">
+                <x:transform xml="${requestScope.taskxml}" xslt="${requestScope.xslTask}"/>
+                <x:transform xml="${sessionScope.journalNames}" xslt="${sessionScope.xslNames}"/>
+                <tr>
+                    <td>Change task status</td>
+                    <td>
+                        <select class="form-control" name="<%=ConstantsClass.STATUS%>">
+                            <option value=""></option>
+                            <option value="<%=ConstantsClass.CANCELLED_STATUS%>">Cancelled</option>
+                            <option value="<%=ConstantsClass.COMPLETED_STATUS%>">Completed</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <div align="center">
+                <input type="button" class="btn btn-outline-success" id="save" value="Save"
+                       onclick="buttonClickEdit(this)">
+            </div>
             <%
                 }
             %>
+            <div class="center">
+                <input type="button" id="backtotasks" class="btn btn-outline-primary" value="Back to tasks page"
+                       onclick="buttonClickAdd(this)">
+            </div>
+            <div class="center">
+                <input type="button" id="backtomain" class="btn btn-outline-primary" value="Back to main page"
+                       onclick="buttonClickAdd(this)">
+            </div>
         </div>
     </form>
 </div>
