@@ -47,7 +47,7 @@ public class JournalServlet extends HttpServlet {
         switch (useraction) {
             case ConstantsClass.ADD:
                 req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.TRUE);
-                req.getRequestDispatcher(ConstantsClass.UPDATE_JOURNALS_ADDRESS).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.LAB4_UPDATE_JOURNAL).forward(req, resp);
                 break;
             case ConstantsClass.UPDATE:
                 usernumber = req.getParameter(ConstantsClass.USERNUMBER);
@@ -67,10 +67,10 @@ public class JournalServlet extends HttpServlet {
                     req.setAttribute(ConstantsClass.XSL_JOURNAL_ATTRIBUTE, xslJournal);
                     req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL, controller.getJournal(num));
                     req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.FALSE);
-                    req.getRequestDispatcher(ConstantsClass.UPDATE_JOURNALS_ADDRESS).forward(req, resp);
+                    req.getRequestDispatcher(ConstantsClass.LAB4_UPDATE_JOURNAL).forward(req, resp);
                 } else {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_JOURNAL);
-                    req.getRequestDispatcher(ConstantsClass.LAB4_UPDATE_JOURNAL).forward(req, resp);
+                    req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
                 }
                 break;
             case ConstantsClass.DELETE:
@@ -82,11 +82,11 @@ public class JournalServlet extends HttpServlet {
                         updateUtil.updateJournals(req, resp);
                     } catch (ControllerActionException e) {
                         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-                        req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+                        req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
                     }
                 } else {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_JOURNAL);
-                    req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+                    req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
                 }
                 break;
             case ConstantsClass.CHOOSE: // записали в сессию текущий журнал и имена
@@ -112,13 +112,13 @@ public class JournalServlet extends HttpServlet {
                     }
                     String xslTasks = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.TASKS_XSL));
                     req.getSession().setAttribute(ConstantsClass.JOURNAL_NAMES, n);
-                    req.getSession().setAttribute(ConstantsClass.NAMES_XSL, xslNames);
+                    req.getSession().setAttribute(ConstantsClass.XSL_JOURNAL_NAMES_ATTRIBUTE, xslNames);
                     req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, j);
                     req.getSession().setAttribute(ConstantsClass.XSL_JOURNAL_ATTRIBUTE, xslTasks);
-                    req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                    req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
                 } else {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_JOURNAL);
-                    req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+                    req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
                 }
                 break;
             case ConstantsClass.SORT:
@@ -131,7 +131,7 @@ public class JournalServlet extends HttpServlet {
                     if (!patternChecker.isLikeFilterCorrect(filterLike)) {
                         req.setAttribute(ConstantsClass.FILTER_LIKE, filterLike);
                         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_FILTER_LIKE);
-                        req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+                        req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
                     } else {
                         sortActionJournals(req, resp, sortColumn, sortCriteria, filterLike, filterEquals);
                     }
@@ -139,7 +139,7 @@ public class JournalServlet extends HttpServlet {
                     if (!patternChecker.isEqualsFilterCorrect(filterEquals)) {
                         req.setAttribute(ConstantsClass.FILTER_EQUALS, filterEquals);
                         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_FILTER_EQUALS);
-                        req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+                        req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
                     } else {
                         sortActionJournals(req, resp, sortColumn, sortCriteria, filterLike, filterEquals);
                     }
@@ -170,13 +170,13 @@ public class JournalServlet extends HttpServlet {
                 }
                 if (sortedJournals == null) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
-                    req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+                    req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
                 } else {
                     updateUtil.updateSortedJournals(req, resp, sortedJournals);
                 }
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-                req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
             }
         } else if (filterEquals != null) {
             try {
@@ -188,13 +188,13 @@ public class JournalServlet extends HttpServlet {
                 }
                 if (sortedJournals == null) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
-                    req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+                    req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
                 } else {
                     updateUtil.updateSortedJournals(req, resp, sortedJournals);
                 }
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-                req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
             }
         } else if (filterLike != null) {
             try {
@@ -206,15 +206,15 @@ public class JournalServlet extends HttpServlet {
                 }
                 if (sortedJournals == null) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
-                    req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+                    req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
                 } else {
                     updateUtil.updateSortedJournals(req, resp, sortedJournals);
                 }
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-                req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
             }
         }
-        req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+        req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
     }
 }

@@ -97,7 +97,7 @@ public class JournalUpdateServlet extends HttpServlet {
                 }
                 break;
             case ConstantsClass.BACK_TO_MAIN:
-                req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
                 break;
         }
     }
@@ -115,6 +115,6 @@ public class JournalUpdateServlet extends HttpServlet {
         String xslJournal = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.ADD_EDIT_JOURNAL_XSL));
         req.setAttribute(ConstantsClass.XSL_JOURNAL_ATTRIBUTE, xslJournal);
         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
-        req.getRequestDispatcher(ConstantsClass.UPDATE_JOURNALS_ADDRESS).forward(req, resp);
+        req.getRequestDispatcher(ConstantsClass.LAB4_UPDATE_JOURNAL).forward(req, resp);
     }
 }

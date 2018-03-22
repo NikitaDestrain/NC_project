@@ -36,7 +36,7 @@ public class DataUpdateUtil {
                 req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, updatedJournals);
                 String xslContainer = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.JOURNALS_XSL));
                 req.getSession().setAttribute(ConstantsClass.XSL_JOURNAL_CONTAINER_ATTRIBUTE, xslContainer);
-                req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
             }
         } catch (JAXBException e) {
             resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
@@ -49,7 +49,7 @@ public class DataUpdateUtil {
             String xslContainer = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.JOURNALS_XSL));
             req.getSession().setAttribute(ConstantsClass.XSL_JOURNAL_CONTAINER_ATTRIBUTE, xslContainer);
             req.setAttribute(ConstantsClass.IS_SORTED, Boolean.TRUE);
-            req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+            req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
         } else
             resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
     }
@@ -62,7 +62,7 @@ public class DataUpdateUtil {
                 String xslJournal = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.TASKS_XSL));
                 req.getSession().setAttribute(ConstantsClass.XSL_JOURNAL_ATTRIBUTE, xslJournal);
                 req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, updatedJournal);
-                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
             }
         } catch (JAXBException e) {
             resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
@@ -75,7 +75,7 @@ public class DataUpdateUtil {
             req.getSession().setAttribute(ConstantsClass.XSL_JOURNAL_ATTRIBUTE, xslJournal);
             req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, sortedTasks);
             req.setAttribute(ConstantsClass.IS_SORTED, Boolean.TRUE);
-            req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+            req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
         } else
             resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
     }

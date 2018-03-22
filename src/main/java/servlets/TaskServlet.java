@@ -49,10 +49,10 @@ public class TaskServlet extends HttpServlet {
             case ConstantsClass.ADD:
                 req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.TRUE);
                 req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
-                req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.LAB4_UPDATE_TASK).forward(req, resp);
                 break;
             case ConstantsClass.BACK_TO_MAIN:
-                req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
                 break;
             case ConstantsClass.UPDATE: // имена в сессии
                 usernumber = req.getParameter(ConstantsClass.USERNUMBER);
@@ -69,13 +69,13 @@ public class TaskServlet extends HttpServlet {
                     }
                     String xslTask = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.EDIT_TASK_XSL));
                     req.setAttribute(ConstantsClass.CURRENT_TASK_XML, t);
-                    req.getSession().setAttribute(ConstantsClass.XSL_TASK_ATTRIBUTE, xslTask);
+                    req.setAttribute(ConstantsClass.XSL_TASK_ATTRIBUTE, xslTask);
                     req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
                     req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.FALSE);
-                    req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
+                    req.getRequestDispatcher(ConstantsClass.LAB4_UPDATE_TASK).forward(req, resp);
                 } else {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_TASK);
-                    req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                    req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
                 }
                 break;
             case ConstantsClass.DELETE:
@@ -88,11 +88,11 @@ public class TaskServlet extends HttpServlet {
                         updateUtil.updateTasks(req, resp, currentJournal);
                     } catch (ControllerActionException e) {
                         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-                        req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                        req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
                     }
                 } else {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_TASK);
-                    req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                    req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
                 }
                 break;
             case ConstantsClass.SORT:
@@ -105,7 +105,7 @@ public class TaskServlet extends HttpServlet {
                     if (!patternChecker.isLikeFilterCorrect(filterLike)) {
                         req.setAttribute(ConstantsClass.FILTER_LIKE, filterLike);
                         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_FILTER_LIKE);
-                        req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                        req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
                     } else {
                         sortActionTasks(req, resp, sortColumn, sortCriteria, filterLike, filterEquals);
                     }
@@ -113,7 +113,7 @@ public class TaskServlet extends HttpServlet {
                     if (!patternChecker.isEqualsFilterCorrect(filterEquals)) {
                         req.setAttribute(ConstantsClass.FILTER_EQUALS, filterEquals);
                         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_FILTER_EQUALS);
-                        req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                        req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
                     } else {
                         sortActionTasks(req, resp, sortColumn, sortCriteria, filterLike, filterEquals);
                     }
@@ -145,13 +145,13 @@ public class TaskServlet extends HttpServlet {
                 }
                 if (sortedTasks == null) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
-                    req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                    req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
                 } else {
                     updateUtil.updateSortedTasks(req, resp, sortedTasks);
                 }
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
             }
         } else if (filterEquals != null) {
             try {
@@ -163,13 +163,13 @@ public class TaskServlet extends HttpServlet {
                 }
                 if (sortedTasks == null) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
-                    req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                    req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
                 } else {
                     updateUtil.updateSortedTasks(req, resp, sortedTasks);
                 }
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
             }
         } else if (filterLike != null) {
             try {
@@ -181,16 +181,16 @@ public class TaskServlet extends HttpServlet {
                 }
                 if (sortedTasks == null) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_NO_DATA_FOR_THIS_CRITERION);
-                    req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                    req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
                 } else {
                     updateUtil.updateSortedTasks(req, resp, sortedTasks);
                 }
             } catch (ControllerActionException e) {
                 req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
             }
         }
-        req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+        req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
     }
 
 }
