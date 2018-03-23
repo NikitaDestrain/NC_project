@@ -1,19 +1,28 @@
 package servlets;
 
+import beans.XmlUtilsImpl;
 import beans.XmlUtilsLocal;
 import server.model.Journal;
 import server.model.Task;
 import server.model.TaskStatus;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import javax.ejb.EJB;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBException;
+import java.io.IOException;
 import java.sql.Date;
-import java.util.Properties;
 
-public class Test {
-    public static void main(String[] args) {
+@WebServlet("/test")
+public class TestServlet extends HttpServlet{
+
+    private XmlUtilsLocal xmlUtils;
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Task task1 = new Task(0, "1", TaskStatus.Overdue, "desc1", new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
                 new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()), 0);
         Task task2 = new Task(1, "2", TaskStatus.Overdue, "desc2", new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()),
@@ -26,19 +35,15 @@ public class Test {
         journal1.addTask(task3);
         journal1.setName("j1");
         journal1.setId(0);
-
         try {
-            java.util.Properties properties = new Properties();
-            properties.put(Context.INITIAL_CONTEXT_FACTORY, "beans.XmlUtilsLocal");
-            Context context = new InitialContext(properties);
-            XmlUtilsLocal xmlUtils = (XmlUtilsLocal) context.lookup("java:module/XmlUtilsLocal");
-            try {
-                System.out.println(xmlUtils.marshalToString(Journal.class, journal1));
-            } catch (JAXBException e) {
-                e.printStackTrace();
-            }
-        } catch (NamingException e) {
+            resp.getWriter().print(xmlUtils.marshalToString(Journal.class, journal1));
+        } catch (JAXBException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void init() throws ServletException {
+        xmlUtils = new XmlUtilsImpl();
     }
 }
