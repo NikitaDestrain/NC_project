@@ -1,17 +1,13 @@
 package beans;
 
-import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import java.io.StringWriter;
+import java.io.*;
 
-@Local(XmlUtilsLocal.class)
 @Stateless
 public class XmlUtilsImpl implements XmlUtilsLocal {
-
-    public XmlUtilsImpl() {}
 
     @Override
     public String marshalToString(Class className, Object object) throws JAXBException {
@@ -21,5 +17,20 @@ public class XmlUtilsImpl implements XmlUtilsLocal {
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         marshaller.marshal(object, sw);
         return sw.toString();
+    }
+
+    @Override
+    public String parseXmlToString(String path) throws IOException {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(new File(path)));
+            String line;
+            StringBuilder sb = new StringBuilder();
+            while ((line = br.readLine()) != null) {
+                sb.append(line.trim());
+            }
+            return sb.toString();
+        } catch (IOException e) {
+            throw new IOException();
+        }
     }
 }

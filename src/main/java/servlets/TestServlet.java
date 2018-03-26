@@ -1,6 +1,5 @@
 package servlets;
 
-import beans.XmlUtilsImpl;
 import beans.XmlUtilsLocal;
 import server.model.Journal;
 import server.model.Task;
@@ -19,7 +18,8 @@ import java.sql.Date;
 @WebServlet("/test")
 public class TestServlet extends HttpServlet{
 
-    private XmlUtilsLocal xmlUtils;
+    @EJB
+    private XmlUtilsLocal XmlUtilsImpl;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,15 +35,15 @@ public class TestServlet extends HttpServlet{
         journal1.addTask(task3);
         journal1.setName("j1");
         journal1.setId(0);
+
         try {
-            resp.getWriter().print(xmlUtils.marshalToString(Journal.class, journal1));
+            resp.getWriter().print(XmlUtilsImpl.marshalToString(Journal.class, journal1));
         } catch (JAXBException e) {
-            e.printStackTrace();
+            resp.getWriter().print(e.getMessage());
         }
     }
 
     @Override
     public void init() throws ServletException {
-        xmlUtils = new XmlUtilsImpl();
     }
 }
