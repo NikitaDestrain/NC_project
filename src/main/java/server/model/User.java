@@ -1,32 +1,54 @@
 package server.model;
 
+import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.*;
 
 /**
  * Object with information user
  */
 
+@Entity
+@Table(name = "Users")
+
 @XmlType(propOrder = {"id", "login", "password", "role", "registrationDate"}, name = "user")
 @XmlRootElement(name = "user")
+@XmlSeeAlso(Journal.class)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class User implements Serializable {
+    @Id
+    @Column(name = "User_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "auto_increment")
     @XmlElement(name = "id")
     private Integer id;
+
+    @Column(name = "Login", nullable = false, unique = true, length = 18)
     @XmlElement(name = "login")
     private String login;
+
+    @Column(name = "Password", nullable = false, length = 40)
     @XmlElement(name = "password")
     private String password;
+
+    @Column(name = "Role", length = 18)
     @XmlElement(name = "role")
     private String role;
+
+    @Column(name = "Registration_date", nullable = false)
     @XmlElement(name = "registrationDate")
     private Date registrationDate;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @XmlElement(name = "journals")
+    private Map<Integer, Journal> journals;
 
     public User() {
     }
 
     public User(int id, String login, String password, String role, Date registrationDate) {
+        this.journals = new HashMap<>();
         this.id = id;
         this.login = login;
         this.password = password;
@@ -75,10 +97,26 @@ public class User implements Serializable {
         this.registrationDate = registrationDate;
     }
 
+    public void addJournal(Journal journal) {
+        journals.put(journal.getId(), journal);
+    }
+
+    public void removeJournal(int journalId) {
+        journals.remove(journalId);
+    }
+
+    public List<Journal> getJournals() {
+        List<Journal> list = new LinkedList<>(journals.values());
+        return Collections.unmodifiableList(list);
+    }
+
+    public void setJournals(Map<Integer, Journal> journals) {
+        this.journals = journals;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-
                 "id='" + id + '\'' +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +

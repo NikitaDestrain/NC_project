@@ -1,5 +1,6 @@
 package server.model;
 
+import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
@@ -10,64 +11,91 @@ import java.util.Calendar;
  * The class serves to store the object "task" with server.exceptions.properties
  * <b>name</b>, <b>status</b>, <b>description</b>, <b>notificationDate</b>,  <b>plannedDate</b>, <b>id</b>.
  */
+
+@Entity
+@Table(name = "Tasks")
+
 @XmlRootElement(name = "task")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Task implements Comparable<Task>, Serializable {
+
+    /**
+     * unique identificator
+     */
+    @Id
+    @Column(name = "Task_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "auto_increment")
+    @XmlElement(name = "id")
+    private int id;
+
     /**
      * Task name
      */
+    @Column(name = "Name", nullable = false, unique = true, length = 18)
     @XmlElement(name = "name")
     private String name;
+
     /**
      * Task status @see TaskStatus
      */
+    @Column(name = "Status", nullable = false, length = 18)
     @XmlElement(name = "status")
     private TaskStatus status;
+
     /**
      * Task description
      */
+    @Column(name = "Description", length = 80)
     @XmlElement(name = "description")
     private String description;
+
     /**
      * Notification date
      */
+    @Column(name = "Notification_date", nullable = false)
     @XmlJavaTypeAdapter(SQLDataAdapter.class)
     @XmlElement(name = "notificationDate")
     private Date notificationDate;
 
+    @Transient
     @XmlElement(name = "notification")
     private String notification;
+
     /**
      * Planned date
      */
+    @Column(name = "Planned_date", nullable = false)
     @XmlJavaTypeAdapter(SQLDataAdapter.class)
     @XmlElement(name = "plannedDate")
     private Date plannedDate;
+
+    @Transient
     @XmlElement(name = "planned")
     private String planned;
-    /**
-     * unique identificator
-     */
-    @XmlElement(name = "id")
-    private int id;
 
+    @Column(name = "Upload_date", nullable = false)
     @XmlJavaTypeAdapter(SQLDataAdapter.class)
     @XmlElement(name = "uploadDate")
     private Date uploadDate;
 
+    @Transient
     @XmlElement(name = "upload")
     private String upload;
 
+    @Column(name = "Change_date", nullable = false)
     @XmlJavaTypeAdapter(SQLDataAdapter.class)
     @XmlElement(name = "changeDate")
     private Date changeDate;
 
+    @Transient
     @XmlElement(name = "change")
     private String change;
 
+    @Column(name = "Journal_id", nullable = false)
     @XmlElement(name = "journalId")
     private int journalId;
 
+    @Transient
     @XmlElement(name = "isRescheduled")
     private boolean isRescheduled;
 
@@ -316,7 +344,6 @@ public class Task implements Comparable<Task>, Serializable {
         return isRescheduled;
     }
 
-    //вернет -1 если у задачи переданной в кач-ве аргумента дата идет позже
 
     /**
      * Method allows you to compare two tasks by the time of notification

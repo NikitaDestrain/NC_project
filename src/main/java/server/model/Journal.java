@@ -1,22 +1,38 @@
 package server.model;
 
+import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.*;
+
+@Entity
+@Table(name = "Journal")
 
 @XmlType(propOrder = {"id", "name", "description", "userId", "tasks"}, name = "journal")
 @XmlRootElement(name = "journal")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({Task.class, TaskStatus.class})
 public class Journal implements Serializable {
-    @XmlElement(name = "tasks")
-    private Map<Integer, Task> tasks;
+
+    @Id
+    @Column(name = "Journal_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "auto_increment")
     @XmlElement(name = "id")
     private int id;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @XmlElement(name = "tasks")
+    private Map<Integer, Task> tasks;
+
+    @Column(name = "Name", nullable = false, length = 18)
     @XmlElement(name = "name")
     private String name;
+
+    @Column(name = "Description", length = 80)
     @XmlElement(name = "description")
     private String description;
+
+    @Column(name = "User_id", nullable = false)
     @XmlElement(name = "userId")
     private int userId;
 
@@ -125,6 +141,10 @@ public class Journal implements Serializable {
             if (res < key)
                 res = key;
         return res;
+    }
+
+    public void setTasks(Map<Integer, Task> tasks) {
+        this.tasks = tasks;
     }
 
     @Override
