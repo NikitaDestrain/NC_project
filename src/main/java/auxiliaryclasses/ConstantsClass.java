@@ -162,25 +162,9 @@ public class ConstantsClass {
     public static final String ADMINISTRATOR_ROLE = "Administrator";
 
     // XSL path constants
-
-    public static final String ADD_EDIT_JOURNAL_XSL = "localbackup/addeditjournal.xsl";
-    public static final String ADD_TASK_XSL = "localbackup/addtask.xsl";
-    public static final String EDIT_TASK_XSL = "localbackup/edittask.xsl";
-    public static final String JOURNALS_XSL = "localbackup/journals.xsl";
-    public static final String TASKS_XSL = "localbackup/tasks.xsl";
     public static final String NAMES_XSL = "localbackup/names.xsl";
-
-    // 4 LAB JSP Paths
-
-    public static final String LAB4_MAIN_PAGE = "/mainpage4";
-    public static final String LAB4_UPDATE_JOURNAL = "/updatejournals4";
-    public static final String LAB4_UPDATE_TASK = "/updatetasks4";
-    public static final String LAB4_TASKS_PAGE = "/tasks4";
 
     // XSL parameters
 
-    public static final String XSL_JOURNAL_ATTRIBUTE = "xslJournal";
-    public static final String XSL_JOURNAL_CONTAINER_ATTRIBUTE = "xslContainer";
-    public static final String XSL_TASK_ATTRIBUTE = "xslTask";
     public static final String XSL_JOURNAL_NAMES_ATTRIBUTE = "xslNames";
 }

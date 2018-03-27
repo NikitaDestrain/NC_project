@@ -82,10 +82,10 @@ public class TaskUpdateServlet extends HttpServlet {
                 }
                 break;
             case ConstantsClass.BACK_TO_MAIN:
-                req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
                 break;
             case ConstantsClass.BACK_TO_TASKS:
-                req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
                 break;
         }
     }
@@ -100,10 +100,8 @@ public class TaskUpdateServlet extends HttpServlet {
             resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
         }
         req.setAttribute(ConstantsClass.CURRENT_TASK_XML, t);
-        String xslTask = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.ADD_TASK_XSL));
-        req.setAttribute(ConstantsClass.XSL_TASK_ATTRIBUTE, xslTask);
         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
-        req.getRequestDispatcher(ConstantsClass.LAB4_UPDATE_TASK).forward(req, resp);
+        req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
     }
 
     private void doEditTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -157,10 +155,10 @@ public class TaskUpdateServlet extends HttpServlet {
                 }
                 break;
             case ConstantsClass.BACK_TO_MAIN:
-                req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
                 break;
             case ConstantsClass.BACK_TO_TASKS:
-                req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
                 break;
         }
     }
@@ -178,10 +176,8 @@ public class TaskUpdateServlet extends HttpServlet {
             resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
         }
         req.setAttribute(ConstantsClass.CURRENT_TASK, t);
-        String xslTask = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.ADD_TASK_XSL));
-        req.setAttribute(ConstantsClass.XSL_TASK_ATTRIBUTE, xslTask);
         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
-        req.getRequestDispatcher(ConstantsClass.LAB4_UPDATE_TASK).forward(req, resp);
+        req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
     }
 
     // 12-08-1980

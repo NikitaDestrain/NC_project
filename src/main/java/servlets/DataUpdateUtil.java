@@ -34,9 +34,7 @@ public class DataUpdateUtil {
             String updatedJournals = xmlUtils.marshalToXmlString(journals.getClass(), journals);
             if (updatedJournals != null) {
                 req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, updatedJournals);
-                String xslContainer = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.JOURNALS_XSL));
-                req.getSession().setAttribute(ConstantsClass.XSL_JOURNAL_CONTAINER_ATTRIBUTE, xslContainer);
-                req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
             }
         } catch (JAXBException e) {
             resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
@@ -46,10 +44,8 @@ public class DataUpdateUtil {
     public void updateSortedJournals(HttpServletRequest req, HttpServletResponse resp, String sortedJournals) throws ServletException, IOException {
         if (sortedJournals != null) {
             req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, sortedJournals);
-            String xslContainer = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.JOURNALS_XSL));
-            req.getSession().setAttribute(ConstantsClass.XSL_JOURNAL_CONTAINER_ATTRIBUTE, xslContainer);
             req.setAttribute(ConstantsClass.IS_SORTED, Boolean.TRUE);
-            req.getRequestDispatcher(ConstantsClass.LAB4_MAIN_PAGE).forward(req, resp);
+            req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
         } else
             resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
     }
@@ -59,10 +55,8 @@ public class DataUpdateUtil {
         try {
             String updatedJournal = xmlUtils.marshalToXmlString(journal.getClass(), journal);
             if (updatedJournal != null) {
-                String xslJournal = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.TASKS_XSL));
-                req.getSession().setAttribute(ConstantsClass.XSL_JOURNAL_ATTRIBUTE, xslJournal);
                 req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, updatedJournal);
-                req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
+                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
             }
         } catch (JAXBException e) {
             resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
@@ -71,11 +65,9 @@ public class DataUpdateUtil {
 
     public void updateSortedTasks(HttpServletRequest req, HttpServletResponse resp, String sortedTasks) throws ServletException, IOException {
         if (sortedTasks != null) {
-            String xslJournal = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.TASKS_XSL));
-            req.getSession().setAttribute(ConstantsClass.XSL_JOURNAL_ATTRIBUTE, xslJournal);
             req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, sortedTasks);
             req.setAttribute(ConstantsClass.IS_SORTED, Boolean.TRUE);
-            req.getRequestDispatcher(ConstantsClass.LAB4_TASKS_PAGE).forward(req, resp);
+            req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
         } else
             resp.getWriter().print(ConstantsClass.ERROR_XML_READING);
     }

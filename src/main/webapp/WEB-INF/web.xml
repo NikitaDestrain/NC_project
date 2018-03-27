@@ -67,58 +67,6 @@
         <servlet-name>updatejournals</servlet-name>
         <url-pattern>/updatejournals</url-pattern>
     </servlet-mapping>
-    
-    <!--4 lab-->
-
-    <servlet>
-        <servlet-name>index</servlet-name>
-        <jsp-file>/lab4/index.jsp</jsp-file>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>index</servlet-name>
-        <url-pattern>/index</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>updatetasks4</servlet-name>
-        <jsp-file>/lab4/updatetasks.jsp</jsp-file>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>updatetasks4</servlet-name>
-        <url-pattern>/updatetasks4</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>updatejournals4</servlet-name>
-        <jsp-file>/lab4/updatejournals.jsp</jsp-file>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>updatejournals4</servlet-name>
-        <url-pattern>/updatejournals4</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>mainpage4</servlet-name>
-        <jsp-file>/lab4/mainpage.jsp</jsp-file>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>mainpage4</servlet-name>
-        <url-pattern>/mainpage4</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>tasks4</servlet-name>
-        <jsp-file>/lab4/tasks.jsp</jsp-file>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>tasks4</servlet-name>
-        <url-pattern>/tasks4</url-pattern>
-    </servlet-mapping>
 
     <resource-ref>
         <description>DB Connection</description>

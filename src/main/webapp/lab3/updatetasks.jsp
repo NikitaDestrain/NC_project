@@ -159,6 +159,7 @@
                     <td>Journal:</td>
                     <td>
                         <select class="form-control" name=<%=ConstantsClass.JOURNAL_NAME%>>
+                            <option value=""/>
                             <x:parse xml="${sessionScope.journalNames}" var="names"/>
                             <x:forEach select="$names/journalNames/name" var="name">
                                 <option value="<x:out select="$name"/>"><x:out select="$name"/></option>
@@ -225,7 +226,7 @@
                     <td>Change journal</td>
                     <td>
                         <select class="form-control" name=<%=ConstantsClass.JOURNAL_NAME%>>
-                            <option value=""></option>
+                            <option value=""/>
                             <x:parse xml="${sessionScope.journalNames}" var="names"/>
                             <x:forEach select="$names/journalNames/name" var="name">
                                 <option value="<x:out select="$name"/>"><x:out select="$name"/></option>
