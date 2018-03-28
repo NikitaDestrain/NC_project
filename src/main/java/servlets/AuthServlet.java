@@ -6,6 +6,10 @@ import server.controller.Controller;
 import server.controller.PasswordEncoder;
 import server.exceptions.ControllerActionException;
 import server.exceptions.DAOFactoryActionException;
+import server.exportdata.ExportConstants;
+import server.exportdata.ExportStrategyHelper;
+import server.exportdata.config.ExportConfigHelper;
+import server.exportdata.config.ExportConfigParser;
 import server.model.User;
 
 import javax.servlet.ServletConfig;
@@ -27,13 +31,17 @@ public class AuthServlet extends HttpServlet {
     private PostgreSQLDAOFactory dbFactory;
     private User currentUser;
 
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         try {
             dbFactory = PostgreSQLDAOFactory.getInstance(config.getServletContext().getRealPath(ConstantsClass.SCRIPT_FILE));
             controller = Controller.getInstance();
             updateUtil = DataUpdateUtil.getInstance();
-        } catch (DAOFactoryActionException | ControllerActionException e) {
+            ExportConfigParser.getInstance(config.getServletContext().getRealPath(ExportConstants.PATH_TO_PROPERTIES));
+            ExportConfigHelper.getInstance();
+
+        } catch (DAOFactoryActionException | ControllerActionException | IOException e) {
             throw new ServletException(e.getMessage());
         }
     }
