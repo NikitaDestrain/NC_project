@@ -4,7 +4,9 @@ import server.exportdata.ExportException;
 import server.exportdata.ExportList;
 import server.exportdata.ExportListFactory;
 import server.importdata.StoreException;
+import server.importdata.StoreStrategy;
 import server.importdata.StoreStrategyHelper;
+import server.model.Task;
 
 import javax.ejb.Stateless;
 import java.util.List;
@@ -42,7 +44,10 @@ public class ExportImportBean implements EIBeanLocal {
     @Override
     public void importData(String xml, int strategy) throws StoreException {
         // todo вызов анмаршаллера
-        StoreStrategyHelper storeStrategyHelper = StoreStrategyHelper.getInstance();
-        storeStrategyHelper.resolveStrategy(strategy, new Object());
+        List<Task> tasks = null; // parsed
+        StoreStrategy<Task> storeStrategy = StoreStrategyHelper.getInstance().resolveStrategy(strategy);
+        for (Task t : tasks) {
+            storeStrategy.store(t);
+        }
     }
 }

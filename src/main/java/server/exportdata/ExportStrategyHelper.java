@@ -24,16 +24,16 @@ public class ExportStrategyHelper {
         strategies.put(ExportConstants.TASK_WITH_JOURNAL_EXPORT_STRATEGY, new TaskWithJournalExportStrategy());
     }
 
-    public ExportList resolveStrategy(int strategy, ExportList exportList) throws ExportException {
+    public ExportStrategy resolveStrategy(int strategy) throws ExportException {
         switch (strategy) {
             case ExportConstants.ONLY_JOURNAL_EXPORT_STRATEGY:
-                return strategies.get(ExportConstants.ONLY_JOURNAL_EXPORT_STRATEGY).collectId(exportList);
+                return strategies.get(ExportConstants.ONLY_JOURNAL_EXPORT_STRATEGY);
             case ExportConstants.JOURNAL_WITH_TASKS_EXPORT_STRATEGY:
-                return strategies.get(ExportConstants.JOURNAL_WITH_TASKS_EXPORT_STRATEGY).collectId(exportList);
+                return strategies.get(ExportConstants.JOURNAL_WITH_TASKS_EXPORT_STRATEGY);
             case ExportConstants.ONLY_TASK_EXPORT_STRATEGY:
-                return strategies.get(ExportConstants.ONLY_TASK_EXPORT_STRATEGY).collectId(exportList);
+                return strategies.get(ExportConstants.ONLY_TASK_EXPORT_STRATEGY);
             case ExportConstants.TASK_WITH_JOURNAL_EXPORT_STRATEGY:
-                return strategies.get(ExportConstants.TASK_WITH_JOURNAL_EXPORT_STRATEGY).collectId(exportList);
+                return strategies.get(ExportConstants.TASK_WITH_JOURNAL_EXPORT_STRATEGY);
             default:
                 return null;
         }

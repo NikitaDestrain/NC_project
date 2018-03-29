@@ -8,4 +8,11 @@ public class ExportConstants {
     public static final int TASK_WITH_JOURNAL_EXPORT_STRATEGY = 3;
 
     public static final String PATH_TO_PROPERTIES = "properties/exportconfig.properties";
+
+    public static final String TASK_PROPERTY = "TASK";
+    public static final String JOURNAL_PROPERTY = "JOURNAL";
+
+    // EXCEPTION MESSAGES
+
+    public static final String INCORRECT_PARAMETER = "Unable to perform the export due to the incorrect received parameter!";
 }

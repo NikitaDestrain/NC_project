@@ -1,5 +1,6 @@
 package server.exportdata;
 
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import server.exportdata.config.ExportConfigHelper;
 
 import java.util.LinkedList;
@@ -20,12 +21,36 @@ public class ExportListFactory {
     }
 
     public ExportList createList(List<Integer> journalIDs, List<Integer> taskIDs) throws ExportException {
-        if (journalIDs != null && journalIDs.size() > 0) {
-            return strategyHelper.resolveStrategy(configHelper.getJournalStrategy(), new ExportList(journalIDs, new LinkedList<>()));
-        } else if (taskIDs != null && taskIDs.size() > 0) {
-            return strategyHelper.resolveStrategy(configHelper.getTaskStrategy(), new ExportList(new LinkedList<>(), taskIDs));
+        ExportList exportList = new ExportList();
+
+        fillExportListByType(exportList, ExportConstants.JOURNAL_PROPERTY, journalIDs);
+        fillExportListByType(exportList, ExportConstants.TASK_PROPERTY, taskIDs);
+
+        return exportList;
+    }
+
+    private void fillExportListByType(ExportList exportList, String strategy, List<Integer> IDs) throws ExportException {
+        if (IDs == null || IDs.size() == 0) {
+            throw new ExportException(ExportConstants.INCORRECT_PARAMETER);
         } else {
-            throw new ExportException(EXPORT_ERROR);
+            int strategyType;
+            ExportStrategy exportStrategy;
+            switch (strategy) {
+                case ExportConstants.JOURNAL_PROPERTY:
+                    strategyType = configHelper.getJournalStrategy();
+                    exportStrategy = strategyHelper.resolveStrategy(strategyType);
+                    for (Integer id : IDs) {
+                        exportStrategy.collectId(exportList, id);
+                    }
+                    break;
+                case ExportConstants.TASK_PROPERTY:
+                    strategyType = configHelper.getTaskStrategy();
+                    exportStrategy = strategyHelper.resolveStrategy(strategyType);
+                    for (Integer id : IDs) {
+                        exportStrategy.collectId(exportList, id);
+                    }
+                    break;
+            }
         }
     }
 }

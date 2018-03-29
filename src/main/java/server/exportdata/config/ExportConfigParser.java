@@ -1,6 +1,8 @@
 package server.exportdata.config;
 
 
+import server.exportdata.ExportConstants;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -14,9 +16,6 @@ public class ExportConfigParser {
 
     private final String INCORRECT_PROPERTY = "Unable to load the property: ";
 
-    public static final String TASK_PROPERTY = "TASK";
-    public static final String JOURNAL_PROPERTY = "JOURNAL";
-
     private ExportConfigParser(String path) throws IOException {
         properties = new Properties();
         FileInputStream fis = new FileInputStream(path);
@@ -24,8 +23,8 @@ public class ExportConfigParser {
         fis.close();
 
         exportProperties = new HashMap<>();
-        exportProperties.put(TASK_PROPERTY, get(TASK_PROPERTY));
-        exportProperties.put(JOURNAL_PROPERTY, get(JOURNAL_PROPERTY));
+        exportProperties.put(ExportConstants.TASK_PROPERTY, get(ExportConstants.TASK_PROPERTY));
+        exportProperties.put(ExportConstants.JOURNAL_PROPERTY, get(ExportConstants.JOURNAL_PROPERTY));
     }
 
     public static ExportConfigParser getInstance(String path) throws IOException {

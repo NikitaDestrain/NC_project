@@ -6,7 +6,7 @@ import server.exportdata.ExportStrategy;
 
 public class OnlyJournalExportStrategy implements ExportStrategy {
     @Override
-    public ExportList collectId(ExportList exportList) throws ExportException {
+    public ExportList collectId(ExportList exportList, Integer id) throws ExportException {
         return null;
     }
 }
