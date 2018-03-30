@@ -1,9 +1,8 @@
 package server.exportdata;
 
-import com.sun.xml.internal.bind.v2.model.core.ID;
 import server.exportdata.config.ExportConfigHelper;
+import server.exportdata.config.ExportConfigItem;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class ExportListFactory {
@@ -29,27 +28,14 @@ public class ExportListFactory {
         return exportList;
     }
 
-    private void fillExportListByType(ExportList exportList, String strategy, List<Integer> IDs) throws ExportException {
-        if (IDs == null || IDs.size() == 0) {
+    private void fillExportListByType(ExportList exportList, String type, List<Integer> IDs) throws ExportException {
+        if (IDs == null) {
             throw new ExportException(ExportConstants.INCORRECT_PARAMETER);
         } else {
-            int strategyType;
-            ExportStrategy exportStrategy;
-            switch (strategy) {
-                case ExportConstants.JOURNAL_PROPERTY:
-                    strategyType = configHelper.getJournalStrategy();
-                    exportStrategy = strategyHelper.resolveStrategy(strategyType);
-                    for (Integer id : IDs) {
-                        exportStrategy.collectId(exportList, id);
-                    }
-                    break;
-                case ExportConstants.TASK_PROPERTY:
-                    strategyType = configHelper.getTaskStrategy();
-                    exportStrategy = strategyHelper.resolveStrategy(strategyType);
-                    for (Integer id : IDs) {
-                        exportStrategy.collectId(exportList, id);
-                    }
-                    break;
+            ExportConfigItem configItem = configHelper.getStrategy(type);
+            ExportStrategy exportStrategy = strategyHelper.resolveStrategy(configItem);
+            for (Integer id : IDs) {
+                exportStrategy.collectId(exportList, id);
             }
 
             //todo vlla вот любите вы switch нездоровой любовью

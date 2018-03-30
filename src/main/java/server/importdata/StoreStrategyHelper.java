@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class StoreStrategyHelper {
     private static StoreStrategyHelper ourInstance = new StoreStrategyHelper();
-    private Map<Integer, StoreStrategy> strategies;
+    private Map<String, Map<String, StoreStrategy>> strategies;
 
     public static StoreStrategyHelper getInstance() {
         return ourInstance;
@@ -22,32 +22,22 @@ public class StoreStrategyHelper {
 
     private StoreStrategyHelper() {
         strategies = new HashMap<>();
-        strategies.put(StoreConstants.REPLACE_JOURNAL_STRATEGY, new ReplaceJournalStrategy<Journal>());
-        strategies.put(StoreConstants.IGNORE_JOURNAL_STRATEGY, new IgnoreJournalStrategy<Journal>());
-        strategies.put(StoreConstants.EXCEPTION_THROW_JOURNAL_STRATEGY, new ExceptionThrowJournalStrategy<Journal>());
-        strategies.put(StoreConstants.REPLACE_TASK_STRATEGY, new ReplaceTaskStrategy<Task>());
-        strategies.put(StoreConstants.IGNORE_TASK_STRATEGY, new IgnoreTaskStrategy<Task>());
-        strategies.put(StoreConstants.EXCEPTION_THROW_TASK_STRATEGY, new ExceptionThrowTaskStrategy<Task>());
+
+        Map<String, StoreStrategy> journalStrategies = new HashMap<>();
+        journalStrategies.put(StoreConstants.REPLACE_STRATEGY, new ReplaceJournalStrategy<Journal>());
+        journalStrategies.put(StoreConstants.IGNORE_STRATEGY, new IgnoreJournalStrategy<Journal>());
+        journalStrategies.put(StoreConstants.EXCEPTION_THROW_STRATEGY, new ExceptionThrowJournalStrategy<Journal>());
+        strategies.put(StoreConstants.JOURNAL, journalStrategies);
+
+        Map<String, StoreStrategy> taskStrategies = new HashMap<>();
+        taskStrategies.put(StoreConstants.REPLACE_STRATEGY, new ReplaceTaskStrategy<Task>());
+        taskStrategies.put(StoreConstants.IGNORE_STRATEGY, new IgnoreTaskStrategy<Task>());
+        taskStrategies.put(StoreConstants.EXCEPTION_THROW_STRATEGY, new ExceptionThrowTaskStrategy<Task>());
+        strategies.put(StoreConstants.TASK, taskStrategies);
     }
 
-    public StoreStrategy resolveStrategy(int strategy) throws StoreException {
-        switch (strategy) {
-            case StoreConstants.REPLACE_JOURNAL_STRATEGY:
-                return strategies.get(StoreConstants.REPLACE_JOURNAL_STRATEGY);
-            case StoreConstants.IGNORE_JOURNAL_STRATEGY:
-                return strategies.get(StoreConstants.IGNORE_JOURNAL_STRATEGY);
-            case StoreConstants.EXCEPTION_THROW_JOURNAL_STRATEGY:
-                return strategies.get(StoreConstants.EXCEPTION_THROW_JOURNAL_STRATEGY);
-            case StoreConstants.REPLACE_TASK_STRATEGY:
-                return strategies.get(StoreConstants.REPLACE_TASK_STRATEGY);
-            case StoreConstants.IGNORE_TASK_STRATEGY:
-                return strategies.get(StoreConstants.IGNORE_TASK_STRATEGY);
-            case StoreConstants.EXCEPTION_THROW_TASK_STRATEGY:
-                return strategies.get(StoreConstants.EXCEPTION_THROW_TASK_STRATEGY);
-            default:
-                return null;
-        }
-
+    public StoreStrategy resolveStrategy(StoreItem item) throws StoreException {
+        return strategies.get(item.getType()).get(item.getStrategy());
         //todo vlla "Ода, посвященная Switch"
     }
 }

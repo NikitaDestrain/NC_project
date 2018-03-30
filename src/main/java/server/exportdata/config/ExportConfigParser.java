@@ -5,6 +5,7 @@ import server.exportdata.ExportConstants;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -23,13 +24,21 @@ public class ExportConfigParser {
         fis.close();
 
         exportProperties = new HashMap<>();
-        exportProperties.put(ExportConstants.TASK_PROPERTY, get(ExportConstants.TASK_PROPERTY));
-        exportProperties.put(ExportConstants.JOURNAL_PROPERTY, get(ExportConstants.JOURNAL_PROPERTY));
+        readAllProperties();
         // todo vlla э не, это не парсер пропертей. Это отвратительный хардкод
         // а если в конфиге 1000 записей?
         // Парсер пропертей должен брать любой конфиг заданного формата (в нашем случае заданный формат: любое количество пар "тип данных - стратегия")
         // и переводить его в java-представление.
         // То есть он должен пробегать по каждой строчке и единообразно ее обрабатывать.
+    }
+
+    private void readAllProperties() {
+        Enumeration<?> e = properties.propertyNames();
+        while (e.hasMoreElements()) {
+            String key = (String) e.nextElement();
+            String value = properties.getProperty(key);
+            exportProperties.put(key, value);
+        }
     }
 
     public static ExportConfigParser getInstance(String path) throws IOException {
@@ -42,16 +51,7 @@ public class ExportConfigParser {
         return instance;
     }
 
-    private String get(String key) throws IllegalPropertyException {
-        String s = properties.getProperty(key);
-        if (s == null) {
-            throw new IllegalPropertyException(INCORRECT_PROPERTY + key);
-        } else {
-            return s;
-        }
-    }
-
-    public String getProperty(String key) {
+    public String getPropertyValue(String key) {
         return exportProperties.get(key);
     }
 }

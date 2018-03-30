@@ -1,9 +1,10 @@
 package server.beans;
 
 import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import server.importdata.StoreConstants;
 import server.importdata.StoreException;
+import server.importdata.StoreItem;
 import server.model.Journal;
 import server.model.JournalContainer;
 
@@ -27,15 +28,17 @@ public class Marshaller {
         return instance;
     }
 
-    public Object unmarshal(String xml) throws StoreException {
+    public StoreItem unmarshal(String path) throws StoreException {
         try {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document document = builder.parse(new InputSource(new ByteArrayInputStream(xml.getBytes("utf-8"))));
+            Document document = builder.parse(new FileInputStream(path));
 
-            if ((document.getElementsByTagName("journal")).getLength() > 0) {
-                return unmarshalJournal(xml);
-            } else if (document.getElementsByTagName("journalContainer").getLength() > 0) {
-                return unmarshalJournalContainer(xml);
+            if ((document.getElementsByTagName(StoreConstants.JOURNAL)).getLength() > 0) {
+                Journal journal = unmarshalJournal(path);
+                return new StoreItem(StoreConstants.TASK, journal);
+            } else if (document.getElementsByTagName(StoreConstants.JOURNAL_CONTAINER).getLength() > 0) {
+                JournalContainer container = unmarshalJournalContainer(path);
+                return new StoreItem(StoreConstants.JOURNAL, container);
             } else {
                 throw new StoreException("Unknown XML!");
             }
@@ -47,10 +50,10 @@ public class Marshaller {
     private Journal unmarshalJournal(String path) throws JAXBException {
         try {
             JAXBContext context = JAXBContext.newInstance(Journal.class);
-            StringReader stringReader = new StringReader(path);
+            InputStream in = new FileInputStream(path);
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            return (Journal) unmarshaller.unmarshal(stringReader);
-        } catch (JAXBException e) {
+            return (Journal) unmarshaller.unmarshal(in);
+        } catch (JAXBException | FileNotFoundException e) {
             throw new JAXBException(e.getMessage());
         }
     }
@@ -58,10 +61,10 @@ public class Marshaller {
     private JournalContainer unmarshalJournalContainer(String path) throws JAXBException {
         try {
             JAXBContext context = JAXBContext.newInstance(JournalContainer.class);
-            StringReader stringReader = new StringReader(path);
+            InputStream in = new FileInputStream(path);
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            return (JournalContainer) unmarshaller.unmarshal(stringReader);
-        } catch (JAXBException e) {
+            return (JournalContainer) unmarshaller.unmarshal(in);
+        } catch (JAXBException | FileNotFoundException e) {
             throw new JAXBException(e.getMessage());
         }
     }

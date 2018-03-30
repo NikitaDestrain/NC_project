@@ -2,12 +2,14 @@ package server.exportdata.config;
 
 import server.exportdata.ExportConstants;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ExportConfigHelper {
     private static ExportConfigHelper ourInstance = new ExportConfigHelper();
     private ExportConfigParser parser = ExportConfigParser.getInstance();
 
-    private Integer taskStrategy;
-    private Integer journalStrategy;
+    private Map<String, ExportConfigItem> strategies;
 
     public static ExportConfigHelper getInstance() {
         return ourInstance;
@@ -15,19 +17,16 @@ public class ExportConfigHelper {
 
     private ExportConfigHelper() {
         try {
-            taskStrategy = Integer.parseInt(parser.getProperty(ExportConstants.TASK_PROPERTY));
-            journalStrategy = Integer.parseInt(parser.getProperty(ExportConstants.JOURNAL_PROPERTY));
+            strategies = new HashMap<>();
+            strategies.put(ExportConstants.JOURNAL_PROPERTY, new ExportConfigItem(ExportConstants.JOURNAL_PROPERTY, null, parser.getPropertyValue(ExportConstants.JOURNAL_PROPERTY)));
+            strategies.put(ExportConstants.TASK_PROPERTY, new ExportConfigItem(ExportConstants.TASK_PROPERTY, ExportConstants.JOURNAL_PROPERTY, parser.getPropertyValue(ExportConstants.TASK_PROPERTY)));
         } catch (NumberFormatException e) {
             throw new NumberFormatException(e.getMessage());
         }
     }
 
-    public Integer getTaskStrategy() {
-        return taskStrategy;
-    }
-
-    public Integer getJournalStrategy() {
-        return journalStrategy;
+    public ExportConfigItem getStrategy(String type) {
+        return strategies.get(type);
     }
 
     // todo vlla ничего не мешает хранить мапу стратегий с доступом по типу даных.

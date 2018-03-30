@@ -1,11 +1,9 @@
 package server.exportdata;
 
 public class ExportConstants {
-    public static final int ONLY_JOURNAL_EXPORT_STRATEGY = 0;
-    public static final int JOURNAL_WITH_TASKS_EXPORT_STRATEGY = 1;
-
-    public static final int ONLY_TASK_EXPORT_STRATEGY = 2;
-    public static final int TASK_WITH_JOURNAL_EXPORT_STRATEGY = 3;
+    public static final String ONLY_OBJECT = "only object";
+    public static final String OBJECT_WITH_PARENT = "object with parent";
+    public static final String OBJECT_WITH_CHILDREN = "object wih children";
 
     //todo vlla у вас получается что стратегия жестко завязана на тип данных.
     // На самом деле, стратегии экспорта у нас в архитектуре всего три: экспортировать только объект, экспортировать объкт с родителем, экспортировать объект с потомком.
@@ -26,5 +24,5 @@ public class ExportConstants {
 
     // EXCEPTION MESSAGES
 
-    public static final String INCORRECT_PARAMETER = "Unable to perform the export due to the incorrect received parameter!";
+    public static final String INCORRECT_PARAMETER = "Unable to perform the export due to the incorrect received parameter: ";
 }

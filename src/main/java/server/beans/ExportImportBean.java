@@ -4,6 +4,7 @@ import server.exportdata.ExportException;
 import server.exportdata.ExportList;
 import server.exportdata.ExportListFactory;
 import server.importdata.StoreException;
+import server.importdata.StoreItem;
 import server.importdata.StoreStrategy;
 import server.importdata.StoreStrategyHelper;
 import server.model.Journal;
@@ -46,16 +47,25 @@ public class ExportImportBean implements EIBeanLocal {
      */
 
     @Override
-    public void importData(String xml, int strategy) throws StoreException {
-        Object object = marshaller.unmarshal(xml);
-        if (object instanceof Journal) {
+    public void importData(String xml, String strategy) throws StoreException {
+        StoreItem storeItem = marshaller.unmarshal(xml);
+        storeItem.setStrategy(strategy);
+        StoreStrategyHelper storeStrategyHelper = StoreStrategyHelper.getInstance();
+        if (storeItem.getJournal() != null) {
+            Journal journal = storeItem.getJournal();
             // todo do import of the received journal
-            List<Task> tasks = null; // parsed
-            StoreStrategy<Task> storeStrategy = StoreStrategyHelper.getInstance().resolveStrategy(strategy);
+            List<Task> tasks = journal.getTasks(); // parsed
+            StoreStrategy<Task> storeStrategy = storeStrategyHelper.resolveStrategy(storeItem);
             for (Task t : tasks) {
                 storeStrategy.store(t);
             }
-        } else if (object instanceof JournalContainer) {
+        } else if (storeItem.getContainer() != null) {
+            JournalContainer container = new JournalContainer();
+            List<Journal> journals = container.getJournals();
+            StoreStrategy<Journal> storeStrategy = storeStrategyHelper.resolveStrategy(storeItem);
+            for (Journal journal : journals) {
+                storeStrategy.store(journal);
+            }
             // todo do import of the received journal container
         }
     }
