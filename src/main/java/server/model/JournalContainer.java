@@ -41,4 +41,11 @@ public class JournalContainer {
         LinkedList<Journal> list = new LinkedList<>(journals.values());
         return Collections.unmodifiableList(list);
     }
+
+    @Override
+    public String toString() {
+        return "JournalContainer{" +
+                "journals=" + journals +
+                '}';
+    }
 }

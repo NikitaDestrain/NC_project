@@ -6,6 +6,8 @@ import server.exportdata.ExportListFactory;
 import server.importdata.StoreException;
 import server.importdata.StoreStrategy;
 import server.importdata.StoreStrategyHelper;
+import server.model.Journal;
+import server.model.JournalContainer;
 import server.model.Task;
 
 import javax.ejb.Stateless;
@@ -13,6 +15,8 @@ import java.util.List;
 
 @Stateless
 public class ExportImportBean implements EIBeanLocal {
+
+    private Marshaller marshaller = Marshaller.getInstance();
 
     /**
      * 1. Config file parsing(Done in init-ion of AuthServlet because ServletContext.getRealPath is needed)
@@ -43,11 +47,16 @@ public class ExportImportBean implements EIBeanLocal {
 
     @Override
     public void importData(String xml, int strategy) throws StoreException {
-        // todo вызов анмаршаллера
-        List<Task> tasks = null; // parsed
-        StoreStrategy<Task> storeStrategy = StoreStrategyHelper.getInstance().resolveStrategy(strategy);
-        for (Task t : tasks) {
-            storeStrategy.store(t);
+        Object object = marshaller.unmarshal(xml);
+        if (object instanceof Journal) {
+            // todo do import of the received journal
+            List<Task> tasks = null; // parsed
+            StoreStrategy<Task> storeStrategy = StoreStrategyHelper.getInstance().resolveStrategy(strategy);
+            for (Task t : tasks) {
+                storeStrategy.store(t);
+            }
+        } else if (object instanceof JournalContainer) {
+            // todo do import of the received journal container
         }
     }
 }
