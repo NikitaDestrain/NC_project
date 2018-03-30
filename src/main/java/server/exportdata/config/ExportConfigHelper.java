@@ -29,4 +29,7 @@ public class ExportConfigHelper {
     public Integer getJournalStrategy() {
         return journalStrategy;
     }
+
+    // todo vlla ничего не мешает хранить мапу стратегий с доступом по типу даных.
+    // в этом случае для получения типа стратегии будет достаточно одного метода
 }

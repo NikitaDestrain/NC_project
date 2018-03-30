@@ -25,6 +25,11 @@ public class ExportConfigParser {
         exportProperties = new HashMap<>();
         exportProperties.put(ExportConstants.TASK_PROPERTY, get(ExportConstants.TASK_PROPERTY));
         exportProperties.put(ExportConstants.JOURNAL_PROPERTY, get(ExportConstants.JOURNAL_PROPERTY));
+        // todo vlla э не, это не парсер пропертей. Это отвратительный хардкод
+        // а если в конфиге 1000 записей?
+        // Парсер пропертей должен брать любой конфиг заданного формата (в нашем случае заданный формат: любое количество пар "тип данных - стратегия")
+        // и переводить его в java-представление.
+        // То есть он должен пробегать по каждой строчке и единообразно ее обрабатывать.
     }
 
     public static ExportConfigParser getInstance(String path) throws IOException {

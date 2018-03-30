@@ -16,6 +16,7 @@ public class ExportList {
     public List<Integer> getJournalIds() {
         return journalIds;
     }
+    //todo vlla нарушение инкапсуляции
 
     public void setJournalIds(List<Integer> journalIds) {
         this.journalIds = journalIds;

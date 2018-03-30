@@ -37,5 +37,7 @@ public class ExportStrategyHelper {
             default:
                 return null;
         }
+
+        //todo vlla весь этот код можно заменить одной строчкой (о нездоровой любви к switch)
     }
 }

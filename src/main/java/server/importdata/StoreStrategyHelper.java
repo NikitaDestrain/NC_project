@@ -47,5 +47,7 @@ public class StoreStrategyHelper {
             default:
                 return null;
         }
+
+        //todo vlla "Ода, посвященная Switch"
     }
 }

@@ -7,4 +7,6 @@ public class StoreConstants {
     public static final int REPLACE_TASK_STRATEGY = 3;
     public static final int IGNORE_TASK_STRATEGY = 4;
     public static final int EXCEPTION_THROW_TASK_STRATEGY = 5;
+
+    //todo vlla аналогично - слишком много констант
 }
