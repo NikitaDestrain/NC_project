@@ -5,18 +5,19 @@ import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.*;
 
+//todo доделать связь onetomany
 @Entity
-@Table(name = "Journal")
+@Table(name = "\"Journal\"", schema = "public", catalog = "postgres")
 
 @XmlType(propOrder = {"id", "name", "description", "userId", "tasks"}, name = "journal")
 @XmlRootElement(name = "journal")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({Task.class, TaskStatus.class})
 public class Journal implements Serializable {
-
     @Id
-    @Column(name = "Journal_id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "auto_increment")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_gen")
+    @SequenceGenerator(name = "seq_gen", sequenceName = "\"auto_increment\"", allocationSize = 1)
+    @Column(name = "\"Journal_id\"", nullable = false, unique = true)
     @XmlElement(name = "id")
     private int id;
 
@@ -24,15 +25,15 @@ public class Journal implements Serializable {
     @XmlElement(name = "tasks")
     private Map<Integer, Task> tasks;
 
-    @Column(name = "Name", nullable = false, length = 18)
+    @Column(name = "\"Name\"", nullable = false, length = 18, unique = true)
     @XmlElement(name = "name")
     private String name;
 
-    @Column(name = "Description", length = 80)
+    @Column(name = "\"Description\"", length = 80)
     @XmlElement(name = "description")
     private String description;
 
-    @Column(name = "User_id", nullable = false)
+    @Column(name = "\"User_id\"", nullable = false)
     @XmlElement(name = "userId")
     private int userId;
 
@@ -48,7 +49,7 @@ public class Journal implements Serializable {
         this.description = description;
         this.id = id;
         this.userId = userId;
-        tasks = new HashMap<>();
+        tasks = new LinkedHashMap<>();
     }
 
     public Journal(String name, String description) {
@@ -56,7 +57,7 @@ public class Journal implements Serializable {
         this.description = description;
         this.id = 0;
         this.userId = 0;
-        tasks = new HashMap<>();
+        tasks = new LinkedHashMap<>();
     }
 
     public int getUserId() {

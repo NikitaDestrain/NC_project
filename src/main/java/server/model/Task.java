@@ -13,46 +13,47 @@ import java.util.Calendar;
  */
 
 @Entity
-@Table(name = "Tasks")
+@Table(name = "\"Tasks\"", schema = "public", catalog = "postgres")
 
 @XmlRootElement(name = "task")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Task implements Comparable<Task>, Serializable {
 
     /**
-     * unique identificator
+     * unique id
      */
     @Id
-    @Column(name = "Task_id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "auto_increment")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_gen")
+    @SequenceGenerator(name = "seq_gen", sequenceName = "\"auto_increment\"", allocationSize = 1)
+    @Column(name = "\"Task_id\"", nullable = false, unique = true)
     @XmlElement(name = "id")
     private int id;
 
     /**
      * Task name
      */
-    @Column(name = "Name", nullable = false, unique = true, length = 18)
+    @Column(name = "\"Name\"", nullable = false, unique = true, length = 18)
     @XmlElement(name = "name")
     private String name;
 
     /**
      * Task status @see TaskStatus
      */
-    @Column(name = "Status", nullable = false, length = 18)
+    @Column(name = "\"Status\"", nullable = false, length = 18)
     @XmlElement(name = "status")
     private TaskStatus status;
 
     /**
      * Task description
      */
-    @Column(name = "Description", length = 80)
+    @Column(name = "\"Description\"", length = 80)
     @XmlElement(name = "description")
     private String description;
 
     /**
      * Notification date
      */
-    @Column(name = "Notification_date", nullable = false)
+    @Column(name = "\"Notification_date\"", nullable = false)
     @XmlJavaTypeAdapter(SQLDataAdapter.class)
     @XmlElement(name = "notificationDate")
     private Date notificationDate;
@@ -64,7 +65,7 @@ public class Task implements Comparable<Task>, Serializable {
     /**
      * Planned date
      */
-    @Column(name = "Planned_date", nullable = false)
+    @Column(name = "\"Planned_date\"", nullable = false)
     @XmlJavaTypeAdapter(SQLDataAdapter.class)
     @XmlElement(name = "plannedDate")
     private Date plannedDate;
@@ -73,7 +74,7 @@ public class Task implements Comparable<Task>, Serializable {
     @XmlElement(name = "planned")
     private String planned;
 
-    @Column(name = "Upload_date", nullable = false)
+    @Column(name = "\"Upload_date\"", nullable = false)
     @XmlJavaTypeAdapter(SQLDataAdapter.class)
     @XmlElement(name = "uploadDate")
     private Date uploadDate;
@@ -82,7 +83,7 @@ public class Task implements Comparable<Task>, Serializable {
     @XmlElement(name = "upload")
     private String upload;
 
-    @Column(name = "Change_date", nullable = false)
+    @Column(name = "\"Change_date\"", nullable = false)
     @XmlJavaTypeAdapter(SQLDataAdapter.class)
     @XmlElement(name = "changeDate")
     private Date changeDate;
@@ -91,7 +92,7 @@ public class Task implements Comparable<Task>, Serializable {
     @XmlElement(name = "change")
     private String change;
 
-    @Column(name = "Journal_id", nullable = false)
+    @Column(name = "\"Journal_id\"", nullable = false)
     @XmlElement(name = "journalId")
     private int journalId;
 

@@ -10,8 +10,9 @@ import java.util.*;
  * Object with information user
  */
 
+//todo аналог с журналом
 @Entity
-@Table(name = "Users")
+@Table(name = "\"Users\"", schema = "public", catalog = "postgres")
 
 @XmlType(propOrder = {"id", "login", "password", "role", "registrationDate"}, name = "user")
 @XmlRootElement(name = "user")
@@ -19,36 +20,39 @@ import java.util.*;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class User implements Serializable {
     @Id
-    @Column(name = "User_id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "auto_increment")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_gen")
+    @SequenceGenerator(name = "seq_gen", sequenceName = "\"auto_increment\"", allocationSize = 1)
+    @Column(name = "\"User_id\"", nullable = false, unique = true)
     @XmlElement(name = "id")
     private Integer id;
 
-    @Column(name = "Login", nullable = false, unique = true, length = 18)
+    @Column(name = "\"Login\"", nullable = false, length = 18, unique = true)
     @XmlElement(name = "login")
     private String login;
 
-    @Column(name = "Password", nullable = false, length = 40)
+    @Column(name = "\"Password\"", nullable = false, length = 40)
     @XmlElement(name = "password")
     private String password;
 
-    @Column(name = "Role", length = 18)
+    @Column(name = "\"Role\"", nullable = false, length = 18)
     @XmlElement(name = "role")
     private String role;
 
-    @Column(name = "Registration_date", nullable = false)
+    @Column(name = "\"Registration_date\"", nullable = false)
     @XmlElement(name = "registrationDate")
     private Date registrationDate;
 
     @OneToMany(cascade = CascadeType.ALL)
+    @Transient
     @XmlElement(name = "journals")
     private Map<Integer, Journal> journals;
 
     public User() {
+        this.journals = new LinkedHashMap<>();
     }
 
     public User(int id, String login, String password, String role, Date registrationDate) {
-        this.journals = new HashMap<>();
+        this.journals = new LinkedHashMap<>();
         this.id = id;
         this.login = login;
         this.password = password;
