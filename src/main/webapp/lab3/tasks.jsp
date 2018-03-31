@@ -67,6 +67,10 @@
                         alert("Select a task to perform an action!")
                     }
                     break;
+                case "rename":
+                    document.getElementById("hid").value = "Rename";
+                    document.forms[0].submit();
+                    break;
                 case "back":
                     document.getElementById("hid").value = "backtomain";
                     document.forms[0].submit();
@@ -155,6 +159,8 @@
                         <td><input type="button" class="btn btn-outline-success" id="edit" value="Edit task"
                                    onclick="buttonClick(this)"></td>
                         <td><input type="button" class="btn btn-outline-success" id="delete" value="Delete task"
+                                   onclick="buttonClick(this)"></td>
+                        <td><input type="button" class="btn btn-outline-success" id="rename" value="Rename tasks"
                                    onclick="buttonClick(this)"></td>
                     </tr>
                 </table>

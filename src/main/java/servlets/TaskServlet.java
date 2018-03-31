@@ -93,6 +93,9 @@ public class TaskServlet extends HttpServlet {
                     req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
                 }
                 break;
+            case ConstantsClass.RENAME:
+                resp.getWriter().print("Rename form");
+                break;
             case ConstantsClass.SORT:
                 String sortColumn = req.getParameter(ConstantsClass.SORT_COLUMN); // name||description
                 String sortCriteria = req.getParameter(ConstantsClass.SORT_CRITERIA); // asc||desc

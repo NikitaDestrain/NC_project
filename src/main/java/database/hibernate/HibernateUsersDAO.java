@@ -1,6 +1,7 @@
 package database.hibernate;
 
 import database.daointerfaces.UsersDAO;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import server.factories.UserFactory;
 import server.model.User;
@@ -12,9 +13,10 @@ import java.util.List;
 
 public class HibernateUsersDAO implements UsersDAO {
 
+    private Session session;
+
     @Override
     public User create(String login, String password, String role) throws SQLException {
-        Session session = null;
         User user;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
@@ -25,16 +27,13 @@ public class HibernateUsersDAO implements UsersDAO {
         } catch (ExceptionInInitializerError e) {
             throw new SQLException("Error! ADD");
         } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
+            finishSession();
         }
         return user;
     }
 
     @Override
     public User read(int id) throws SQLException {
-        Session session = null;
         User user;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
@@ -42,16 +41,13 @@ public class HibernateUsersDAO implements UsersDAO {
         } catch (ExceptionInInitializerError e) {
             throw new SQLException("Error! READ");
         } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
+            finishSession();
         }
         return user;
     }
 
     @Override
     public void update(User user) throws SQLException {
-        Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
@@ -60,15 +56,12 @@ public class HibernateUsersDAO implements UsersDAO {
         } catch (ExceptionInInitializerError e) {
             throw new SQLException("Error! UPDATE");
         } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
+            finishSession();
         }
     }
 
     @Override
     public void delete(User user) throws SQLException {
-        Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
@@ -77,15 +70,12 @@ public class HibernateUsersDAO implements UsersDAO {
         } catch (ExceptionInInitializerError e) {
             throw new SQLException("Error! DELETE");
         } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
+            finishSession();
         }
     }
 
     @Override
     public List<User> getAll() throws SQLException {
-        Session session = null;
         List<User> list;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
@@ -93,20 +83,41 @@ public class HibernateUsersDAO implements UsersDAO {
         } catch (ExceptionInInitializerError e) {
             throw new SQLException("Error! READ ALL");
         } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
+            finishSession();
         }
         return Collections.unmodifiableList(list);
     }
 
     @Override
     public User getByLoginAndPassword(String login, String password) throws SQLException {
-        return null;
+        String sql = "SELECT * FROM \"Users\" WHERE \"Login\" = %s AND \"Password\" = %s;";
+        sql = String.format(sql, login, password);
+        Query query = session.createQuery(sql);
+        return (User) query.list().get(0);
     }
 
     @Override
     public List<User> getSortedByCriteria(String column, String criteria) throws SQLException {
-        return null;
+        String sql = "SELECT * FROM \"Users\" ORDER BY \"%s\" %s";
+        sql = String.format(sql, column, criteria);
+        return Collections.unmodifiableList(getListByQuery(sql));
+    }
+
+    private void finishSession() {
+        if (session != null && session.isOpen()) {
+            session.close();
+        }
+    }
+
+    private List<User> getListByQuery(String sql) throws SQLException {
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            Query query = session.createQuery(sql);
+            return query.list();
+        } catch (ExceptionInInitializerError e) {
+            throw new SQLException("Error! READ SORT");
+        } finally {
+            finishSession();
+        }
     }
 }

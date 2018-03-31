@@ -21,7 +21,8 @@ public class Journal implements Serializable {
     @XmlElement(name = "id")
     private int id;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    //@OneToMany(cascade = CascadeType.ALL)
+    @Transient
     @XmlElement(name = "tasks")
     private Map<Integer, Task> tasks;
 

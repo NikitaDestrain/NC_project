@@ -4,6 +4,7 @@ public class ConstantsClass {
     public static final String ADD = "Add";
     public static final String EDIT = "Edit";
     public static final String DELETE = "Delete";
+    public static final String RENAME = "Rename";
     public static final String LATER = "Later";
     public static final String FINISH = "Finish";
     public static final String CANCEL = "Cancel";

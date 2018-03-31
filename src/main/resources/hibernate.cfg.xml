@@ -15,7 +15,6 @@
         <property name="show_sql">true</property>
         <property name="hibernate.temp.use_jdbc_metadata_defaults">false</property>
 
-        <!--<mapping class="server.entites.UsersEntity"/>-->
         <mapping class="server.model.User"/>
         <mapping class="server.model.Journal"/>
         <mapping class="server.model.Task"/>

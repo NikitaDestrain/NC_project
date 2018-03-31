@@ -42,9 +42,13 @@ public class Task implements Comparable<Task>, Serializable {
     /**
      * Task status @see TaskStatus
      */
-    @Column(name = "\"Status\"", nullable = false, length = 18)
+
+    @Transient
     @XmlElement(name = "status")
     private TaskStatus status;
+
+    @Column(name = "\"Status\"", nullable = false, length = 18)
+    private String stringStatus;
 
     /**
      * Task description
@@ -132,6 +136,7 @@ public class Task implements Comparable<Task>, Serializable {
         this.planned = parseDate(plannedDate);
         this.upload = parseDate(uploadDate);
         this.change = parseDate(changeDate);
+        this.stringStatus = status.toString();
     }
 
     public Task(String name, TaskStatus status, String description, Date notificationDate,
@@ -148,6 +153,7 @@ public class Task implements Comparable<Task>, Serializable {
         this.planned = parseDate(plannedDate);
         this.upload = parseDate(uploadDate);
         this.change = parseDate(changeDate);
+        this.stringStatus = status.toString();
     }
 
     public Task(String name, TaskStatus status, String description, String notification, String planned, int id, String upload, String change, int journalId) {
@@ -160,6 +166,7 @@ public class Task implements Comparable<Task>, Serializable {
         this.upload = upload;
         this.change = change;
         this.journalId = journalId;
+        this.stringStatus = status.toString();
     }
 
     private String parseDate(Date date) {
@@ -204,6 +211,7 @@ public class Task implements Comparable<Task>, Serializable {
         this.planned = parseDate(task.getPlannedDate());
         this.upload = parseDate(task.getUploadDate());
         this.change = parseDate(task.getChangeDate());
+        this.stringStatus = task.getStatus().toString();
     }
 
     /**
@@ -240,7 +248,16 @@ public class Task implements Comparable<Task>, Serializable {
      * @param status new status from the class {@linkplain TaskStatus}
      */
     public void setStatus(TaskStatus status) {
+        this.stringStatus = status.toString();
         this.status = status;
+    }
+
+    public String getStringStatus() {
+        return stringStatus;
+    }
+
+    public void setStringStatus(String stringStatus) {
+        this.stringStatus = stringStatus;
     }
 
     /**
