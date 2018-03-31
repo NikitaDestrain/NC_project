@@ -22,6 +22,11 @@ public class TaskFactory {
         return new Task(id, name, parseStringToTaskStatus(status), description, notificationDate, plannedDate, uploadDate, changeDate, journalId);
     }
 
+    public static Task createTask(String name, String status, String description, Date notificationDate, Date plannedDate,
+                                  Date uploadDate, Date changeDate, int journalId) {
+        return new Task(name, parseStringToTaskStatus(status), description, notificationDate, plannedDate, uploadDate, changeDate, journalId);
+    }
+
     public static Task createTask(Task task) {
         return new Task(task.getId(), task.getName(), task.getStatus(), task.getDescription(), task.getNotificationDate(),
                 task.getPlannedDate(), task.getUploadDate(), task.getChangeDate(), task.getJournalId());

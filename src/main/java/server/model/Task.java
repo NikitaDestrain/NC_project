@@ -1,7 +1,10 @@
 package server.model;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.sql.Date;
@@ -122,6 +125,22 @@ public class Task implements Comparable<Task>, Serializable {
         this.notificationDate = notificationDate;
         this.plannedDate = plannedDate;
         this.id = id;
+        this.uploadDate = uploadDate;
+        this.changeDate = changeDate;
+        this.journalId = journalId;
+        this.notification = parseDate(notificationDate);
+        this.planned = parseDate(plannedDate);
+        this.upload = parseDate(uploadDate);
+        this.change = parseDate(changeDate);
+    }
+
+    public Task(String name, TaskStatus status, String description, Date notificationDate,
+                Date plannedDate, Date uploadDate, Date changeDate, int journalId) {
+        this.name = name;
+        this.status = status;
+        this.description = description;
+        this.notificationDate = notificationDate;
+        this.plannedDate = plannedDate;
         this.uploadDate = uploadDate;
         this.changeDate = changeDate;
         this.journalId = journalId;

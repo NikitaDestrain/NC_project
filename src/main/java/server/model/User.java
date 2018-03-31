@@ -58,6 +58,14 @@ public class User implements Serializable {
         this.password = password;
         this.role = role;
         this.registrationDate = registrationDate;
+    }
+
+    public User(String login, String password, String role, Date registrationDate) {
+        this.journals = new LinkedHashMap<>();
+        this.login = login;
+        this.password = password;
+        this.role = role;
+        this.registrationDate = registrationDate;
         this.registrationDate = new Date(System.currentTimeMillis());
     }
 

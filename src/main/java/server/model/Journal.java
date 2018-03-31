@@ -52,6 +52,13 @@ public class Journal implements Serializable {
         tasks = new LinkedHashMap<>();
     }
 
+    public Journal(String name, String description, int userId) {
+        this.name = name;
+        this.description = description;
+        this.userId = userId;
+        tasks = new LinkedHashMap<>();
+    }
+
     public Journal(String name, String description) {
         this.name = name;
         this.description = description;

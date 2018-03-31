@@ -55,7 +55,6 @@ public class PostgreSQLDAOFactory implements DAOFactory {
         }
     }
 
-    @Override
     public Connection getConnection() throws DAOFactoryActionException {
         try {
             return dataSource.getConnection();

@@ -1,5 +1,9 @@
 package server.controller;
 
+import database.hibernate.HibernateDAOFactory;
+import database.hibernate.HibernateJournalDAO;
+import database.hibernate.HibernateTasksDAO;
+import database.hibernate.HibernateUsersDAO;
 import database.postgresql.PostgreSQLDAOFactory;
 import database.postgresql.PostgreSQLJournalDAO;
 import database.postgresql.PostgreSQLTasksDAO;
@@ -9,8 +13,8 @@ import server.exceptions.DAOFactoryActionException;
 import server.exceptions.UserAuthorizerStartException;
 import server.model.*;
 
-import java.sql.SQLException;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.List;
 
 public class Controller {
@@ -23,6 +27,9 @@ public class Controller {
     private PostgreSQLUsersDAO usersDAO;
     private PostgreSQLJournalDAO journalDAO;
     private PostgreSQLTasksDAO tasksDAO;
+    private HibernateTasksDAO hibernateTasksDAO;
+    private HibernateJournalDAO hibernateJournalDAO;
+    private HibernateUsersDAO hibernateUsersDAO;
     private UserAuthorizer userAuthorizer;
     private Notifier notifier;
     private static Controller instance;
@@ -36,6 +43,9 @@ public class Controller {
             usersDAO = (PostgreSQLUsersDAO) postgreSQLDAOFactory.getUsersDao();
             journalDAO = (PostgreSQLJournalDAO) postgreSQLDAOFactory.getJournalDao();
             tasksDAO = (PostgreSQLTasksDAO) postgreSQLDAOFactory.getTasksDao();
+            hibernateTasksDAO = (HibernateTasksDAO) HibernateDAOFactory.getInstance().getTasksDao();
+            hibernateJournalDAO = (HibernateJournalDAO) HibernateDAOFactory.getInstance().getJournalDao();
+            hibernateUsersDAO = (HibernateUsersDAO) HibernateDAOFactory.getInstance().getUsersDao();
             userAuthorizer = UserAuthorizer.getInstance();
             notifier = new Notifier();
             createUserContainer();
@@ -59,7 +69,8 @@ public class Controller {
     public void addUser(String login, String password, String role) throws ControllerActionException {
         if (!userAuthorizer.isSuchLoginExists(login) && password != null) {
             try {
-                User user = usersDAO.create(login, password, role);
+                //User user = usersDAO.create(login, password, role);
+                User user = hibernateUsersDAO.create(login, password, role);
                 userContainer.addUser(user);
                 userAuthorizer.addUser(user);
             } catch (SQLException e) {
@@ -71,7 +82,8 @@ public class Controller {
 
     public void deleteUser(int id) throws ControllerActionException {
         try {
-            usersDAO.delete(id);
+            //usersDAO.delete(userContainer.getUser(id));
+            hibernateUsersDAO.delete(userContainer.getUser(id));
             userAuthorizer.removeUser(userContainer.getUser(id).getLogin());
             userContainer.removeUser(id);
         } catch (SQLException e) {
@@ -81,7 +93,8 @@ public class Controller {
 
     public void editUser(User user) throws ControllerActionException {
         try {
-            usersDAO.update(user);
+            //usersDAO.update(user);
+            hibernateUsersDAO.update(user);
         } catch (SQLException e) {
             throw new ControllerActionException(ControllerErrorConstants.ERROR_EDIT_USER);
         }
@@ -139,7 +152,8 @@ public class Controller {
                 throw new ControllerActionException(ControllerErrorConstants.ERROR_NAME_EXISTS);
 
             if (checkDate(plannedDate, notificationDate)) {
-                Task task = tasksDAO.create(name, TaskStatus.Planned, description, notificationDate, plannedDate, journalId);
+                //Task task = tasksDAO.create(name, TaskStatus.Planned, description, notificationDate, plannedDate, journalId);
+                Task task = hibernateTasksDAO.create(name, TaskStatus.Planned, description, notificationDate, plannedDate, journalId);
                 journalContainer.getJournal(journalId).addTask(task);
                 notifier.addNotification(task);
                 taskNamesContainer.addName(name);
@@ -151,7 +165,8 @@ public class Controller {
 
     public void deleteTask(Task task) throws ControllerActionException {
         try {
-            tasksDAO.delete(task.getId());
+            //tasksDAO.delete(task);
+            hibernateTasksDAO.delete(task);
             journalContainer.getJournal(task.getJournalId()).removeTask(task.getId());
             notifier.cancelNotification(task.getId());
             taskNamesContainer.deleteName(task.getName());
@@ -205,7 +220,8 @@ public class Controller {
             }
             if (task.getStatus() == TaskStatus.Completed || task.getStatus() == TaskStatus.Cancelled)
                 notifier.cancelNotification(task.getId());
-            tasksDAO.update(task);
+            //tasksDAO.update(task);
+            hibernateTasksDAO.update(task);
         } catch (SQLException e) {
             setAllDataInTask(task, oldName, oldStatus, oldDescription, oldNotificationDate, oldPlannedDate, oldChangeDate, oldJournalId);
             if (newJournalId != -1)
@@ -298,7 +314,8 @@ public class Controller {
         if (journalNamesContainer.isContain(name))
             throw new ControllerActionException(ControllerErrorConstants.ERROR_NAME_EXISTS);
         try {
-            Journal journal = journalDAO.create(name, description, userId);
+            //Journal journal = journalDAO.create(name, description, userId);
+            Journal journal = hibernateJournalDAO.create(name, description, userId);
             journalContainer.addJournal(journal);
             journalNamesContainer.addName(journal.getName());
         } catch (SQLException e) {
@@ -308,7 +325,8 @@ public class Controller {
 
     public void deleteJournal(int id) throws ControllerActionException {
         try {
-            journalDAO.delete(id);
+            //journalDAO.delete(journalContainer.getJournal(id));
+            hibernateJournalDAO.delete(journalContainer.getJournal(id));
             journalNamesContainer.deleteName(journalContainer.getJournal(id).getName());
             journalContainer.removeJournal(id);
         } catch (SQLException e) {
@@ -334,7 +352,8 @@ public class Controller {
         setAllDataInJournal(journal, name, description);
 
         try {
-            journalDAO.update(journal);
+            //journalDAO.update(journal);
+            hibernateJournalDAO.update(journal);
             journalNamesContainer.editName(oldName, name);
         } catch (SQLException e) {
             setAllDataInJournal(journal, oldName, oldDescription);
