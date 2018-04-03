@@ -244,12 +244,7 @@ public class Controller {
 
     public Journal getSortedTasks(int journalId, String column, String criteria) throws ControllerActionException {
         try {
-            List<Task> sortedTasks = tasksDAO.getSortedByCriteria(journalId, column, criteria);
-            Journal sortedTasksJournal = new Journal();
-            if (sortedTasks != null)
-                for (Task task : sortedTasks)
-                    sortedTasksJournal.addTask(task);
-            return sortedTasksJournal;
+            return getSortedTasksJournal(tasksDAO.getSortedByCriteria(journalId, column, criteria));
         } catch (SQLException e) {
             throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
         }
@@ -257,12 +252,7 @@ public class Controller {
 
     public Journal getFilteredTasksByPattern(int journalId, String column, String pattern, String criteria) throws ControllerActionException {
         try {
-            List<Task> sortedTasks = tasksDAO.getFilteredByPattern(journalId, column, pattern, criteria);
-            Journal sortedTasksJournal = new Journal();
-            if (sortedTasks != null)
-                for (Task task : sortedTasks)
-                    sortedTasksJournal.addTask(task);
-            return sortedTasksJournal;
+            return getSortedTasksJournal(tasksDAO.getFilteredByPattern(journalId, column, pattern, criteria));
         } catch (SQLException e) {
             throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
         }
@@ -270,15 +260,19 @@ public class Controller {
 
     public Journal getFilteredTasksByEquals(int journalId, String column, String equal, String criteria) throws ControllerActionException {
         try {
-            List<Task> sortedTasks = tasksDAO.getFilteredByEquals(journalId, column, equal, criteria);
-            Journal sortedTasksJournal = new Journal();
-            if (sortedTasks != null)
-                for (Task task : sortedTasks)
-                    sortedTasksJournal.addTask(task);
-            return sortedTasksJournal;
+            return getSortedTasksJournal(tasksDAO.getFilteredByEquals(journalId, column, equal, criteria));
         } catch (SQLException e) {
             throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
         }
+    }
+
+    private Journal getSortedTasksJournal(List<Task> sortedTasks) {
+        fixTasks(sortedTasks);
+        Journal sortedTasksJournal = new Journal();
+        if (sortedTasks != null)
+            for (Task task : sortedTasks)
+                sortedTasksJournal.addTask(task);
+        return sortedTasksJournal;
     }
 
     public void setOverdue(Task task) {
@@ -362,12 +356,7 @@ public class Controller {
 
     public JournalContainer getSortedJournals(String column, String criteria) throws ControllerActionException {
         try {
-            List<Journal> sortedJournals = journalDAO.getSortedByCriteria(column, criteria);
-            JournalContainer sortedJournalContainer = new JournalContainer();
-            if (sortedJournals != null)
-                for (Journal journal : sortedJournals)
-                    sortedJournalContainer.addJournal(journal);
-            return sortedJournalContainer;
+            return getSortedJournalContainer(journalDAO.getSortedByCriteria(column, criteria));
         } catch (SQLException e) {
             throw new ControllerActionException(e.getMessage());
         }
@@ -375,12 +364,7 @@ public class Controller {
 
     public JournalContainer getFilteredJournalsByPattern(String column, String pattern, String criteria) throws ControllerActionException {
         try {
-            List<Journal> sortedJournals = journalDAO.getFilteredByPattern(column, pattern, criteria);
-            JournalContainer sortedJournalContainer = new JournalContainer();
-            if (sortedJournals != null)
-                for (Journal journal : sortedJournals)
-                    sortedJournalContainer.addJournal(journal);
-            return sortedJournalContainer;
+            return getSortedJournalContainer(journalDAO.getFilteredByPattern(column, pattern, criteria));
         } catch (SQLException e) {
             throw new ControllerActionException(e.getMessage());
         }
@@ -388,15 +372,18 @@ public class Controller {
 
     public JournalContainer getFilteredJournalsByEquals(String column, String equal, String criteria) throws ControllerActionException {
         try {
-            List<Journal> sortedJournals = journalDAO.getFilteredByEquals(column, equal, criteria);
-            JournalContainer sortedJournalContainer = new JournalContainer();
-            if (sortedJournals != null)
-                for (Journal journal : sortedJournals)
-                    sortedJournalContainer.addJournal(journal);
-            return sortedJournalContainer;
+            return getSortedJournalContainer(journalDAO.getFilteredByEquals(column, equal, criteria));
         } catch (SQLException e) {
             throw new ControllerActionException(e.getMessage());
         }
+    }
+
+    private JournalContainer getSortedJournalContainer(List<Journal> sortedJournals) {
+        JournalContainer sortedJournalContainer = new JournalContainer();
+        if (sortedJournals != null)
+            for (Journal journal : sortedJournals)
+                sortedJournalContainer.addJournal(journal);
+        return sortedJournalContainer;
     }
 
     public JournalNamesContainer getJournalNamesContainer() {
@@ -419,7 +406,9 @@ public class Controller {
             for (Journal journal : journalDAO.getAll()) {
                 journalContainer.addJournal(journal);
                 journalNamesContainer.addName(journal.getName());
-                for (Task task : tasksDAO.getAll())
+                List<Task> tasks = tasksDAO.getAll();
+                fixTasks(tasks);
+                for (Task task : tasks)
                     if (task.getJournalId() == journal.getId()) {
                         notifier.addNotification(task);
                         journal.addTask(task);
@@ -428,6 +417,16 @@ public class Controller {
             }
         } catch (SQLException e) {
             throw new ControllerActionException(e.getMessage());
+        }
+    }
+
+    private void fixTasks(List<Task> tasks) {
+        for (Task task : tasks) {
+            task.setStringStatus(task.getStringStatus());
+            task.setPlannedDate(task.getPlannedDate());
+            task.setUploadDate(task.getUploadDate());
+            task.setNotificationDate(task.getNotificationDate());
+            task.setChangeDate(task.getChangeDate());
         }
     }
 }

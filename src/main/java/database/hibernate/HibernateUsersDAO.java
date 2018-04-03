@@ -1,8 +1,11 @@
 package database.hibernate;
 
+import auxiliaryclasses.ConstantsClass;
 import database.daointerfaces.UsersDAO;
-import org.hibernate.Query;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import server.factories.UserFactory;
 import server.model.User;
 
@@ -89,17 +92,33 @@ public class HibernateUsersDAO implements UsersDAO {
 
     @Override
     public User getByLoginAndPassword(String login, String password) throws SQLException {
-        String sql = "SELECT * FROM \"Users\" WHERE \"Login\" = %s AND \"Password\" = %s;";
-        sql = String.format(sql, login, password);
-        Query query = session.createQuery(sql);
-        return (User) query.list().get(0);
+        User user;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            Criteria equalResult = session.createCriteria(User.class)
+                    .add(Restrictions.eq(ConstantsClass.LOGIN_PARAMETER, login))
+                    .add(Restrictions.eq(ConstantsClass.PASSWORD_PARAMETER, password));
+            user = (User) equalResult.list().get(0);
+        } catch (ExceptionInInitializerError e) {
+            throw new SQLException("Error! READ SORT EQUAL");
+        } finally {
+            finishSession();
+        }
+        return user;
     }
 
     @Override
     public List<User> getSortedByCriteria(String column, String criteria) throws SQLException {
-        String sql = "SELECT * FROM \"Users\" ORDER BY \"%s\" %s";
-        sql = String.format(sql, column, criteria);
-        return Collections.unmodifiableList(getListByQuery(sql));
+        List<User> list;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            list = getOrderCriteria(column, criteria, session.createCriteria(User.class)).list();
+        } catch (ExceptionInInitializerError e) {
+            throw new SQLException("Error! READ SORT");
+        } finally {
+            finishSession();
+        }
+        return Collections.unmodifiableList(list);
     }
 
     private void finishSession() {
@@ -108,15 +127,11 @@ public class HibernateUsersDAO implements UsersDAO {
         }
     }
 
-    private List<User> getListByQuery(String sql) throws SQLException {
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            Query query = session.createQuery(sql);
-            return query.list();
-        } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! READ SORT");
-        } finally {
-            finishSession();
-        }
+    private Criteria getOrderCriteria(String column, String criteria, Criteria resultCriteria) {
+        if (criteria.equalsIgnoreCase(ConstantsClass.SORT_ASC))
+            return resultCriteria.addOrder(Order.asc(column));
+        if (criteria.equalsIgnoreCase(ConstantsClass.SORT_DESC))
+            return resultCriteria.addOrder(Order.desc(column));
+        return null;
     }
 }

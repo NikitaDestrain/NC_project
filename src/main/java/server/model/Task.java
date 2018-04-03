@@ -133,10 +133,10 @@ public class Task implements Comparable<Task>, Serializable {
         this.uploadDate = uploadDate;
         this.changeDate = changeDate;
         this.journalId = journalId;
-        this.notification = parseDate(notificationDate);
-        this.planned = parseDate(plannedDate);
-        this.upload = parseDate(uploadDate);
-        this.change = parseDate(changeDate);
+        this.notification = ParameterParser.parseDate(notificationDate);
+        this.planned = ParameterParser.parseDate(plannedDate);
+        this.upload = ParameterParser.parseDate(uploadDate);
+        this.change = ParameterParser.parseDate(changeDate);
         this.stringStatus = status.toString();
     }
 
@@ -150,10 +150,10 @@ public class Task implements Comparable<Task>, Serializable {
         this.uploadDate = uploadDate;
         this.changeDate = changeDate;
         this.journalId = journalId;
-        this.notification = parseDate(notificationDate);
-        this.planned = parseDate(plannedDate);
-        this.upload = parseDate(uploadDate);
-        this.change = parseDate(changeDate);
+        this.notification = ParameterParser.parseDate(notificationDate);
+        this.planned = ParameterParser.parseDate(plannedDate);
+        this.upload = ParameterParser.parseDate(uploadDate);
+        this.change = ParameterParser.parseDate(changeDate);
         this.stringStatus = status.toString();
     }
 
@@ -168,19 +168,6 @@ public class Task implements Comparable<Task>, Serializable {
         this.change = change;
         this.journalId = journalId;
         this.stringStatus = status.toString();
-    }
-
-    private String parseDate(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-
-        String days = calendar.get(Calendar.DAY_OF_MONTH) + "";
-        days = days.length() == 1 ? "0" + days : days;
-
-        String months = (calendar.get(Calendar.MONTH) + 1) + "";
-        months = months.length() == 1 ? "0" + months : months;
-
-        return days + "-" + months + "-" + calendar.get(Calendar.YEAR);
     }
 
     /**
@@ -208,10 +195,10 @@ public class Task implements Comparable<Task>, Serializable {
         }
         this.changeDate = task.getChangeDate();
         this.uploadDate = task.getUploadDate();
-        this.notification = parseDate(task.getNotificationDate());
-        this.planned = parseDate(task.getPlannedDate());
-        this.upload = parseDate(task.getUploadDate());
-        this.change = parseDate(task.getChangeDate());
+        this.notification = ParameterParser.parseDate(task.getNotificationDate());
+        this.planned = ParameterParser.parseDate(task.getPlannedDate());
+        this.upload = ParameterParser.parseDate(task.getUploadDate());
+        this.change = ParameterParser.parseDate(task.getChangeDate());
         this.stringStatus = task.getStatus().toString();
     }
 
@@ -258,7 +245,7 @@ public class Task implements Comparable<Task>, Serializable {
     }
 
     public void setStringStatus(String stringStatus) {
-        this.stringStatus = stringStatus;
+        setStatus(ParameterParser.parseStatus(stringStatus));
     }
 
     /**
@@ -294,11 +281,12 @@ public class Task implements Comparable<Task>, Serializable {
      * @param notificationDate the new task notification time
      */
     public void setNotificationDate(Date notificationDate) {
-        if (this.notificationDate != notificationDate) {
+        if (!this.notificationDate.equals(notificationDate)) {
             this.notificationDate = notificationDate;
-            this.notification = parseDate(notificationDate);
+            this.notification = ParameterParser.parseDate(notificationDate);
             isRescheduled = true;
         }
+        this.notification = ParameterParser.parseDate(notificationDate);
     }
 
     /**
@@ -316,11 +304,12 @@ public class Task implements Comparable<Task>, Serializable {
      * @param plannedDate new planned task time
      */
     public void setPlannedDate(Date plannedDate) {
-        if (this.plannedDate != plannedDate) {
+        if (!this.plannedDate.equals(plannedDate)) {
             this.plannedDate = plannedDate;
-            this.planned = parseDate(plannedDate);
+            this.planned = ParameterParser.parseDate(plannedDate);
             isRescheduled = true;
         }
+        this.planned = ParameterParser.parseDate(plannedDate);
     }
 
     /**
@@ -342,7 +331,7 @@ public class Task implements Comparable<Task>, Serializable {
 
     public void setUploadDate(Date uploadDate) {
         this.uploadDate = uploadDate;
-        this.upload = parseDate(uploadDate);
+        this.upload = ParameterParser.parseDate(uploadDate);
     }
 
     public Date getChangeDate() {
@@ -351,7 +340,7 @@ public class Task implements Comparable<Task>, Serializable {
 
     public void setChangeDate(Date changeDate) {
         this.changeDate = changeDate;
-        this.change = parseDate(changeDate);
+        this.change = ParameterParser.parseDate(changeDate);
     }
 
     public String getNotification() {
@@ -401,18 +390,33 @@ public class Task implements Comparable<Task>, Serializable {
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", status=" + status +
+                ", stringStatus='" + stringStatus + '\'' +
+                ", description='" + description + '\'' +
+                ", notificationDate=" + notificationDate +
+                ", notification='" + notification + '\'' +
+                ", plannedDate=" + plannedDate +
+                ", planned='" + planned + '\'' +
+                ", uploadDate=" + uploadDate +
+                ", upload='" + upload + '\'' +
+                ", changeDate=" + changeDate +
+                ", change='" + change + '\'' +
+                ", journalId=" + journalId +
+                ", isRescheduled=" + isRescheduled +
+                '}';
+    }
+
     /**
      * Method that allows you to get information about all fields of an object Task
      *
      * @return string information
      */
-    @Override
-    public String toString() {
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(this.getId() + ". " + this.getClass().getSimpleName() + " (" + this.getName() + ", " + this.getStatus() + ", " + this.getDescription());
-        stringBuffer.append(", " + this.getNotificationDate() + ", " + this.getPlannedDate() + ")");
-        return stringBuffer.toString();
-    }
+
 
     @Override
     public boolean equals(Object o) {

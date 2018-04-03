@@ -173,25 +173,25 @@
                             <select class="form-control" name="<%=ConstantsClass.SORT_COLUMN%>"
                                     id="<%=ConstantsClass.SORT_COLUMN%>">
                                 <option value=""></option>
-                                <option value="<%=ConstantsClass.STATUS%>">
+                                <option value="<%=ConstantsClass.HIBERNATE_STATUS%>">
                                     Status
                                 </option>
-                                <option value="<%=ConstantsClass.NAME%>">
+                                <option value="<%=ConstantsClass.HIBERNATE_NAME%>">
                                     Name
                                 </option>
-                                <option value="<%=ConstantsClass.DESCRIPTION%>">
+                                <option value="<%=ConstantsClass.HIBERNATE_DESCRIPTION%>">
                                     Description
                                 </option>
-                                <option value="<%=ConstantsClass.PLANNED_DATE%>">
+                                <option value="<%=ConstantsClass.HIBERNATE_PLANNED_DATE%>">
                                     Planned date
                                 </option>
-                                <option value="<%=ConstantsClass.NOTIFICATION_DATE%>">
+                                <option value="<%=ConstantsClass.HIBERNATE_NOTIFICATION_DATE%>">
                                     Notification date
                                 </option>
-                                <option value="<%=ConstantsClass.UPLOAD_DATE%>">
+                                <option value="<%=ConstantsClass.HIBERNATE_UPLOAD_DATE%>">
                                     Upload date
                                 </option>
-                                <option value="<%=ConstantsClass.CHANGE_DATE%>">
+                                <option value="<%=ConstantsClass.HIBERNATE_CHANGE_DATE%>">
                                     Change date
                                 </option>
                             </select>

@@ -1,8 +1,11 @@
 package database.hibernate;
 
+import auxiliaryclasses.ConstantsClass;
 import database.daointerfaces.TasksDAO;
-import org.hibernate.Query;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import server.factories.TaskFactory;
 import server.model.Task;
 import server.model.TaskStatus;
@@ -91,25 +94,50 @@ public class HibernateTasksDAO implements TasksDAO {
 
     @Override
     public List<Task> getSortedByCriteria(int journalId, String column, String criteria) throws SQLException {
-        String sql = "SELECT * FROM \"Tasks\" WHERE \"Journal_id\" = ? ORDER BY \"%s\" %s";
-        sql = String.format(sql, column, criteria);
-        return Collections.unmodifiableList(getListByQuery(sql));
+        List<Task> list;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            list = getOrderCriteria(journalId, column, criteria, session.createCriteria(Task.class)).list();
+        } catch (ExceptionInInitializerError e) {
+            throw new SQLException("Error! READ SORT");
+        } finally {
+            finishSession();
+        }
+        return Collections.unmodifiableList(list);
     }
 
     @Override
     public List<Task> getFilteredByPattern(int journalId, String column, String pattern, String criteria) throws
             SQLException {
-        String sql = "SELECT * FROM \"Tasks\" WHERE \"%s\" LIKE \'%s%s%s\' AND \"Journal_id\" = ? ORDER BY \"%s\" %s";
-        sql = String.format(sql, column, '%', pattern, '%', column, criteria);
-        return Collections.unmodifiableList(getListByQuery(sql));
+        List<Task> list;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            Criteria likeResult = session.createCriteria(Task.class)
+                    .add(Restrictions.like(column, createPattern(pattern)));
+            list = getOrderCriteria(journalId, column, criteria, likeResult).list();
+        } catch (Exception e) {
+            throw new SQLException("Error! READ SORT PATTERN");
+        } finally {
+            finishSession();
+        }
+        return Collections.unmodifiableList(list);
     }
 
     @Override
     public List<Task> getFilteredByEquals(int journalId, String column, String equal, String criteria) throws
             SQLException {
-        String sql = "SELECT * FROM \"Tasks\" WHERE \"%s\"::text = \'%s\' AND \"Journal_id\" = ? ORDER BY \"%s\" %s";
-        sql = String.format(sql, column, equal, column, criteria);
-        return Collections.unmodifiableList(getListByQuery(sql));
+        List<Task> list;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            Criteria equalResult = session.createCriteria(Task.class)
+                    .add(Restrictions.eq(column, equal));
+            list = getOrderCriteria(journalId, column, criteria, equalResult).list();
+        } catch (ExceptionInInitializerError e) {
+            throw new SQLException("Error! READ SORT EQUAL");
+        } finally {
+            finishSession();
+        }
+        return Collections.unmodifiableList(list);
     }
 
     private void finishSession() {
@@ -118,16 +146,16 @@ public class HibernateTasksDAO implements TasksDAO {
         }
     }
 
-    private List<Task> getListByQuery(String sql) throws SQLException {
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            Query query = session.createQuery(sql);
-            return query.list();
-        } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! READ SORT");
-        } finally {
-            finishSession();
-        }
+    private Criteria getOrderCriteria(int journalId, String column, String criteria, Criteria resultCriteria) {
+        resultCriteria.add(Restrictions.eq(ConstantsClass.HIBERNATE_JOURNAL_ID, journalId));
+        if (criteria.equalsIgnoreCase(ConstantsClass.SORT_ASC))
+            return resultCriteria.addOrder(Order.asc(column));
+        if (criteria.equalsIgnoreCase(ConstantsClass.SORT_DESC))
+            return resultCriteria.addOrder(Order.desc(column));
+        return null;
     }
 
+    private String createPattern(String pattern) {
+        return "%" + pattern + "%";
+    }
 }

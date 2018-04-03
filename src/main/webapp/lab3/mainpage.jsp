@@ -156,10 +156,10 @@
                         <select class="form-control" name="<%=ConstantsClass.SORT_COLUMN%>"
                                 id="<%=ConstantsClass.SORT_COLUMN%>">
                             <option value=""></option>
-                            <option value="<%=ConstantsClass.NAME%>">
+                            <option value="<%=ConstantsClass.HIBERNATE_NAME%>">
                                 Name
                             </option>
-                            <option value="<%=ConstantsClass.DESCRIPTION%>">
+                            <option value="<%=ConstantsClass.HIBERNATE_DESCRIPTION%>">
                                 Description
                             </option>
                         </select>

@@ -131,6 +131,15 @@ public class ConstantsClass {
     public static final String UPLOAD_DATE = "Upload_date";
     public static final String CHANGE_DATE = "Change_date";
 
+    public static final String HIBERNATE_NAME = "name";
+    public static final String HIBERNATE_DESCRIPTION = "description";
+    public static final String HIBERNATE_STATUS = "stringStatus";
+    public static final String HIBERNATE_PLANNED_DATE = "plannedDate";
+    public static final String HIBERNATE_NOTIFICATION_DATE = "notificationDate";
+    public static final String HIBERNATE_UPLOAD_DATE = "uploadDate";
+    public static final String HIBERNATE_CHANGE_DATE = "changeDate";
+    public static final String HIBERNATE_JOURNAL_ID = "journalId";
+
     public static final String JOURNAL_NAMES = "journalNames";
     public static final String CURRENT_TASK = "task";
     public static final String CURRENT_TASK_XML = "taskxml";

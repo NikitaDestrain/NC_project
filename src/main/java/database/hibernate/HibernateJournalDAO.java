@@ -2,9 +2,10 @@ package database.hibernate;
 
 import auxiliaryclasses.ConstantsClass;
 import database.daointerfaces.JournalDAO;
-import org.hibernate.Query;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import server.factories.JournalFactory;
 import server.model.Journal;
 
@@ -91,19 +92,12 @@ public class HibernateJournalDAO implements JournalDAO {
 
     @Override
     public List<Journal> getSortedByCriteria(String column, String criteria) throws SQLException {
-        List<Journal> list = null;
+        List<Journal> list;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            if (criteria.equalsIgnoreCase(ConstantsClass.SORT_ASC))
-                list = session.createCriteria(Journal.class)
-                        .addOrder(Order.asc(column.toLowerCase()))
-                        .list();
-            if (criteria.equalsIgnoreCase(ConstantsClass.SORT_DESC))
-                list = session.createCriteria(Journal.class)
-                        .addOrder(Order.desc(column.toLowerCase()))
-                        .list();
+            list = getOrderCriteria(column, criteria, session.createCriteria(Journal.class)).list();
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! READ ALL");
+            throw new SQLException("Error! READ SORT");
         } finally {
             finishSession();
         }
@@ -112,16 +106,34 @@ public class HibernateJournalDAO implements JournalDAO {
 
     @Override
     public List<Journal> getFilteredByPattern(String column, String pattern, String criteria) throws SQLException {
-        String sql = "SELECT * FROM \"Journal\" WHERE \"%s\"::text LIKE \'%s%s%s\' ORDER BY \"%s\" %s";
-        sql = String.format(sql, column, '%', pattern, '%', column, criteria);
-        return Collections.unmodifiableList(getListByQuery(sql));
+        List<Journal> list;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            Criteria likeResult = session.createCriteria(Journal.class)
+                    .add(Restrictions.like(column, createPattern(pattern)));
+            list = getOrderCriteria(column, criteria, likeResult).list();
+        } catch (Exception e) {
+            throw new SQLException("Error! READ SORT PATTERN");
+        } finally {
+            finishSession();
+        }
+        return Collections.unmodifiableList(list);
     }
 
     @Override
     public List<Journal> getFilteredByEquals(String column, String equal, String criteria) throws SQLException {
-        String sql = "SELECT * FROM \"Journal\" WHERE \"%s\" = \'%s\' ORDER BY \"%s\" %s";
-        sql = String.format(sql, column, equal, column, criteria);
-        return Collections.unmodifiableList(getListByQuery(sql));
+        List<Journal> list;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            Criteria equalResult = session.createCriteria(Journal.class)
+                    .add(Restrictions.eq(column, equal));
+            list = getOrderCriteria(column, criteria, equalResult).list();
+        } catch (Exception e) {
+            throw new SQLException("Error! READ SORT EQUAL");
+        } finally {
+            finishSession();
+        }
+        return Collections.unmodifiableList(list);
     }
 
     private void finishSession() {
@@ -130,16 +142,15 @@ public class HibernateJournalDAO implements JournalDAO {
         }
     }
 
-    private List<Journal> getListByQuery(String sql) throws SQLException {
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            System.out.println(sql);
-            Query query = session.createQuery(sql);
-            return query.list();
-        } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! READ SORT");
-        } finally {
-            finishSession();
-        }
+    private Criteria getOrderCriteria(String column, String criteria, Criteria resultCriteria) {
+        if (criteria.equalsIgnoreCase(ConstantsClass.SORT_ASC))
+            return resultCriteria.addOrder(Order.asc(column));
+        if (criteria.equalsIgnoreCase(ConstantsClass.SORT_DESC))
+            return resultCriteria.addOrder(Order.desc(column));
+        return null;
+    }
+
+    private String createPattern(String pattern) {
+        return "%" + pattern + "%";
     }
 }
