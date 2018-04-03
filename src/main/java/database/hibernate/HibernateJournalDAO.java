@@ -1,8 +1,10 @@
 package database.hibernate;
 
+import auxiliaryclasses.ConstantsClass;
 import database.daointerfaces.JournalDAO;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import server.factories.JournalFactory;
 import server.model.Journal;
 
@@ -89,9 +91,23 @@ public class HibernateJournalDAO implements JournalDAO {
 
     @Override
     public List<Journal> getSortedByCriteria(String column, String criteria) throws SQLException {
-        String sql = "SELECT * FROM \"Journal\" ORDER BY \"%s\" %s";
-        sql = String.format(sql, column, criteria);
-        return Collections.unmodifiableList(getListByQuery(sql));
+        List<Journal> list = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            if (criteria.equalsIgnoreCase(ConstantsClass.SORT_ASC))
+                list = session.createCriteria(Journal.class)
+                        .addOrder(Order.asc(column.toLowerCase()))
+                        .list();
+            if (criteria.equalsIgnoreCase(ConstantsClass.SORT_DESC))
+                list = session.createCriteria(Journal.class)
+                        .addOrder(Order.desc(column.toLowerCase()))
+                        .list();
+        } catch (ExceptionInInitializerError e) {
+            throw new SQLException("Error! READ ALL");
+        } finally {
+            finishSession();
+        }
+        return Collections.unmodifiableList(list);
     }
 
     @Override

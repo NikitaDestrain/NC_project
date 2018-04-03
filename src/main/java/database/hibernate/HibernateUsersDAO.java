@@ -6,7 +6,6 @@ import org.hibernate.Session;
 import server.factories.UserFactory;
 import server.model.User;
 
-import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +20,7 @@ public class HibernateUsersDAO implements UsersDAO {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
-            user = UserFactory.createUser(login, password, role, new Date(System.currentTimeMillis()));
+            user = UserFactory.createUser(login, password, role);
             session.save(user);
             session.getTransaction().commit();
         } catch (ExceptionInInitializerError e) {

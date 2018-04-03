@@ -42,7 +42,7 @@ public class User implements Serializable {
     @XmlElement(name = "registrationDate")
     private Date registrationDate;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    //@OneToMany(cascade = CascadeType.ALL)
     @Transient
     @XmlElement(name = "journals")
     private Map<Integer, Journal> journals;
@@ -135,5 +135,24 @@ public class User implements Serializable {
                 ", role='" + role + '\'' +
                 ", registrationDate='" + registrationDate +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) &&
+                Objects.equals(login, user.login) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(role, user.role) &&
+                Objects.equals(registrationDate, user.registrationDate) &&
+                Objects.equals(journals, user.journals);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, login, password, role, registrationDate, journals);
     }
 }

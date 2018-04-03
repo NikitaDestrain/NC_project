@@ -163,4 +163,22 @@ public class Journal implements Serializable {
                 " " + this.userId + " (" + this.tasks + ")");
         return stringBuffer.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Journal journal = (Journal) o;
+        return id == journal.id &&
+                userId == journal.userId &&
+                Objects.equals(tasks, journal.tasks) &&
+                Objects.equals(name, journal.name) &&
+                Objects.equals(description, journal.description);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, tasks, name, description, userId);
+    }
 }

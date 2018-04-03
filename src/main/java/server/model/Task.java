@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.Calendar;
+import java.util.Objects;
 
 /**
  * The class serves to store the object "task" with server.exceptions.properties
@@ -411,5 +412,33 @@ public class Task implements Comparable<Task>, Serializable {
         stringBuffer.append(this.getId() + ". " + this.getClass().getSimpleName() + " (" + this.getName() + ", " + this.getStatus() + ", " + this.getDescription());
         stringBuffer.append(", " + this.getNotificationDate() + ", " + this.getPlannedDate() + ")");
         return stringBuffer.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id == task.id &&
+                journalId == task.journalId &&
+                isRescheduled == task.isRescheduled &&
+                Objects.equals(name, task.name) &&
+                status == task.status &&
+                Objects.equals(stringStatus, task.stringStatus) &&
+                Objects.equals(description, task.description) &&
+                Objects.equals(notificationDate, task.notificationDate) &&
+                Objects.equals(notification, task.notification) &&
+                Objects.equals(plannedDate, task.plannedDate) &&
+                Objects.equals(planned, task.planned) &&
+                Objects.equals(uploadDate, task.uploadDate) &&
+                Objects.equals(upload, task.upload) &&
+                Objects.equals(changeDate, task.changeDate) &&
+                Objects.equals(change, task.change);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, name, status, stringStatus, description, notificationDate, notification, plannedDate, planned, uploadDate, upload, changeDate, change, journalId, isRescheduled);
     }
 }

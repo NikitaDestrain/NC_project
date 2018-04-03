@@ -22,8 +22,7 @@ public class HibernateTasksDAO implements TasksDAO {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
-            task = TaskFactory.createTask(name, status.toString(), description, notificationDate, plannedDate,
-                    new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), journalId);
+            task = TaskFactory.createTask(name, status.toString(), description, notificationDate, plannedDate, journalId);
             session.save(task);
             session.getTransaction().commit();
         } catch (ExceptionInInitializerError e) {
