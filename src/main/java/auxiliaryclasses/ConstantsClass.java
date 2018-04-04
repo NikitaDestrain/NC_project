@@ -80,6 +80,8 @@ public class ConstantsClass {
     // web constants
 
     public static final String IS_ADD = "isadd";
+    public static final String IS_EDIT = "isedit";
+    public static final String IS_RENAME = "isrename";
 
     public static final String AUTH_SERVLET_ADDRESS = "/authservlet";
     public static final String JOURNAL_SERVLET_ADDRESS = "/journalservlet";
@@ -100,6 +102,7 @@ public class ConstantsClass {
     public static final String DO_SELECT = "select";
     public static final String DO_ADD_TASK = "addtask";
     public static final String DO_EDIT_TASK = "edittask";
+    public static final String DO_RENAME_TASKS = "renametasks";
     public static final String DO_CRUD_FROM_JOURNAL = "crudactionmain";
     public static final String DO_CRUD_FROM_TASKS = "crudactiontasks";
     public static final String DO_ADD_JOURNAL = "addjournal";
@@ -130,6 +133,7 @@ public class ConstantsClass {
     public static final String NOTIFICATION_DATE = "Notification_date";
     public static final String UPLOAD_DATE = "Upload_date";
     public static final String CHANGE_DATE = "Change_date";
+    public static final String PREFIX = "Prefix";
 
     public static final String HIBERNATE_NAME = "name";
     public static final String HIBERNATE_DESCRIPTION = "description";

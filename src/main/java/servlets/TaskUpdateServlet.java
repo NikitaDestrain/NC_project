@@ -33,6 +33,9 @@ public class TaskUpdateServlet extends HttpServlet {
             case ConstantsClass.DO_EDIT_TASK:
                 doEditTask(req, resp);
                 break;
+            case ConstantsClass.DO_RENAME_TASKS:
+                doRenameTasks(req, resp);
+                break;
         }
     }
 
@@ -176,6 +179,41 @@ public class TaskUpdateServlet extends HttpServlet {
             resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
         }
         req.setAttribute(ConstantsClass.CURRENT_TASK, t);
+        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
+        req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
+    }
+
+    private void doRenameTasks(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            controller = Controller.getInstance();
+            updateUtil = DataUpdateUtil.getInstance();
+        } catch (ControllerActionException e) {
+            resp.getWriter().print(ConstantsClass.ERROR_LAZY_MESSAGE);
+        }
+        String useraction = req.getParameter(ConstantsClass.USERACTION);
+        Journal currentJournal = (Journal) req.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL);
+        switch (useraction) {
+            case ConstantsClass.RENAME:
+                String prefix = req.getParameter(ConstantsClass.PREFIX);
+                try {
+                    controller.renameTasks(currentJournal.getId(), prefix);
+                    updateUtil.updateTasks(req, resp, currentJournal);
+                } catch (ControllerActionException e) {
+                    incorrectRenameTasks(req, resp, prefix, e.getMessage());
+                }
+                break;
+            case ConstantsClass.BACK_TO_MAIN:
+                req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+                break;
+            case ConstantsClass.BACK_TO_TASKS:
+                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                break;
+        }
+    }
+
+
+    private void incorrectRenameTasks(HttpServletRequest req, HttpServletResponse resp, String prefix, String message) throws ServletException, IOException {
+        req.setAttribute(ConstantsClass.PREFIX, prefix);
         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
         req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
     }
