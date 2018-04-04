@@ -79,6 +79,10 @@ public class ConstantsClass {
 
     // web constants
 
+    public static final String REPLACE = "replace";
+    public static final String IGNORE = "ignore";
+    public static final String EXCEPTION = "exception";
+
     public static final String IS_ADD = "isadd";
     public static final String IS_EDIT = "isedit";
     public static final String IS_RENAME = "isrename";
@@ -88,6 +92,7 @@ public class ConstantsClass {
     public static final String JOURNAL_UPDATE_SERVLET_ADDRESS = "/journalupdateservlet";
     public static final String TASK_SERVLET_ADDRESS = "/taskservlet";
     public static final String TASK_UPDATE_SERVLET_ADDRESS = "/taskupdateservlet";
+    public static final String IMPORT_SERVLET_ADDRESS = "/importservlet";
 
     public static final String JOURNAL_PAGE_ADDRESS = "/mainpage";
     public static final String TASKS_PAGE_ADDRESS = "/tasks";
@@ -95,6 +100,8 @@ public class ConstantsClass {
     public static final String SIGN_UP_ADDRESS = "/signup";
     public static final String UPDATE_TASKS_ADDRESS = "/updatetasks";
     public static final String UPDATE_JOURNALS_ADDRESS = "/updatejournals";
+    public static final String JOURNALS_XSL_ADDRESS = "/journalxsl";
+    public static final String TASKS_XSL_ADDRESS = "/taskxsl";
 
     public static final String DO_SIGN_IN = "signin";
     public static final String SIGN_IN_ACTION = "signinaction";
@@ -110,6 +117,11 @@ public class ConstantsClass {
     public static final String BACK_TO_MAIN = "backtomain";
     public static final String BACK_TO_TASKS = "backtotasks";
 
+    public static final String CHOOSE_STRATEGY = "choosestrategy";
+
+    public static final String SELECTED = "selected";
+    public static final String IMPORT = "imp";
+    public static final String EXPORT = "exp";
     public static final String USERACTION = "useraction";
     public static final String USERNUMBER = "usernumber";
     public static final String JOURNAL_NAME = "journalname";
@@ -159,6 +171,11 @@ public class ConstantsClass {
     public static final String CURRENT_JOURNAL_ID = "curId";
     public static final String IS_SORTED = "issorted";
     public static final String SHOW_ALL = "allvals";
+    public static final String XSL_JOURNAL_CONTAINER_PARAMETER = "xslJournals";
+    public static final String XSL_JOURNAL_PARAMETER = "xslJournal";
+
+    public static final String IMPORT_PARAMETER = "import";
+    public static final String EXPORT_PARAMETER = "export";
 
     public static final String NAME = "Name";
     public static final String DESCRIPTION = "Description";
@@ -177,6 +194,8 @@ public class ConstantsClass {
 
     // XSL path constants
     public static final String NAMES_XSL = "localbackup/names.xsl";
+    public static final String JOURNALS_XSL = "localbackup/journals.xsl";
+    public static final String TASKS_XSL = "localbackup/tasks.xsl";
 
     // XSL parameters
 

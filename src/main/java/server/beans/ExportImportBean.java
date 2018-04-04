@@ -48,6 +48,7 @@ public class ExportImportBean implements EIBeanLocal {
 
     @Override
     public void importData(String xml, String strategy) throws StoreException {
+       // throw new StoreException(strategy + "\n" + xml);
         StoreItem storeItem = marshaller.unmarshal(xml);
         storeItem.setStrategy(strategy);
         StoreStrategyHelper storeStrategyHelper = StoreStrategyHelper.getInstance();
