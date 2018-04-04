@@ -1,6 +1,6 @@
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 <%@ page import="auxiliaryclasses.ConstantsClass" %>
-<%@ page import="server.model.Journal" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: ывв
   Date: 18.02.2018
@@ -67,11 +67,34 @@
                     break;
             }
         }
+
+        function buttonClickRename(x) {
+            switch (x.id) {
+                case "rename":
+                    if (document.getElementById("prefix").value.length == 0)
+                        alert("Enter prefix!");
+                    else {
+                        document.getElementById("hid").value = "Rename";
+                        document.forms[0].submit();
+                    }
+                    break;
+                case "backtomain":
+                    document.getElementById("hid").value = "backtomain";
+                    document.forms[0].submit();
+                    break;
+                case "backtotasks":
+                    document.getElementById("hid").value = "backtotasks";
+                    document.forms[0].submit();
+                    break;
+            }
+        }
     </script>
 </head>
 <body>
 <%
     Boolean isAdd = request.getSession().getAttribute(ConstantsClass.IS_ADD) != null && (Boolean) request.getSession().getAttribute(ConstantsClass.IS_ADD);
+    Boolean isRename = request.getSession().getAttribute(ConstantsClass.IS_RENAME) != null && (Boolean) request.getSession().getAttribute(ConstantsClass.IS_RENAME);
+    Boolean isEdit = request.getSession().getAttribute(ConstantsClass.IS_EDIT) != null && (Boolean) request.getSession().getAttribute(ConstantsClass.IS_EDIT);
 %>
 <div align="center">
     <form method="post" action="<%=ConstantsClass.TASK_UPDATE_SERVLET_ADDRESS%>" role="form">
@@ -173,7 +196,12 @@
                        onclick="buttonClickAdd(this)">
             </div>
             <%
-            } else {
+                    request.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.FALSE);
+                }
+            %>
+
+            <%
+                if (isEdit) {
             %>
             <div align="center">
                 <strong>
@@ -250,8 +278,44 @@
                        onclick="buttonClickEdit(this)">
             </div>
             <%
+                    request.getSession().setAttribute(ConstantsClass.IS_EDIT, Boolean.FALSE);
                 }
             %>
+
+            <%
+                if (isRename) {
+            %>
+            <div align="center">
+                <strong>
+                    Rename tasks
+                </strong>
+                <input type="hidden" name="<%=ConstantsClass.ACTION%>" value="<%=ConstantsClass.DO_RENAME_TASKS%>">
+                <br>
+                <i>
+                    Result example: Prefix.TaskName
+                </i>
+                <table>
+                    <tr>
+                        <td>Prefix</td>
+                        <td>
+                            <input type="text" class="form-control" name="<%=ConstantsClass.PREFIX%>"
+                                   id="prefix"
+                                   value=<%=request.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME) == null ? "" : request.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME)%>>
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                <div class="center">
+                    <input type="button" id="rename" class="btn btn-outline-primary" value="Rename"
+                           onclick="buttonClickRename(this)">
+                </div>
+                <br>
+            </div>
+            <%
+                    request.getSession().setAttribute(ConstantsClass.IS_RENAME, Boolean.FALSE);
+                }
+            %>
+
             <div class="center">
                 <input type="button" id="backtotasks" class="btn btn-outline-primary" value="Back to tasks page"
                        onclick="buttonClickAdd(this)">

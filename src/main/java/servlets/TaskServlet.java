@@ -59,6 +59,7 @@ public class TaskServlet extends HttpServlet {
                 if (usernumber != null && !usernumber.equals("")) {
                     int num = Integer.parseInt(usernumber);
                     currentTask = controller.getTask(currentJournal.getId(), num);
+                    req.getSession().setAttribute(ConstantsClass.IS_EDIT, Boolean.TRUE);
                     req.getSession().setAttribute(ConstantsClass.CURRENT_TASK, currentTask);
                     req.getSession().setAttribute(ConstantsClass.CURRENT_STATUS, currentTask.getStatus());
                     String t = null;
@@ -94,7 +95,9 @@ public class TaskServlet extends HttpServlet {
                 }
                 break;
             case ConstantsClass.RENAME:
-                resp.getWriter().print("Rename form");
+                req.getSession().setAttribute(ConstantsClass.IS_RENAME, Boolean.TRUE);
+                req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
+                req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
                 break;
             case ConstantsClass.SORT:
                 String sortColumn = req.getParameter(ConstantsClass.SORT_COLUMN); // name||description

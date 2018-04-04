@@ -27,7 +27,7 @@ public class HibernateUsersDAO implements UsersDAO {
             session.save(user);
             session.getTransaction().commit();
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! ADD");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -41,7 +41,7 @@ public class HibernateUsersDAO implements UsersDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             user = (User) session.load(User.class, id);
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! READ");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -56,7 +56,7 @@ public class HibernateUsersDAO implements UsersDAO {
             session.update(user);
             session.getTransaction().commit();
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! UPDATE");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -70,7 +70,7 @@ public class HibernateUsersDAO implements UsersDAO {
             session.delete(user);
             session.getTransaction().commit();
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! DELETE");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -83,7 +83,7 @@ public class HibernateUsersDAO implements UsersDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             list = session.createCriteria(User.class).list();
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! READ ALL");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -100,7 +100,7 @@ public class HibernateUsersDAO implements UsersDAO {
                     .add(Restrictions.eq(ConstantsClass.PASSWORD_PARAMETER, password));
             user = (User) equalResult.list().get(0);
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! READ SORT EQUAL");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -114,7 +114,7 @@ public class HibernateUsersDAO implements UsersDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             list = getOrderCriteria(column, criteria, session.createCriteria(User.class)).list();
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! READ SORT");
+            throw new SQLException();
         } finally {
             finishSession();
         }

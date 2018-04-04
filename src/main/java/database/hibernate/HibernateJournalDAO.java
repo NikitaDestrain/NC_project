@@ -27,7 +27,7 @@ public class HibernateJournalDAO implements JournalDAO {
             session.save(journal);
             session.getTransaction().commit();
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! ADD");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -41,7 +41,7 @@ public class HibernateJournalDAO implements JournalDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             journal = (Journal) session.load(Journal.class, id);
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! READ");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -56,7 +56,7 @@ public class HibernateJournalDAO implements JournalDAO {
             session.update(journal);
             session.getTransaction().commit();
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! UPDATE");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -70,7 +70,7 @@ public class HibernateJournalDAO implements JournalDAO {
             session.delete(journal);
             session.getTransaction().commit();
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! DELETE");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -83,7 +83,7 @@ public class HibernateJournalDAO implements JournalDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             list = session.createCriteria(Journal.class).list();
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! READ ALL");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -97,7 +97,7 @@ public class HibernateJournalDAO implements JournalDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             list = getOrderCriteria(column, criteria, session.createCriteria(Journal.class)).list();
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! READ SORT");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -113,7 +113,7 @@ public class HibernateJournalDAO implements JournalDAO {
                     .add(Restrictions.like(column, createPattern(pattern)));
             list = getOrderCriteria(column, criteria, likeResult).list();
         } catch (Exception e) {
-            throw new SQLException("Error! READ SORT PATTERN");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -129,7 +129,7 @@ public class HibernateJournalDAO implements JournalDAO {
                     .add(Restrictions.eq(column, equal));
             list = getOrderCriteria(column, criteria, equalResult).list();
         } catch (Exception e) {
-            throw new SQLException("Error! READ SORT EQUAL");
+            throw new SQLException();
         } finally {
             finishSession();
         }
