@@ -8,19 +8,27 @@ import server.model.Journal;
 import server.model.Task;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import javax.xml.bind.JAXBException;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 @WebServlet(ConstantsClass.TASK_SERVLET_ADDRESS)
+@MultipartConfig
+
 public class TaskServlet extends HttpServlet {
     private Controller controller;
     private DataUpdateUtil updateUtil;
     private XmlUtils xmlUtils = XmlUtils.getInstance();
     private PatternChecker patternChecker = PatternChecker.getInstance();
+    private ImportExportManager importExportManager = ImportExportManager.getInstance();
 
     private Task currentTask;
 
@@ -130,6 +138,14 @@ public class TaskServlet extends HttpServlet {
                 break;
             case ConstantsClass.RELOAD:
                 updateUtil.updateJournals(req, resp);
+                break;
+            case ConstantsClass.IMPORT:
+                Part filePart = req.getPart(ConstantsClass.IMPORT_PARAMETER);
+                importExportManager.doImport(filePart, req, resp);
+                break;
+            case ConstantsClass.EXPORT:
+                String impFile = req.getParameter(ConstantsClass.EXPORT_PARAMETER);
+                resp.getWriter().print(impFile);
                 break;
         }
     }

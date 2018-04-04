@@ -68,6 +68,26 @@
         <url-pattern>/updatejournals</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>journalxsl</servlet-name>
+        <jsp-file>/lab4/journalxsl.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>journalxsl</servlet-name>
+        <url-pattern>/journalxsl</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>taskxsl</servlet-name>
+        <jsp-file>/lab4/taskxsl.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>taskxsl</servlet-name>
+        <url-pattern>/taskxsl</url-pattern>
+    </servlet-mapping>
+
     <resource-ref>
         <description>DB Connection</description>
         <res-ref-name>jdbc/cracker</res-ref-name>

@@ -92,7 +92,58 @@
                     document.getElementById("hid").value = "reload";
                     document.forms[0].submit();
                     break;
+                case "imp":
+                    document.getElementById("hid").value = "imp";
+                    document.forms[0].submit();
+                    break;
+                case "exp":
+                    document.getElementById("hid").value = "exp";
+                    document.forms[0].submit();
+                    break;
             }
+        }
+
+        function importSubmit(x) {
+            var imp = x.value;
+            if (imp.localeCompare("")!=0){
+                if (confirm("Do you really want to import data from " + imp + "?")) {
+                    document.getElementById("imp").disabled = false;
+                }
+            }
+        }
+
+        function exportSubmit(x) {
+            var exp = x.value;
+            if (exp.localeCompare("")!=0){
+                if (confirm("Do you really want to export data to " + exp + "?")) {
+                    document.getElementById("exp").disabled = false;
+                }
+            }
+        }
+
+        function exportingValues() {
+            var selected = document.getElementsByName("selected");
+            var noChecked = true;
+            for (var i=0; i<selected.length; i++) {
+                if (selected[i].checked) {
+                    document.getElementById("export").disabled = false;
+                    noChecked = false;
+                    break;
+                }
+                if (noChecked) {
+                    document.getElementById("export").disabled = true;
+                }
+            }
+        }
+
+        function clearImport() {
+            document.getElementById("import").value = "";
+            document.getElementById("imp").disabled = true;
+        }
+
+        function clearExport() {
+            document.getElementById("export").value = "";
+            document.getElementById("exp").disabled = true;
         }
     </script>
 </head>
@@ -102,7 +153,7 @@
 %>
 <div align="center"><strong>TASK SCHEDULER</strong></div>
 <div align="center">
-    <form method="post" id="mainform" action="<%=ConstantsClass.TASK_SERVLET_ADDRESS%>" role="form">
+    <form method="post" id="mainform" action="<%=ConstantsClass.TASK_SERVLET_ADDRESS%>" role="form" enctype="multipart/form-data">
         <div class="form-group">
             <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
             <input type="hidden" name="<%=ConstantsClass.ACTION%>" value=<%=ConstantsClass.DO_CRUD_FROM_TASKS%>>
@@ -121,6 +172,10 @@
                 <x:parse xml="${sessionScope.journal}" var="container"/>
                 <x:forEach select="$container/journal/tasks/entry" var="task">
                     <tr>
+                        <td>
+                            <input type="checkbox" class="form-control" name="<%=ConstantsClass.SELECTED%>"
+                                   value="<x:out select="$task/value/id"/>" onclick="exportingValues()"/>
+                        </td>
                         <td>
                             <label>
                                 <input type="radio" class="form-control" name="<%=ConstantsClass.USERNUMBER%>"
@@ -162,6 +217,39 @@
                                    onclick="buttonClick(this)"></td>
                         <td><input type="button" class="btn btn-outline-success" id="rename" value="Rename tasks"
                                    onclick="buttonClick(this)"></td>
+                    </tr>
+                </table>
+            </div>
+            <div align="center">
+                <table>
+                    <tr>
+                        <td>
+                            Import <input type="file" name="<%=ConstantsClass.IMPORT_PARAMETER%>" class="btn btn-outline-primary"
+                                          id="import" accept="text/xml" onchange="importSubmit(this)"/>
+                        </td>
+                        <td>
+                            <input type="button" class="btn btn-outline-primary" value="Clear"
+                                   onclick="clearImport()"/>
+                        </td>
+                        <td>
+                            <input type="button" class="btn btn-outline-primary" id="imp" value="Import data"
+                                   onclick="buttonClick(this)" disabled/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Export <input type="file" name="<%=ConstantsClass.EXPORT_PARAMETER%>"
+                                          class="btn btn-outline-primary"
+                                          id="export" accept="text/xml" onchange="exportSubmit(this)" disabled/>
+                        </td>
+                        <td>
+                            <input type="button" class="btn btn-outline-primary" value="Clear"
+                                   onclick="clearExport()"/>
+                        </td>
+                        <td>
+                            <input type="button" class="btn btn-outline-primary" id="exp" value="Export data"
+                                   onclick="buttonClick(this)" disabled/>
+                        </td>
                     </tr>
                 </table>
             </div>

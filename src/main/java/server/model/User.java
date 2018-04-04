@@ -12,7 +12,8 @@ import java.util.*;
 
 //todo аналог с журналом
 @Entity
-@Table(name = "\"Users\"", schema = "public", catalog = "postgres")
+@Table(name = "\"Users\"", schema = "public", catalog = "cracker")
+//@Table(name = "\"Users\"", schema = "public", catalog = "postgres")
 
 @XmlType(propOrder = {"id", "login", "password", "role", "registrationDate"}, name = "user")
 @XmlRootElement(name = "user")

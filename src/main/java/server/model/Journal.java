@@ -7,7 +7,8 @@ import java.util.*;
 
 //todo доделать связь onetomany
 @Entity
-@Table(name = "\"Journal\"", schema = "public", catalog = "postgres")
+@Table(name = "\"Journal\"", schema = "public", catalog = "cracker")
+//@Table(name = "\"Journal\"", schema = "public", catalog = "postgres")
 
 @XmlType(propOrder = {"id", "name", "description", "userId", "tasks"}, name = "journal")
 @XmlRootElement(name = "journal")

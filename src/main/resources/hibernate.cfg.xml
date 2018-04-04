@@ -7,7 +7,7 @@
         <!-- DB schema will be updated if needed -->
         <property name="hibernate.current_session_context_class">thread</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
-        <property name="connection.url">jdbc:postgresql://localhost:5432/postgres</property>
+        <property name="connection.url">jdbc:postgresql://localhost:5432/cracker</property>
         <property name="connection.driver_class">org.postgresql.Driver</property>
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL82Dialect</property>
         <property name="connection.username">postgres</property>
