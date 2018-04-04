@@ -275,6 +275,28 @@ public class Controller {
         return sortedTasksJournal;
     }
 
+    public void renameTasks(int journalId, String prefix) throws ControllerActionException {
+        for (Task task : journalContainer.getJournal(journalId).getTasks())
+            doRenameAction(task, prefix);
+    }
+
+    private void doRenameAction(Task task, String prefix) throws ControllerActionException{
+        try {
+            String oldName = task.getName();
+            String newName = createNewName(prefix, oldName);
+            task.setName(newName);
+            tasksDAO.update(task);
+            taskNamesContainer.deleteName(oldName);
+            taskNamesContainer.addName(newName);
+        } catch (SQLException e) {
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
+        }
+    }
+
+    private String createNewName(String prefix, String name) {
+        return prefix + "." + name;
+    }
+
     public void setOverdue(Task task) {
         try {
             if (statusManager.isStatusConversionValid(task.getStatus(), TaskStatus.Overdue)) {

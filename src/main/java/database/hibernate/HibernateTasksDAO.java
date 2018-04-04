@@ -29,7 +29,7 @@ public class HibernateTasksDAO implements TasksDAO {
             session.save(task);
             session.getTransaction().commit();
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! ADD");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -43,7 +43,7 @@ public class HibernateTasksDAO implements TasksDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             task = (Task) session.load(Task.class, id);
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! READ");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -58,7 +58,7 @@ public class HibernateTasksDAO implements TasksDAO {
             session.update(task);
             session.getTransaction().commit();
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! UPDATE");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -72,7 +72,7 @@ public class HibernateTasksDAO implements TasksDAO {
             session.delete(task);
             session.getTransaction().commit();
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! DELETE");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -85,7 +85,7 @@ public class HibernateTasksDAO implements TasksDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             list = session.createCriteria(Task.class).list();
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! READ ALL");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -99,7 +99,7 @@ public class HibernateTasksDAO implements TasksDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             list = getOrderCriteria(journalId, column, criteria, session.createCriteria(Task.class)).list();
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! READ SORT");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -116,7 +116,7 @@ public class HibernateTasksDAO implements TasksDAO {
                     .add(Restrictions.like(column, createPattern(pattern)));
             list = getOrderCriteria(journalId, column, criteria, likeResult).list();
         } catch (Exception e) {
-            throw new SQLException("Error! READ SORT PATTERN");
+            throw new SQLException();
         } finally {
             finishSession();
         }
@@ -133,7 +133,7 @@ public class HibernateTasksDAO implements TasksDAO {
                     .add(Restrictions.eq(column, equal));
             list = getOrderCriteria(journalId, column, criteria, equalResult).list();
         } catch (ExceptionInInitializerError e) {
-            throw new SQLException("Error! READ SORT EQUAL");
+            throw new SQLException();
         } finally {
             finishSession();
         }
