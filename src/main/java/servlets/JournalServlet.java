@@ -159,7 +159,11 @@ public class JournalServlet extends HttpServlet {
                 break;
             case ConstantsClass.EXPORT:
                 String impFile = req.getParameter(ConstantsClass.EXPORT_PARAMETER);
-                resp.getWriter().print(impFile);
+                String[] checkBoxes = req.getParameterValues(ConstantsClass.USERNUMBER);
+                for (String s: checkBoxes) {
+                    resp.getWriter().println(s);
+                }
+                //resp.getWriter().print(impFile);
                 break;
         }
     }

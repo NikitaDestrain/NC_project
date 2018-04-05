@@ -200,4 +200,8 @@ public class ConstantsClass {
     // XSL parameters
 
     public static final String XSL_JOURNAL_NAMES_ATTRIBUTE = "xslNames";
+
+    public static final String INCORRECT_FILE_CONTENT = "Incorrect XML-file content! Could not perform import!";
+    public static final String JOURNAL_CONTAINER_TAG = "<journalContainer>";
+    public static final String JOURNAL_TAG = "<journal>";
 }

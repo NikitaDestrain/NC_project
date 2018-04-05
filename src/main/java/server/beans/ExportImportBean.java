@@ -48,26 +48,23 @@ public class ExportImportBean implements EIBeanLocal {
 
     @Override
     public void importData(String xml, String strategy) throws StoreException {
-       // throw new StoreException(strategy + "\n" + xml);
         StoreItem storeItem = marshaller.unmarshal(xml);
         storeItem.setStrategy(strategy);
         StoreStrategyHelper storeStrategyHelper = StoreStrategyHelper.getInstance();
         if (storeItem.getJournal() != null) {
             Journal journal = storeItem.getJournal();
-            // todo do import of the received journal
-            List<Task> tasks = journal.getTasks(); // parsed
+            List<Task> tasks = journal.getTasks();
             StoreStrategy<Task> storeStrategy = storeStrategyHelper.resolveStrategy(storeItem);
             for (Task t : tasks) {
                 storeStrategy.store(t);
             }
         } else if (storeItem.getContainer() != null) {
-            JournalContainer container = new JournalContainer();
+            JournalContainer container = storeItem.getContainer();
             List<Journal> journals = container.getJournals();
             StoreStrategy<Journal> storeStrategy = storeStrategyHelper.resolveStrategy(storeItem);
             for (Journal journal : journals) {
                 storeStrategy.store(journal);
             }
-            // todo do import of the received journal container
         }
     }
 }

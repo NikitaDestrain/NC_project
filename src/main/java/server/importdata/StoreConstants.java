@@ -10,4 +10,6 @@ public class StoreConstants {
     public static final String TASK = "task";
 
     //todo vlla аналогично - слишком много констант
+
+    public static final String STORE_EXCEPTION_MESSAGE = "Object with this ID already exists in the system: ";
 }
