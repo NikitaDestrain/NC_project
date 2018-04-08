@@ -45,26 +45,29 @@
                     document.forms[0].submit();
                     break;
                 case "edit":
-                    document.getElementById("hid").value = "Update";
-                    document.forms[0].submit();
+                    if (countChecked() > 1) {
+                        alert("Select only one object to perform the \"Edit\" operation!");
+                    }
+                    else if (countChecked() == 1) {
+                        document.getElementById("hid").value = "Update";
+                        document.forms[0].submit();
+                    }
+                    else {
+                        alert("Select a task to perform an action!");
+                    }
                     break;
                 case "delete":
-                    var radios = document.getElementsByName("usernumber");
-                    var checked = false;
-                    for (var i = 0; i < radios.length; i++) {
-                        if (radios[i].checked) {
-                            checked = true;
-                            break;
-                        }
+                    if (countChecked() > 1) {
+                        alert("Select only one object to perform the \"Delete\" operation!");
                     }
-                    if (checked) {
+                    else if (countChecked() == 1) {
                         if (confirm("Are you sure want to delete this task?")) {
                             document.getElementById("hid").value = "Delete";
                             document.forms[0].submit();
                         }
                     }
                     else {
-                        alert("Select a task to perform an action!")
+                        alert("Select a task to perform an action!");
                     }
                     break;
                 case "rename":
@@ -112,6 +115,17 @@
             }
         }
 
+        function countChecked() {
+            var checkboxes = document.getElementsByName("usernumber");
+            var count = 0;
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    count++;
+                }
+            }
+            return count;
+        }
+
         function exportSubmit(x) {
             var exp = x.value;
             if (exp.localeCompare("")!=0){
@@ -122,7 +136,7 @@
         }
 
         function exportingValues() {
-            var selected = document.getElementsByName("selected");
+            var selected = document.getElementsByName("usernumber");
             var noChecked = true;
             for (var i=0; i<selected.length; i++) {
                 if (selected[i].checked) {
@@ -173,14 +187,8 @@
                 <x:forEach select="$container/journal/tasks/entry" var="task">
                     <tr>
                         <td>
-                            <input type="checkbox" class="form-control" name="<%=ConstantsClass.SELECTED%>"
+                            <input type="checkbox" class="form-control" name="<%=ConstantsClass.USERNUMBER%>"
                                    value="<x:out select="$task/value/id"/>" onclick="exportingValues()"/>
-                        </td>
-                        <td>
-                            <label>
-                                <input type="radio" class="form-control" name="<%=ConstantsClass.USERNUMBER%>"
-                                       value="<x:out select="$task/value/id"/>"/>
-                            </label>
                         </td>
                         <td>
                             <x:out select="$task/value/status"/>

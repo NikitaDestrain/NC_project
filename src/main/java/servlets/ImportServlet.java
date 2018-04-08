@@ -3,6 +3,7 @@ package servlets;
 import auxiliaryclasses.ConstantsClass;
 import server.beans.EIBeanLocal;
 import server.beans.ExportImportBean;
+import server.exceptions.ControllerActionException;
 import server.importdata.StoreException;
 
 import javax.ejb.EJB;
@@ -16,8 +17,19 @@ import java.io.IOException;
 @WebServlet(ConstantsClass.IMPORT_SERVLET_ADDRESS)
 public class ImportServlet extends HttpServlet {
 
+    DataUpdateUtil updateUtil;
+
     @EJB
     EIBeanLocal ExportImportBean;
+
+    @Override
+    public void init() throws ServletException {
+        try {
+            updateUtil = DataUpdateUtil.getInstance();
+        } catch (ControllerActionException e) {
+            throw new ServletException(e.getMessage());
+        }
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,12 +47,12 @@ public class ImportServlet extends HttpServlet {
         String xml = req.getSession().getAttribute(ConstantsClass.JOURNAL_PARAMETER)==null?
                 (String) req.getSession().getAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER):
                 (String) req.getSession().getAttribute(ConstantsClass.JOURNAL_PARAMETER);
-        resp.getWriter().println(strategy);
-        resp.getWriter().println(xml);
-//        try {
-//            ExportImportBean.importData(xml, strategy);
-//        } catch (StoreException e) {
-//            resp.getWriter().print(e.getMessage());
-//        }
+
+        try {
+            ExportImportBean.importData(xml, strategy);
+            updateUtil.updateJournals(req, resp);
+        } catch (StoreException e) {
+            resp.getWriter().print(e.getMessage());
+        }
     }
 }

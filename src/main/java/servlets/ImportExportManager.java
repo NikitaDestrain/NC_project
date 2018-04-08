@@ -36,18 +36,20 @@ public class ImportExportManager {
             sb.append("\n");
         }
         fileData = sb.toString();
-        if (fileData.contains(ConstantsClass.JOURNAL_CONTAINER_PARAMETER)) {
+        if (fileData.contains(ConstantsClass.JOURNAL_CONTAINER_TAG)) {
             String xsl = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.JOURNALS_XSL));
             req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, fileData);
             req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, null);
             req.setAttribute(ConstantsClass.XSL_JOURNAL_CONTAINER_PARAMETER, xsl);
             req.getRequestDispatcher(ConstantsClass.JOURNALS_XSL_ADDRESS).forward(req, resp);
-        } else if (fileData.contains(ConstantsClass.JOURNAL_PARAMETER)) {
+        } else if (fileData.contains(ConstantsClass.JOURNAL_TAG)) {
             String xsl = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.TASKS_XSL));
             req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, fileData);
             req.getSession().setAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER, null);
             req.setAttribute(ConstantsClass.XSL_JOURNAL_PARAMETER, xsl);
             req.getRequestDispatcher(ConstantsClass.TASKS_XSL_ADDRESS).forward(req, resp);
+        } else {
+            resp.getWriter().print(ConstantsClass.INCORRECT_FILE_CONTENT);
         }
     }
 }
