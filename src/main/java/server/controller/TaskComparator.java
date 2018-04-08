@@ -1,4 +1,6 @@
-package server.model;
+package server.controller;
+
+import server.model.Task;
 
 import java.util.Comparator;
 

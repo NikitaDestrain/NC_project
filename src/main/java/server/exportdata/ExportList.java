@@ -1,12 +1,14 @@
 package server.exportdata;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ExportList {
     private List<Integer> journalIds;
     private List<Integer> taskIds;
 
-    public ExportList() {}
+    public ExportList() {
+    }
 
     public ExportList(List<Integer> journalIds, List<Integer> taskIds) {
         this.journalIds = journalIds;
@@ -14,20 +16,12 @@ public class ExportList {
     }
 
     public List<Integer> getJournalIds() {
-        return journalIds;
+        return Collections.unmodifiableList(journalIds);
     }
-    //todo vlla нарушение инкапсуляции
-
-    public void setJournalIds(List<Integer> journalIds) {
-        this.journalIds = journalIds;
-    }
+    //todo vlla нарушение инкапсуляции DONE
 
     public List<Integer> getTaskIds() {
-        return taskIds;
-    }
-
-    public void setTaskIds(List<Integer> taskIds) {
-        this.taskIds = taskIds;
+        return Collections.unmodifiableList(taskIds);
     }
 
     public void addJournalId(int journalId) {

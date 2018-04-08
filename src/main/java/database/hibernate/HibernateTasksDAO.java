@@ -36,6 +36,22 @@ public class HibernateTasksDAO implements TasksDAO {
         return task;
     }
 
+    public Task create(int id, String name, TaskStatus status, String description, Date notificationDate, Date plannedDate, Integer journalId) throws SQLException {
+        Task task;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            session.beginTransaction();
+            task = TaskFactory.createTask(id, name, status.toString(), description, notificationDate, plannedDate, journalId);
+            session.save(task);
+            session.getTransaction().commit();
+        } catch (ExceptionInInitializerError e) {
+            throw new SQLException();
+        } finally {
+            finishSession();
+        }
+        return task;
+    }
+
     @Override
     public Task read(int id) throws SQLException {
         Task task;
@@ -48,6 +64,16 @@ public class HibernateTasksDAO implements TasksDAO {
             finishSession();
         }
         return task;
+    }
+
+    public boolean contains(int id) {
+        try {
+            return read(id) != null;
+        } catch (Exception e) {
+            return false;
+        } finally {
+            finishSession();
+        }
     }
 
     @Override

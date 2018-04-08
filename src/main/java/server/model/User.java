@@ -10,10 +10,8 @@ import java.util.*;
  * Object with information user
  */
 
-//todo аналог с журналом
 @Entity
 @Table(name = "\"Users\"", schema = "public", catalog = "cracker")
-//@Table(name = "\"Users\"", schema = "public", catalog = "postgres")
 
 @XmlType(propOrder = {"id", "login", "password", "role", "registrationDate"}, name = "user")
 @XmlRootElement(name = "user")
@@ -43,7 +41,6 @@ public class User implements Serializable {
     @XmlElement(name = "registrationDate")
     private Date registrationDate;
 
-    //@OneToMany(cascade = CascadeType.ALL)
     @Transient
     @XmlElement(name = "journals")
     private Map<Integer, Journal> journals;
@@ -117,6 +114,8 @@ public class User implements Serializable {
     public void removeJournal(int journalId) {
         journals.remove(journalId);
     }
+
+    public Journal getJournal(int journalId) { return journals.get(journalId);}
 
     public List<Journal> getJournals() {
         List<Journal> list = new LinkedList<>(journals.values());

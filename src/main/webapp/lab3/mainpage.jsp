@@ -109,7 +109,7 @@
 
         function importSubmit(x) {
             var imp = x.value;
-            if (imp.localeCompare("")!=0){
+            if (imp.localeCompare("") != 0) {
                 if (confirm("Do you really want to import data from " + imp + "?")) {
                     document.getElementById("imp").disabled = false;
                 }
@@ -129,7 +129,7 @@
 
         function exportSubmit(x) {
             var exp = x.value;
-            if (exp.localeCompare("")!=0){
+            if (exp.localeCompare("") != 0) {
                 if (confirm("Do you really want to export data to " + exp + "?")) {
                     document.getElementById("exp").disabled = false;
                 }
@@ -139,7 +139,7 @@
         function exportingValues() {
             var selected = document.getElementsByName("usernumber");
             var noChecked = true;
-            for (var i=0; i<selected.length; i++) {
+            for (var i = 0; i < selected.length; i++) {
                 if (selected[i].checked) {
                     document.getElementById("export").disabled = false;
                     noChecked = false;
@@ -221,8 +221,9 @@
             <table>
                 <tr>
                     <td>
-                        Import <input type="file" name="<%=ConstantsClass.IMPORT_PARAMETER%>" class="btn btn-outline-primary"
-                               id="import" accept="text/xml" onchange="importSubmit(this)"/>
+                        Import <input type="file" name="<%=ConstantsClass.IMPORT_PARAMETER%>"
+                                      class="btn btn-outline-primary"
+                                      id="import" accept="text/xml" onchange="importSubmit(this)"/>
                     </td>
                     <td>
                         <input type="button" class="btn btn-outline-primary" value="Clear"
@@ -237,7 +238,7 @@
                     <td>
                         Export <input type="file" name="<%=ConstantsClass.EXPORT_PARAMETER%>"
                                       class="btn btn-outline-primary"
-                               id="export" accept="text/xml" onchange="exportSubmit(this)" disabled/>
+                                      id="export" accept="text/xml" onchange="exportSubmit(this)" disabled/>
                     </td>
                     <td>
                         <input type="button" class="btn btn-outline-primary" value="Clear"

@@ -1,4 +1,6 @@
-package server.model;
+package server.controller;
+
+import server.model.TaskStatus;
 
 import java.sql.Date;
 import java.util.Calendar;

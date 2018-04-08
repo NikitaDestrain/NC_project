@@ -154,13 +154,14 @@ public class Controller {
         }
     }
 
+    //метод добавления, если айди уже существует и не требуется сиквенс
     public void addTask(Task t) throws ControllerActionException {
         try {
             if (taskNamesContainer.isContain(t.getName()))
                 throw new ControllerActionException(ControllerErrorConstants.ERROR_NAME_EXISTS);
 
             if (checkDate(t.getPlannedDate(), t.getNotificationDate())) {
-                Task task = tasksDAO.create(t.getName(), TaskStatus.Planned, t.getDescription(), t.getNotificationDate(),
+                Task task = tasksDAO.create(t.getId(), t.getName(), TaskStatus.Planned, t.getDescription(), t.getNotificationDate(),
                         t.getPlannedDate(), t.getJournalId());
                 journalContainer.getJournal(t.getJournalId()).addTask(task);
                 notifier.addNotification(task);
@@ -263,6 +264,16 @@ public class Controller {
         return journalContainer.getJournal(journalId).getTask(taskId);
     }
 
+    public Task getTask(int taskId) {
+        Task task;
+        for (Journal journal : journalContainer.getJournals()) {
+            task = journal.getTask(taskId);
+            if (task != null)
+                return task;
+        }
+        return null;
+    }
+
     public Journal getTasks(int journalId) {
         return journalContainer.getJournal(journalId);
     }
@@ -347,11 +358,12 @@ public class Controller {
         }
     }
 
+    //метод добавления, если айди уже существует и не требуется сиквенс
     public void addJournal(Journal j) throws ControllerActionException {
         if (journalNamesContainer.isContain(j.getName()))
             throw new ControllerActionException(ControllerErrorConstants.ERROR_NAME_EXISTS);
         try {
-            Journal journal = journalDAO.create(j.getName(), j.getDescription(), j.getUserId());
+            Journal journal = journalDAO.create(j.getId(), j.getName(), j.getDescription(), j.getUserId());
             journalContainer.addJournal(journal);
             journalNamesContainer.addName(journal.getName());
             systemIds.add(journal.getId());
@@ -497,15 +509,24 @@ public class Controller {
     }
 
     public boolean containsId(int id) {
-        return systemIds.contains(id); // todo сделать поиск макс значения в этом списке id
+        return systemIds.contains(id); // todo сделать поиск макс значения в этом списке id DONE
+    }
+
+    private int getMaxSystemId() {
+        int max = systemIds.get(0);
+        for (int i = 1; i < systemIds.size(); i++) {
+            if (max < systemIds.get(i))
+                max = systemIds.get(i);
+        }
+        return max;
     }
 
     public boolean containsObject(Object object) {
         if (object instanceof Journal) {
-            return journalContainer.getJournals().contains(object);
+            return journalDAO.contains(((Journal) object).getId());
         } else if (object instanceof Task) {
             Journal j = journalContainer.getJournal(((Task) object).getJournalId());
-            return j != null && j.getTasks().contains(object);
+            return tasksDAO.contains(((Task) object).getId());
         } else return false;
     }
 }

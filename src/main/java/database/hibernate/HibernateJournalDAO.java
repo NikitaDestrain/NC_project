@@ -3,6 +3,7 @@ package database.hibernate;
 import auxiliaryclasses.ConstantsClass;
 import database.daointerfaces.JournalDAO;
 import org.hibernate.Criteria;
+import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -34,18 +35,44 @@ public class HibernateJournalDAO implements JournalDAO {
         return journal;
     }
 
-    @Override
-    public Journal read(int id) throws SQLException {
+    public Journal create(int id, String name, String description, Integer userId) throws SQLException {
         Journal journal;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            journal = (Journal) session.load(Journal.class, id);
+            session.beginTransaction();
+            journal = JournalFactory.createJournal(id, name, description, userId);
+            session.save(journal);
+            session.getTransaction().commit();
         } catch (ExceptionInInitializerError e) {
             throw new SQLException();
         } finally {
             finishSession();
         }
         return journal;
+    }
+
+    @Override
+    public Journal read(int id) throws SQLException {
+        Journal journal;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            journal = (Journal) session.get(Journal.class, id);
+        } catch (ExceptionInInitializerError e) {
+            throw new SQLException();
+        } finally {
+            finishSession();
+        }
+        return journal;
+    }
+
+    public boolean contains(int id) {
+        try {
+            return read(id) != null;
+        } catch (Exception e) {
+            return false;
+        } finally {
+            finishSession();
+        }
     }
 
     @Override

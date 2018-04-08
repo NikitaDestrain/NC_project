@@ -1,14 +1,14 @@
 package server.model;
 
+import server.controller.TaskComparator;
+
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.*;
 
-//todo доделать связь onetomany
 @Entity
 @Table(name = "\"Journal\"", schema = "public", catalog = "cracker")
-//@Table(name = "\"Journal\"", schema = "public", catalog = "postgres")
 
 @XmlType(propOrder = {"id", "name", "description", "userId", "tasks"}, name = "journal")
 @XmlRootElement(name = "journal")
@@ -22,7 +22,6 @@ public class Journal implements Serializable {
     @XmlElement(name = "id")
     private int id;
 
-    //@OneToMany(cascade = CascadeType.ALL)
     @Transient
     @XmlElement(name = "tasks")
     private Map<Integer, Task> tasks;

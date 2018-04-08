@@ -39,7 +39,7 @@ public class HibernateUsersDAO implements UsersDAO {
         User user;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            user = (User) session.load(User.class, id);
+            user = (User) session.get(User.class, id);
         } catch (ExceptionInInitializerError e) {
             throw new SQLException();
         } finally {

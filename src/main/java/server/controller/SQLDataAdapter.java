@@ -1,4 +1,4 @@
-package server.model;
+package server.controller;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.sql.Date;
