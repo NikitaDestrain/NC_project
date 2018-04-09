@@ -107,15 +107,6 @@
             }
         }
 
-        function importSubmit(x) {
-            var imp = x.value;
-            if (imp.localeCompare("") != 0) {
-                if (confirm("Do you really want to import data from " + imp + "?")) {
-                    document.getElementById("imp").disabled = false;
-                }
-            }
-        }
-
         function countChecked() {
             var checkboxes = document.getElementsByName("usernumber");
             var count = 0;
@@ -151,11 +142,6 @@
             }
         }
 
-        function clearImport() {
-            document.getElementById("import").value = "";
-            document.getElementById("imp").disabled = true;
-        }
-
         function clearExport() {
             document.getElementById("export").value = "";
             document.getElementById("exp").disabled = true;
@@ -167,7 +153,7 @@
     Boolean isSorted = request.getAttribute(ConstantsClass.IS_SORTED) == null ? false : (Boolean) request.getAttribute(ConstantsClass.IS_SORTED);
 %>
 <div align="center"><strong>JOURNALS</strong></div>
-<form method="post" action="<%=ConstantsClass.JOURNAL_SERVLET_ADDRESS%>" role="form" enctype="multipart/form-data">
+<form method="post" action="<%=ConstantsClass.JOURNAL_SERVLET_ADDRESS%>" role="form">
     <div class="form-group">
         <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
         <input type="hidden" name="<%=ConstantsClass.ACTION%>" value=<%=ConstantsClass.DO_CRUD_FROM_JOURNAL%>>
@@ -217,22 +203,11 @@
             </table>
         </div>
         <div align="center">
+            <input type="button" class="btn btn-outline-primary" id="imp" value="Import data"
+                   onclick="buttonClick(this)"/>
+        </div>
+        <div align="center">
             <table>
-                <tr>
-                    <td>
-                        Import <input type="file" name="<%=ConstantsClass.IMPORT_PARAMETER%>"
-                                      class="btn btn-outline-primary"
-                                      id="import" accept="text/xml" onchange="importSubmit(this)"/>
-                    </td>
-                    <td>
-                        <input type="button" class="btn btn-outline-primary" value="Clear"
-                               onclick="clearImport()"/>
-                    </td>
-                    <td>
-                        <input type="button" class="btn btn-outline-primary" id="imp" value="Import data"
-                               onclick="buttonClick(this)" disabled/>
-                    </td>
-                </tr>
                 <tr>
                     <td>
                         Export <input type="file" name="<%=ConstantsClass.EXPORT_PARAMETER%>"

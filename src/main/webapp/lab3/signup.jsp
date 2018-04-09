@@ -41,7 +41,7 @@
 
             <table>
                 <tr>
-                    <td>Username:</td>
+                    <td>Username: </td>
                     <td>
                         <input type="text" class="form-control"
                                name="<%=ConstantsClass.LOGIN_PARAMETER%>" id="login"
@@ -50,7 +50,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Password:</td>
+                    <td>Password: </td>
                     <td>
                         <input type="password" class="form-control" name="<%=ConstantsClass.PASSWORD_PARAMETER%>"
                                value="" id="password"/>
@@ -58,7 +58,7 @@
                 </tr>
                 <tr>
 
-                    <td>Repeat password:</td>
+                    <td>Repeat password: </td>
                     <td>
                         <input type="password" class="form-control" name="<%=ConstantsClass.REPEAT_PASSWORD_PARAMETER%>"
                                value="" id="repeat"/>

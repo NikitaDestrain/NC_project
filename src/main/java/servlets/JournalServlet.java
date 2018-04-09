@@ -19,7 +19,6 @@ import java.io.*;
 import java.nio.file.Paths;
 
 @WebServlet(ConstantsClass.JOURNAL_SERVLET_ADDRESS)
-@MultipartConfig
 public class JournalServlet extends HttpServlet {
     private Controller controller;
     private DataUpdateUtil updateUtil;
@@ -154,8 +153,7 @@ public class JournalServlet extends HttpServlet {
                 updateUtil.updateJournals(req, resp);
                 break;
             case ConstantsClass.IMPORT:
-                Part filePart = req.getPart(ConstantsClass.IMPORT_PARAMETER);
-                importExportManager.doImport(filePart, req, resp);
+                req.getRequestDispatcher(ConstantsClass.JOURNALS_XSL_ADDRESS).forward(req, resp);
                 break;
             case ConstantsClass.EXPORT:
                 String impFile = req.getParameter(ConstantsClass.EXPORT_PARAMETER);

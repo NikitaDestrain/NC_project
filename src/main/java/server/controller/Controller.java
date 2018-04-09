@@ -525,7 +525,6 @@ public class Controller {
         if (object instanceof Journal) {
             return journalDAO.contains(((Journal) object).getId());
         } else if (object instanceof Task) {
-            Journal j = journalContainer.getJournal(((Task) object).getJournalId());
             return tasksDAO.contains(((Task) object).getId());
         } else return false;
     }

@@ -14,7 +14,7 @@ public class IgnoreJournalStrategy<T> implements StoreStrategy<T> {
         try {
             controller = Controller.getInstance();
             Journal j = (Journal) object;
-            if (!controller.containsObject(j) && !controller.containsId(j.getId())) {
+            if (!controller.containsObject(j)) {
                 controller.addJournal(j);
             }
         } catch (ControllerActionException e) {

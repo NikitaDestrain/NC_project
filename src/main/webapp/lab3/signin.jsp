@@ -45,14 +45,14 @@
 
         <table>
             <tr>
-                <td>Username:</td>
+                <td>Username: </td>
                 <td><input type="text" class="form-control" name="login" id="login"
                            value="<%= request.getAttribute(ConstantsClass.LOGIN_PARAMETER)!=null?
                            request.getAttribute(ConstantsClass.LOGIN_PARAMETER):"" %>"/>
                 </td>
             </tr>
             <tr>
-                <td>Password:</td>
+                <td>Password: </td>
                 <td><input type="password" class="form-control" name="password" id="password"
                            value="<%= request.getAttribute(ConstantsClass.PASSWORD_PARAMETER)!=null?
                            request.getAttribute(ConstantsClass.PASSWORD_PARAMETER):"" %>"/>

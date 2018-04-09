@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 @WebServlet(ConstantsClass.TASK_SERVLET_ADDRESS)
-@MultipartConfig
 
 public class TaskServlet extends HttpServlet {
     private Controller controller;
@@ -140,8 +139,7 @@ public class TaskServlet extends HttpServlet {
                 updateUtil.updateJournals(req, resp);
                 break;
             case ConstantsClass.IMPORT:
-                Part filePart = req.getPart(ConstantsClass.IMPORT_PARAMETER);
-                importExportManager.doImport(filePart, req, resp);
+                req.getRequestDispatcher(ConstantsClass.TASKS_XSL_ADDRESS).forward(req, resp);
                 break;
             case ConstantsClass.EXPORT:
                 String impFile = req.getParameter(ConstantsClass.EXPORT_PARAMETER);
