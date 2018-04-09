@@ -509,7 +509,7 @@ public class Controller {
     }
 
     public boolean containsId(int id) {
-        return systemIds.contains(id); // todo сделать поиск макс значения в этом списке id DONE
+        return systemIds.contains(id);
     }
 
     private int getMaxSystemId() {

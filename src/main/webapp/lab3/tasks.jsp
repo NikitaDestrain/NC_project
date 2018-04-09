@@ -175,7 +175,7 @@
 
             <table class="table">
                 <tr>
-                    <th>№</th>
+                    <th></th>
                     <th>Status</th>
                     <th>Name</th>
                     <th>Description</th>

@@ -21,7 +21,7 @@
     <div class="form-group">
         <table class="table">
             <tr>
-                <th>№</th>
+                <th>ID</th>
                 <th>Status</th>
                 <th>Name</th>
                 <th>Description</th>

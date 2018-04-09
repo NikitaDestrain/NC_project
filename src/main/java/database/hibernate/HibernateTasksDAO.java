@@ -57,7 +57,7 @@ public class HibernateTasksDAO implements TasksDAO {
         Task task;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            task = (Task) session.load(Task.class, id);
+            task = (Task) session.get(Task.class, id);
         } catch (ExceptionInInitializerError e) {
             throw new SQLException();
         } finally {
@@ -68,7 +68,8 @@ public class HibernateTasksDAO implements TasksDAO {
 
     public boolean contains(int id) {
         try {
-            return read(id) != null;
+            boolean b = read(id) != null;
+            return b;
         } catch (Exception e) {
             return false;
         } finally {
