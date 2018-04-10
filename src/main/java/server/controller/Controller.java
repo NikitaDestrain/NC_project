@@ -528,4 +528,8 @@ public class Controller {
             return tasksDAO.contains(((Task) object).getId());
         } else return false;
     }
+
+    public boolean containsUser(int id) {
+        return usersDAO.contains(id);
+    }
 }

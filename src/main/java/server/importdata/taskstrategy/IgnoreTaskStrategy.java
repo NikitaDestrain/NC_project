@@ -14,7 +14,7 @@ public class IgnoreTaskStrategy<T> implements StoreStrategy<T> {
         try {
             controller = Controller.getInstance();
             Task t = (Task) object;
-            if (!controller.containsObject(t) && !controller.containsId(t.getId())) {
+            if (!controller.containsObject(t) && !controller.containsUser(t.getId())) {
                 controller.addTask(t);
             }
         } catch (ControllerActionException e) {

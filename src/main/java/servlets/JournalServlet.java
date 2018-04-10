@@ -19,6 +19,7 @@ import java.io.*;
 import java.nio.file.Paths;
 
 @WebServlet(ConstantsClass.JOURNAL_SERVLET_ADDRESS)
+@MultipartConfig
 public class JournalServlet extends HttpServlet {
     private Controller controller;
     private DataUpdateUtil updateUtil;
@@ -153,15 +154,22 @@ public class JournalServlet extends HttpServlet {
                 updateUtil.updateJournals(req, resp);
                 break;
             case ConstantsClass.IMPORT:
-                req.getRequestDispatcher(ConstantsClass.JOURNALS_XSL_ADDRESS).forward(req, resp);
+                //req.getRequestDispatcher(ConstantsClass.JOURNALS_XSL_ADDRESS).forward(req, resp);
+                Part part = req.getPart(ConstantsClass.IMPORT_PARAMETER);
+                importExportManager.doImport(part, req, resp);
                 break;
             case ConstantsClass.EXPORT:
-                String impFile = req.getParameter(ConstantsClass.EXPORT_PARAMETER);
                 String[] checkBoxes = req.getParameterValues(ConstantsClass.USERNUMBER);
+                try(BufferedWriter writer = new BufferedWriter(new FileWriter(ConstantsClass.HOME_DOWNLOADS))) {
+                    for (String s: checkBoxes) {
+                        writer.write(s);
+                        writer.newLine();
+                    }
+                }
+                resp.getWriter().println("written into file:");
                 for (String s: checkBoxes) {
                     resp.getWriter().println(s);
                 }
-                //resp.getWriter().print(impFile);
                 break;
         }
     }

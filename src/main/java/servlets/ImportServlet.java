@@ -12,7 +12,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 import java.io.IOException;
 
 @WebServlet(ConstantsClass.IMPORT_SERVLET_ADDRESS)
@@ -48,13 +47,14 @@ public class ImportServlet extends HttpServlet {
 
     private void performStrategy(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        String strategy = req.getParameter(ConstantsClass.USERNUMBER);
+        String journalStrategy = req.getParameter(ConstantsClass.JOURNAL_STRATEGY);
+        //String taskStrategy = req.getParameter(ConstantsClass.TASK_STRATEGY);
         String xml = req.getSession().getAttribute(ConstantsClass.JOURNAL_PARAMETER)==null?
                 (String) req.getSession().getAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER):
                 (String) req.getSession().getAttribute(ConstantsClass.JOURNAL_PARAMETER);
 
         try {
-            ExportImportBean.importData(xml, strategy);
+            ExportImportBean.importData(xml, journalStrategy);
             updateUtil.updateJournals(req, resp);
         } catch (StoreException e) {
             resp.getWriter().print(e.getMessage());
@@ -63,7 +63,8 @@ public class ImportServlet extends HttpServlet {
 
     private void loadImportingValues(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        Part part = req.getPart(ConstantsClass.IMPORT_PARAMETER);
-        importExportManager.doImport(part, req, resp);
+//        Part part = req.getPart(ConstantsClass.IMPORT_PARAMETER);
+//        importExportManager.doImport(part, req, resp);
+        resp.getWriter().print("success");
     }
 }

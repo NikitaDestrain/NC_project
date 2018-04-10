@@ -17,6 +17,16 @@ public class HibernateUsersDAO implements UsersDAO {
 
     private Session session;
 
+    public boolean contains(int id) {
+        try {
+            return read(id) != null;
+        } catch (Exception e) {
+            return false;
+        } finally {
+            finishSession();
+        }
+    }
+
     @Override
     public User create(String login, String password, String role) throws SQLException {
         User user;

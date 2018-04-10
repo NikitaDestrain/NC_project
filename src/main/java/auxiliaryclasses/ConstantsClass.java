@@ -204,4 +204,9 @@ public class ConstantsClass {
     public static final String INCORRECT_FILE_CONTENT = "Incorrect XML-file content! Could not perform import!";
     public static final String JOURNAL_CONTAINER_TAG = "<journalContainer>";
     public static final String JOURNAL_TAG = "<journal>";
+
+    public static final String HOME_DOWNLOADS = System.getProperty("user.home") + "/Downloads/export.xml";
+
+    public static final String JOURNAL_STRATEGY = "journalStrategy";
+    public static final String TASK_STRATEGY = "taskStrategy";
 }

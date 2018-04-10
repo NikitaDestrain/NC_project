@@ -37,7 +37,6 @@
                     break;
             }
         }
-
         function buttonClick(x) {
             switch (x.id) {
                 case "add":
@@ -106,7 +105,6 @@
                     break;
             }
         }
-
         function countChecked() {
             var checkboxes = document.getElementsByName("usernumber");
             var count = 0;
@@ -118,33 +116,33 @@
             return count;
         }
 
-        function exportSubmit(x) {
-            var exp = x.value;
-            if (exp.localeCompare("") != 0) {
-                if (confirm("Do you really want to export data to " + exp + "?")) {
-                    document.getElementById("exp").disabled = false;
-                }
-            }
-        }
-
         function exportingValues() {
             var selected = document.getElementsByName("usernumber");
             var noChecked = true;
             for (var i = 0; i < selected.length; i++) {
                 if (selected[i].checked) {
-                    document.getElementById("export").disabled = false;
+                    document.getElementById("exp").disabled = false;
                     noChecked = false;
                     break;
                 }
                 if (noChecked) {
-                    document.getElementById("export").disabled = true;
+                    document.getElementById("exp").disabled = true;
                 }
             }
         }
 
-        function clearExport() {
-            document.getElementById("export").value = "";
-            document.getElementById("exp").disabled = true;
+        function importSubmit(x) {
+            var imp = x.value;
+            if (imp.localeCompare("") != 0) {
+                if (confirm("Do you really want to import data from " + imp + "?")) {
+                    document.getElementById("imp").disabled = false;
+                }
+            }
+        }
+
+        function clearImport() {
+            document.getElementById("import").value = "";
+            document.getElementById("imp").disabled = true;
         }
     </script>
 </head>
@@ -153,7 +151,7 @@
     Boolean isSorted = request.getAttribute(ConstantsClass.IS_SORTED) == null ? false : (Boolean) request.getAttribute(ConstantsClass.IS_SORTED);
 %>
 <div align="center"><strong>JOURNALS</strong></div>
-<form method="post" action="<%=ConstantsClass.JOURNAL_SERVLET_ADDRESS%>" role="form">
+<form method="post" action="<%=ConstantsClass.JOURNAL_SERVLET_ADDRESS%>" role="form" enctype="multipart/form-data">
     <div class="form-group">
         <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
         <input type="hidden" name="<%=ConstantsClass.ACTION%>" value=<%=ConstantsClass.DO_CRUD_FROM_JOURNAL%>>
@@ -203,26 +201,28 @@
             </table>
         </div>
         <div align="center">
-            <input type="button" class="btn btn-outline-primary" id="imp" value="Import data"
-                   onclick="buttonClick(this)"/>
-        </div>
-        <div align="center">
             <table>
                 <tr>
                     <td>
-                        Export <input type="file" name="<%=ConstantsClass.EXPORT_PARAMETER%>"
+                        Import <input type="file" name="<%=ConstantsClass.IMPORT_PARAMETER%>"
                                       class="btn btn-outline-primary"
-                                      id="export" accept="text/xml" onchange="exportSubmit(this)" disabled/>
+                                      id="import" accept="text/xml" onchange="importSubmit(this)"/>
                     </td>
                     <td>
                         <input type="button" class="btn btn-outline-primary" value="Clear"
-                               onclick="clearExport()"/>
+                               onclick="clearImport()"/>
                     </td>
                     <td>
-                        <input type="button" class="btn btn-outline-primary" id="exp" value="Export data"
+                        <input type="button" class="btn btn-outline-primary" id="imp" value="Import data"
                                onclick="buttonClick(this)" disabled/>
                     </td>
                 </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table>
+                <input type="button" class="btn btn-outline-primary" id="exp" value="Export data"
+                       onclick="buttonClick(this)" disabled/>
             </table>
         </div>
         <div align="center">

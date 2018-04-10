@@ -17,4 +17,35 @@
         </xsl:for-each>
     </xsl:template>
 
+    <!--<xsl:template match="journalContainer/journals/entry/value/tasks/entry">-->
+        <!--<tr>-->
+            <!--<td><strong>TASKS</strong></td>-->
+            <!--<xsl:for-each select="value">-->
+                <!--<td>-->
+                    <!--<xsl:value-of select="id/text()"/>-->
+                <!--</td>-->
+                <!--<td>-->
+                    <!--<xsl:value-of select="status/text()"/>-->
+                <!--</td>-->
+                <!--<td>-->
+                    <!--<xsl:value-of select="name/text()"/>-->
+                <!--</td>-->
+                <!--<td>-->
+                    <!--<xsl:value-of select="description/text()"/>-->
+                <!--</td>-->
+                <!--<td>-->
+                    <!--<xsl:value-of select="planned/text()"/>-->
+                <!--</td>-->
+                <!--<td>-->
+                    <!--<xsl:value-of select="notification/text()"/>-->
+                <!--</td>-->
+                <!--<td>-->
+                    <!--<xsl:value-of select="upload/text()"/>-->
+                <!--</td>-->
+                <!--<td>-->
+                    <!--<xsl:value-of select="change/text()"/>-->
+                <!--</td>-->
+            <!--</xsl:for-each>-->
+        <!--</tr>-->
+    <!--</xsl:template>-->
 </xsl:stylesheet>

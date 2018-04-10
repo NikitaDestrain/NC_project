@@ -15,13 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import javax.xml.bind.JAXBException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 @WebServlet(ConstantsClass.TASK_SERVLET_ADDRESS)
-
+@MultipartConfig
 public class TaskServlet extends HttpServlet {
     private Controller controller;
     private DataUpdateUtil updateUtil;
@@ -139,15 +136,22 @@ public class TaskServlet extends HttpServlet {
                 updateUtil.updateJournals(req, resp);
                 break;
             case ConstantsClass.IMPORT:
-                req.getRequestDispatcher(ConstantsClass.TASKS_XSL_ADDRESS).forward(req, resp);
+                //req.getRequestDispatcher(ConstantsClass.TASKS_XSL_ADDRESS).forward(req, resp);
+                Part part = req.getPart(ConstantsClass.IMPORT_PARAMETER);
+                importExportManager.doImport(part, req, resp);
                 break;
             case ConstantsClass.EXPORT:
-                String impFile = req.getParameter(ConstantsClass.EXPORT_PARAMETER);
                 String[] checkBoxes = req.getParameterValues(ConstantsClass.USERNUMBER);
+                try(BufferedWriter writer = new BufferedWriter(new FileWriter(ConstantsClass.HOME_DOWNLOADS))) {
+                    for (String s: checkBoxes) {
+                        writer.write(s);
+                        writer.newLine();
+                    }
+                }
+                resp.getWriter().println("written into file:");
                 for (String s: checkBoxes) {
                     resp.getWriter().println(s);
                 }
-                //resp.getWriter().print(impFile);
                 break;
         }
     }
