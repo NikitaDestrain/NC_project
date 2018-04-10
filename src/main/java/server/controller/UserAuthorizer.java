@@ -1,7 +1,7 @@
 package server.controller;
 
 import database.daointerfaces.UsersDAO;
-import database.postgresql.PostgreSQLDAOFactory;
+import database.postgresql.PostgreSQLDAOManager;
 import server.exceptions.DAOFactoryActionException;
 import server.exceptions.UserAuthorizerStartException;
 import server.model.User;
@@ -19,7 +19,7 @@ public class UserAuthorizer {
 
     private UserAuthorizer() throws UserAuthorizerStartException {
         try {
-            usersDAO = PostgreSQLDAOFactory.getInstance().getUsersDao();
+            usersDAO = PostgreSQLDAOManager.getInstance().getUsersDao();
             userData = new HashMap<>();
             createStartUserData();
         } catch (SQLException | DAOFactoryActionException e) {

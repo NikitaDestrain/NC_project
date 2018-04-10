@@ -15,7 +15,7 @@ public class ExceptionThrowJournalStrategy<T> implements StoreStrategy<T> {
         try {
             controller = Controller.getInstance();
             Journal j = (Journal) object;
-            if (!controller.containsObject(j) && !controller.containsUser(j.getId())) {
+            if (!controller.containsObject(j) && !controller.isExistId(j.getId())) {
                 controller.addJournal(j);
             } else {
                 throw new StoreException(StoreConstants.STORE_EXCEPTION_MESSAGE + j.getId());

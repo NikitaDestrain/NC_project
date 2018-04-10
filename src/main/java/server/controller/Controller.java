@@ -1,10 +1,12 @@
 package server.controller;
 
-import database.hibernate.HibernateDAOFactory;
+import database.hibernate.HibernateDAOManager;
 import database.hibernate.HibernateJournalDAO;
 import database.hibernate.HibernateTasksDAO;
 import database.hibernate.HibernateUsersDAO;
+import database.postgresql.PostgreSQLDAOManager;
 import server.exceptions.ControllerActionException;
+import server.exceptions.DAOFactoryActionException;
 import server.exceptions.UserAuthorizerStartException;
 import server.model.*;
 
@@ -19,7 +21,7 @@ public class Controller {
     private JournalNamesContainer journalNamesContainer;
     private TaskNamesContainer taskNamesContainer;
     private LifecycleManager statusManager;
-    private HibernateDAOFactory DAOFactory;
+    private HibernateDAOManager DAOFactory;
     private HibernateUsersDAO usersDAO;
     private HibernateJournalDAO journalDAO;
     private HibernateTasksDAO tasksDAO;
@@ -33,7 +35,7 @@ public class Controller {
             systemIds = new LinkedList<>();
             journalNamesContainer = new JournalNamesContainer();
             taskNamesContainer = new TaskNamesContainer();
-            DAOFactory = HibernateDAOFactory.getInstance();
+            DAOFactory = HibernateDAOManager.getInstance();
             statusManager = LifecycleManager.getInstance();
             usersDAO = (HibernateUsersDAO) DAOFactory.getUsersDao();
             journalDAO = (HibernateJournalDAO) DAOFactory.getJournalDao();
@@ -358,7 +360,6 @@ public class Controller {
         }
     }
 
-    //метод добавления, если айди уже существует и не требуется сиквенс
     public void addJournal(Journal j) throws ControllerActionException {
         if (journalNamesContainer.isContain(j.getName()))
             throw new ControllerActionException(ControllerErrorConstants.ERROR_NAME_EXISTS);
@@ -513,12 +514,11 @@ public class Controller {
     }
 
     private int getMaxSystemId() {
-        int max = systemIds.get(0);
-        for (int i = 1; i < systemIds.size(); i++) {
-            if (max < systemIds.get(i))
-                max = systemIds.get(i);
+        try {
+            return PostgreSQLDAOManager.getInstance().getMaxId();
+        } catch (DAOFactoryActionException e) {
+            return -1;
         }
-        return max;
     }
 
     public boolean containsObject(Object object) {
@@ -529,7 +529,7 @@ public class Controller {
         } else return false;
     }
 
-    public boolean containsUser(int id) {
-        return usersDAO.contains(id);
+    public boolean isExistId(int id){
+        return tasksDAO.contains(id) && usersDAO.contains(id) && journalDAO.contains(id);
     }
 }

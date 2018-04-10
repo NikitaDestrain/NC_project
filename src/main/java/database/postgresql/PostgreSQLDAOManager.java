@@ -1,6 +1,6 @@
 package database.postgresql;
 
-import database.daointerfaces.DAOFactory;
+import database.daointerfaces.DAOManager;
 import database.daointerfaces.JournalDAO;
 import database.daointerfaces.TasksDAO;
 import database.daointerfaces.UsersDAO;
@@ -13,35 +13,36 @@ import javax.sql.DataSource;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
-public class PostgreSQLDAOFactory implements DAOFactory {
-    private static PostgreSQLDAOFactory instance;
+public class PostgreSQLDAOManager implements DAOManager {
+    private static PostgreSQLDAOManager instance;
     private DataSource dataSource;
     private Connection connection;
 
-    private PostgreSQLDAOFactory(String path) throws DAOFactoryActionException {
+    private PostgreSQLDAOManager(String path) throws DAOFactoryActionException {
         initDataSource();
         connection = getConnection();
         executeSqlStartScript(path);
     }
 
-    private PostgreSQLDAOFactory() throws DAOFactoryActionException {
+    private PostgreSQLDAOManager() throws DAOFactoryActionException {
         initDataSource();
         connection = getConnection();
     }
 
-    public static PostgreSQLDAOFactory getInstance(String path) throws DAOFactoryActionException {
+    public static PostgreSQLDAOManager getInstance(String path) throws DAOFactoryActionException {
         if (instance == null)
-            instance = new PostgreSQLDAOFactory(path);
+            instance = new PostgreSQLDAOManager(path);
         return instance;
     }
 
-    public static PostgreSQLDAOFactory getInstance() throws DAOFactoryActionException {
+    public static PostgreSQLDAOManager getInstance() throws DAOFactoryActionException {
         if (instance == null)
-            instance = new PostgreSQLDAOFactory();
+            instance = new PostgreSQLDAOManager();
         return instance;
     }
 
@@ -106,5 +107,28 @@ public class PostgreSQLDAOFactory implements DAOFactory {
         } catch (FileNotFoundException e) {
             throw new DAOFactoryActionException(DAOErrorConstants.START_SCRIPT_ERROR);
         }
+    }
+
+    public int getMaxId() throws DAOFactoryActionException {
+        String sql = "SELECT \"last_value\" FROM \"auto_increment\"";
+        Statement statement = null;
+        int maxId = -1;
+        try {
+            statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            rs.next();
+            maxId = rs.getInt(1);
+        } catch (SQLException e) {
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    throw new DAOFactoryActionException(DAOErrorConstants.INCORRECT_WORK_ERROR);
+                }
+            }
+            statement = null;
+        }
+        return maxId;
     }
 }

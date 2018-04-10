@@ -1,13 +1,12 @@
 package servlets;
 
 import auxiliaryclasses.ConstantsClass;
-import database.postgresql.PostgreSQLDAOFactory;
+import database.postgresql.PostgreSQLDAOManager;
 import server.controller.Controller;
 import server.controller.PasswordEncoder;
 import server.exceptions.ControllerActionException;
 import server.exceptions.DAOFactoryActionException;
 import server.exportdata.ExportConstants;
-import server.exportdata.ExportStrategyHelper;
 import server.exportdata.config.ExportConfigHelper;
 import server.exportdata.config.ExportConfigParser;
 import server.model.User;
@@ -28,14 +27,14 @@ public class AuthServlet extends HttpServlet {
     private PatternChecker patternChecker = PatternChecker.getInstance();
     private Controller controller;
 
-    private PostgreSQLDAOFactory dbFactory;
+    private PostgreSQLDAOManager dbFactory;
     private User currentUser;
 
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         try {
-            dbFactory = PostgreSQLDAOFactory.getInstance(config.getServletContext().getRealPath(ConstantsClass.SCRIPT_FILE));
+            dbFactory = PostgreSQLDAOManager.getInstance(config.getServletContext().getRealPath(ConstantsClass.SCRIPT_FILE));
             controller = Controller.getInstance();
             updateUtil = DataUpdateUtil.getInstance();
             ExportConfigParser.getInstance(config.getServletContext().getRealPath(ExportConstants.PATH_TO_PROPERTIES));

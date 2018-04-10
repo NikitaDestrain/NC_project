@@ -93,6 +93,7 @@ public class ConstantsClass {
     public static final String TASK_SERVLET_ADDRESS = "/taskservlet";
     public static final String TASK_UPDATE_SERVLET_ADDRESS = "/taskupdateservlet";
     public static final String IMPORT_SERVLET_ADDRESS = "/importservlet";
+    public static final String DOWNLOAD_SERVLET_ADDRESS = "/download";
 
     public static final String JOURNAL_PAGE_ADDRESS = "/mainpage";
     public static final String TASKS_PAGE_ADDRESS = "/tasks";

@@ -17,7 +17,7 @@ public class ReplaceTaskStrategy<T> implements StoreStrategy<T> {
             if (controller.containsObject(t)) {
                 controller.editTask(t.getId(), t.getJournalId(), t.getName(), t.getStatus(), t.getDescription(),
                         t.getNotificationDate(), t.getPlannedDate(), null);
-            } else if(!controller.containsUser(t.getId())){
+            } else if(!controller.isExistId(t.getId())){
                 controller.addTask(t);
             }
         } catch (ControllerActionException e) {

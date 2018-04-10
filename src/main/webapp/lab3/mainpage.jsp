@@ -37,6 +37,7 @@
                     break;
             }
         }
+
         function buttonClick(x) {
             switch (x.id) {
                 case "add":
@@ -105,6 +106,7 @@
                     break;
             }
         }
+
         function countChecked() {
             var checkboxes = document.getElementsByName("usernumber");
             var count = 0;
@@ -220,6 +222,7 @@
             </table>
         </div>
         <div align="center">
+            <a href="">download</a>
             <table>
                 <input type="button" class="btn btn-outline-primary" id="exp" value="Export data"
                        onclick="buttonClick(this)" disabled/>

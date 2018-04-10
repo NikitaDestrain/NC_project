@@ -1,23 +1,23 @@
 package database.hibernate;
 
-import database.daointerfaces.DAOFactory;
+import database.daointerfaces.DAOManager;
 import database.daointerfaces.JournalDAO;
 import database.daointerfaces.TasksDAO;
 import database.daointerfaces.UsersDAO;
 
-public class HibernateDAOFactory implements DAOFactory {
+public class HibernateDAOManager implements DAOManager {
 
-    private static HibernateDAOFactory instance;
+    private static HibernateDAOManager instance;
     private static TasksDAO tasksDAO;
     private static JournalDAO journalDAO;
     private static UsersDAO usersDAO;
 
-    public HibernateDAOFactory() {
+    public HibernateDAOManager() {
     }
 
-    public static synchronized HibernateDAOFactory getInstance() {
+    public static synchronized HibernateDAOManager getInstance() {
         if (instance == null) {
-            instance = new HibernateDAOFactory();
+            instance = new HibernateDAOManager();
         }
         return instance;
     }

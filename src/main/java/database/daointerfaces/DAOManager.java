@@ -1,6 +1,6 @@
 package database.daointerfaces;
 
-public interface DAOFactory {
+public interface DAOManager {
     public TasksDAO getTasksDao();
 
     public JournalDAO getJournalDao();

@@ -68,8 +68,7 @@ public class HibernateTasksDAO implements TasksDAO {
 
     public boolean contains(int id) {
         try {
-            boolean b = read(id) != null;
-            return b;
+            return read(id) != null;
         } catch (Exception e) {
             return false;
         } finally {
