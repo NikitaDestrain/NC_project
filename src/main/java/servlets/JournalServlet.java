@@ -1,12 +1,15 @@
 package servlets;
 
 import auxiliaryclasses.ConstantsClass;
+import server.beans.EIBeanLocal;
 import server.controller.Controller;
 import server.controller.XmlUtils;
 import server.exceptions.ControllerActionException;
+import server.exportdata.ExportException;
 import server.model.Journal;
 import server.model.JournalContainer;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -15,8 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import javax.xml.bind.JAXBException;
-import java.io.*;
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.util.List;
 
 @WebServlet(ConstantsClass.JOURNAL_SERVLET_ADDRESS)
 @MultipartConfig
@@ -28,6 +31,9 @@ public class JournalServlet extends HttpServlet {
     private ImportExportManager importExportManager = ImportExportManager.getInstance();
 
     private Journal currentJournal;
+
+    @EJB
+    EIBeanLocal ExportImportBean;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -160,15 +166,13 @@ public class JournalServlet extends HttpServlet {
                 break;
             case ConstantsClass.EXPORT:
                 String[] checkBoxes = req.getParameterValues(ConstantsClass.USERNUMBER);
-                try(BufferedWriter writer = new BufferedWriter(new FileWriter(new File(ConstantsClass.HOME_DOWNLOADS)))) {
-                    for (String s: checkBoxes) {
-                        writer.write(s);
-                        writer.newLine();
-                    }
-                }
-                resp.getWriter().println("written into file:");
-                for (String s: checkBoxes) {
-                    resp.getWriter().println(s);
+                try {
+                    List<Integer> listIds = importExportManager.createIDList(checkBoxes);
+                    String exportXml = ExportImportBean.exportData(listIds, null);
+                    xmlUtils.writeStringXMLToFile(ConstantsClass.HOME_DOWNLOADS, exportXml);
+                    resp.getWriter().print("Success! Check Downloads");
+                } catch (ExportException e) {
+                    e.printStackTrace();
                 }
                 break;
         }

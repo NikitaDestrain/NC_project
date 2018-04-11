@@ -1,6 +1,7 @@
 package server.exportdata;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ExportList {
@@ -8,6 +9,8 @@ public class ExportList {
     private List<Integer> taskIds;
 
     public ExportList() {
+        journalIds = new LinkedList<>();
+        taskIds = new LinkedList<>();
     }
 
     public ExportList(List<Integer> journalIds, List<Integer> taskIds) {

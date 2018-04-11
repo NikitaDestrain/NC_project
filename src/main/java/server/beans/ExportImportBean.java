@@ -1,11 +1,13 @@
 package server.beans;
 
+import server.controller.Controller;
+import server.exceptions.ControllerActionException;
+import server.exceptions.MarshallerException;
 import server.exportdata.ExportException;
 import server.exportdata.ExportList;
 import server.exportdata.ExportListFactory;
 import server.importdata.*;
 import server.model.Journal;
-import server.model.JournalContainer;
 import server.model.Task;
 
 import javax.ejb.Stateless;
@@ -15,6 +17,7 @@ import java.util.List;
 public class ExportImportBean implements EIBeanLocal {
 
     private Marshaller marshaller = Marshaller.getInstance();
+    private Controller controller;
 
     /**
      * 1. Config file parsing(Done in init-ion of AuthServlet because ServletContext.getRealPath is needed)
@@ -30,10 +33,17 @@ public class ExportImportBean implements EIBeanLocal {
 
     @Override
     public String exportData(List<Integer> journalIDs, List<Integer> taskIDs) throws ExportException {
-        ExportList exportList = ExportListFactory.getInstance().createList(journalIDs, taskIDs);
-        // todo вызов методов контроллера, которые достанут и вернут объекты по полученным айди
-        // todo вызов маршаллера, который сформирует xml по полученным объектам
-        return null;
+        try {
+            controller = Controller.getInstance();
+
+            ExportList exportList = ExportListFactory.getInstance().createList(journalIDs, taskIDs);
+            List<Journal> journalList = controller.createJournalListByIds(exportList.getJournalIds());
+            List<Task> taskList = controller.createTaskListByIds(exportList.getTaskIds());
+
+            return marshaller.marshalToXMLString(journalList, taskList);
+        } catch (ControllerActionException | MarshallerException e) {
+            throw new ExportException();
+        }
     }
 
     /**

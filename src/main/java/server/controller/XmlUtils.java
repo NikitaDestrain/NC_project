@@ -164,4 +164,13 @@ public class XmlUtils {
         }
         return task;
     }
+
+    public void writeStringXMLToFile(String fileName, String xml) {
+        try (FileWriter writer = new FileWriter(fileName)) {
+            writer.append(xml);
+            writer.flush();
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 }

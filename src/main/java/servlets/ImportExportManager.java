@@ -2,9 +2,9 @@ package servlets;
 
 import auxiliaryclasses.ConstantsClass;
 import server.controller.XmlUtils;
+import server.exportdata.ExportException;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
@@ -12,6 +12,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ImportExportManager {
     private static ImportExportManager ourInstance = new ImportExportManager();
@@ -51,5 +54,13 @@ public class ImportExportManager {
         } else {
             resp.getWriter().print(ConstantsClass.INCORRECT_FILE_CONTENT);
         }
+    }
+
+    public List<Integer> createIDList(String[] checkBoxes) {
+        List<Integer> IDs = new LinkedList<>();
+        for (String checkBox : checkBoxes) {
+            IDs.add(Integer.parseInt(checkBox));
+        }
+        return Collections.unmodifiableList(IDs);
     }
 }

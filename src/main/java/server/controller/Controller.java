@@ -12,6 +12,7 @@ import server.model.*;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -509,6 +510,22 @@ public class Controller {
         }
     }
 
+    public List<Journal> createJournalListByIds(List<Integer> journalIDs) {
+        List<Journal> list = new LinkedList<>();
+        for (Integer id : journalIDs) {
+            list.add(getJournal(id));
+        }
+        return Collections.unmodifiableList(list);
+    }
+
+    public List<Task> createTaskListByIds(List<Integer> taskIDs) {
+        List<Task> list = new LinkedList<>();
+        for (Integer id : taskIDs) {
+            list.add(getTask(id));
+        }
+        return Collections.unmodifiableList(list);
+    }
+
     public boolean containsId(int id) {
         return systemIds.contains(id);
     }
@@ -529,11 +546,7 @@ public class Controller {
         } else return false;
     }
 
-    public boolean isExistId(int id){
-//        boolean a = tasksDAO.contains(id);
-//        boolean b = usersDAO.contains(id);
-//        boolean c = journalDAO.contains(id);
-//        return a && b && c;
+    public boolean isExistId(int id) {
         return tasksDAO.contains(id) || usersDAO.contains(id) || journalDAO.contains(id);
     }
 }
