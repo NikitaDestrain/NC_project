@@ -81,27 +81,27 @@
                 </tr>
             </table>
         </div>
-        <%--<div align="center">--%>
-            <%--Choose a strategy for tasks: <br/>--%>
-            <%--<table>--%>
-                <%--<tr>--%>
-                    <%--<td>--%>
-                        <%--<select name="<%=ConstantsClass.TASK_STRATEGY%>">--%>
-                            <%--<option value=""></option>--%>
-                            <%--<option value="<%=ConstantsClass.REPLACE%>">--%>
-                                <%--Replace--%>
-                            <%--</option>--%>
-                            <%--<option value="<%=ConstantsClass.IGNORE%>">--%>
-                                <%--Ignore--%>
-                            <%--</option>--%>
-                            <%--<option value="<%=ConstantsClass.EXCEPTION%>">--%>
-                                <%--Throw an exception--%>
-                            <%--</option>--%>
-                        <%--</select>--%>
-                    <%--</td>--%>
-                <%--</tr>--%>
-            <%--</table>--%>
-        <%--</div>--%>
+        <div align="center">
+            Choose a strategy for tasks: <br/>
+            <table>
+                <tr>
+                    <td>
+                        <select name="<%=ConstantsClass.TASK_STRATEGY%>">
+                            <option value=""></option>
+                            <option value="<%=ConstantsClass.REPLACE%>">
+                                Replace
+                            </option>
+                            <option value="<%=ConstantsClass.IGNORE%>">
+                                Ignore
+                            </option>
+                            <option value="<%=ConstantsClass.EXCEPTION%>">
+                                Throw an exception
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
         <div align="center">
             <input type="submit" id="submit" class="btn btn-outline-primary" value="OK"/>
         </div>

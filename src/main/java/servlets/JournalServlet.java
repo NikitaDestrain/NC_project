@@ -160,7 +160,7 @@ public class JournalServlet extends HttpServlet {
                 break;
             case ConstantsClass.EXPORT:
                 String[] checkBoxes = req.getParameterValues(ConstantsClass.USERNUMBER);
-                try(BufferedWriter writer = new BufferedWriter(new FileWriter(ConstantsClass.HOME_DOWNLOADS))) {
+                try(BufferedWriter writer = new BufferedWriter(new FileWriter(new File(ConstantsClass.HOME_DOWNLOADS)))) {
                     for (String s: checkBoxes) {
                         writer.write(s);
                         writer.newLine();

@@ -3,10 +3,7 @@ package server.beans;
 import server.exportdata.ExportException;
 import server.exportdata.ExportList;
 import server.exportdata.ExportListFactory;
-import server.importdata.StoreException;
-import server.importdata.StoreItem;
-import server.importdata.StoreStrategy;
-import server.importdata.StoreStrategyHelper;
+import server.importdata.*;
 import server.model.Journal;
 import server.model.JournalContainer;
 import server.model.Task;
@@ -47,24 +44,20 @@ public class ExportImportBean implements EIBeanLocal {
      */
 
     @Override
-    public void importData(String xml, String strategy) throws StoreException {
+    public void importData(String xml, String journalStrategy, String taskStrategy) throws StoreException {
         StoreItem storeItem = marshaller.unmarshal(xml);
-        storeItem.setStrategy(strategy);
+        storeItem.setJournalStrategy(journalStrategy);
+        storeItem.setTaskStrategy(taskStrategy);
         StoreStrategyHelper storeStrategyHelper = StoreStrategyHelper.getInstance();
-        if (storeItem.getJournal() != null) {
-            Journal journal = storeItem.getJournal();
-            List<Task> tasks = journal.getTasks();
-            StoreStrategy<Task> storeStrategy = storeStrategyHelper.resolveStrategy(storeItem);
-            for (Task t : tasks) {
-                storeStrategy.store(t);
-            }
-        } else if (storeItem.getContainer() != null) {
-            JournalContainer container = storeItem.getContainer();
-            List<Journal> journals = container.getJournals();
-            StoreStrategy<Journal> storeStrategy = storeStrategyHelper.resolveStrategy(storeItem);
-            for (Journal journal : journals) {
-                storeStrategy.store(journal);
-            }
+        StoreStrategy<Journal> journalStoreStrategy = storeStrategyHelper.resolveStrategy(storeItem, StoreConstants.JOURNAL);
+        StoreStrategy<Task> taskStoreStrategy = storeStrategyHelper.resolveStrategy(storeItem, StoreConstants.TASK);
+
+        List<Journal> journals = storeItem.getContainer().getJournals();
+        for (Journal j : journals) {
+            if (journalStoreStrategy.store(j))
+                for (Task t : j.getTasks()) {
+                    taskStoreStrategy.store(t);
+                }
         }
     }
 }

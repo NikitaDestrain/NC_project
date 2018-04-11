@@ -530,6 +530,10 @@ public class Controller {
     }
 
     public boolean isExistId(int id){
-        return tasksDAO.contains(id) && usersDAO.contains(id) && journalDAO.contains(id);
+//        boolean a = tasksDAO.contains(id);
+//        boolean b = usersDAO.contains(id);
+//        boolean c = journalDAO.contains(id);
+//        return a && b && c;
+        return tasksDAO.contains(id) || usersDAO.contains(id) || journalDAO.contains(id);
     }
 }

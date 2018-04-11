@@ -2,25 +2,31 @@
 
     <xsl:template match="journalContainer/journals">
         <table>
+            <xsl:attribute name="class">
+                <xsl:text>table</xsl:text>
+            </xsl:attribute>
             <caption>JOURNALS</caption>
-        <xsl:for-each select="journal">
-            <tr>
-                <td>
-                    <xsl:value-of select="id/text()"/>
-                </td>
-                <td>
-                    <xsl:value-of select="name/text()"/>
-                </td>
-                <td>
-                    <xsl:value-of select="description/text()"/>
-                </td>
-            </tr>
-        </xsl:for-each>
+            <xsl:for-each select="journal">
+                <tr>
+                    <td>
+                        <xsl:value-of select="id/text()"/>
+                    </td>
+                    <td>
+                        <xsl:value-of select="name/text()"/>
+                    </td>
+                    <td>
+                        <xsl:value-of select="description/text()"/>
+                    </td>
+                </tr>
+            </xsl:for-each>
         </table>
     </xsl:template>
 
     <xsl:template match="journalContainer/tasks">
         <table>
+            <xsl:attribute name="class">
+                <xsl:text>table</xsl:text>
+            </xsl:attribute>
             <caption>TASKS</caption>
             <xsl:for-each select="task">
                 <tr>

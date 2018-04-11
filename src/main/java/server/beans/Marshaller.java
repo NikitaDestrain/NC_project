@@ -37,10 +37,10 @@ public class Marshaller {
 
             if ((document.getElementsByTagName(StoreConstants.JOURNAL)).getLength() > 0) {
                 Journal journal = unmarshalJournal(xml);
-                return new StoreItem(StoreConstants.TASK, journal);
+                return new StoreItem(journal);
             } else if (document.getElementsByTagName(StoreConstants.JOURNAL_CONTAINER).getLength() > 0) {
                 JournalContainer container = unmarshalJournalContainer(xml);
-                return new StoreItem(StoreConstants.JOURNAL, container);
+                return new StoreItem(container);
             } else {
                 throw new StoreException("Unknown XML!");
             }

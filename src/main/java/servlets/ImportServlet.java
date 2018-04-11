@@ -48,13 +48,13 @@ public class ImportServlet extends HttpServlet {
     private void performStrategy(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String journalStrategy = req.getParameter(ConstantsClass.JOURNAL_STRATEGY);
-        //String taskStrategy = req.getParameter(ConstantsClass.TASK_STRATEGY);
+        String taskStrategy = req.getParameter(ConstantsClass.TASK_STRATEGY);
         String xml = req.getSession().getAttribute(ConstantsClass.JOURNAL_PARAMETER)==null?
                 (String) req.getSession().getAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER):
                 (String) req.getSession().getAttribute(ConstantsClass.JOURNAL_PARAMETER);
 
         try {
-            ExportImportBean.importData(xml, journalStrategy);
+            ExportImportBean.importData(xml, journalStrategy, taskStrategy);
             updateUtil.updateJournals(req, resp);
         } catch (StoreException e) {
             resp.getWriter().print(e.getMessage());

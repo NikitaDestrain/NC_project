@@ -283,11 +283,11 @@ public class Task implements Comparable<Task>, Serializable {
      * @param notificationDate the new task notification time
      */
     public void setNotificationDate(Date notificationDate) {
-        if (!this.notificationDate.equals(notificationDate)) {
+        //if (!this.notificationDate.equals(notificationDate)) {
             this.notificationDate = notificationDate;
             this.notification = ParameterParser.parseDate(notificationDate);
             isRescheduled = true;
-        }
+        //}
         this.notification = ParameterParser.parseDate(notificationDate);
     }
 
@@ -306,11 +306,11 @@ public class Task implements Comparable<Task>, Serializable {
      * @param plannedDate new planned task time
      */
     public void setPlannedDate(Date plannedDate) {
-        if (!this.plannedDate.equals(plannedDate)) {
+        //if (!this.plannedDate.equals(plannedDate)) {
             this.plannedDate = plannedDate;
             this.planned = ParameterParser.parseDate(plannedDate);
             isRescheduled = true;
-        }
+        //}
         this.planned = ParameterParser.parseDate(plannedDate);
     }
 

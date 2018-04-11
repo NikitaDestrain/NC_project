@@ -10,15 +10,17 @@ public class IgnoreJournalStrategy<T> implements StoreStrategy<T> {
     private Controller controller;
 
     @Override
-    public void store(T object) throws StoreException {
+    public boolean store(T object) throws StoreException {
         try {
             controller = Controller.getInstance();
             Journal j = (Journal) object;
             if (!controller.containsObject(j) && !controller.isExistId(j.getId())) {
                 controller.addJournal(j);
+                return true;
             }
         } catch (ControllerActionException e) {
             throw new StoreException(e.getMessage());
         }
+        return false;
     }
 }

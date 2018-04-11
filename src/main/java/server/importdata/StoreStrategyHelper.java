@@ -15,6 +15,7 @@ import java.util.Map;
 public class StoreStrategyHelper {
     private static StoreStrategyHelper ourInstance = new StoreStrategyHelper();
     private Map<String, Map<String, StoreStrategy>> strategies;
+    private final String NO_SUCH_STRATEGY = "Could not find suitable strategy!";
 
     public static StoreStrategyHelper getInstance() {
         return ourInstance;
@@ -36,8 +37,13 @@ public class StoreStrategyHelper {
         strategies.put(StoreConstants.TASK, taskStrategies);
     }
 
-    public StoreStrategy resolveStrategy(StoreItem item) throws StoreException {
-        return strategies.get(item.getType()).get(item.getStrategy());
+    public StoreStrategy resolveStrategy(StoreItem item, String type) throws StoreException {
+        if (type.equals(StoreConstants.JOURNAL))
+            return strategies.get(type).get(item.getJournalStrategy());
+        else if (type.equals(StoreConstants.TASK))
+            return strategies.get(type).get(item.getTaskStrategy());
+        else
+            throw new StoreException(NO_SUCH_STRATEGY);
         //todo vlla "Ода, посвященная Switch"
     }
 }

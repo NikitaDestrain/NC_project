@@ -48,13 +48,7 @@
       enctype="multipart/form-data">
     <div class="form-group">
         <input type="hidden" id="hid" name="<%=ConstantsClass.ACTION%>" value="<%=ConstantsClass.CHOOSE_STRATEGY%>">
-        <div align="center"><strong>JOURNALS</strong></div>
-        <table class="table">
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Description</th>
-            </tr>
+        <div align="center"><strong>Data from xml</strong></div>
             <%
                 if (request.getSession().getAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER) != null &&
                         request.getAttribute(ConstantsClass.XSL_JOURNAL_CONTAINER_PARAMETER) != null) {
@@ -63,7 +57,6 @@
             <%
                 }
             %>
-        </table>
         <div align="center">
             Choose a strategy for journals: <br/>
             <table>
@@ -84,26 +77,26 @@
                 </tr>
             </table>
         </div>
-        <%--<div align="center">--%>
-            <%--Choose a strategy for tasks: <br/>--%>
-            <%--<table>--%>
-                <%--<tr>--%>
-                    <%--<td>--%>
-                        <%--<select name="<%=ConstantsClass.TASK_STRATEGY%>">--%>
-                            <%--<option value="<%=ConstantsClass.REPLACE%>">--%>
-                                <%--Replace--%>
-                            <%--</option>--%>
-                            <%--<option value="<%=ConstantsClass.IGNORE%>">--%>
-                                <%--Ignore--%>
-                            <%--</option>--%>
-                            <%--<option value="<%=ConstantsClass.EXCEPTION%>">--%>
-                                <%--Throw an exception--%>
-                            <%--</option>--%>
-                        <%--</select>--%>
-                    <%--</td>--%>
-                <%--</tr>--%>
-            <%--</table>--%>
-        <%--</div>--%>
+        <div align="center">
+            Choose a strategy for tasks: <br/>
+            <table>
+                <tr>
+                    <td>
+                        <select name="<%=ConstantsClass.TASK_STRATEGY%>">
+                            <option value="<%=ConstantsClass.REPLACE%>">
+                                Replace
+                            </option>
+                            <option value="<%=ConstantsClass.IGNORE%>">
+                                Ignore
+                            </option>
+                            <option value="<%=ConstantsClass.EXCEPTION%>">
+                                Throw an exception
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
         <div align="center">
             <input type="submit" id="submit" class="btn btn-outline-primary" value="OK"/>
         </div>
