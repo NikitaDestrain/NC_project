@@ -57,7 +57,7 @@ ALTER TABLE "Journal"
 
 CREATE TABLE IF NOT EXISTS "Tasks" (
   "Task_id"           BIGINT DEFAULT nextval('auto_increment' :: REGCLASS) NOT NULL,
-  "Name"              CHARACTER VARYING(18)                                NOT NULL UNIQUE,
+  "Name"              CHARACTER VARYING(50)                                NOT NULL UNIQUE,
   "Status"            CHARACTER VARYING(18)                                NOT NULL,
   "Description"       CHARACTER VARYING(80),
   "Planned_date"      DATE                                                 NOT NULL,

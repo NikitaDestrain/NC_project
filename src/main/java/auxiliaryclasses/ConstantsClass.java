@@ -125,6 +125,7 @@ public class ConstantsClass {
     public static final String EXPORT = "exp";
     public static final String USERACTION = "useraction";
     public static final String USERNUMBER = "usernumber";
+    public static final String RENAMENUMBER = "renamenumber";
     public static final String JOURNAL_NAME = "journalname";
     public static final String ACTION = "action";
     public static final String RESCHEDULE_TASK = "rescheduletask";

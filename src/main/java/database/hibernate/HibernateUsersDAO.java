@@ -36,7 +36,7 @@ public class HibernateUsersDAO implements UsersDAO {
             user = UserFactory.createUser(login, password, role);
             session.save(user);
             session.getTransaction().commit();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -50,7 +50,7 @@ public class HibernateUsersDAO implements UsersDAO {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             user = (User) session.get(User.class, id);
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -65,7 +65,7 @@ public class HibernateUsersDAO implements UsersDAO {
             session.beginTransaction();
             session.update(user);
             session.getTransaction().commit();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -79,7 +79,7 @@ public class HibernateUsersDAO implements UsersDAO {
             session.beginTransaction();
             session.delete(user);
             session.getTransaction().commit();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -92,7 +92,7 @@ public class HibernateUsersDAO implements UsersDAO {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             list = session.createCriteria(User.class).list();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -109,7 +109,7 @@ public class HibernateUsersDAO implements UsersDAO {
                     .add(Restrictions.eq(ConstantsClass.LOGIN_PARAMETER, login))
                     .add(Restrictions.eq(ConstantsClass.PASSWORD_PARAMETER, password));
             user = (User) equalResult.list().get(0);
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -123,7 +123,7 @@ public class HibernateUsersDAO implements UsersDAO {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             list = getOrderCriteria(column, criteria, session.createCriteria(User.class)).list();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();

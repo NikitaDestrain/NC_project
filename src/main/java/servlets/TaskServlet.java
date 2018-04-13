@@ -1,6 +1,7 @@
 package servlets;
 
 import auxiliaryclasses.ConstantsClass;
+import com.sun.org.apache.regexp.internal.RE;
 import server.beans.EIBeanLocal;
 import server.controller.Controller;
 import server.controller.XmlUtils;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(ConstantsClass.TASK_SERVLET_ADDRESS)
 @MultipartConfig
@@ -107,6 +109,8 @@ public class TaskServlet extends HttpServlet {
             case ConstantsClass.RENAME:
                 req.getSession().setAttribute(ConstantsClass.IS_RENAME, Boolean.TRUE);
                 req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
+                List<Integer> renameIds = importExportManager.createIDList(req.getParameterValues(ConstantsClass.USERNUMBER));
+                req.getSession().setAttribute(ConstantsClass.RENAMENUMBER, renameIds);
                 req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
                 break;
             case ConstantsClass.SORT:

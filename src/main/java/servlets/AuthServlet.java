@@ -28,12 +28,14 @@ public class AuthServlet extends HttpServlet {
     private Controller controller;
 
     private PostgreSQLDAOManager dbFactory;
+    private CurrentUserContainer currentUserContainer;
     private User currentUser;
 
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         try {
+            currentUserContainer = CurrentUserContainer.getInstance();
             dbFactory = PostgreSQLDAOManager.getInstance(config.getServletContext().getRealPath(ConstantsClass.SCRIPT_FILE));
             controller = Controller.getInstance();
             updateUtil = DataUpdateUtil.getInstance();
@@ -83,6 +85,7 @@ public class AuthServlet extends HttpServlet {
                     currentUser = controller.signInUser(login, encryptedPassword);
                     if (currentUser != null) {
                         req.getSession().setAttribute(ConstantsClass.CURRENT_USER, currentUser);
+                        currentUserContainer.setUser(currentUser);
                         updateUtil.updateJournals(req, resp);
                     } else {
                         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_IN);
@@ -118,6 +121,7 @@ public class AuthServlet extends HttpServlet {
                 currentUser = controller.signInUser(login, encryptedPassword);
                 if (currentUser != null) {
                     req.getSession().setAttribute(ConstantsClass.CURRENT_USER, currentUser);
+                    currentUserContainer.setUser(currentUser);
                     updateUtil.updateJournals(req, resp);
                 } else {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_UP);

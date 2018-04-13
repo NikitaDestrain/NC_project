@@ -314,9 +314,14 @@ public class Controller {
         return sortedTasksJournal;
     }
 
-    public void renameTasks(int journalId, String prefix) throws ControllerActionException {
+    public void renameTasks(int journalId, List<Integer> tasksId, String prefix) throws ControllerActionException {
         for (Task task : journalContainer.getJournal(journalId).getTasks())
-            doRenameAction(task, prefix);
+            if (tasksId.contains(task.getId()) && checkLengthName(task.getName(), prefix))
+                doRenameAction(task, prefix);
+    }
+
+    private boolean checkLengthName(String name, String prefix) {
+        return (name.length() + prefix.length()) < 50;
     }
 
     private void doRenameAction(Task task, String prefix) throws ControllerActionException {

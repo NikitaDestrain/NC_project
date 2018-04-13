@@ -28,7 +28,7 @@ public class HibernateTasksDAO implements TasksDAO {
             task = TaskFactory.createTask(name, status.toString(), description, notificationDate, plannedDate, journalId);
             session.save(task);
             session.getTransaction().commit();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -44,7 +44,7 @@ public class HibernateTasksDAO implements TasksDAO {
             task = TaskFactory.createTask(id, name, status.toString(), description, notificationDate, plannedDate, journalId);
             session.save(task);
             session.getTransaction().commit();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -58,7 +58,7 @@ public class HibernateTasksDAO implements TasksDAO {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             task = (Task) session.get(Task.class, id);
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -83,7 +83,7 @@ public class HibernateTasksDAO implements TasksDAO {
             session.beginTransaction();
             session.update(task);
             session.getTransaction().commit();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -97,7 +97,7 @@ public class HibernateTasksDAO implements TasksDAO {
             session.beginTransaction();
             session.delete(task);
             session.getTransaction().commit();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -110,7 +110,7 @@ public class HibernateTasksDAO implements TasksDAO {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             list = session.createCriteria(Task.class).list();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -124,7 +124,7 @@ public class HibernateTasksDAO implements TasksDAO {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             list = getOrderCriteria(journalId, column, criteria, session.createCriteria(Task.class)).list();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -158,7 +158,7 @@ public class HibernateTasksDAO implements TasksDAO {
             Criteria equalResult = session.createCriteria(Task.class)
                     .add(Restrictions.eq(column, equal));
             list = getOrderCriteria(journalId, column, criteria, equalResult).list();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();

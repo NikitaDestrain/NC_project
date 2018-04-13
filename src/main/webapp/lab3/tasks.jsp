@@ -71,8 +71,12 @@
                     }
                     break;
                 case "rename":
-                    document.getElementById("hid").value = "Rename";
-                    document.forms[0].submit();
+                    if (countChecked() < 1) {
+                        alert("Select at least one object to perform the \"Rename\" operation!");
+                    } else {
+                        document.getElementById("hid").value = "Rename";
+                        document.forms[0].submit();
+                    }
                     break;
                 case "back":
                     document.getElementById("hid").value = "backtomain";
@@ -154,7 +158,8 @@
 %>
 <div align="center"><strong>TASK SCHEDULER</strong></div>
 <div align="center">
-    <form method="post" id="mainform" action="<%=ConstantsClass.TASK_SERVLET_ADDRESS%>" role="form" enctype="multipart/form-data">
+    <form method="post" id="mainform" action="<%=ConstantsClass.TASK_SERVLET_ADDRESS%>" role="form"
+          enctype="multipart/form-data">
         <div class="form-group">
             <input type="hidden" id="hid" name=<%=ConstantsClass.USERACTION%>>
             <input type="hidden" name="<%=ConstantsClass.ACTION%>" value=<%=ConstantsClass.DO_CRUD_FROM_TASKS%>>

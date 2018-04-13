@@ -2,7 +2,6 @@ package servlets;
 
 import auxiliaryclasses.ConstantsClass;
 import server.controller.XmlUtils;
-import server.exportdata.ExportException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

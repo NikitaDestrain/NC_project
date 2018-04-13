@@ -27,7 +27,7 @@ public class HibernateJournalDAO implements JournalDAO {
             journal = JournalFactory.createJournal(name, description, userId);
             session.save(journal);
             session.getTransaction().commit();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -43,7 +43,7 @@ public class HibernateJournalDAO implements JournalDAO {
             journal = JournalFactory.createJournal(id, name, description, userId);
             session.save(journal);
             session.getTransaction().commit();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -57,7 +57,7 @@ public class HibernateJournalDAO implements JournalDAO {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             journal = (Journal) session.get(Journal.class, id);
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -82,7 +82,7 @@ public class HibernateJournalDAO implements JournalDAO {
             session.beginTransaction();
             session.update(journal);
             session.getTransaction().commit();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -96,7 +96,7 @@ public class HibernateJournalDAO implements JournalDAO {
             session.beginTransaction();
             session.delete(journal);
             session.getTransaction().commit();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -109,7 +109,7 @@ public class HibernateJournalDAO implements JournalDAO {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             list = session.createCriteria(Journal.class).list();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();
@@ -123,7 +123,7 @@ public class HibernateJournalDAO implements JournalDAO {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             list = getOrderCriteria(column, criteria, session.createCriteria(Journal.class)).list();
-        } catch (ExceptionInInitializerError e) {
+        } catch (Exception e) {
             throw new SQLException();
         } finally {
             finishSession();

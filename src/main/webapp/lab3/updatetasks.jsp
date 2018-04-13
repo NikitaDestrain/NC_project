@@ -293,10 +293,15 @@
                 <br>
                 <i>
                     Result example: Prefix.TaskName
+                    <br>
+                    (Note: If the length of the new name is more than 50 characters, the old name will be left!)
+                    <br>
                 </i>
                 <table>
                     <tr>
                         <td>Prefix</td>
+                        Current journal name:
+                        <%=request.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME) == null ? "" : request.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL_NAME)%>
                         <td>
                             <input type="text" class="form-control" name="<%=ConstantsClass.PREFIX%>"
                                    id="prefix"

@@ -33,7 +33,6 @@ import java.util.*;
 public class Marshaller {
 
     private static Marshaller instance;
-    private static final String PARSE_ERROR = "Unable to parse XML!";
     private CurrentUserContainer userContainer = CurrentUserContainer.getInstance();
 
     private Marshaller() {
@@ -57,18 +56,18 @@ public class Marshaller {
                 return new StoreItem(Collections.unmodifiableList(new LinkedList<>(parsedJournals.values())));
             }
             else
-                throw new StoreException(PARSE_ERROR);
+                throw new StoreException(MarshallerConstants.PARSE_ERROR);
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            throw new StoreException(PARSE_ERROR);
+            throw new StoreException(MarshallerConstants.PARSE_ERROR);
         }
     }
 
     private Map<Integer, Journal> unmarshalJournals(Document document) throws StoreException {
         if (userContainer.getUser() == null) {
-            throw new StoreException(PARSE_ERROR);
+            throw new StoreException(MarshallerConstants.PARSE_ERROR);
         }
         else {
-            NodeList journals = document.getElementsByTagName("journal");
+            NodeList journals = document.getElementsByTagName(MarshallerConstants.JOURNAL_TAG);
             Map<Integer, Journal> parsedJournals = new HashMap<>();
             Element current;
             Journal journal;
@@ -78,15 +77,15 @@ public class Marshaller {
             NodeList descriptions;
             for (int i = 0; i < journals.getLength(); i++) {
                 current = (Element) journals.item(i);
-                descriptions = current.getElementsByTagName("description");
+                descriptions = current.getElementsByTagName(MarshallerConstants.DESCRIPTION_TAG);
                 if (descriptions.getLength() != 0) {
                     description = descriptions.item(0).getFirstChild().getNodeValue();
                 }
                 try {
-                    name = current.getElementsByTagName("name").item(0).getFirstChild().getNodeValue();
-                    id = current.getElementsByTagName("id").item(0).getFirstChild().getNodeValue();
+                    name = current.getElementsByTagName(MarshallerConstants.NAME_TAG).item(0).getFirstChild().getNodeValue();
+                    id = current.getElementsByTagName(MarshallerConstants.ID_TAG).item(0).getFirstChild().getNodeValue();
                 } catch (NullPointerException e) {
-                    throw new StoreException(PARSE_ERROR);
+                    throw new StoreException(MarshallerConstants.PARSE_ERROR);
                 }
                 journal = JournalFactory.createJournal(Integer.parseInt(id), name, description, userContainer.getUser().getId());
                 parsedJournals.put(journal.getId(), journal);
@@ -96,7 +95,7 @@ public class Marshaller {
     }
 
     private List<Task> unmarshalTasks(Document document) throws StoreException {
-        NodeList tasks = document.getElementsByTagName("task");
+        NodeList tasks = document.getElementsByTagName(MarshallerConstants.TASK_TAG);
         List<Task> parsedTasks = new LinkedList<>();
         Element current;
         Task task;
@@ -116,21 +115,21 @@ public class Marshaller {
         NodeList descriptions;
         for (int i = 0; i < tasks.getLength(); i++) {
             current = (Element) tasks.item(i);
-            descriptions = current.getElementsByTagName("description");
+            descriptions = current.getElementsByTagName(MarshallerConstants.DESCRIPTION_TAG);
             if (descriptions.getLength() != 0) {
                 description = descriptions.item(0).getFirstChild().getNodeValue();
             }
             try {
-                name = current.getElementsByTagName("name").item(0).getFirstChild().getNodeValue();
-                id = current.getElementsByTagName("id").item(0).getFirstChild().getNodeValue();
-                status = current.getElementsByTagName("status").item(0).getFirstChild().getNodeValue();
-                notification = current.getElementsByTagName("notificationDate").item(0).getFirstChild().getNodeValue();
-                planned = current.getElementsByTagName("plannedDate").item(0).getFirstChild().getNodeValue();
-                upload = current.getElementsByTagName("uploadDate").item(0).getFirstChild().getNodeValue();
-                change = current.getElementsByTagName("changeDate").item(0).getFirstChild().getNodeValue();
-                journalId = current.getElementsByTagName("journalId").item(0).getFirstChild().getNodeValue();
+                name = current.getElementsByTagName(MarshallerConstants.NAME_TAG).item(0).getFirstChild().getNodeValue();
+                id = current.getElementsByTagName(MarshallerConstants.ID_TAG).item(0).getFirstChild().getNodeValue();
+                status = current.getElementsByTagName(MarshallerConstants.STATUS_TAG).item(0).getFirstChild().getNodeValue();
+                notification = current.getElementsByTagName(MarshallerConstants.NOTIFICATION_DATE_TAG).item(0).getFirstChild().getNodeValue();
+                planned = current.getElementsByTagName(MarshallerConstants.PLANNED_DATE_TAG).item(0).getFirstChild().getNodeValue();
+                upload = current.getElementsByTagName(MarshallerConstants.UPLOAD_DATE_TAG).item(0).getFirstChild().getNodeValue();
+                change = current.getElementsByTagName(MarshallerConstants.CHANGE_DATE_TAG).item(0).getFirstChild().getNodeValue();
+                journalId = current.getElementsByTagName(MarshallerConstants.JOURNAL_ID_TAG).item(0).getFirstChild().getNodeValue();
             } catch (NullPointerException e) {
-                throw new StoreException(PARSE_ERROR);
+                throw new StoreException(MarshallerConstants.PARSE_ERROR);
             }
             notificationDate = Date.valueOf(notification.substring(0, 10));
             plannedDate = Date.valueOf(planned.substring(0, 10));
@@ -168,14 +167,14 @@ public class Marshaller {
     }
 
     private void createXMLSchema(Document doc, List<Journal> journals, List<Task> tasks) {
-        Element rootElement = doc.createElement("container");
+        Element rootElement = doc.createElement(MarshallerConstants.ROOT_TAG);
         doc.appendChild(rootElement);
 
-        Element journalsElement = doc.createElement("journals");
+        Element journalsElement = doc.createElement(MarshallerConstants.JOURNALS_TAG);
         rootElement.appendChild(journalsElement);
         createJournalElements(doc, journalsElement, journals);
 
-        Element tasksElement = doc.createElement("tasks");
+        Element tasksElement = doc.createElement(MarshallerConstants.TASKS_TAG);
         rootElement.appendChild(tasksElement);
         createTaskElements(doc, tasksElement, tasks);
     }
@@ -193,16 +192,16 @@ public class Marshaller {
     private Node createTaskNode(Document doc, Integer id, String name, TaskStatus status, String description,
                                 Date notificationDate, Date plannedDate, Date uploadDate, Date changeDate,
                                 Integer journalId) {
-        Element task = doc.createElement("task");
-        task.appendChild(createElementWithValue(doc, "id", id.toString()));
-        task.appendChild(createElementWithValue(doc, "name", name));
-        task.appendChild(createElementWithValue(doc, "status", status.toString()));
-        task.appendChild(createElementWithValue(doc, "description", description));
-        task.appendChild(createElementWithValue(doc, "notificationDate", notificationDate.toString()));
-        task.appendChild(createElementWithValue(doc, "plannedDate", plannedDate.toString()));
-        task.appendChild(createElementWithValue(doc, "uploadDate", uploadDate.toString()));
-        task.appendChild(createElementWithValue(doc, "changeDate", changeDate.toString()));
-        task.appendChild(createElementWithValue(doc, "journalId", journalId.toString()));
+        Element task = doc.createElement(MarshallerConstants.TASK_TAG);
+        task.appendChild(createElementWithValue(doc, MarshallerConstants.ID_TAG, id.toString()));
+        task.appendChild(createElementWithValue(doc, MarshallerConstants.NAME_TAG, name));
+        task.appendChild(createElementWithValue(doc, MarshallerConstants.STATUS_TAG, status.toString()));
+        task.appendChild(createElementWithValue(doc, MarshallerConstants.DESCRIPTION_TAG, description));
+        task.appendChild(createElementWithValue(doc, MarshallerConstants.NOTIFICATION_DATE_TAG, notificationDate.toString()));
+        task.appendChild(createElementWithValue(doc, MarshallerConstants.PLANNED_DATE_TAG, plannedDate.toString()));
+        task.appendChild(createElementWithValue(doc, MarshallerConstants.UPLOAD_DATE_TAG, uploadDate.toString()));
+        task.appendChild(createElementWithValue(doc, MarshallerConstants.CHANGE_DATE_TAG, changeDate.toString()));
+        task.appendChild(createElementWithValue(doc, MarshallerConstants.JOURNAL_ID_TAG, journalId.toString()));
         return task;
     }
 
@@ -215,10 +214,10 @@ public class Marshaller {
     }
 
     private Node createJournalNode(Document doc, Integer id, String name, String description) {
-        Element journal = doc.createElement("journal");
-        journal.appendChild(createElementWithValue(doc, "id", id.toString()));
-        journal.appendChild(createElementWithValue(doc, "name", name));
-        journal.appendChild(createElementWithValue(doc, "description", description));
+        Element journal = doc.createElement(MarshallerConstants.JOURNAL_TAG);
+        journal.appendChild(createElementWithValue(doc, MarshallerConstants.ID_TAG, id.toString()));
+        journal.appendChild(createElementWithValue(doc, MarshallerConstants.NAME_TAG, name));
+        journal.appendChild(createElementWithValue(doc, MarshallerConstants.DESCRIPTION_TAG, description));
         return journal;
     }
 

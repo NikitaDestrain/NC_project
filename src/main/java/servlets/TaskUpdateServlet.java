@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.List;
 
 @WebServlet(ConstantsClass.TASK_UPDATE_SERVLET_ADDRESS)
 public class TaskUpdateServlet extends HttpServlet {
@@ -195,8 +196,10 @@ public class TaskUpdateServlet extends HttpServlet {
         switch (useraction) {
             case ConstantsClass.RENAME:
                 String prefix = req.getParameter(ConstantsClass.PREFIX);
+                List<Integer> listRenameIds = (List<Integer>) req.getSession().getAttribute(ConstantsClass.RENAMENUMBER);
                 try {
-                    controller.renameTasks(currentJournal.getId(), prefix);
+                    controller.renameTasks(currentJournal.getId(),
+                            listRenameIds, prefix);
                     updateUtil.updateTasks(req, resp, currentJournal);
                 } catch (ControllerActionException e) {
                     incorrectRenameTasks(req, resp, prefix, e.getMessage());
