@@ -1,11 +1,11 @@
 package server.beans;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import server.exceptions.MarshallerException;
+import server.factories.JournalFactory;
+import server.factories.TaskFactory;
 import server.importdata.StoreConstants;
 import server.importdata.StoreException;
 import server.importdata.StoreItem;
@@ -13,10 +13,8 @@ import server.model.Journal;
 import server.model.JournalContainer;
 import server.model.Task;
 import server.model.TaskStatus;
+import servlets.CurrentUserContainer;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -27,15 +25,16 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
-import java.util.List;
+import java.util.*;
 
 public class Marshaller {
 
     private static Marshaller instance;
+    private static final String PARSE_ERROR = "Unable to parse XML!";
+    private CurrentUserContainer userContainer = CurrentUserContainer.getInstance();
 
     private Marshaller() {
     }
@@ -51,39 +50,108 @@ public class Marshaller {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document document = builder.parse(new InputSource(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))));
 
-            if ((document.getElementsByTagName(StoreConstants.JOURNAL)).getLength() > 0) {
-                Journal journal = unmarshalJournal(xml);
-                return new StoreItem(journal);
-            } else if (document.getElementsByTagName(StoreConstants.JOURNAL_CONTAINER).getLength() > 0) {
-                JournalContainer container = unmarshalJournalContainer(xml);
-                return new StoreItem(container);
-            } else {
-                throw new StoreException("Unknown XML!");
+            if ((document.getElementsByTagName(StoreConstants.CONTAINER_TAG)).getLength() > 0) {
+                Map<Integer, Journal> parsedJournals = unmarshalJournals(document);
+                List<Task> parsedTasks = unmarshalTasks(document);
+                addTasksToJournals(parsedJournals, parsedTasks);
+                return new StoreItem(Collections.unmodifiableList(new LinkedList<>(parsedJournals.values())));
             }
-        } catch (ParserConfigurationException | SAXException | IOException | JAXBException e) {
-            throw new StoreException("Unable to parse XML!");
+            else
+                throw new StoreException(PARSE_ERROR);
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            throw new StoreException(PARSE_ERROR);
         }
     }
 
-    private Journal unmarshalJournal(String xml) throws JAXBException {
-        try {
-            JAXBContext context = JAXBContext.newInstance(Journal.class);
-            StringReader reader = new StringReader(xml);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            return (Journal) unmarshaller.unmarshal(reader);
-        } catch (JAXBException e) {
-            throw new JAXBException(e.getMessage());
+    private Map<Integer, Journal> unmarshalJournals(Document document) throws StoreException {
+        if (userContainer.getUser() == null) {
+            throw new StoreException(PARSE_ERROR);
+        }
+        else {
+            NodeList journals = document.getElementsByTagName("journal");
+            Map<Integer, Journal> parsedJournals = new HashMap<>();
+            Element current;
+            Journal journal;
+            String name;
+            String description = null;
+            String id;
+            NodeList descriptions;
+            for (int i = 0; i < journals.getLength(); i++) {
+                current = (Element) journals.item(i);
+                descriptions = current.getElementsByTagName("description");
+                if (descriptions.getLength() != 0) {
+                    description = descriptions.item(0).getFirstChild().getNodeValue();
+                }
+                try {
+                    name = current.getElementsByTagName("name").item(0).getFirstChild().getNodeValue();
+                    id = current.getElementsByTagName("id").item(0).getFirstChild().getNodeValue();
+                } catch (NullPointerException e) {
+                    throw new StoreException(PARSE_ERROR);
+                }
+                journal = JournalFactory.createJournal(Integer.parseInt(id), name, description, userContainer.getUser().getId());
+                parsedJournals.put(journal.getId(), journal);
+            }
+            return parsedJournals;
         }
     }
 
-    private JournalContainer unmarshalJournalContainer(String xml) throws JAXBException {
-        try {
-            JAXBContext context = JAXBContext.newInstance(JournalContainer.class);
-            StringReader reader = new StringReader(xml);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            return (JournalContainer) unmarshaller.unmarshal(reader);
-        } catch (JAXBException e) {
-            throw new JAXBException(e.getMessage());
+    private List<Task> unmarshalTasks(Document document) throws StoreException {
+        NodeList tasks = document.getElementsByTagName("task");
+        List<Task> parsedTasks = new LinkedList<>();
+        Element current;
+        Task task;
+        String name;
+        String description = null;
+        String id;
+        String status;
+        String notification;
+        String planned;
+        String upload;
+        String change;
+        Date notificationDate;
+        Date plannedDate;
+        Date uploadDate;
+        Date changeDate;
+        String journalId;
+        NodeList descriptions;
+        for (int i = 0; i < tasks.getLength(); i++) {
+            current = (Element) tasks.item(i);
+            descriptions = current.getElementsByTagName("description");
+            if (descriptions.getLength() != 0) {
+                description = descriptions.item(0).getFirstChild().getNodeValue();
+            }
+            try {
+                name = current.getElementsByTagName("name").item(0).getFirstChild().getNodeValue();
+                id = current.getElementsByTagName("id").item(0).getFirstChild().getNodeValue();
+                status = current.getElementsByTagName("status").item(0).getFirstChild().getNodeValue();
+                notification = current.getElementsByTagName("notificationDate").item(0).getFirstChild().getNodeValue();
+                planned = current.getElementsByTagName("plannedDate").item(0).getFirstChild().getNodeValue();
+                upload = current.getElementsByTagName("uploadDate").item(0).getFirstChild().getNodeValue();
+                change = current.getElementsByTagName("changeDate").item(0).getFirstChild().getNodeValue();
+                journalId = current.getElementsByTagName("journalId").item(0).getFirstChild().getNodeValue();
+            } catch (NullPointerException e) {
+                throw new StoreException(PARSE_ERROR);
+            }
+            notificationDate = Date.valueOf(notification.substring(0, 10));
+            plannedDate = Date.valueOf(planned.substring(0, 10));
+            uploadDate = Date.valueOf(upload.substring(0, 10));
+            changeDate = Date.valueOf(change.substring(0, 10));
+
+            task = TaskFactory.createTask(Integer.parseInt(id), name, status, description,
+                    notificationDate, plannedDate, uploadDate, changeDate, Integer.parseInt(journalId));
+
+            parsedTasks.add(task);
+        }
+        return parsedTasks;
+    }
+
+    private void addTasksToJournals(Map<Integer, Journal> journals, List<Task> tasks) {
+        Journal j;
+        for (Task t : tasks) {
+            j = journals.get(t.getJournalId());
+            if (j != null) {
+                j.addTask(t);
+            }
         }
     }
 

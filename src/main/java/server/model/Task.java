@@ -19,7 +19,7 @@ import java.util.Objects;
  */
 
 @Entity
-@Table(name = "\"Tasks\"", schema = "public", catalog = "postgres")
+@Table(name = "\"Tasks\"", schema = "public", catalog = "cracker")
 
 @XmlRootElement(name = "task")
 @XmlAccessorType(XmlAccessType.FIELD)
