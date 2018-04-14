@@ -68,7 +68,7 @@ public class ConstantsClass {
     public static final String ERROR_CHOOSE_JOURNAL = "Choose a journal to perform an action!";
     public static final String ERROR_CHOOSE_TASK = "Choose a task to perform an action!";
 
-    public static final String ERROR_NAME_LENGTH = "The length of the \"name\" field \n should be between 0 and 18 characters and\nit should contain latin characters, whitespaces and numbers!";
+    public static final String ERROR_NAME_LENGTH = "The length of the \"name\" field \n should be between 0 and 50 characters and\nit should contain latin characters, whitespaces and numbers!";
     public static final String ERROR_DESCRIPTION_LENGTH = "The length of the \"description\" field \n should be less than 80 characters and\nit should contain latin characters, whitespaces and numbers!";
     public static final String ERROR_DATE_PARSE = "Enter date in format [d]d-[m]m-yyyy!";
     public static final String ERROR_FILTER_LIKE = "\"Like\" filter should contain latin characters, numbers, \"%\" and \"_\" symbols!";
@@ -187,7 +187,7 @@ public class ConstantsClass {
     public static final String SAVE = "Save";
     public static final String OK = "OK";
 
-    public static final int NAME_FIELD_LENGTH = 18;
+    public static final int NAME_FIELD_LENGTH = 50;
     public static final int LOGIN_FIELD_LENGTH = 18;
     public static final int DESCRIPTION_FIELD_LENGTH = 80;
     public static final String CURRENT_STATUS = "curstatus";

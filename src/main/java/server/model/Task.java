@@ -38,7 +38,7 @@ public class Task implements Comparable<Task>, Serializable {
     /**
      * Task name
      */
-    @Column(name = "\"Name\"", nullable = false, unique = true, length = 18)
+    @Column(name = "\"Name\"", nullable = false, unique = true, length = 50)
     @XmlElement(name = "name")
     private String name;
 
@@ -50,7 +50,7 @@ public class Task implements Comparable<Task>, Serializable {
     @XmlElement(name = "status")
     private TaskStatus status;
 
-    @Column(name = "\"Status\"", nullable = false, length = 50)
+    @Column(name = "\"Status\"", nullable = false, length = 18)
     private String stringStatus;
 
     /**

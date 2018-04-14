@@ -26,7 +26,7 @@ public class Journal implements Serializable {
     @XmlElement(name = "tasks")
     private Map<Integer, Task> tasks;
 
-    @Column(name = "\"Name\"", nullable = false, length = 18, unique = true)
+    @Column(name = "\"Name\"", nullable = false, length = 50, unique = true)
     @XmlElement(name = "name")
     private String name;
 
