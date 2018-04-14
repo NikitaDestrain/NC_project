@@ -60,6 +60,8 @@ public class TaskServlet extends HttpServlet {
         switch (useraction) {
             case ConstantsClass.ADD:
                 req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.TRUE);
+                req.getSession().setAttribute(ConstantsClass.IS_EDIT, Boolean.FALSE);
+                req.getSession().setAttribute(ConstantsClass.IS_RENAME, Boolean.FALSE);
                 req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
                 req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
                 break;
@@ -83,6 +85,7 @@ public class TaskServlet extends HttpServlet {
                     req.setAttribute(ConstantsClass.CURRENT_TASK_XML, t);
                     req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
                     req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.FALSE);
+                    req.getSession().setAttribute(ConstantsClass.IS_RENAME, Boolean.FALSE);
                     req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
                 } else {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_TASK);
@@ -108,6 +111,8 @@ public class TaskServlet extends HttpServlet {
                 break;
             case ConstantsClass.RENAME:
                 req.getSession().setAttribute(ConstantsClass.IS_RENAME, Boolean.TRUE);
+                req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.FALSE);
+                req.getSession().setAttribute(ConstantsClass.IS_EDIT, Boolean.FALSE);
                 req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
                 List<Integer> renameIds = importExportManager.createIDList(req.getParameterValues(ConstantsClass.USERNUMBER));
                 req.getSession().setAttribute(ConstantsClass.RENAMENUMBER, renameIds);

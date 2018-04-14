@@ -52,12 +52,12 @@ public class XmlUtils {
         }
     }
 
-    public boolean compareWithXsd(String nameFileXML, String nameFileXSD) throws Exception {
+    public boolean compareWithXsd(String fileXML, String fileXSD) throws Exception {
         try {
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(new StreamSource(nameFileXSD));
+            Schema schema = factory.newSchema(new StreamSource(new ByteArrayInputStream(fileXSD.getBytes(StandardCharsets.UTF_8))));
             Validator valid = schema.newValidator();
-            valid.validate(new StreamSource(new ByteArrayInputStream(nameFileXML.getBytes(StandardCharsets.UTF_8))));
+            valid.validate(new StreamSource(new ByteArrayInputStream(fileXML.getBytes(StandardCharsets.UTF_8))));
             System.out.println(SUCCESSFULLY_VALIDATION);
             return true;
         } catch (Exception e) {

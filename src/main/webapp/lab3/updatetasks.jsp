@@ -196,7 +196,6 @@
                        onclick="buttonClickAdd(this)">
             </div>
             <%
-                    request.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.FALSE);
                 }
             %>
 
@@ -278,7 +277,6 @@
                        onclick="buttonClickEdit(this)">
             </div>
             <%
-                    request.getSession().setAttribute(ConstantsClass.IS_EDIT, Boolean.FALSE);
                 }
             %>
 
@@ -317,7 +315,6 @@
                 <br>
             </div>
             <%
-                    request.getSession().setAttribute(ConstantsClass.IS_RENAME, Boolean.FALSE);
                 }
             %>
 
@@ -330,12 +327,12 @@
                        onclick="buttonClickAdd(this)">
             </div>
         </div>
+        <div align="center">
+            <%=
+            request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" : request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)
+            %>
+        </div>
     </form>
-</div>
-<div align="center">
-    <%=
-    request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE) == null ? "" : request.getAttribute(ConstantsClass.MESSAGE_ATTRIBUTE)
-    %>
 </div>
 </body>
 </html>

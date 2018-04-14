@@ -105,6 +105,9 @@ public class TaskUpdateServlet extends HttpServlet {
         }
         req.setAttribute(ConstantsClass.CURRENT_TASK_XML, t);
         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
+        req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.TRUE);
+        req.getSession().setAttribute(ConstantsClass.IS_EDIT, Boolean.FALSE);
+        req.getSession().setAttribute(ConstantsClass.IS_RENAME, Boolean.FALSE);
         req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
     }
 
@@ -179,8 +182,11 @@ public class TaskUpdateServlet extends HttpServlet {
         } catch (Exception ex) {
             resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
         }
-        req.setAttribute(ConstantsClass.CURRENT_TASK, t);
+        req.setAttribute(ConstantsClass.CURRENT_TASK_XML, t);
         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
+        req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.FALSE);
+        req.getSession().setAttribute(ConstantsClass.IS_EDIT, Boolean.TRUE);
+        req.getSession().setAttribute(ConstantsClass.IS_RENAME, Boolean.FALSE);
         req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
     }
 
@@ -218,6 +224,9 @@ public class TaskUpdateServlet extends HttpServlet {
     private void incorrectRenameTasks(HttpServletRequest req, HttpServletResponse resp, String prefix, String message) throws ServletException, IOException {
         req.setAttribute(ConstantsClass.PREFIX, prefix);
         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
+        req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.FALSE);
+        req.getSession().setAttribute(ConstantsClass.IS_EDIT, Boolean.FALSE);
+        req.getSession().setAttribute(ConstantsClass.IS_RENAME, Boolean.TRUE);
         req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
     }
 

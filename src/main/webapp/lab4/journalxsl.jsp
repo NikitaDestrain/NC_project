@@ -49,14 +49,11 @@
     <div class="form-group">
         <input type="hidden" id="hid" name="<%=ConstantsClass.ACTION%>" value="<%=ConstantsClass.CHOOSE_STRATEGY%>">
         <div align="center"><strong>Data from xml</strong></div>
-            <%
-                if (request.getSession().getAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER) != null &&
-                        request.getAttribute(ConstantsClass.XSL_JOURNAL_CONTAINER_PARAMETER) != null) {
-            %>
-            <x:transform xml="${sessionScope.journalContainer}" xslt="${requestScope.xslJournals}"/>
-            <%
-                }
-            %>
+        <%
+            if (request.getSession().getAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER) != null &&
+                    request.getAttribute(ConstantsClass.XSL_JOURNAL_CONTAINER_PARAMETER) != null) {
+        %>
+        <x:transform xml="${sessionScope.journalContainer}" xslt="${requestScope.xslJournals}"/>
         <div align="center">
             Choose a strategy for journals: <br/>
             <table>
@@ -100,6 +97,17 @@
         <div align="center">
             <input type="submit" id="submit" class="btn btn-outline-primary" value="OK"/>
         </div>
+        <%
+            } else {
+        %>
+        <div align="center">
+            <strong>
+                Could not display the XML you've chosen :(
+            </strong>
+        </div>
+        <%
+            }
+        %>
     </div>
 </form>
 </body>

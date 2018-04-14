@@ -19,7 +19,7 @@
                 <th>Name</th>
                 <th>Description</th>
             </tr>
-            <xsl:for-each select="entry/value">
+            <xsl:for-each select="journal">
                 <tr>
                     <td>
                         <xsl:value-of select="id/text()"/>
@@ -45,6 +45,7 @@
             </caption>
             <tr>
                 <th>ID</th>
+                <th>Journal ID</th>
                 <th>Status</th>
                 <th>Name</th>
                 <th>Description</th>
@@ -53,10 +54,13 @@
                 <th>Upload date</th>
                 <th>Change date</th>
             </tr>
-            <xsl:for-each select="entry/value">
+            <xsl:for-each select="task">
                 <tr>
                     <td>
                         <xsl:value-of select="id/text()"/>
+                    </td>
+                    <td>
+                        <xsl:value-of select="journalId/text()"/>
                     </td>
                     <td>
                         <xsl:value-of select="status/text()"/>
@@ -68,17 +72,29 @@
                         <xsl:value-of select="description/text()"/>
                     </td>
                     <td>
-                        <xsl:value-of select="planned/text()"/>
+                        <xsl:value-of select="plannedDate/text()"/>
                     </td>
                     <td>
-                        <xsl:value-of select="notification/text()"/>
+                        <xsl:value-of select="notificationDate/text()"/>
                     </td>
                     <td>
-                        <xsl:value-of select="upload/text()"/>
+                        <xsl:value-of select="uploadDate/text()"/>
                     </td>
                     <td>
-                        <xsl:value-of select="change/text()"/>
+                        <xsl:value-of select="changeDate/text()"/>
                     </td>
+                    <!--<td>-->
+                        <!--<xsl:value-of select="planned/text()"/>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                        <!--<xsl:value-of select="notification/text()"/>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                        <!--<xsl:value-of select="upload/text()"/>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                        <!--<xsl:value-of select="change/text()"/>-->
+                    <!--</td>-->
                 </tr>
             </xsl:for-each>
         </table>

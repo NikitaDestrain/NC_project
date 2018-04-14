@@ -43,6 +43,8 @@ public class ConstantsClass {
     public static final String USER_DATA = "USER_DATA";
     public static final String SCRIPT_FILE = "scripts/databasescript.sql";
 
+    public static final String LAB4_XSD_FILE = "xsd/lab4.xsd";
+
     public static final int SERVER_TREATMENT = 1;
     public static final int NOT_SERVER_TREATMENT = 0;
 
