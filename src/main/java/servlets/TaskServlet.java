@@ -19,9 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import javax.xml.bind.JAXBException;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.List;
 
 @WebServlet(ConstantsClass.TASK_SERVLET_ADDRESS)
@@ -161,10 +160,7 @@ public class TaskServlet extends HttpServlet {
                 String[] checkBoxes = req.getParameterValues(ConstantsClass.USERNUMBER);
                 try {
                     String exportXml = ExportImportBean.exportData(null, importExportManager.createIDList(checkBoxes));
-                    xmlUtils.writeStringXMLToFile(ConstantsClass.HOME_DOWNLOADS, exportXml);
-                    xmlUtils.writeStringXMLToFile(getServletContext().getRealPath("/") + DownloadConstants.EXPORT_FILE,
-                            exportXml);
-                    downloadAction(req, resp);
+                    downloadAction(req, resp, exportXml);
                 } catch (Exception e) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_LAZY_MESSAGE);
                     req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
@@ -236,22 +232,17 @@ public class TaskServlet extends HttpServlet {
         req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
     }
 
-    private void downloadAction(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void downloadAction(HttpServletRequest req, HttpServletResponse resp, String export) throws IOException {
         req.setCharacterEncoding(DownloadConstants.DEFAULT_CHARACTER_ENCODING);
         resp.setCharacterEncoding(DownloadConstants.DEFAULT_CHARACTER_ENCODING);
-
         ServletOutputStream out = resp.getOutputStream();
         resp.addHeader("Content-Disposition", "attachment;filename=" + DownloadConstants.DEFAULT_EXPORT_FILE_NAME);
-        File f = new File(getServletContext().getRealPath("/"), DownloadConstants.EXPORT_FILE);
-
-        resp.addHeader("Content-Length", String.valueOf(f.length()));
         resp.setContentType(DownloadConstants.DEFAULT_CONTENT_TYPE);
-        FileInputStream fileInputStream = new FileInputStream(f);
+        StringReader sr = new StringReader(export);
         int i;
-        while ((i = fileInputStream.read()) != -1) {
+        while ((i = sr.read()) != -1) {
             out.write(i);
         }
-        fileInputStream.close();
         out.close();
     }
 }
