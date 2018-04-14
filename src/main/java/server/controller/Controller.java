@@ -204,7 +204,9 @@ public class Controller {
         if (taskNamesContainer.isContain(name) && !task.getName().equals(name))
             throw new ControllerActionException(ControllerErrorConstants.ERROR_NAME_EXISTS);
 
-        Journal newJournal = getJournal(newJournalName);
+        Journal newJournal = null;
+        if (newJournalName != null)
+            newJournal = getJournal(newJournalName);
         int newJournalId = -1;
         if (newJournal != null)
             newJournalId = newJournal.getId();

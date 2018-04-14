@@ -3,6 +3,7 @@ package server.importdata;
 import server.model.Journal;
 import server.model.JournalContainer;
 
+import java.util.Collections;
 import java.util.List;
 
 public class StoreItem {
@@ -25,7 +26,7 @@ public class StoreItem {
     }
 
     public List<Journal> getJournals() {
-        return journals;
+        return Collections.unmodifiableList(journals);
     }
 
     public void setJournals(List<Journal> journals) {
