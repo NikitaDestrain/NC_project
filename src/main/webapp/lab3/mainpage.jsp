@@ -222,7 +222,6 @@
             </table>
         </div>
         <div align="center">
-            <a href="">download</a>
             <table>
                 <input type="button" class="btn btn-outline-primary" id="exp" value="Export data"
                        onclick="buttonClick(this)" disabled/>

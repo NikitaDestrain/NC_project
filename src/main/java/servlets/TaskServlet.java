@@ -1,17 +1,17 @@
 package servlets;
 
 import auxiliaryclasses.ConstantsClass;
-import com.sun.org.apache.regexp.internal.RE;
+import auxiliaryclasses.DownloadConstants;
 import server.beans.EIBeanLocal;
 import server.controller.Controller;
 import server.controller.XmlUtils;
 import server.exceptions.ControllerActionException;
-import server.exportdata.ExportException;
 import server.model.Journal;
 import server.model.Task;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import javax.xml.bind.JAXBException;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -160,9 +162,12 @@ public class TaskServlet extends HttpServlet {
                 try {
                     String exportXml = ExportImportBean.exportData(null, importExportManager.createIDList(checkBoxes));
                     xmlUtils.writeStringXMLToFile(ConstantsClass.HOME_DOWNLOADS, exportXml);
-                    resp.getWriter().print("Success! Check Downloads");
-                } catch (ExportException e) {
+                    xmlUtils.writeStringXMLToFile(getServletContext().getRealPath("/") + DownloadConstants.EXPORT_FILE,
+                            exportXml);
+                    downloadAction(req, resp);
+                } catch (Exception e) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_LAZY_MESSAGE);
+                    req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
                 }
                 break;
         }
@@ -231,4 +236,22 @@ public class TaskServlet extends HttpServlet {
         req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
     }
 
+    private void downloadAction(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        req.setCharacterEncoding(DownloadConstants.DEFAULT_CHARACTER_ENCODING);
+        resp.setCharacterEncoding(DownloadConstants.DEFAULT_CHARACTER_ENCODING);
+
+        ServletOutputStream out = resp.getOutputStream();
+        resp.addHeader("Content-Disposition", "attachment;filename=" + DownloadConstants.DEFAULT_EXPORT_FILE_NAME);
+        File f = new File(getServletContext().getRealPath("/"), DownloadConstants.EXPORT_FILE);
+
+        resp.addHeader("Content-Length", String.valueOf(f.length()));
+        resp.setContentType(DownloadConstants.DEFAULT_CONTENT_TYPE);
+        FileInputStream fileInputStream = new FileInputStream(f);
+        int i;
+        while ((i = fileInputStream.read()) != -1) {
+            out.write(i);
+        }
+        fileInputStream.close();
+        out.close();
+    }
 }
