@@ -30,7 +30,7 @@ public class JournalServlet extends HttpServlet {
     private DataUpdateUtil updateUtil;
     private XmlUtils xmlUtils = XmlUtils.getInstance();
     private PatternChecker patternChecker = PatternChecker.getInstance();
-    private ImportExportManager importExportManager = ImportExportManager.getInstance();
+    private ImportManager importExportManager = ImportManager.getInstance();
 
     private Journal currentJournal;
 
@@ -162,7 +162,6 @@ public class JournalServlet extends HttpServlet {
                 updateUtil.updateJournals(req, resp);
                 break;
             case ConstantsClass.IMPORT:
-                //req.getRequestDispatcher(ConstantsClass.JOURNALS_XSL_ADDRESS).forward(req, resp);
                 Part part = req.getPart(ConstantsClass.IMPORT_PARAMETER);
                 importExportManager.doImport(part, req, resp);
                 break;

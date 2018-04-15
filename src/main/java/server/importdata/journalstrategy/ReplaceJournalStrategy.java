@@ -10,20 +10,19 @@ public class ReplaceJournalStrategy<T> implements StoreStrategy<T> {
     private Controller controller;
 
     @Override
-    public boolean store(T object) throws StoreException {
+    public Object store(T object) throws StoreException {
         try {
             controller = Controller.getInstance();
             Journal j = (Journal) object;
             if (controller.containsObject(j)) {
                 controller.editJournal(j.getId(), j.getName(), j.getDescription());
-                return true;
+                return Boolean.TRUE;
             } else if (!controller.isExistId(j.getId())){
-                controller.addJournal(j);
-                return true;
+                return controller.addJournal(j);
             }
         } catch (ControllerActionException e) {
             throw new StoreException(e.getMessage());
         }
-        return false;
+        return null;
     }
 }

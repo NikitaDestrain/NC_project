@@ -75,6 +75,29 @@ public class HibernateJournalDAO implements JournalDAO {
         }
     }
 
+    public Journal read(String name) throws SQLException {
+        Journal journal;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            journal = (Journal) session.get(Journal.class, name);
+        } catch (Exception e) {
+            throw new SQLException();
+        } finally {
+            finishSession();
+        }
+        return journal;
+    }
+
+    public boolean contains(String name) {
+        try {
+            return read(name) != null;
+        } catch (Exception e) {
+            return false;
+        } finally {
+            finishSession();
+        }
+    }
+
     @Override
     public void update(Journal journal) throws SQLException {
         try {

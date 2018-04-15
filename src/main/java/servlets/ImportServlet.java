@@ -18,7 +18,7 @@ import java.io.IOException;
 @MultipartConfig
 public class ImportServlet extends HttpServlet {
 
-    private ImportExportManager importExportManager = ImportExportManager.getInstance();
+    private ImportManager importExportManager = ImportManager.getInstance();
     private DataUpdateUtil updateUtil;
 
     @EJB

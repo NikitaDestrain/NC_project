@@ -15,15 +15,15 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ImportExportManager {
-    private static ImportExportManager ourInstance = new ImportExportManager();
+public class ImportManager {
+    private static ImportManager ourInstance = new ImportManager();
     private XmlUtils xmlUtils = XmlUtils.getInstance();
 
-    public static ImportExportManager getInstance() {
+    public static ImportManager getInstance() {
         return ourInstance;
     }
 
-    private ImportExportManager() {
+    private ImportManager() {
     }
 
     public void doImport(Part filePart, HttpServletRequest req, HttpServletResponse resp)

@@ -11,13 +11,12 @@ public class ExceptionThrowJournalStrategy<T> implements StoreStrategy<T> {
     private Controller controller;
 
     @Override
-    public boolean store(T object) throws StoreException {
+    public Object store(T object) throws StoreException {
         try {
             controller = Controller.getInstance();
             Journal j = (Journal) object;
             if (!controller.containsObject(j) && !controller.isExistId(j.getId())) {
-                controller.addJournal(j);
-                return true;
+                return controller.addJournal(j);
             } else {
                 throw new StoreException(StoreConstants.STORE_EXCEPTION_MESSAGE + j.getId());
             }

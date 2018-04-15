@@ -11,13 +11,13 @@ public class ExceptionThrowTaskStrategy<T> implements StoreStrategy<T> {
     private Controller controller;
 
     @Override
-    public boolean store(T object) throws StoreException {
+    public Object store(T object) throws StoreException {
         try {
             controller = Controller.getInstance();
             Task t = (Task) object;
             if (!controller.containsObject(t) && !controller.isExistId(t.getId())) {
                 controller.addTask(t);
-                return true;
+                return Boolean.TRUE;
             } else {
                 throw new StoreException(StoreConstants.STORE_EXCEPTION_MESSAGE + t.getId());
             }

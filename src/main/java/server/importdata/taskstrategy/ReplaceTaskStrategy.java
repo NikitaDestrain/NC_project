@@ -10,21 +10,21 @@ public class ReplaceTaskStrategy<T> implements StoreStrategy<T> {
     private Controller controller;
 
     @Override
-    public boolean store(T object) throws StoreException {
+    public Object store(T object) throws StoreException {
         try {
             controller = Controller.getInstance();
             Task t = (Task) object;
             if (controller.containsObject(t)) {
                 controller.editTask(t.getId(), t.getJournalId(), t.getName(), t.getStatus(), t.getDescription(),
                         t.getNotificationDate(), t.getPlannedDate(), null);
-                return true;
+                return Boolean.TRUE;
             } else if(!controller.isExistId(t.getId())){
                 controller.addTask(t);
-                return true;
+                return Boolean.TRUE;
             }
         } catch (ControllerActionException e) {
             throw new StoreException(e.getMessage());
         }
-        return false;
+        return null;
     }
 }

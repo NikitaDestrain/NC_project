@@ -76,6 +76,29 @@ public class HibernateTasksDAO implements TasksDAO {
         }
     }
 
+    public boolean contains(String name) {
+        try {
+            return read(name) != null;
+        } catch (Exception e) {
+            return false;
+        } finally {
+            finishSession();
+        }
+    }
+
+    public Task read(String name) throws SQLException {
+        Task task;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            task = (Task) session.get(Task.class, name);
+        } catch (Exception e) {
+            throw new SQLException();
+        } finally {
+            finishSession();
+        }
+        return task;
+    }
+
     @Override
     public void update(Task task) throws SQLException {
         try {

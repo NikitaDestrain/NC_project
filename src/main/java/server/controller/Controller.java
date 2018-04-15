@@ -368,7 +368,7 @@ public class Controller {
         }
     }
 
-    public void addJournal(Journal j) throws ControllerActionException {
+    public Journal addJournal(Journal j) throws ControllerActionException {
         if (journalNamesContainer.isContain(j.getName()))
             throw new ControllerActionException(ControllerErrorConstants.ERROR_NAME_EXISTS);
         try {
@@ -376,6 +376,7 @@ public class Controller {
             journalContainer.addJournal(journal);
             journalNamesContainer.addName(journal.getName());
             systemIds.add(journal.getId());
+            return journal;
         } catch (SQLException e) {
             throw new ControllerActionException(ControllerErrorConstants.ERROR_ADD_JOURNAL);
         }
@@ -547,9 +548,9 @@ public class Controller {
 
     public boolean containsObject(Object object) {
         if (object instanceof Journal) {
-            return journalDAO.contains(((Journal) object).getId());
+            return journalDAO.contains(((Journal) object).getId()) || journalDAO.contains(((Journal) object).getName());
         } else if (object instanceof Task) {
-            return tasksDAO.contains(((Task) object).getId());
+            return tasksDAO.contains(((Task) object).getId()) || tasksDAO.contains(((Task) object).getName());
         } else return false;
     }
 
