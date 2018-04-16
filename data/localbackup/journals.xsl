@@ -83,18 +83,6 @@
                     <td>
                         <xsl:value-of select="changeDate/text()"/>
                     </td>
-                    <!--<td>-->
-                        <!--<xsl:value-of select="planned/text()"/>-->
-                    <!--</td>-->
-                    <!--<td>-->
-                        <!--<xsl:value-of select="notification/text()"/>-->
-                    <!--</td>-->
-                    <!--<td>-->
-                        <!--<xsl:value-of select="upload/text()"/>-->
-                    <!--</td>-->
-                    <!--<td>-->
-                        <!--<xsl:value-of select="change/text()"/>-->
-                    <!--</td>-->
                 </tr>
             </xsl:for-each>
         </table>

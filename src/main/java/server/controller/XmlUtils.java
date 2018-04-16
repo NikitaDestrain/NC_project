@@ -1,5 +1,6 @@
 package server.controller;
 
+import auxiliaryclasses.ConstantsClass;
 import server.model.Journal;
 import server.model.JournalContainer;
 import server.model.JournalNamesContainer;
@@ -65,69 +66,6 @@ public class XmlUtils {
         }
     }
 
-    public void writeJournal(Journal journal, String path) throws Exception {
-        try {
-            JAXBContext context = JAXBContext.newInstance(Journal.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            OutputStream out = new FileOutputStream(path);
-            marshaller.marshal(journal, out);
-        } catch (Exception e) {
-            throw new Exception();
-        }
-    }
-
-    public Journal readJournal(String path) throws Exception {
-        Journal journal;
-        try {
-            JAXBContext context = JAXBContext.newInstance(Journal.class);
-            InputStream in = new FileInputStream(path);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            journal = (Journal) unmarshaller.unmarshal(in);
-        } catch (Exception e) {
-            throw new Exception();
-        }
-        return journal;
-    }
-
-    public void writeJournalContainer(JournalContainer container, String path) throws Exception {
-        try {
-            JAXBContext context = JAXBContext.newInstance(JournalContainer.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            OutputStream out = new FileOutputStream(path);
-            marshaller.marshal(container, out);
-        } catch (Exception e) {
-            throw new Exception();
-        }
-    }
-
-    public JournalContainer readJournalContainer(String path) throws Exception {
-        JournalContainer journalContainer;
-        try {
-            JAXBContext context = JAXBContext.newInstance(JournalContainer.class);
-            InputStream in = new FileInputStream(path);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            journalContainer = (JournalContainer) unmarshaller.unmarshal(in);
-        } catch (Exception e) {
-            throw new Exception();
-        }
-        return journalContainer;
-    }
-
-    public JournalNamesContainer readNames(String path) throws Exception {
-        JournalNamesContainer container;
-        try {
-            JAXBContext context = JAXBContext.newInstance(JournalNamesContainer.class);
-            InputStream in = new FileInputStream(path);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            container = (JournalNamesContainer) unmarshaller.unmarshal(in);
-        } catch (Exception e) {
-            throw new Exception();
-        }
-        return container;
-    }
-
     public void writeNames(JournalNamesContainer container, String path) throws Exception {
         try {
             JAXBContext context = JAXBContext.newInstance(JournalNamesContainer.class);
@@ -137,40 +75,6 @@ public class XmlUtils {
             marshaller.marshal(container, out);
         } catch (Exception e) {
             throw new Exception();
-        }
-    }
-
-    public void writeTask(Task task, String path) throws Exception {
-        try {
-            JAXBContext context = JAXBContext.newInstance(Task.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            OutputStream out = new FileOutputStream(path);
-            marshaller.marshal(task, out);
-        } catch (Exception e) {
-            throw new Exception();
-        }
-    }
-
-    public Task readTask(String path) throws Exception {
-        Task task;
-        try {
-            JAXBContext context = JAXBContext.newInstance(Task.class);
-            InputStream in = new FileInputStream(path);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            task = (Task) unmarshaller.unmarshal(in);
-        } catch (Exception e) {
-            throw new Exception();
-        }
-        return task;
-    }
-
-    public void writeStringXMLToFile(String fileName, String xml) {
-        try (FileWriter writer = new FileWriter(fileName)) {
-            writer.append(xml);
-            writer.flush();
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
         }
     }
 }

@@ -53,7 +53,8 @@ public class Marshaller {
                 Map<Integer, Journal> parsedJournals = unmarshalJournals(document);
                 List<Task> parsedTasks = unmarshalTasks(document);
                 addTasksToJournals(parsedJournals, parsedTasks);
-                return new StoreItem(Collections.unmodifiableList(new LinkedList<>(parsedJournals.values())));
+                return new StoreItem(Collections.unmodifiableList(new LinkedList<>(parsedJournals.values())),
+                        parsedTasks);
             } else
                 throw new StoreException(MarshallerConstants.PARSE_ERROR);
         } catch (ParserConfigurationException | SAXException | IOException e) {
@@ -144,6 +145,9 @@ public class Marshaller {
     }
 
     private void addTasksToJournals(Map<Integer, Journal> journals, List<Task> tasks) {
+        if (journals.size() == 0)
+            return;
+
         Journal j;
         for (Task t : tasks) {
             j = journals.get(t.getJournalId());

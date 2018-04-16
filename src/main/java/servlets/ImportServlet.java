@@ -40,8 +40,6 @@ public class ImportServlet extends HttpServlet {
             case ConstantsClass.CHOOSE_STRATEGY:
                 performStrategy(req, resp);
                 break;
-            case ConstantsClass.IMPORT:
-                loadImportingValues(req, resp);
         }
     }
 
@@ -59,12 +57,5 @@ public class ImportServlet extends HttpServlet {
         } catch (StoreException e) {
             resp.getWriter().print(e.getMessage());
         }
-    }
-
-    private void loadImportingValues(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-//        Part part = req.getPart(ConstantsClass.IMPORT_PARAMETER);
-//        importExportManager.doImport(part, req, resp);
-        resp.getWriter().print("success");
     }
 }

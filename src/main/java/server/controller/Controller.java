@@ -538,14 +538,6 @@ public class Controller {
         return systemIds.contains(id);
     }
 
-    private int getMaxSystemId() {
-        try {
-            return PostgreSQLDAOManager.getInstance().getMaxId();
-        } catch (DAOFactoryActionException e) {
-            return -1;
-        }
-    }
-
     public boolean containsObject(Object object) {
         if (object instanceof Journal) {
             return journalDAO.contains(((Journal) object).getId()) || journalDAO.contains(((Journal) object).getName());

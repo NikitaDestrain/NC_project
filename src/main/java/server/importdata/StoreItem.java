@@ -2,6 +2,7 @@ package server.importdata;
 
 import server.model.Journal;
 import server.model.JournalContainer;
+import server.model.Task;
 
 import java.util.Collections;
 import java.util.List;
@@ -9,20 +10,15 @@ import java.util.List;
 public class StoreItem {
     private String journalStrategy;
     private String taskStrategy;
-    private Journal journal = null;
-    private JournalContainer container = null;
     private List<Journal> journals;
+    private List<Task> tasks;
 
-    public StoreItem(Journal journal) {
-        this.journal = journal;
-    }
-
-    public StoreItem(JournalContainer container) {
-        this.container = container;
-    }
-
-    public StoreItem(List<Journal> journals) {
+    public StoreItem(List<Journal> journals, List<Task> tasks) {
         this.journals = journals;
+        this.tasks = tasks;
+    }
+
+    public StoreItem() {
     }
 
     public List<Journal> getJournals() {
@@ -33,12 +29,12 @@ public class StoreItem {
         this.journals = journals;
     }
 
-    public Journal getJournal() {
-        return journal;
+    public List<Task> getTasks() {
+        return tasks;
     }
 
-    public JournalContainer getContainer() {
-        return container;
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
     public String getJournalStrategy() {

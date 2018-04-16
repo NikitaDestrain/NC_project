@@ -62,16 +62,23 @@ public class ExportImportBean implements EIBeanLocal {
         StoreStrategy<Journal> journalStoreStrategy = storeStrategyHelper.resolveStrategy(storeItem, StoreConstants.JOURNAL);
         StoreStrategy<Task> taskStoreStrategy = storeStrategyHelper.resolveStrategy(storeItem, StoreConstants.TASK);
 
-        List<Journal> journals = storeItem.getJournals();
-        Object object;
-        for (Journal j : journals) {
-            object = journalStoreStrategy.store(j);
-            if (object != null) {
-                for (Task t : j.getTasks()) {
-                    if (object instanceof Journal){
-                        t.setJournalId(((Journal)object).getId());
-                    } else if (object instanceof Boolean) {
-                        taskStoreStrategy.store(t);
+        List<Journal> journals = storeItem.getJournals(); // todo лист тасок без журнала
+        List<Task> tasks = storeItem.getTasks();
+        if (journals.size() == 0) {
+            for (Task t : tasks) {
+                taskStoreStrategy.store(t);
+            }
+        } else {
+            Object object;
+            for (Journal j : journals) {
+                object = journalStoreStrategy.store(j);
+                if (object != null) {
+                    for (Task t : j.getTasks()) {
+                        if (object instanceof Journal) {
+                            t.setJournalId(((Journal) object).getId());
+                        } else if (object instanceof Boolean) {
+                            taskStoreStrategy.store(t);
+                        }
                     }
                 }
             }
