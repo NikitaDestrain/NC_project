@@ -54,8 +54,7 @@ public class Marshaller {
                 List<Task> parsedTasks = unmarshalTasks(document);
                 addTasksToJournals(parsedJournals, parsedTasks);
                 return new StoreItem(Collections.unmodifiableList(new LinkedList<>(parsedJournals.values())));
-            }
-            else
+            } else
                 throw new StoreException(MarshallerConstants.PARSE_ERROR);
         } catch (ParserConfigurationException | SAXException | IOException e) {
             throw new StoreException(MarshallerConstants.PARSE_ERROR);
@@ -65,8 +64,7 @@ public class Marshaller {
     private Map<Integer, Journal> unmarshalJournals(Document document) throws StoreException {
         if (userContainer.getUser() == null) {
             throw new StoreException(MarshallerConstants.PARSE_ERROR);
-        }
-        else {
+        } else {
             NodeList journals = document.getElementsByTagName(MarshallerConstants.JOURNAL_TAG);
             Map<Integer, Journal> parsedJournals = new HashMap<>();
             Element current;
@@ -117,7 +115,8 @@ public class Marshaller {
             current = (Element) tasks.item(i);
             descriptions = current.getElementsByTagName(MarshallerConstants.DESCRIPTION_TAG);
             if (descriptions.getLength() != 0) {
-                description = descriptions.item(0).getFirstChild().getNodeValue();
+                description = descriptions.item(0).getFirstChild() == null ? "" :
+                        descriptions.item(0).getFirstChild().getNodeValue();
             }
             try {
                 name = current.getElementsByTagName(MarshallerConstants.NAME_TAG).item(0).getFirstChild().getNodeValue();
