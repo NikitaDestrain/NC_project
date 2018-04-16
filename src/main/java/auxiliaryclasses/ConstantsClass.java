@@ -193,21 +193,16 @@ public class ConstantsClass {
     public static final String CURRENT_STATUS = "curstatus";
 
     public static final String USER_ROLE = "User";
-    public static final String MODERATOR_ROLE = "Moderator";
-    public static final String ADMINISTRATOR_ROLE = "Administrator";
 
     // XSL path constants
     public static final String NAMES_XSL = "localbackup/names.xsl";
     public static final String JOURNALS_XSL = "localbackup/journals.xsl";
-    public static final String TASKS_XSL = "localbackup/tasks.xsl";
 
     // XSL parameters
 
     public static final String XSL_JOURNAL_NAMES_ATTRIBUTE = "xslNames";
 
     public static final String INCORRECT_FILE_CONTENT = "Incorrect XML-file content! Could not perform import!";
-    public static final String JOURNAL_CONTAINER_TAG = "<journalContainer>";
-    public static final String JOURNAL_TAG = "<journal>";
 
     public static final String HOME_DOWNLOADS = System.getProperty("user.home") + "/Downloads/export.xml";
 

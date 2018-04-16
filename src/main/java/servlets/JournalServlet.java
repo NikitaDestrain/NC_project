@@ -30,7 +30,7 @@ public class JournalServlet extends HttpServlet {
     private DataUpdateUtil updateUtil;
     private XmlUtils xmlUtils = XmlUtils.getInstance();
     private PatternChecker patternChecker = PatternChecker.getInstance();
-    private ImportManager importExportManager = ImportManager.getInstance();
+    private ImportExportManager importExportManager = ImportExportManager.getInstance();
 
     private Journal currentJournal;
 
@@ -170,7 +170,7 @@ public class JournalServlet extends HttpServlet {
                 try {
                     List<Integer> listIds = importExportManager.createIDList(checkBoxes);
                     String exportXml = ExportImportBean.exportData(listIds, null);
-                    downloadAction(req, resp, exportXml);
+                    importExportManager.downloadAction(req, resp, exportXml);
                 } catch (Exception e) {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_LAZY_MESSAGE);
                     req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
@@ -239,19 +239,5 @@ public class JournalServlet extends HttpServlet {
             }
         }
         req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
-    }
-
-    private void downloadAction(HttpServletRequest req, HttpServletResponse resp, String export) throws IOException {
-        req.setCharacterEncoding(DownloadConstants.DEFAULT_CHARACTER_ENCODING);
-        resp.setCharacterEncoding(DownloadConstants.DEFAULT_CHARACTER_ENCODING);
-        ServletOutputStream out = resp.getOutputStream();
-        resp.addHeader("Content-Disposition", "attachment;filename=" + DownloadConstants.DEFAULT_EXPORT_FILE_NAME);
-        resp.setContentType(DownloadConstants.DEFAULT_CONTENT_TYPE);
-        StringReader sr = new StringReader(export);
-        int i;
-        while ((i = sr.read()) != -1) {
-            out.write(i);
-        }
-        out.close();
     }
 }

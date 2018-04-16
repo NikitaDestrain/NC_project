@@ -1,29 +1,28 @@
 package servlets;
 
 import auxiliaryclasses.ConstantsClass;
+import auxiliaryclasses.DownloadConstants;
 import server.controller.XmlUtils;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ImportManager {
-    private static ImportManager ourInstance = new ImportManager();
+public class ImportExportManager {
+    private static ImportExportManager ourInstance = new ImportExportManager();
     private XmlUtils xmlUtils = XmlUtils.getInstance();
 
-    public static ImportManager getInstance() {
+    public static ImportExportManager getInstance() {
         return ourInstance;
     }
 
-    private ImportManager() {
+    private ImportExportManager() {
     }
 
     public void doImport(Part filePart, HttpServletRequest req, HttpServletResponse resp)
@@ -65,5 +64,19 @@ public class ImportManager {
             IDs.add(Integer.parseInt(checkBox));
         }
         return Collections.unmodifiableList(IDs);
+    }
+
+    public void downloadAction(HttpServletRequest req, HttpServletResponse resp, String export) throws IOException {
+        req.setCharacterEncoding(DownloadConstants.DEFAULT_CHARACTER_ENCODING);
+        resp.setCharacterEncoding(DownloadConstants.DEFAULT_CHARACTER_ENCODING);
+        ServletOutputStream out = resp.getOutputStream();
+        resp.addHeader("Content-Disposition", "attachment;filename=" + DownloadConstants.DEFAULT_EXPORT_FILE_NAME);
+        resp.setContentType(DownloadConstants.DEFAULT_CONTENT_TYPE);
+        StringReader sr = new StringReader(export);
+        int i;
+        while ((i = sr.read()) != -1) {
+            out.write(i);
+        }
+        out.close();
     }
 }
