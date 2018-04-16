@@ -236,6 +236,7 @@ public class Controller {
             if (task.getStatus() == TaskStatus.Completed || task.getStatus() == TaskStatus.Cancelled)
                 notifier.cancelNotification(task.getId());
             tasksDAO.update(task);
+            taskNamesContainer.editName(oldName, name);
         } catch (SQLException e) {
             setAllDataInTask(task, oldName, oldStatus, oldDescription, oldNotificationDate, oldPlannedDate, oldChangeDate, oldJournalId);
             if (newJournalId != -1)
