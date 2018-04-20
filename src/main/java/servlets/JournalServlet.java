@@ -26,6 +26,7 @@ import java.util.List;
 @WebServlet(ConstantsClass.JOURNAL_SERVLET_ADDRESS)
 @MultipartConfig
 public class JournalServlet extends HttpServlet {
+    //todo vlla не знаю, как это исправить, но читать класс (и ему подобные) очень тяжело
     private Controller controller;
     private DataUpdateUtil updateUtil;
     private XmlUtils xmlUtils = XmlUtils.getInstance();

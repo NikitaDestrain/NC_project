@@ -37,7 +37,12 @@ public class HibernateUsersDAO implements UsersDAO {
             session.save(user);
             session.getTransaction().commit();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(); //todo vlla плохо по двум причинам:
+            // 1) (критичное) В эксепшен не передано изначальное исключение, т.е. потеряна информация, хранящаяся в нем (error message, stacktrace)
+            // представьте, что вам прилетел голый SQLException из метода create(). Всё, больше никакой информации в нем нет. Как понять, что пошло не так?
+            // 2) (рекомендуемое) Стоит писать осмысленные error message в каждый эксепшен, созданный в вашем приложении. Тоже очень упрощает дальнейший анализ.
+            //
+            // все вышесказанное относится вообще ко всем исключениям в приложении
         } finally {
             finishSession();
         }
