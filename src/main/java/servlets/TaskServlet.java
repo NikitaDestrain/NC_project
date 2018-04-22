@@ -1,7 +1,6 @@
 package servlets;
 
 import auxiliaryclasses.ConstantsClass;
-import auxiliaryclasses.DownloadConstants;
 import server.beans.EIBeanLocal;
 import server.controller.Controller;
 import server.controller.XmlUtils;
@@ -11,7 +10,6 @@ import server.model.Task;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.List;
 
 @WebServlet(ConstantsClass.TASK_SERVLET_ADDRESS)

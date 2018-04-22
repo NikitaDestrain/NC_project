@@ -1,16 +1,11 @@
 package server.controller;
 
-import auxiliaryclasses.ConstantsClass;
-import server.model.Journal;
-import server.model.JournalContainer;
 import server.model.JournalNamesContainer;
-import server.model.Task;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -40,17 +35,13 @@ public class XmlUtils {
     }
 
     public String parseXmlToString(String path) throws IOException {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(new File(path)));
-            String line;
-            StringBuilder sb = new StringBuilder();
-            while ((line = br.readLine()) != null) {
-                sb.append(line.trim());
-            }
-            return sb.toString();
-        } catch (IOException e) {
-            throw new IOException();
+        BufferedReader br = new BufferedReader(new FileReader(new File(path)));
+        String line;
+        StringBuilder sb = new StringBuilder();
+        while ((line = br.readLine()) != null) {
+            sb.append(line.trim());
         }
+        return sb.toString();
     }
 
     public boolean compareWithXsd(String fileXML, String fileXSD) throws Exception {
@@ -67,14 +58,10 @@ public class XmlUtils {
     }
 
     public void writeNames(JournalNamesContainer container, String path) throws Exception {
-        try {
-            JAXBContext context = JAXBContext.newInstance(JournalNamesContainer.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            OutputStream out = new FileOutputStream(path);
-            marshaller.marshal(container, out);
-        } catch (Exception e) {
-            throw new Exception();
-        }
+        JAXBContext context = JAXBContext.newInstance(JournalNamesContainer.class);
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        OutputStream out = new FileOutputStream(path);
+        marshaller.marshal(container, out);
     }
 }

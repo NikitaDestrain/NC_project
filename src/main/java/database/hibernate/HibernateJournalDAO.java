@@ -3,7 +3,6 @@ package database.hibernate;
 import auxiliaryclasses.ConstantsClass;
 import database.daointerfaces.JournalDAO;
 import org.hibernate.Criteria;
-import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -28,7 +27,7 @@ public class HibernateJournalDAO implements JournalDAO {
             session.save(journal);
             session.getTransaction().commit();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -44,7 +43,7 @@ public class HibernateJournalDAO implements JournalDAO {
             session.save(journal);
             session.getTransaction().commit();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -58,7 +57,7 @@ public class HibernateJournalDAO implements JournalDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             journal = (Journal) session.get(Journal.class, id);
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -81,7 +80,7 @@ public class HibernateJournalDAO implements JournalDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             journal = (Journal) session.get(Journal.class, name);
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -106,7 +105,7 @@ public class HibernateJournalDAO implements JournalDAO {
             session.update(journal);
             session.getTransaction().commit();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -120,7 +119,7 @@ public class HibernateJournalDAO implements JournalDAO {
             session.delete(journal);
             session.getTransaction().commit();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -133,7 +132,7 @@ public class HibernateJournalDAO implements JournalDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             list = session.createCriteria(Journal.class).list();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -147,7 +146,7 @@ public class HibernateJournalDAO implements JournalDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             list = getOrderCriteria(column, criteria, session.createCriteria(Journal.class)).list();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -163,7 +162,7 @@ public class HibernateJournalDAO implements JournalDAO {
                     .add(Restrictions.like(column, createPattern(pattern)));
             list = getOrderCriteria(column, criteria, likeResult).list();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -179,7 +178,7 @@ public class HibernateJournalDAO implements JournalDAO {
                     .add(Restrictions.eq(column, equal));
             list = getOrderCriteria(column, criteria, equalResult).list();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }

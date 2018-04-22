@@ -15,7 +15,7 @@ public class NotificationTimer extends TimerTask {
 
     @Override
     public void run() {
-        if(task.getStatus() != TaskStatus.Completed || task.getStatus() != TaskStatus.Cancelled)
+        if (task.getStatus() != TaskStatus.Completed || task.getStatus() != TaskStatus.Cancelled)
             try {
                 Controller.getInstance().setOverdue(task);
             } catch (ControllerActionException e) {

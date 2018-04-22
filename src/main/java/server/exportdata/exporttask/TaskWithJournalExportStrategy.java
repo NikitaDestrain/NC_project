@@ -19,10 +19,9 @@ public class TaskWithJournalExportStrategy implements ExportStrategy {
                 exportList.addTaskId(id);
                 Task exportTask = controller.getTask(id);
                 exportList.addJournalId(exportTask.getJournalId());
-            }
-            else throw new ExportException();
+            } else throw new ExportException();
         } catch (ControllerActionException e) {
-            throw new ExportException();
+            throw new ExportException(e.getMessage());
         }
     }
 }

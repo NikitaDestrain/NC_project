@@ -14,11 +14,11 @@ public class OnlyTaskExportStrategy implements ExportStrategy {
     public void collectId(ExportList exportList, Integer id) throws ExportException {
         try {
             controller = Controller.getInstance();
-            if(controller.containsId(id))
+            if (controller.containsId(id))
                 exportList.addTaskId(id);
             else throw new ExportException();
         } catch (ControllerActionException e) {
-            throw new ExportException();
+            throw new ExportException(e.getMessage());
         }
     }
 }

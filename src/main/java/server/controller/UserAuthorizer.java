@@ -23,7 +23,7 @@ public class UserAuthorizer {
             userData = new HashMap<>();
             createStartUserData();
         } catch (SQLException | DAOFactoryActionException e) {
-            throw new UserAuthorizerStartException();
+            throw new UserAuthorizerStartException(e.getMessage());
         }
     }
 

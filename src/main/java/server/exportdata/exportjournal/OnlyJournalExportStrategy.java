@@ -18,7 +18,7 @@ public class OnlyJournalExportStrategy implements ExportStrategy {
                 exportList.addJournalId(id);
             else throw new ExportException();
         } catch (ControllerActionException e) {
-            throw new ExportException();
+            throw new ExportException(e.getMessage());
         }
     }
 }

@@ -10,10 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ExportStrategyHelper {
-    private static ExportStrategyHelper ourInstance = new ExportStrategyHelper();
+    private static ExportStrategyHelper ourInstance;
     private Map<String, Map<String, ExportStrategy>> strategies;
 
     public static ExportStrategyHelper getInstance() {
+        if (ourInstance == null) ourInstance = new ExportStrategyHelper();
         return ourInstance;
     }
 
@@ -31,9 +32,9 @@ public class ExportStrategyHelper {
         strategies.put(ExportConstants.TASK_PROPERTY, taskStrategies);
     }
 
-    public ExportStrategy resolveStrategy(ExportConfigItem configItem) throws ExportException {
+    public ExportStrategy resolveStrategy(ExportConfigItem configItem) {
         return strategies.get(configItem.getType()).get(configItem.getStrategy());
 
-        //todo vlla весь этот код можно заменить одной строчкой (о нездоровой любви к switch)
+        //todo vlla весь этот код можно заменить одной строчкой (о нездоровой любви к switch) DONE
     }
 }

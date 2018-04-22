@@ -1,7 +1,6 @@
 package server.importdata;
 
 import server.model.Journal;
-import server.model.JournalContainer;
 import server.model.Task;
 
 import java.util.Collections;

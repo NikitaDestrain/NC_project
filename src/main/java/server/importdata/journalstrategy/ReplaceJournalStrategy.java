@@ -17,7 +17,7 @@ public class ReplaceJournalStrategy<T> implements StoreStrategy<T> {
             if (controller.containsObject(j)) {
                 controller.editJournal(j.getId(), j.getName(), j.getDescription());
                 return Boolean.TRUE;
-            } else if (!controller.isExistId(j.getId())){
+            } else if (!controller.isExistId(j.getId())) {
                 return controller.addJournal(j);
             }
         } catch (ControllerActionException e) {

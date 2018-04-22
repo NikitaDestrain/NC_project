@@ -46,7 +46,7 @@ public class AuthServlet extends HttpServlet {
             updateUtil = DataUpdateUtil.getInstance();
             ExportConfigParser.getInstance(config.getServletContext().getRealPath(ExportConstants.PATH_TO_PROPERTIES));
             ExportConfigHelper.getInstance();
-        } catch (DAOFactoryActionException | ControllerActionException | IOException e) {
+        } catch (DAOFactoryActionException | ControllerActionException | IOException | NumberFormatException e) {
             throw new ServletException(e.getMessage());
         }
     }
@@ -99,7 +99,7 @@ public class AuthServlet extends HttpServlet {
     }
 
     private void incorrectSignIn(HttpServletRequest req, HttpServletResponse resp, String login, String message)
-            throws ServletException, IOException  {
+            throws ServletException, IOException {
         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
         req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
         req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
@@ -134,7 +134,7 @@ public class AuthServlet extends HttpServlet {
     }
 
     private void incorrectSignUp(HttpServletRequest req, HttpServletResponse resp, String login, String message)
-            throws ServletException, IOException  {
+            throws ServletException, IOException {
         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
         req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
         req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);

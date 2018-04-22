@@ -29,7 +29,7 @@ public class HibernateTasksDAO implements TasksDAO {
             session.save(task);
             session.getTransaction().commit();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -45,7 +45,7 @@ public class HibernateTasksDAO implements TasksDAO {
             session.save(task);
             session.getTransaction().commit();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -59,7 +59,7 @@ public class HibernateTasksDAO implements TasksDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             task = (Task) session.get(Task.class, id);
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -92,7 +92,7 @@ public class HibernateTasksDAO implements TasksDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             task = (Task) session.get(Task.class, name);
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -107,7 +107,7 @@ public class HibernateTasksDAO implements TasksDAO {
             session.update(task);
             session.getTransaction().commit();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -121,7 +121,7 @@ public class HibernateTasksDAO implements TasksDAO {
             session.delete(task);
             session.getTransaction().commit();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -134,7 +134,7 @@ public class HibernateTasksDAO implements TasksDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             list = session.createCriteria(Task.class).list();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -148,7 +148,7 @@ public class HibernateTasksDAO implements TasksDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             list = getOrderCriteria(journalId, column, criteria, session.createCriteria(Task.class)).list();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -165,7 +165,7 @@ public class HibernateTasksDAO implements TasksDAO {
                     .add(Restrictions.like(column, createPattern(pattern)));
             list = getOrderCriteria(journalId, column, criteria, likeResult).list();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -182,7 +182,7 @@ public class HibernateTasksDAO implements TasksDAO {
                     .add(Restrictions.eq(column, equal));
             list = getOrderCriteria(journalId, column, criteria, equalResult).list();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }

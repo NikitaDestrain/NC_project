@@ -18,7 +18,7 @@ import java.io.IOException;
 @MultipartConfig
 public class ImportServlet extends HttpServlet {
 
-    private ImportExportManager importExportManager = ImportExportManager.getInstance();
+    private ImportExportManager importExportManager;
     private DataUpdateUtil updateUtil;
 
     @EJB
@@ -27,6 +27,7 @@ public class ImportServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
+            importExportManager = ImportExportManager.getInstance();
             updateUtil = DataUpdateUtil.getInstance();
         } catch (ControllerActionException e) {
             throw new ServletException(e.getMessage());
@@ -47,8 +48,8 @@ public class ImportServlet extends HttpServlet {
             throws ServletException, IOException {
         String journalStrategy = req.getParameter(ConstantsClass.JOURNAL_STRATEGY);
         String taskStrategy = req.getParameter(ConstantsClass.TASK_STRATEGY);
-        String xml = req.getSession().getAttribute(ConstantsClass.JOURNAL_PARAMETER)==null?
-                (String) req.getSession().getAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER):
+        String xml = req.getSession().getAttribute(ConstantsClass.JOURNAL_PARAMETER) == null ?
+                (String) req.getSession().getAttribute(ConstantsClass.JOURNAL_CONTAINER_PARAMETER) :
                 (String) req.getSession().getAttribute(ConstantsClass.JOURNAL_PARAMETER);
 
         try {

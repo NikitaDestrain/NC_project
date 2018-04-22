@@ -1,5 +1,6 @@
 package server.controller;
 
+import auxiliaryclasses.ConstantsClass;
 import database.hibernate.HibernateDAOManager;
 import database.hibernate.HibernateJournalDAO;
 import database.hibernate.HibernateTasksDAO;
@@ -111,7 +112,7 @@ public class Controller {
                     sortedUserContainer.addUser(user);
             return sortedUserContainer;
         } catch (SQLException e) {
-            throw new ControllerActionException();
+            throw new ControllerActionException(ConstantsClass.ERROR_LAZY_MESSAGE);
         }
     }
 

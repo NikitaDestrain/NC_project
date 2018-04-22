@@ -37,7 +37,7 @@ public class HibernateUsersDAO implements UsersDAO {
             session.save(user);
             session.getTransaction().commit();
         } catch (Exception e) {
-            throw new SQLException(); //todo vlla плохо по двум причинам:
+            throw new SQLException(e.getMessage()); //todo vlla плохо по двум причинам: DONE
             // 1) (критичное) В эксепшен не передано изначальное исключение, т.е. потеряна информация, хранящаяся в нем (error message, stacktrace)
             // представьте, что вам прилетел голый SQLException из метода create(). Всё, больше никакой информации в нем нет. Как понять, что пошло не так?
             // 2) (рекомендуемое) Стоит писать осмысленные error message в каждый эксепшен, созданный в вашем приложении. Тоже очень упрощает дальнейший анализ.
@@ -56,7 +56,7 @@ public class HibernateUsersDAO implements UsersDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             user = (User) session.get(User.class, id);
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -71,7 +71,7 @@ public class HibernateUsersDAO implements UsersDAO {
             session.update(user);
             session.getTransaction().commit();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -85,7 +85,7 @@ public class HibernateUsersDAO implements UsersDAO {
             session.delete(user);
             session.getTransaction().commit();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -98,7 +98,7 @@ public class HibernateUsersDAO implements UsersDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             list = session.createCriteria(User.class).list();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -115,7 +115,7 @@ public class HibernateUsersDAO implements UsersDAO {
                     .add(Restrictions.eq(ConstantsClass.PASSWORD_PARAMETER, password));
             user = (User) equalResult.list().get(0);
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }
@@ -129,7 +129,7 @@ public class HibernateUsersDAO implements UsersDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             list = getOrderCriteria(column, criteria, session.createCriteria(User.class)).list();
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e.getMessage());
         } finally {
             finishSession();
         }

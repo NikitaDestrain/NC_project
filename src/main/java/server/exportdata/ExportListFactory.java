@@ -6,17 +6,19 @@ import server.exportdata.config.ExportConfigItem;
 import java.util.List;
 
 public class ExportListFactory {
-    private static ExportListFactory ourInstance = new ExportListFactory();
-    private ExportStrategyHelper strategyHelper = ExportStrategyHelper.getInstance();
-    private ExportConfigHelper configHelper = ExportConfigHelper.getInstance();
+    private static ExportListFactory ourInstance;
+    private ExportStrategyHelper strategyHelper;
+    private ExportConfigHelper configHelper;
 
-    private final String EXPORT_ERROR = "Could not perform export! Select journals or tasks!";
 
-    public static ExportListFactory getInstance() {
+    public static ExportListFactory getInstance() throws NumberFormatException {
+        if (ourInstance == null) ourInstance = new ExportListFactory();
         return ourInstance;
     }
 
-    private ExportListFactory() {
+    private ExportListFactory() throws NumberFormatException {
+        strategyHelper = ExportStrategyHelper.getInstance();
+        configHelper = ExportConfigHelper.getInstance();
     }
 
     public ExportList createList(List<Integer> journalIDs, List<Integer> taskIDs) throws ExportException {
@@ -38,7 +40,7 @@ public class ExportListFactory {
             exportStrategy.collectId(exportList, id);
         }
 
-        //todo vlla вот любите вы switch нездоровой любовью
+        //todo vlla вот любите вы switch нездоровой любовью DONE
         // этот код можно уменьшить в два раза, сделав при этом его более гибким
         // как вы думаете, зачем я вообще ввел этот метод в своем коде? Просто из непреодолимого желаения написать как можно больше методов?
         // Ответ: я ввел его, чтобы сделать более повторно используемый код.

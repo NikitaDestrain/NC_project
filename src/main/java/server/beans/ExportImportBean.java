@@ -41,8 +41,8 @@ public class ExportImportBean implements EIBeanLocal {
             List<Task> taskList = controller.createTaskListByIds(exportList.getTaskIds());
 
             return marshaller.marshalToXMLString(journalList, taskList);
-        } catch (ControllerActionException | MarshallerException e) {
-            throw new ExportException();
+        } catch (ControllerActionException | MarshallerException | NumberFormatException e) {
+            throw new ExportException(e.getMessage());
         }
     }
 

@@ -1,6 +1,9 @@
 package server.beans;
 
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import server.exceptions.MarshallerException;
@@ -10,7 +13,6 @@ import server.importdata.StoreConstants;
 import server.importdata.StoreException;
 import server.importdata.StoreItem;
 import server.model.Journal;
-import server.model.JournalContainer;
 import server.model.Task;
 import server.model.TaskStatus;
 import servlets.CurrentUserContainer;
