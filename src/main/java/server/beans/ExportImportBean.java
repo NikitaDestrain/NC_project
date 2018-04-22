@@ -64,23 +64,20 @@ public class ExportImportBean implements EIBeanLocal {
 
         List<Journal> journals = storeItem.getJournals(); // todo лист тасок без журнала DONE
         List<Task> tasks = storeItem.getTasks();
-        if (journals.size() == 0) { //todo vlla почему так переусложнено? Просто: бежим по списку журналов - сохраняем, бежим по списку тасок - сохраняем
-            for (Task t : tasks) {
-                taskStoreStrategy.store(t);
-            }
-        } else {
-            Object object;
-            for (Journal j : journals) {
-                object = journalStoreStrategy.store(j);
-                if (object != null) {
-                    for (Task t : j.getTasks()) {
-                        if (object instanceof Journal) {
-                            t.setJournalId(((Journal) object).getId());
-                        } else if (object instanceof Boolean) {
-                            taskStoreStrategy.store(t);
-                        }
+        //todo vlla почему так переусложнено? Просто: бежим по списку журналов - сохраняем, бежим по списку тасок - сохраняем DONE
+        Object object;
+        for (Journal j : journals) {
+            object = journalStoreStrategy.store(j);
+            if (object != null) {
+                for (Task t : j.getTasks()) {
+                    if (object instanceof Journal) {
+                        t.setJournalId(((Journal) object).getId());
                     }
                 }
+            }
+
+            for (Task t : tasks) {
+                taskStoreStrategy.store(t);
             }
         }
     }

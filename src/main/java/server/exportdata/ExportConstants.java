@@ -3,7 +3,7 @@ package server.exportdata;
 public class ExportConstants {
     public static final String ONLY_OBJECT = "only object";
     public static final String OBJECT_WITH_PARENT = "object with parent";
-    public static final String OBJECT_WITH_CHILDREN = "object wih children";
+    public static final String OBJECT_WITH_CHILDREN = "object with children";
 
     //todo vlla у вас получается что стратегия жестко завязана на тип данных.
     // На самом деле, стратегии экспорта у нас в архитектуре всего три: экспортировать только объект, экспортировать объкт с родителем, экспортировать объект с потомком.
