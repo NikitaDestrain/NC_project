@@ -12,7 +12,7 @@ public class ExportConfigHelper {
     private Map<String, ExportConfigItem> strategies;
 
     public static ExportConfigHelper getInstance() throws NumberFormatException {
-        if(ourInstance == null) ourInstance = new ExportConfigHelper();
+        if (ourInstance == null) ourInstance = new ExportConfigHelper();
         return ourInstance;
     }
 
@@ -25,7 +25,4 @@ public class ExportConfigHelper {
     public ExportConfigItem getStrategy(String type) {
         return strategies.get(type);
     }
-
-    // todo vlla ничего не мешает хранить мапу стратегий с доступом по типу даных.
-    // в этом случае для получения типа стратегии будет достаточно одного метода
 }

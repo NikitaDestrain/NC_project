@@ -62,9 +62,8 @@ public class ExportImportBean implements EIBeanLocal {
         StoreStrategy<Journal> journalStoreStrategy = storeStrategyHelper.resolveStrategy(storeItem, StoreConstants.JOURNAL);
         StoreStrategy<Task> taskStoreStrategy = storeStrategyHelper.resolveStrategy(storeItem, StoreConstants.TASK);
 
-        List<Journal> journals = storeItem.getJournals(); // todo лист тасок без журнала DONE
+        List<Journal> journals = storeItem.getJournals();
         List<Task> tasks = storeItem.getTasks();
-        //todo vlla почему так переусложнено? Просто: бежим по списку журналов - сохраняем, бежим по списку тасок - сохраняем DONE
         Object object;
         for (Journal j : journals) {
             object = journalStoreStrategy.store(j);

@@ -44,6 +44,5 @@ public class StoreStrategyHelper {
             return strategies.get(type).get(item.getTaskStrategy());
         else
             throw new StoreException(NO_SUCH_STRATEGY);
-        //todo vlla "Ода, посвященная Switch"
     }
 }

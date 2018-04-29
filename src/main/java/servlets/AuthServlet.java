@@ -22,9 +22,6 @@ import java.security.NoSuchAlgorithmException;
 
 @WebServlet(ConstantsClass.AUTH_SERVLET_ADDRESS)
 public class AuthServlet extends HttpServlet {
-    //todo vlla класс не опрятный, сложно читается. Часто полей инициализируются сразу, часть в методе init.
-    // Есть поля, которые никогда не используются
-    // Много дублирования кода
 
     private PasswordEncoder encoder;
     private DataUpdateUtil updateUtil;
@@ -65,7 +62,7 @@ public class AuthServlet extends HttpServlet {
     }
 
     private void doSignIn(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String useraction = req.getParameter(ConstantsClass.USERACTION); //todo vlla в чем разница с ACTION? Зачем еще один switch, если мы уже определили action?
+        String useraction = req.getParameter(ConstantsClass.USERACTION);
         String login;
         String password;
         String encryptedPassword;

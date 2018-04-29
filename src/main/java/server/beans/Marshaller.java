@@ -123,7 +123,6 @@ public class Marshaller {
             }
             try {
                 name = current.getElementsByTagName(MarshallerConstants.NAME_TAG).item(0).getFirstChild().getNodeValue();
-                //todo vlla а почему вы решили сделать параметры объектов тегами, а не атрибутами?
                 id = current.getElementsByTagName(MarshallerConstants.ID_TAG).item(0).getFirstChild().getNodeValue();
                 status = current.getElementsByTagName(MarshallerConstants.STATUS_TAG).item(0).getFirstChild().getNodeValue();
                 notification = current.getElementsByTagName(MarshallerConstants.NOTIFICATION_DATE_TAG).item(0).getFirstChild().getNodeValue();

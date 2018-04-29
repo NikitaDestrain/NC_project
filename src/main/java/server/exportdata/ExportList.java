@@ -21,7 +21,6 @@ public class ExportList {
     public List<Integer> getJournalIds() {
         return Collections.unmodifiableList(journalIds);
     }
-    //todo vlla нарушение инкапсуляции DONE
 
     public List<Integer> getTaskIds() {
         return Collections.unmodifiableList(taskIds);
