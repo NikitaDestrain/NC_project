@@ -1,28 +1,38 @@
 package servlets;
 
 import auxiliaryclasses.ConstantsClass;
+import server.beans.EIBeanLocal;
 import server.controller.Controller;
 import server.controller.XmlUtils;
 import server.exceptions.ControllerActionException;
 import server.model.Journal;
 import server.model.Task;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(ConstantsClass.TASK_SERVLET_ADDRESS)
+@MultipartConfig
 public class TaskServlet extends HttpServlet {
     private Controller controller;
     private DataUpdateUtil updateUtil;
     private XmlUtils xmlUtils = XmlUtils.getInstance();
     private PatternChecker patternChecker = PatternChecker.getInstance();
+    private ImportExportManager importExportManager = ImportExportManager.getInstance();
 
     private Task currentTask;
+
+    @EJB
+    EIBeanLocal ExportImportBean;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -48,6 +58,8 @@ public class TaskServlet extends HttpServlet {
         switch (useraction) {
             case ConstantsClass.ADD:
                 req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.TRUE);
+                req.getSession().setAttribute(ConstantsClass.IS_EDIT, Boolean.FALSE);
+                req.getSession().setAttribute(ConstantsClass.IS_RENAME, Boolean.FALSE);
                 req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
                 req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
                 break;
@@ -59,6 +71,7 @@ public class TaskServlet extends HttpServlet {
                 if (usernumber != null && !usernumber.equals("")) {
                     int num = Integer.parseInt(usernumber);
                     currentTask = controller.getTask(currentJournal.getId(), num);
+                    req.getSession().setAttribute(ConstantsClass.IS_EDIT, Boolean.TRUE);
                     req.getSession().setAttribute(ConstantsClass.CURRENT_TASK, currentTask);
                     req.getSession().setAttribute(ConstantsClass.CURRENT_STATUS, currentTask.getStatus());
                     String t = null;
@@ -70,6 +83,7 @@ public class TaskServlet extends HttpServlet {
                     req.setAttribute(ConstantsClass.CURRENT_TASK_XML, t);
                     req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
                     req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.FALSE);
+                    req.getSession().setAttribute(ConstantsClass.IS_RENAME, Boolean.FALSE);
                     req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
                 } else {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_TASK);
@@ -92,6 +106,15 @@ public class TaskServlet extends HttpServlet {
                     req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_CHOOSE_TASK);
                     req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
                 }
+                break;
+            case ConstantsClass.RENAME:
+                req.getSession().setAttribute(ConstantsClass.IS_RENAME, Boolean.TRUE);
+                req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.FALSE);
+                req.getSession().setAttribute(ConstantsClass.IS_EDIT, Boolean.FALSE);
+                req.getSession().setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
+                List<Integer> renameIds = importExportManager.createIDList(req.getParameterValues(ConstantsClass.USERNUMBER));
+                req.getSession().setAttribute(ConstantsClass.RENAMENUMBER, renameIds);
+                req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
                 break;
             case ConstantsClass.SORT:
                 String sortColumn = req.getParameter(ConstantsClass.SORT_COLUMN); // name||description
@@ -124,6 +147,20 @@ public class TaskServlet extends HttpServlet {
                 break;
             case ConstantsClass.RELOAD:
                 updateUtil.updateJournals(req, resp);
+                break;
+            case ConstantsClass.IMPORT:
+                Part part = req.getPart(ConstantsClass.IMPORT_PARAMETER);
+                importExportManager.doImport(part, req, resp);
+                break;
+            case ConstantsClass.EXPORT:
+                String[] checkBoxes = req.getParameterValues(ConstantsClass.USERNUMBER);
+                try {
+                    String exportXml = ExportImportBean.exportData(null, importExportManager.createIDList(checkBoxes));
+                    importExportManager.downloadAction(req, resp, exportXml);
+                } catch (Exception e) {
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_LAZY_MESSAGE);
+                    req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+                }
                 break;
         }
     }
@@ -190,5 +227,4 @@ public class TaskServlet extends HttpServlet {
         }
         req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
     }
-
 }

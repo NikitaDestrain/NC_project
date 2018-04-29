@@ -72,10 +72,10 @@ public class PostgreSQLUsersDAO implements UsersDAO {
     }
 
     @Override
-    public void delete(int id) throws SQLException {
+    public void delete(User user) throws SQLException {
         String sql = "DELETE FROM \"Users\" WHERE \"User_id\" = ?";
         try (PreparedStatement stm = connection.prepareStatement(sql);) {
-            stm.setInt(1, id);
+            stm.setInt(1, user.getId());
             stm.executeUpdate();
         }
     }

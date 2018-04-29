@@ -25,7 +25,7 @@ public class MainForm extends JFrame {
         Journal backup = Controller.getInstance().getJournal();
         this.journal = backup == null ? new Journal() : backup;
         try {
-            icon = new ImageIcon(ParserProperties.getInstance().getProperty(ConstantsClass.MAIN_FORM_ICON));
+            icon = new ImageIcon(ParserProperties.getInstance().getPropertyValue(ConstantsClass.MAIN_FORM_ICON));
         } catch (IllegalPropertyException e) {
             JOptionPane.showMessageDialog(MainForm.this, "Illegal value of property",
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -196,7 +196,7 @@ public class MainForm extends JFrame {
                 if (action == JOptionPane.OK_OPTION) {
                     try {
                         ServerProcessor.getInstance().finishServer();
-                        String path = ParserProperties.getInstance().getProperty(ConstantsClass.JOURNAL_XML_FILE);
+                        String path = ParserProperties.getInstance().getPropertyValue(ConstantsClass.JOURNAL_XML_FILE);
                         if (path == null)
                             JOptionPane.showMessageDialog(MainForm.this,
                                     "Incorrect file path",
@@ -204,7 +204,7 @@ public class MainForm extends JFrame {
                         else {
                             journalBackup.writeJournal(journal, path);
                             UserAuthorizer.getInstance().writeUserData(ParserProperties.getInstance()
-                                    .getProperty(ConstantsClass.USER_DATA));
+                                    .getPropertyValue(ConstantsClass.USER_DATA));
                             System.exit(0);
                         }
                     } catch (IllegalPropertyException ex) {

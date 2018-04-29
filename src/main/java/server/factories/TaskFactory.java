@@ -19,7 +19,20 @@ public class TaskFactory {
      */
     public static Task createTask(int id, String name, String status, String description, Date notificationDate, Date plannedDate,
                                   Date uploadDate, Date changeDate, int journalId) {
-        return new Task(id, name, parseStringToTaskStatus(status), description, notificationDate, plannedDate, uploadDate, changeDate, journalId);
+        return new Task(id, name, parseStringToTaskStatus(status), description, notificationDate, plannedDate,
+                uploadDate, changeDate, journalId);
+    }
+
+    public static Task createTask(String name, String status, String description, Date notificationDate,
+                                  Date plannedDate, int journalId) {
+        return new Task(name, parseStringToTaskStatus(status), description, notificationDate, plannedDate,
+                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), journalId);
+    }
+
+    public static Task createTask(int id, String name, String status, String description, Date notificationDate,
+                                  Date plannedDate, int journalId) {
+        return new Task(id, name, parseStringToTaskStatus(status), description, notificationDate, plannedDate,
+                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), journalId);
     }
 
     public static Task createTask(Task task) {

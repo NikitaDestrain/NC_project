@@ -8,6 +8,10 @@ public class JournalFactory {
         return new Journal(id, name, description, userId);
     }
 
+    public static Journal createJournal(String name, String description, Integer userId) {
+        return new Journal(name, description, userId);
+    }
+
     public static Journal createJournal(Journal journal) {
         return new Journal(journal.getId(), journal.getName(), journal.getDescription(), journal.getUserId());
     }

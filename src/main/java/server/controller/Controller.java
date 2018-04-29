@@ -1,16 +1,20 @@
 package server.controller;
 
-import database.postgresql.PostgreSQLDAOFactory;
-import database.postgresql.PostgreSQLJournalDAO;
-import database.postgresql.PostgreSQLTasksDAO;
-import database.postgresql.PostgreSQLUsersDAO;
+import auxiliaryclasses.ConstantsClass;
+import database.hibernate.HibernateDAOManager;
+import database.hibernate.HibernateJournalDAO;
+import database.hibernate.HibernateTasksDAO;
+import database.hibernate.HibernateUsersDAO;
+import database.postgresql.PostgreSQLDAOManager;
 import server.exceptions.ControllerActionException;
 import server.exceptions.DAOFactoryActionException;
 import server.exceptions.UserAuthorizerStartException;
 import server.model.*;
 
-import java.sql.SQLException;
 import java.sql.Date;
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Controller {
@@ -19,28 +23,30 @@ public class Controller {
     private JournalNamesContainer journalNamesContainer;
     private TaskNamesContainer taskNamesContainer;
     private LifecycleManager statusManager;
-    private PostgreSQLDAOFactory postgreSQLDAOFactory;
-    private PostgreSQLUsersDAO usersDAO;
-    private PostgreSQLJournalDAO journalDAO;
-    private PostgreSQLTasksDAO tasksDAO;
+    private HibernateDAOManager DAOFactory;
+    private HibernateUsersDAO usersDAO;
+    private HibernateJournalDAO journalDAO;
+    private HibernateTasksDAO tasksDAO;
     private UserAuthorizer userAuthorizer;
     private Notifier notifier;
     private static Controller instance;
+    private List<Integer> systemIds;
 
     private Controller() throws ControllerActionException {
         try {
+            systemIds = new LinkedList<>();
             journalNamesContainer = new JournalNamesContainer();
             taskNamesContainer = new TaskNamesContainer();
-            postgreSQLDAOFactory = PostgreSQLDAOFactory.getInstance();
+            DAOFactory = HibernateDAOManager.getInstance();
             statusManager = LifecycleManager.getInstance();
-            usersDAO = (PostgreSQLUsersDAO) postgreSQLDAOFactory.getUsersDao();
-            journalDAO = (PostgreSQLJournalDAO) postgreSQLDAOFactory.getJournalDao();
-            tasksDAO = (PostgreSQLTasksDAO) postgreSQLDAOFactory.getTasksDao();
+            usersDAO = (HibernateUsersDAO) DAOFactory.getUsersDao();
+            journalDAO = (HibernateJournalDAO) DAOFactory.getJournalDao();
+            tasksDAO = (HibernateTasksDAO) DAOFactory.getTasksDao();
             userAuthorizer = UserAuthorizer.getInstance();
             notifier = new Notifier();
             createUserContainer();
             createJournalContainer();
-        } catch (DAOFactoryActionException | UserAuthorizerStartException e) {
+        } catch (UserAuthorizerStartException e) {
             throw new ControllerActionException(e.getMessage());
         }
     }
@@ -62,6 +68,7 @@ public class Controller {
                 User user = usersDAO.create(login, password, role);
                 userContainer.addUser(user);
                 userAuthorizer.addUser(user);
+                systemIds.add(user.getId());
             } catch (SQLException e) {
                 throw new ControllerActionException(ControllerErrorConstants.ERROR_ADD_USER);
             }
@@ -71,9 +78,10 @@ public class Controller {
 
     public void deleteUser(int id) throws ControllerActionException {
         try {
-            usersDAO.delete(id);
+            usersDAO.delete(userContainer.getUser(id));
             userAuthorizer.removeUser(userContainer.getUser(id).getLogin());
             userContainer.removeUser(id);
+            systemIds.remove(new Integer(id));
         } catch (SQLException e) {
             throw new ControllerActionException(ControllerErrorConstants.ERROR_DELETE_USER);
         }
@@ -104,7 +112,7 @@ public class Controller {
                     sortedUserContainer.addUser(user);
             return sortedUserContainer;
         } catch (SQLException e) {
-            throw new ControllerActionException();
+            throw new ControllerActionException(ConstantsClass.ERROR_LAZY_MESSAGE);
         }
     }
 
@@ -143,6 +151,26 @@ public class Controller {
                 journalContainer.getJournal(journalId).addTask(task);
                 notifier.addNotification(task);
                 taskNamesContainer.addName(name);
+                systemIds.add(task.getId());
+            }
+        } catch (SQLException e) {
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_ADD_TASK);
+        }
+    }
+
+    //метод добавления, если айди уже существует и не требуется сиквенс
+    public void addTask(Task t) throws ControllerActionException {
+        try {
+            if (taskNamesContainer.isContain(t.getName()))
+                throw new ControllerActionException(ControllerErrorConstants.ERROR_NAME_EXISTS);
+
+            if (checkDate(t.getPlannedDate(), t.getNotificationDate())) {
+                Task task = tasksDAO.create(t.getId(), t.getName(), TaskStatus.Planned, t.getDescription(), t.getNotificationDate(),
+                        t.getPlannedDate(), t.getJournalId());
+                journalContainer.getJournal(t.getJournalId()).addTask(task);
+                notifier.addNotification(task);
+                taskNamesContainer.addName(t.getName());
+                systemIds.add(task.getId());
             }
         } catch (SQLException e) {
             throw new ControllerActionException(ControllerErrorConstants.ERROR_ADD_TASK);
@@ -151,10 +179,11 @@ public class Controller {
 
     public void deleteTask(Task task) throws ControllerActionException {
         try {
-            tasksDAO.delete(task.getId());
+            tasksDAO.delete(task);
             journalContainer.getJournal(task.getJournalId()).removeTask(task.getId());
             notifier.cancelNotification(task.getId());
             taskNamesContainer.deleteName(task.getName());
+            systemIds.remove(new Integer(task.getId()));
         } catch (SQLException e) {
             throw new ControllerActionException(ControllerErrorConstants.ERROR_DELETE_TASK);
         }
@@ -176,10 +205,12 @@ public class Controller {
         if (taskNamesContainer.isContain(name) && !task.getName().equals(name))
             throw new ControllerActionException(ControllerErrorConstants.ERROR_NAME_EXISTS);
 
-        Journal newJournal = getJournal(newJournalName);
         int newJournalId = -1;
-        if (newJournal != null)
-            newJournalId = newJournal.getId();
+        if (newJournalName != null) {
+            Journal newJournal = getJournal(newJournalName);
+            if (newJournal != null)
+                newJournalId = newJournal.getId();
+        }
 
         //backup
         String oldName = task.getName();
@@ -206,6 +237,7 @@ public class Controller {
             if (task.getStatus() == TaskStatus.Completed || task.getStatus() == TaskStatus.Cancelled)
                 notifier.cancelNotification(task.getId());
             tasksDAO.update(task);
+            taskNamesContainer.editName(oldName, name);
         } catch (SQLException e) {
             setAllDataInTask(task, oldName, oldStatus, oldDescription, oldNotificationDate, oldPlannedDate, oldChangeDate, oldJournalId);
             if (newJournalId != -1)
@@ -239,18 +271,23 @@ public class Controller {
         return journalContainer.getJournal(journalId).getTask(taskId);
     }
 
+    public Task getTask(int taskId) {
+        Task task;
+        for (Journal journal : journalContainer.getJournals()) {
+            task = journal.getTask(taskId);
+            if (task != null)
+                return task;
+        }
+        return null;
+    }
+
     public Journal getTasks(int journalId) {
         return journalContainer.getJournal(journalId);
     }
 
     public Journal getSortedTasks(int journalId, String column, String criteria) throws ControllerActionException {
         try {
-            List<Task> sortedTasks = tasksDAO.getSortedByCriteria(journalId, column, criteria);
-            Journal sortedTasksJournal = new Journal();
-            if (sortedTasks != null)
-                for (Task task : sortedTasks)
-                    sortedTasksJournal.addTask(task);
-            return sortedTasksJournal;
+            return getSortedTasksJournal(tasksDAO.getSortedByCriteria(journalId, column, criteria));
         } catch (SQLException e) {
             throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
         }
@@ -258,12 +295,7 @@ public class Controller {
 
     public Journal getFilteredTasksByPattern(int journalId, String column, String pattern, String criteria) throws ControllerActionException {
         try {
-            List<Task> sortedTasks = tasksDAO.getFilteredByPattern(journalId, column, pattern, criteria);
-            Journal sortedTasksJournal = new Journal();
-            if (sortedTasks != null)
-                for (Task task : sortedTasks)
-                    sortedTasksJournal.addTask(task);
-            return sortedTasksJournal;
+            return getSortedTasksJournal(tasksDAO.getFilteredByPattern(journalId, column, pattern, criteria));
         } catch (SQLException e) {
             throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
         }
@@ -271,15 +303,46 @@ public class Controller {
 
     public Journal getFilteredTasksByEquals(int journalId, String column, String equal, String criteria) throws ControllerActionException {
         try {
-            List<Task> sortedTasks = tasksDAO.getFilteredByEquals(journalId, column, equal, criteria);
-            Journal sortedTasksJournal = new Journal();
-            if (sortedTasks != null)
-                for (Task task : sortedTasks)
-                    sortedTasksJournal.addTask(task);
-            return sortedTasksJournal;
+            return getSortedTasksJournal(tasksDAO.getFilteredByEquals(journalId, column, equal, criteria));
         } catch (SQLException e) {
             throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
         }
+    }
+
+    private Journal getSortedTasksJournal(List<Task> sortedTasks) {
+        fixTasks(sortedTasks);
+        Journal sortedTasksJournal = new Journal();
+        if (sortedTasks != null)
+            for (Task task : sortedTasks)
+                sortedTasksJournal.addTask(task);
+        return sortedTasksJournal;
+    }
+
+    public void renameTasks(int journalId, List<Integer> tasksId, String prefix) throws ControllerActionException {
+        for (Task task : journalContainer.getJournal(journalId).getTasks())
+            if (tasksId.contains(task.getId()) && checkLengthName(task.getName(), prefix))
+                doRenameAction(task, prefix);
+    }
+
+    private boolean checkLengthName(String name, String prefix) {
+        return (name.length() + prefix.length()) < 50;
+    }
+
+    private void doRenameAction(Task task, String prefix) throws ControllerActionException {
+        try {
+            String oldName = task.getName();
+            String newName = createNewName(prefix, oldName);
+            task.setName(newName);
+            tasksDAO.update(task);
+            taskNamesContainer.deleteName(oldName);
+            taskNamesContainer.addName(newName);
+        } catch (SQLException e) {
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_LAZY_MESSAGE);
+        }
+    }
+
+    private String createNewName(String prefix, String name) {
+        return prefix + "." + name;
     }
 
     public void setOverdue(Task task) {
@@ -301,6 +364,21 @@ public class Controller {
             Journal journal = journalDAO.create(name, description, userId);
             journalContainer.addJournal(journal);
             journalNamesContainer.addName(journal.getName());
+            systemIds.add(journal.getId());
+        } catch (SQLException e) {
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_ADD_JOURNAL);
+        }
+    }
+
+    public Journal addJournal(Journal j) throws ControllerActionException {
+        if (journalNamesContainer.isContain(j.getName()))
+            throw new ControllerActionException(ControllerErrorConstants.ERROR_NAME_EXISTS);
+        try {
+            Journal journal = journalDAO.create(j.getId(), j.getName(), j.getDescription(), j.getUserId());
+            journalContainer.addJournal(journal);
+            journalNamesContainer.addName(journal.getName());
+            systemIds.add(journal.getId());
+            return journal;
         } catch (SQLException e) {
             throw new ControllerActionException(ControllerErrorConstants.ERROR_ADD_JOURNAL);
         }
@@ -308,9 +386,10 @@ public class Controller {
 
     public void deleteJournal(int id) throws ControllerActionException {
         try {
-            journalDAO.delete(id);
+            journalDAO.delete(journalContainer.getJournal(id));
             journalNamesContainer.deleteName(journalContainer.getJournal(id).getName());
             journalContainer.removeJournal(id);
+            systemIds.remove(new Integer(id));
         } catch (SQLException e) {
             throw new ControllerActionException(ControllerErrorConstants.ERROR_DELETE_JOURNAL);
         }
@@ -363,12 +442,7 @@ public class Controller {
 
     public JournalContainer getSortedJournals(String column, String criteria) throws ControllerActionException {
         try {
-            List<Journal> sortedJournals = journalDAO.getSortedByCriteria(column, criteria);
-            JournalContainer sortedJournalContainer = new JournalContainer();
-            if (sortedJournals != null)
-                for (Journal journal : sortedJournals)
-                    sortedJournalContainer.addJournal(journal);
-            return sortedJournalContainer;
+            return getSortedJournalContainer(journalDAO.getSortedByCriteria(column, criteria));
         } catch (SQLException e) {
             throw new ControllerActionException(e.getMessage());
         }
@@ -376,12 +450,7 @@ public class Controller {
 
     public JournalContainer getFilteredJournalsByPattern(String column, String pattern, String criteria) throws ControllerActionException {
         try {
-            List<Journal> sortedJournals = journalDAO.getFilteredByPattern(column, pattern, criteria);
-            JournalContainer sortedJournalContainer = new JournalContainer();
-            if (sortedJournals != null)
-                for (Journal journal : sortedJournals)
-                    sortedJournalContainer.addJournal(journal);
-            return sortedJournalContainer;
+            return getSortedJournalContainer(journalDAO.getFilteredByPattern(column, pattern, criteria));
         } catch (SQLException e) {
             throw new ControllerActionException(e.getMessage());
         }
@@ -389,15 +458,18 @@ public class Controller {
 
     public JournalContainer getFilteredJournalsByEquals(String column, String equal, String criteria) throws ControllerActionException {
         try {
-            List<Journal> sortedJournals = journalDAO.getFilteredByEquals(column, equal, criteria);
-            JournalContainer sortedJournalContainer = new JournalContainer();
-            if (sortedJournals != null)
-                for (Journal journal : sortedJournals)
-                    sortedJournalContainer.addJournal(journal);
-            return sortedJournalContainer;
+            return getSortedJournalContainer(journalDAO.getFilteredByEquals(column, equal, criteria));
         } catch (SQLException e) {
             throw new ControllerActionException(e.getMessage());
         }
+    }
+
+    private JournalContainer getSortedJournalContainer(List<Journal> sortedJournals) {
+        JournalContainer sortedJournalContainer = new JournalContainer();
+        if (sortedJournals != null)
+            for (Journal journal : sortedJournals)
+                sortedJournalContainer.addJournal(journal);
+        return sortedJournalContainer;
     }
 
     public JournalNamesContainer getJournalNamesContainer() {
@@ -407,8 +479,10 @@ public class Controller {
     private void createUserContainer() throws ControllerActionException {
         try {
             userContainer = new UserContainer();
-            for (User user : usersDAO.getAll())
+            for (User user : usersDAO.getAll()) {
                 userContainer.addUser(user);
+                systemIds.add(user.getId());
+            }
         } catch (SQLException e) {
             throw new ControllerActionException(e.getMessage());
         }
@@ -418,17 +492,63 @@ public class Controller {
         try {
             journalContainer = new JournalContainer();
             for (Journal journal : journalDAO.getAll()) {
+                systemIds.add(journal.getId());
                 journalContainer.addJournal(journal);
                 journalNamesContainer.addName(journal.getName());
-                for (Task task : tasksDAO.getAll())
+                List<Task> tasks = tasksDAO.getAll();
+                fixTasks(tasks);
+                for (Task task : tasks)
                     if (task.getJournalId() == journal.getId()) {
                         notifier.addNotification(task);
                         journal.addTask(task);
                         taskNamesContainer.addName(task.getName());
+                        systemIds.add(task.getId());
                     }
             }
         } catch (SQLException e) {
             throw new ControllerActionException(e.getMessage());
         }
+    }
+
+    private void fixTasks(List<Task> tasks) {
+        for (Task task : tasks) {
+            task.setStringStatus(task.getStringStatus());
+            task.setPlannedDate(task.getPlannedDate());
+            task.setUploadDate(task.getUploadDate());
+            task.setNotificationDate(task.getNotificationDate());
+            task.setChangeDate(task.getChangeDate());
+        }
+    }
+
+    public List<Journal> createJournalListByIds(List<Integer> journalIDs) {
+        List<Journal> list = new LinkedList<>();
+        for (Integer id : journalIDs) {
+            list.add(getJournal(id));
+        }
+        return Collections.unmodifiableList(list);
+    }
+
+    public List<Task> createTaskListByIds(List<Integer> taskIDs) {
+        List<Task> list = new LinkedList<>();
+        for (Integer id : taskIDs) {
+            list.add(getTask(id));
+        }
+        return Collections.unmodifiableList(list);
+    }
+
+    public boolean containsId(int id) {
+        return systemIds.contains(id);
+    }
+
+    public boolean containsObject(Object object) {
+        if (object instanceof Journal) {
+            return journalDAO.contains(((Journal) object).getId()) || journalDAO.contains(((Journal) object).getName());
+        } else if (object instanceof Task) {
+            return tasksDAO.contains(((Task) object).getId()) || tasksDAO.contains(((Task) object).getName());
+        } else return false;
+    }
+
+    public boolean isExistId(int id) {
+        return tasksDAO.contains(id) || usersDAO.contains(id) || journalDAO.contains(id);
     }
 }

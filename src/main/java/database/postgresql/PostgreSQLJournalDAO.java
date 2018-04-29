@@ -62,10 +62,10 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     }
 
     @Override
-    public void delete(int id) throws SQLException {
+    public void delete(Journal journal) throws SQLException {
         String sql = "DELETE FROM \"Journal\" WHERE \"Journal_id\" = ?";
         try (PreparedStatement stm = connection.prepareStatement(sql);) {
-            stm.setInt(1, id);
+            stm.setInt(1, journal.getId());
             stm.executeUpdate();
         }
     }

@@ -77,10 +77,10 @@ public class PostgreSQLTasksDAO implements TasksDAO {
     }
 
     @Override
-    public void delete(int id) throws SQLException {
+    public void delete(Task task) throws SQLException {
         String sql = "DELETE FROM \"Tasks\" WHERE \"Task_id\" = ?";
         try (PreparedStatement stm = connection.prepareStatement(sql);) {
-            stm.setInt(1, id);
+            stm.setInt(1, task.getId());
             stm.executeUpdate();
         }
     }

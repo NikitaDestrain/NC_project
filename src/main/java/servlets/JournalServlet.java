@@ -1,28 +1,42 @@
 package servlets;
 
 import auxiliaryclasses.ConstantsClass;
+import auxiliaryclasses.DownloadConstants;
+import server.beans.EIBeanLocal;
 import server.controller.Controller;
 import server.controller.XmlUtils;
 import server.exceptions.ControllerActionException;
 import server.model.Journal;
 import server.model.JournalContainer;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.io.StringReader;
+import java.util.List;
 
 @WebServlet(ConstantsClass.JOURNAL_SERVLET_ADDRESS)
+@MultipartConfig
 public class JournalServlet extends HttpServlet {
+
     private Controller controller;
     private DataUpdateUtil updateUtil;
     private XmlUtils xmlUtils = XmlUtils.getInstance();
     private PatternChecker patternChecker = PatternChecker.getInstance();
+    private ImportExportManager importExportManager = ImportExportManager.getInstance();
 
     private Journal currentJournal;
+
+    @EJB
+    EIBeanLocal ExportImportBean;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -98,6 +112,7 @@ public class JournalServlet extends HttpServlet {
                         resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
                     }
                     String n = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.NAMES_XML_FILE));
+                    String xslNames = xmlUtils.parseXmlToString(req.getServletContext().getRealPath(ConstantsClass.NAMES_XSL));
                     String j = null;
                     try {
                         j = xmlUtils.marshalToXmlString(Journal.class, currentJournal);
@@ -107,6 +122,7 @@ public class JournalServlet extends HttpServlet {
                         req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
                     }
                     req.getSession().setAttribute(ConstantsClass.JOURNAL_NAMES, n);
+                    req.getSession().setAttribute(ConstantsClass.XSL_JOURNAL_NAMES_ATTRIBUTE, xslNames);
                     req.getSession().setAttribute(ConstantsClass.JOURNAL_PARAMETER, j);
                     req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
                 } else {
@@ -145,6 +161,21 @@ public class JournalServlet extends HttpServlet {
                 break;
             case ConstantsClass.RELOAD:
                 updateUtil.updateJournals(req, resp);
+                break;
+            case ConstantsClass.IMPORT:
+                Part part = req.getPart(ConstantsClass.IMPORT_PARAMETER);
+                importExportManager.doImport(part, req, resp);
+                break;
+            case ConstantsClass.EXPORT:
+                String[] checkBoxes = req.getParameterValues(ConstantsClass.USERNUMBER);
+                try {
+                    List<Integer> listIds = importExportManager.createIDList(checkBoxes);
+                    String exportXml = ExportImportBean.exportData(listIds, null);
+                    importExportManager.downloadAction(req, resp, exportXml);
+                } catch (Exception e) {
+                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_LAZY_MESSAGE);
+                    req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+                }
                 break;
         }
     }

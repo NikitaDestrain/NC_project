@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.List;
 
 @WebServlet(ConstantsClass.TASK_UPDATE_SERVLET_ADDRESS)
 public class TaskUpdateServlet extends HttpServlet {
@@ -32,6 +33,9 @@ public class TaskUpdateServlet extends HttpServlet {
                 break;
             case ConstantsClass.DO_EDIT_TASK:
                 doEditTask(req, resp);
+                break;
+            case ConstantsClass.DO_RENAME_TASKS:
+                doRenameTasks(req, resp);
                 break;
         }
     }
@@ -101,6 +105,9 @@ public class TaskUpdateServlet extends HttpServlet {
         }
         req.setAttribute(ConstantsClass.CURRENT_TASK_XML, t);
         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
+        req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.TRUE);
+        req.getSession().setAttribute(ConstantsClass.IS_EDIT, Boolean.FALSE);
+        req.getSession().setAttribute(ConstantsClass.IS_RENAME, Boolean.FALSE);
         req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
     }
 
@@ -175,9 +182,51 @@ public class TaskUpdateServlet extends HttpServlet {
         } catch (Exception ex) {
             resp.getWriter().print(ConstantsClass.ERROR_XML_WRITING);
         }
-        req.setAttribute(ConstantsClass.CURRENT_TASK, t);
-        req.setAttribute(ConstantsClass.CURRENT_JOURNAL_NAME, currentJournal.getName());
+        req.setAttribute(ConstantsClass.CURRENT_TASK_XML, t);
         req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
+        req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.FALSE);
+        req.getSession().setAttribute(ConstantsClass.IS_EDIT, Boolean.TRUE);
+        req.getSession().setAttribute(ConstantsClass.IS_RENAME, Boolean.FALSE);
+        req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
+    }
+
+    private void doRenameTasks(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            controller = Controller.getInstance();
+            updateUtil = DataUpdateUtil.getInstance();
+        } catch (ControllerActionException e) {
+            resp.getWriter().print(ConstantsClass.ERROR_LAZY_MESSAGE);
+        }
+        String useraction = req.getParameter(ConstantsClass.USERACTION);
+        Journal currentJournal = (Journal) req.getSession().getAttribute(ConstantsClass.CURRENT_JOURNAL);
+        switch (useraction) {
+            case ConstantsClass.RENAME:
+                String prefix = req.getParameter(ConstantsClass.PREFIX);
+                List<Integer> listRenameIds = (List<Integer>) req.getSession().getAttribute(ConstantsClass.RENAMENUMBER);
+                try {
+                    controller.renameTasks(currentJournal.getId(),
+                            listRenameIds, prefix);
+                    updateUtil.updateTasks(req, resp, currentJournal);
+                } catch (ControllerActionException e) {
+                    incorrectRenameTasks(req, resp, prefix, e.getMessage());
+                }
+                break;
+            case ConstantsClass.BACK_TO_MAIN:
+                req.getRequestDispatcher(ConstantsClass.JOURNAL_PAGE_ADDRESS).forward(req, resp);
+                break;
+            case ConstantsClass.BACK_TO_TASKS:
+                req.getRequestDispatcher(ConstantsClass.TASKS_PAGE_ADDRESS).forward(req, resp);
+                break;
+        }
+    }
+
+
+    private void incorrectRenameTasks(HttpServletRequest req, HttpServletResponse resp, String prefix, String message) throws ServletException, IOException {
+        req.setAttribute(ConstantsClass.PREFIX, prefix);
+        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
+        req.getSession().setAttribute(ConstantsClass.IS_ADD, Boolean.FALSE);
+        req.getSession().setAttribute(ConstantsClass.IS_EDIT, Boolean.FALSE);
+        req.getSession().setAttribute(ConstantsClass.IS_RENAME, Boolean.TRUE);
         req.getRequestDispatcher(ConstantsClass.UPDATE_TASKS_ADDRESS).forward(req, resp);
     }
 

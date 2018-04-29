@@ -1,11 +1,14 @@
 package servlets;
 
 import auxiliaryclasses.ConstantsClass;
-import database.postgresql.PostgreSQLDAOFactory;
+import database.postgresql.PostgreSQLDAOManager;
 import server.controller.Controller;
 import server.controller.PasswordEncoder;
 import server.exceptions.ControllerActionException;
 import server.exceptions.DAOFactoryActionException;
+import server.exportdata.ExportConstants;
+import server.exportdata.config.ExportConfigHelper;
+import server.exportdata.config.ExportConfigParser;
 import server.model.User;
 
 import javax.servlet.ServletConfig;
@@ -19,21 +22,28 @@ import java.security.NoSuchAlgorithmException;
 
 @WebServlet(ConstantsClass.AUTH_SERVLET_ADDRESS)
 public class AuthServlet extends HttpServlet {
-    private PasswordEncoder encoder = PasswordEncoder.getInstance();
+
+    private PasswordEncoder encoder;
     private DataUpdateUtil updateUtil;
-    private PatternChecker patternChecker = PatternChecker.getInstance();
+    private PatternChecker patternChecker;
     private Controller controller;
 
-    private PostgreSQLDAOFactory dbFactory;
+    private CurrentUserContainer currentUserContainer;
     private User currentUser;
+
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         try {
-            dbFactory = PostgreSQLDAOFactory.getInstance(config.getServletContext().getRealPath(ConstantsClass.SCRIPT_FILE));
+            currentUserContainer = CurrentUserContainer.getInstance();
+            patternChecker = PatternChecker.getInstance();
+            encoder = PasswordEncoder.getInstance();
+            PostgreSQLDAOManager.getInstance(config.getServletContext().getRealPath(ConstantsClass.SCRIPT_FILE));
             controller = Controller.getInstance();
             updateUtil = DataUpdateUtil.getInstance();
-        } catch (DAOFactoryActionException | ControllerActionException e) {
+            ExportConfigParser.getInstance(config.getServletContext().getRealPath(ExportConstants.PATH_TO_PROPERTIES));
+            ExportConfigHelper.getInstance();
+        } catch (DAOFactoryActionException | ControllerActionException | IOException | NumberFormatException e) {
             throw new ServletException(e.getMessage());
         }
     }
@@ -61,26 +71,21 @@ public class AuthServlet extends HttpServlet {
                 login = req.getParameter(ConstantsClass.LOGIN_PARAMETER);
                 password = req.getParameter(ConstantsClass.PASSWORD_PARAMETER);
                 if (!patternChecker.isCorrectLogin(login) || !patternChecker.isCorrectLogin(password) || login.length() > ConstantsClass.LOGIN_FIELD_LENGTH) {
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_AUTH);
-                    req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
-                    req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
+                    incorrectSignIn(req, resp, login, ConstantsClass.ERROR_AUTH);
                 } else {
                     try {
                         encryptedPassword = encoder.encode(password);
                     } catch (NoSuchAlgorithmException e) {
-                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
-                        req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
-                        req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
+                        incorrectSignIn(req, resp, login, ConstantsClass.UNSUCCESSFUL_ACTION);
                         break;
                     }
                     currentUser = controller.signInUser(login, encryptedPassword);
                     if (currentUser != null) {
                         req.getSession().setAttribute(ConstantsClass.CURRENT_USER, currentUser);
+                        currentUserContainer.setUser(currentUser);
                         updateUtil.updateJournals(req, resp);
                     } else {
-                        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_IN);
-                        req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
-                        req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
+                        incorrectSignIn(req, resp, login, ConstantsClass.UNSUCCESSFUL_SIGN_IN);
                     }
                     break;
                 }
@@ -90,38 +95,45 @@ public class AuthServlet extends HttpServlet {
         }
     }
 
+    private void incorrectSignIn(HttpServletRequest req, HttpServletResponse resp, String login, String message)
+            throws ServletException, IOException {
+        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
+        req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
+        req.getRequestDispatcher(ConstantsClass.SIGN_IN_ADDRESS).forward(req, resp);
+    }
+
     private void doSignUp(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter(ConstantsClass.LOGIN_PARAMETER);
         String password = req.getParameter(ConstantsClass.PASSWORD_PARAMETER);
         String encryptedPassword = null;
         if (!patternChecker.isCorrectLogin(login) || !patternChecker.isCorrectLogin(password) || login.length() > ConstantsClass.LOGIN_FIELD_LENGTH) {
-            req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.ERROR_AUTH);
-            req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
-            req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
+            incorrectSignUp(req, resp, login, ConstantsClass.ERROR_AUTH);
         } else {
             try {
                 encryptedPassword = encoder.encode(password);
             } catch (NoSuchAlgorithmException e) {
-                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_ACTION);
-                req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
-                req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
+                incorrectSignUp(req, resp, login, ConstantsClass.UNSUCCESSFUL_ACTION);
             }
             try {
                 controller.addUser(login, encryptedPassword, ConstantsClass.USER_ROLE);
                 currentUser = controller.signInUser(login, encryptedPassword);
                 if (currentUser != null) {
                     req.getSession().setAttribute(ConstantsClass.CURRENT_USER, currentUser);
+                    currentUserContainer.setUser(currentUser);
                     updateUtil.updateJournals(req, resp);
                 } else {
-                    req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, ConstantsClass.UNSUCCESSFUL_SIGN_UP);
-                    req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
-                    req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
+                    incorrectSignUp(req, resp, login, ConstantsClass.UNSUCCESSFUL_SIGN_UP);
                 }
             } catch (ControllerActionException e) {
-                req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, e.getMessage());
-                req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
-                req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
+                incorrectSignUp(req, resp, login, e.getMessage());
             }
         }
+    }
+
+    private void incorrectSignUp(HttpServletRequest req, HttpServletResponse resp, String login, String message)
+            throws ServletException, IOException {
+        req.setAttribute(ConstantsClass.MESSAGE_ATTRIBUTE, message);
+        req.setAttribute(ConstantsClass.LOGIN_PARAMETER, login);
+        req.getRequestDispatcher(ConstantsClass.SIGN_UP_ADDRESS).forward(req, resp);
     }
 }

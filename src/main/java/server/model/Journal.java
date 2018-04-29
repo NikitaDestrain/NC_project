@@ -1,22 +1,40 @@
 package server.model;
 
+import server.controller.TaskComparator;
+
+import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.*;
+
+@Entity
+@Table(name = "\"Journal\"", schema = "public", catalog = "cracker")
 
 @XmlType(propOrder = {"id", "name", "description", "userId", "tasks"}, name = "journal")
 @XmlRootElement(name = "journal")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({Task.class, TaskStatus.class})
 public class Journal implements Serializable {
-    @XmlElement(name = "tasks")
-    private Map<Integer, Task> tasks;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_gen")
+    @SequenceGenerator(name = "seq_gen", sequenceName = "\"auto_increment\"", allocationSize = 1)
+    @Column(name = "\"Journal_id\"", nullable = false, unique = true)
     @XmlElement(name = "id")
     private int id;
+
+    @Transient
+    @XmlElement(name = "tasks")
+    private Map<Integer, Task> tasks;
+
+    @Column(name = "\"Name\"", nullable = false, length = 50, unique = true)
     @XmlElement(name = "name")
     private String name;
+
+    @Column(name = "\"Description\"", length = 80)
     @XmlElement(name = "description")
     private String description;
+
+    @Column(name = "\"User_id\"", nullable = false)
     @XmlElement(name = "userId")
     private int userId;
 
@@ -32,7 +50,14 @@ public class Journal implements Serializable {
         this.description = description;
         this.id = id;
         this.userId = userId;
-        tasks = new HashMap<>();
+        tasks = new LinkedHashMap<>();
+    }
+
+    public Journal(String name, String description, int userId) {
+        this.name = name;
+        this.description = description;
+        this.userId = userId;
+        tasks = new LinkedHashMap<>();
     }
 
     public Journal(String name, String description) {
@@ -40,7 +65,7 @@ public class Journal implements Serializable {
         this.description = description;
         this.id = 0;
         this.userId = 0;
-        tasks = new HashMap<>();
+        tasks = new LinkedHashMap<>();
     }
 
     public int getUserId() {
@@ -127,11 +152,33 @@ public class Journal implements Serializable {
         return res;
     }
 
+    public void setTasks(Map<Integer, Task> tasks) {
+        this.tasks = tasks;
+    }
+
     @Override
     public String toString() {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(this.getClass().getSimpleName() + " " + this.name + " " + this.description +
                 " " + this.userId + " (" + this.tasks + ")");
         return stringBuffer.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Journal journal = (Journal) o;
+        return id == journal.id &&
+                userId == journal.userId &&
+                Objects.equals(tasks, journal.tasks) &&
+                Objects.equals(name, journal.name) &&
+                Objects.equals(description, journal.description);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, tasks, name, description, userId);
     }
 }

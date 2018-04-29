@@ -4,6 +4,7 @@ public class ConstantsClass {
     public static final String ADD = "Add";
     public static final String EDIT = "Edit";
     public static final String DELETE = "Delete";
+    public static final String RENAME = "Rename";
     public static final String LATER = "Later";
     public static final String FINISH = "Finish";
     public static final String CANCEL = "Cancel";
@@ -42,6 +43,8 @@ public class ConstantsClass {
     public static final String USER_DATA = "USER_DATA";
     public static final String SCRIPT_FILE = "scripts/databasescript.sql";
 
+    public static final String LAB4_XSD_FILE = "xsd/lab4.xsd";
+
     public static final int SERVER_TREATMENT = 1;
     public static final int NOT_SERVER_TREATMENT = 0;
 
@@ -65,7 +68,7 @@ public class ConstantsClass {
     public static final String ERROR_CHOOSE_JOURNAL = "Choose a journal to perform an action!";
     public static final String ERROR_CHOOSE_TASK = "Choose a task to perform an action!";
 
-    public static final String ERROR_NAME_LENGTH = "The length of the \"name\" field \n should be between 0 and 18 characters and\nit should contain latin characters, whitespaces and numbers!";
+    public static final String ERROR_NAME_LENGTH = "The length of the \"name\" field \n should be between 0 and 50 characters and\nit should contain latin characters, whitespaces and numbers!";
     public static final String ERROR_DESCRIPTION_LENGTH = "The length of the \"description\" field \n should be less than 80 characters and\nit should contain latin characters, whitespaces and numbers!";
     public static final String ERROR_DATE_PARSE = "Enter date in format [d]d-[m]m-yyyy!";
     public static final String ERROR_FILTER_LIKE = "\"Like\" filter should contain latin characters, numbers, \"%\" and \"_\" symbols!";
@@ -78,19 +81,30 @@ public class ConstantsClass {
 
     // web constants
 
+    public static final String REPLACE = "replace";
+    public static final String IGNORE = "ignore";
+    public static final String EXCEPTION = "exception";
+
     public static final String IS_ADD = "isadd";
+    public static final String IS_EDIT = "isedit";
+    public static final String IS_RENAME = "isrename";
 
     public static final String AUTH_SERVLET_ADDRESS = "/authservlet";
     public static final String JOURNAL_SERVLET_ADDRESS = "/journalservlet";
     public static final String JOURNAL_UPDATE_SERVLET_ADDRESS = "/journalupdateservlet";
     public static final String TASK_SERVLET_ADDRESS = "/taskservlet";
     public static final String TASK_UPDATE_SERVLET_ADDRESS = "/taskupdateservlet";
+    public static final String IMPORT_SERVLET_ADDRESS = "/importservlet";
+    public static final String DOWNLOAD_SERVLET_ADDRESS = "/download";
+
     public static final String JOURNAL_PAGE_ADDRESS = "/mainpage";
     public static final String TASKS_PAGE_ADDRESS = "/tasks";
     public static final String SIGN_IN_ADDRESS = "/signin";
     public static final String SIGN_UP_ADDRESS = "/signup";
     public static final String UPDATE_TASKS_ADDRESS = "/updatetasks";
     public static final String UPDATE_JOURNALS_ADDRESS = "/updatejournals";
+    public static final String JOURNALS_XSL_ADDRESS = "/journalxsl";
+    public static final String TASKS_XSL_ADDRESS = "/taskxsl";
 
     public static final String DO_SIGN_IN = "signin";
     public static final String SIGN_IN_ACTION = "signinaction";
@@ -98,6 +112,7 @@ public class ConstantsClass {
     public static final String DO_SELECT = "select";
     public static final String DO_ADD_TASK = "addtask";
     public static final String DO_EDIT_TASK = "edittask";
+    public static final String DO_RENAME_TASKS = "renametasks";
     public static final String DO_CRUD_FROM_JOURNAL = "crudactionmain";
     public static final String DO_CRUD_FROM_TASKS = "crudactiontasks";
     public static final String DO_ADD_JOURNAL = "addjournal";
@@ -105,8 +120,14 @@ public class ConstantsClass {
     public static final String BACK_TO_MAIN = "backtomain";
     public static final String BACK_TO_TASKS = "backtotasks";
 
+    public static final String CHOOSE_STRATEGY = "choosestrategy";
+
+    public static final String SELECTED = "selected";
+    public static final String IMPORT = "imp";
+    public static final String EXPORT = "exp";
     public static final String USERACTION = "useraction";
     public static final String USERNUMBER = "usernumber";
+    public static final String RENAMENUMBER = "renamenumber";
     public static final String JOURNAL_NAME = "journalname";
     public static final String ACTION = "action";
     public static final String RESCHEDULE_TASK = "rescheduletask";
@@ -128,6 +149,16 @@ public class ConstantsClass {
     public static final String NOTIFICATION_DATE = "Notification_date";
     public static final String UPLOAD_DATE = "Upload_date";
     public static final String CHANGE_DATE = "Change_date";
+    public static final String PREFIX = "Prefix";
+
+    public static final String HIBERNATE_NAME = "name";
+    public static final String HIBERNATE_DESCRIPTION = "description";
+    public static final String HIBERNATE_STATUS = "stringStatus";
+    public static final String HIBERNATE_PLANNED_DATE = "plannedDate";
+    public static final String HIBERNATE_NOTIFICATION_DATE = "notificationDate";
+    public static final String HIBERNATE_UPLOAD_DATE = "uploadDate";
+    public static final String HIBERNATE_CHANGE_DATE = "changeDate";
+    public static final String HIBERNATE_JOURNAL_ID = "journalId";
 
     public static final String JOURNAL_NAMES = "journalNames";
     public static final String CURRENT_TASK = "task";
@@ -144,6 +175,11 @@ public class ConstantsClass {
     public static final String CURRENT_JOURNAL_ID = "curId";
     public static final String IS_SORTED = "issorted";
     public static final String SHOW_ALL = "allvals";
+    public static final String XSL_JOURNAL_CONTAINER_PARAMETER = "xslJournals";
+    public static final String XSL_JOURNAL_PARAMETER = "xslJournal";
+
+    public static final String IMPORT_PARAMETER = "import";
+    public static final String EXPORT_PARAMETER = "export";
 
     public static final String NAME = "Name";
     public static final String DESCRIPTION = "Description";
@@ -151,12 +187,25 @@ public class ConstantsClass {
     public static final String SAVE = "Save";
     public static final String OK = "OK";
 
-    public static final int NAME_FIELD_LENGTH = 18;
+    public static final int NAME_FIELD_LENGTH = 50;
     public static final int LOGIN_FIELD_LENGTH = 18;
     public static final int DESCRIPTION_FIELD_LENGTH = 80;
     public static final String CURRENT_STATUS = "curstatus";
 
     public static final String USER_ROLE = "User";
-    public static final String MODERATOR_ROLE = "Moderator";
-    public static final String ADMINISTRATOR_ROLE = "Administrator";
+
+    // XSL path constants
+    public static final String NAMES_XSL = "localbackup/names.xsl";
+    public static final String JOURNALS_XSL = "localbackup/journals.xsl";
+
+    // XSL parameters
+
+    public static final String XSL_JOURNAL_NAMES_ATTRIBUTE = "xslNames";
+
+    public static final String INCORRECT_FILE_CONTENT = "Incorrect XML-file content! Could not perform import!";
+
+    public static final String HOME_DOWNLOADS = System.getProperty("user.home") + "/Downloads/export.xml";
+
+    public static final String JOURNAL_STRATEGY = "journalStrategy";
+    public static final String TASK_STRATEGY = "taskStrategy";
 }

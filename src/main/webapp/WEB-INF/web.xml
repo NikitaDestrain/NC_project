@@ -6,9 +6,11 @@
 
     <display-name>HelloWorldServlet</display-name>
 
+    <!--3 lab-->
+
     <servlet>
         <servlet-name>signin</servlet-name>
-        <jsp-file>/signin.jsp</jsp-file>
+        <jsp-file>/lab3/signin.jsp</jsp-file>
     </servlet>
 
     <servlet-mapping>
@@ -18,7 +20,7 @@
 
     <servlet>
         <servlet-name>signup</servlet-name>
-        <jsp-file>/signup.jsp</jsp-file>
+        <jsp-file>/lab3/signup.jsp</jsp-file>
     </servlet>
 
     <servlet-mapping>
@@ -28,7 +30,7 @@
 
     <servlet>
         <servlet-name>mainpage</servlet-name>
-        <jsp-file>/mainpage.jsp</jsp-file>
+        <jsp-file>/lab3/mainpage.jsp</jsp-file>
     </servlet>
 
     <servlet-mapping>
@@ -38,7 +40,7 @@
 
     <servlet>
         <servlet-name>tasks</servlet-name>
-        <jsp-file>/tasks.jsp</jsp-file>
+        <jsp-file>/lab3/tasks.jsp</jsp-file>
     </servlet>
 
     <servlet-mapping>
@@ -48,7 +50,7 @@
 
     <servlet>
         <servlet-name>updatetasks</servlet-name>
-        <jsp-file>/updatetasks.jsp</jsp-file>
+        <jsp-file>/lab3/updatetasks.jsp</jsp-file>
     </servlet>
 
     <servlet-mapping>
@@ -58,12 +60,32 @@
 
     <servlet>
         <servlet-name>updatejournals</servlet-name>
-        <jsp-file>/updatejournals.jsp</jsp-file>
+        <jsp-file>/lab3/updatejournals.jsp</jsp-file>
     </servlet>
 
     <servlet-mapping>
         <servlet-name>updatejournals</servlet-name>
         <url-pattern>/updatejournals</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>journalxsl</servlet-name>
+        <jsp-file>/lab4/journalxsl.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>journalxsl</servlet-name>
+        <url-pattern>/journalxsl</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>taskxsl</servlet-name>
+        <jsp-file>/lab4/taskxsl.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>taskxsl</servlet-name>
+        <url-pattern>/taskxsl</url-pattern>
     </servlet-mapping>
 
     <resource-ref>
@@ -72,4 +94,5 @@
         <res-type>javax.sql.DataSource</res-type>
         <res-auth>Container</res-auth>
     </resource-ref>
+
 </web-app>
